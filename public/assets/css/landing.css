@@ -33,6 +33,7 @@ body{
   font-family:Helvetica-Neue;
   font-style: normal;  
   z-index: 99999;
+  padding: 10px;
 }
 
 
@@ -44,6 +45,9 @@ body{
     background: none;
     color: #fff ;
     border: none;
+    font-size: large ;
+    font-weight: bold;
+    padding: 0;
 } 
 .navbar-menu  a{
     text-decoration: none;
@@ -64,20 +68,29 @@ body{
 
 
 .dropdown ul{
-    background-color:none;
-    padding: 0;
+    background-color:#002c9e;
+    
+    border-radius: 5px;
 }
 
 .dropdown li{
     background-color: #002c9e;
-    margin: 2px;
+    padding: 5px;
+   
 }
 .dropdown a{
     padding: 0;
     background-color: #002c9e;
 }
 
+.btn-dropdown:hover {
+    background: #002c9e;
+    opacity: 75%;
+}
 
+.btn-dropdown:focus{
+    background-color: #002c9e;
+}
 
 
 
@@ -117,9 +130,9 @@ body{
 
 .slider .slide-track{
     display: flex;
-    animation: scroll 40s linear infinite;
-    -webkit-animation:scroll 40s linear infinite ;
-    width: calc(100px * 22 );
+    animation: scroll 20s linear infinite;
+    -webkit-animation:scroll 20s linear infinite ;
+    width: calc(120px * 22 );
 }
 
 .slider .slide{
@@ -138,8 +151,8 @@ body{
         transform: translateX(0);
     }
     100%{
-        -webkit-transform: translateX(calc(-50px*11 ));
-        transform: translateX(calc(-50px*11 ));
+        -webkit-transform: translateX(calc(-30px*11 ));
+        transform: translateX(calc(-30px*11 ));
     }
 }
 
