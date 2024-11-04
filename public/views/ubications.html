@@ -15,95 +15,327 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="stylesheet" href="../assets/css/landing.css">
+  <link rel="stylesheet" href="/public/assets/css/main.css">
+  <link rel="stylesheet" href="/public/assets/css/landing.css">
+  <link rel="stylesheet" href="/public/assets/css/ubications.css">
   <title>Centros Regionales</title>
 </head>
 
 <body class="background-white">
 
-    <!--Header/navar==============================================================================-->
-    <nav class="header" >
-      
-      <div class="container-fluid background-white" style=" display: flex ; justify-content: end; padding: 0;">
-        <a href="/public/index.html" style="width: 13.5%; display: flex; align-items: center; justify-content: center; ">
-          <img src="/public/assets/img/logos/UNAH-version-horizontal.png" alt="UNAH" style="width: 50%;" >
-        </a>
-        <div class="oficial-yellow bar " style=" min-height:5rem; height:10vh; width: 1.5%; position: relative; left: 90px; "></div>
-        <div class="oficial-blue bar  " style="min-height: 5rem; height:10vh; width:10%; position: relative; left: 90px; "></div>
-        <div class="oficial-blue   " style="min-height: 5rem; height:10vh; width:75%; position: relative;  z-index: 10; ">
-          
-          <div class="navbar-menu">
-            <div class="navbar-menu-item">
-              <a href="/public/views/careers.html">Oferta Académica</a>
+  <!--Header/navar==============================================================================-->
+  <nav class="header">
+
+    <div class="container-fluid background-white" style=" display: flex ; justify-content: end; padding: 0;">
+      <a href="/public/index.html" style="width: 13.5%; display: flex; align-items: center; justify-content: center; ">
+        <img src="/public/assets/img/logos/UNAH-version-horizontal.png" alt="UNAH" style="width: 50%;">
+      </a>
+      <div class="oficial-yellow bar "
+        style=" min-height:5rem; height:10vh; width: 1.5%; position: relative; left: 90px; "></div>
+      <div class="oficial-blue bar  "
+        style="min-height: 5rem; height:10vh; width:10%; position: relative; left: 90px; "></div>
+      <div class="oficial-blue   " style="min-height: 5rem; height:10vh; width:75%; position: relative;  z-index: 10; ">
+
+        <div class="navbar-menu">
+          <div class="navbar-menu-item">
+            <a href="/public/views/careers.html">Oferta Académica</a>
+          </div>
+          <div class="navbar-menu-item">
+            <button>Inscripción</button>
+          </div>
+          <div class="navbar-menu-item">
+            <button>Estudiantes</button>
+          </div>
+          <div class="navbar-menu-item">
+            <button>Docentes</button>
+          </div>
+          <div class="navbar-menu-item">
+
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle btn-dropdown" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Admistración
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
             </div>
-            <div class="navbar-menu-item">
-              <button>Inscripción</button>
-            </div>
-            <div class="navbar-menu-item">
-              <button>Estudiantes</button>
-            </div>
-            <div class="navbar-menu-item">
-              <button>Docentes</button>
-            </div>
-            <div class="navbar-menu-item">
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+
+  <!--Ubication cards========================================================================-->
+  <div style="width:100vw; display:flex; justify-content: center; padding-top: 20px;">
+    <h1 style="font-weight: bold;">Centros Regionales</h1>
+  </div>
+
+  <section>
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
               
-              <div class="dropdown" >
-                <button class="btn btn-secondary dropdown-toggle btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Admistración
-                </button>
-                <ul class="dropdown-menu" >
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </div>
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
               
             </div>
-            
           </div>
         </div>
       </div>
+    </div>
 
-    </nav>
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="ubication-card">
+      <div class="face front">
+        <img src="https://placehold.co/800x800" alt="">
+        <h3>Titulo 1</h3>
+      </div>
+      <div class="face back">
+        <h3>Titulo 1</h3>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p>Dirección: Lorem ipsum dolor sit amet consectetur.</p>
+              
+            </div>
+        
+            <div class="col-12">
+              <p>Teléfono: +504 1111-1111</p>
+             
+            </div>
+            <div class="col-12">
+              <p>Correo: ejemplo@dominio.com</p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
+  </section>
 
-    <!--Footer=================================================================================-->
-  
+  <!--Footer=================================================================================-->
+
   <footer class="footer">
-    
-    <img src="../assets/img/logos/UNAH-version-horizontal-white.png"  style="width: 6vw; margin: 2vh;">
+
+    <img src="../assets/img/logos/UNAH-version-horizontal-white.png" style="width: 6vw; margin: 2vh;">
 
     <ul class="social-icon">
       <li class="footer-icon">
-        <a href="https://facebook.com/unahoficial" >
+        <a href="https://facebook.com/unahoficial">
           <img src="../assets/img/icons/icon_facebook_white.png" alt="">
         </a>
       </li>
       <li class="footer-icon">
-        <a href="https://instagram.com/unahoficial" >
+        <a href="https://instagram.com/unahoficial">
           <img src="../assets/img/icons/icon_insta_white.png" alt="">
         </a>
       </li>
       <li class="footer-icon">
-        <a href="https://www.unah.edu.hn/" >
+        <a href="https://www.unah.edu.hn/">
           <img src="../assets/img/icons/icon_linkedin_white.png" alt="">
         </a>
       </li>
       <li class="footer-icon">
-        <a href="https://x.com/UNAHoficial" >
+        <a href="https://x.com/UNAHoficial">
           <img src="../assets/img/icons/icon_x_white.png" alt="">
         </a>
       </li>
       <li class="footer-icon">
-        <a href="https://youtube.com/unahoficial" >
+        <a href="https://youtube.com/unahoficial">
           <img src="../assets/img/icons/icon_youtube_white.png" alt="">
         </a>
       </li>
     </ul>
-    
+
     <ul class="footer-menu">
       <li class="footer-menu-item">
         <a href="" class="footer-menu-icon">Inicio</a>

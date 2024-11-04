@@ -1,0 +1,105 @@
+@font-face {
+    font-family: Helvetica-Neue;
+    src: url(../font/helvetica-neue-regular.ttf) format('truetype');
+    font-size: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family:  Barskerville-MT-Bold;
+    src: url(../font/BaskervilleMTStd-Bold.otf) format('opentype');
+    font-weight: normal;
+    font-size: normal;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Helvetica-Neue, Barskerville-MT-Bold, sans-serif;
+}
+
+section{
+    border-top: #ffb300 solid 2px ;
+    border-bottom: #ffb300 solid 2px ;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding-left: 15vw;
+    padding-right: 15vw;
+}
+
+.ubication-card{
+    position: relative;
+    width: 300px;
+    height: 350px;
+    margin: 20px;
+}
+
+.ubication-card .face{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: .5s;
+}
+
+.ubication-card .front {
+    transform: perspective(600px) rotateY(0deg);
+    box-shadow: 0 5px 10px #000;  
+}
+
+.ubication-card .front img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ubication-card .front h3 {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    color: #fff;
+    background: rgba(0,0,0,.4);
+    text-align: center;
+    margin: 0;
+}
+
+.ubication-card .back{
+    transform: perspective(600px) rotateY(180deg);
+    background: #002c9e;
+    opacity: 0.8;
+    padding: 15px;
+    color: #fff;
+    display: flex;
+    flex-direction:column ;
+    justify-content: space-between;
+    text-align: center;
+    box-shadow: 0 5px 10px #000;
+}
+
+
+.ubication-card .back h3{
+    font-size: 30px;
+    margin-top: 20px;
+    letter-spacing: 2px;
+}
+
+.ubication-card .back p{
+    letter-spacing: 1px;
+}
+
+.ubication-card:hover .front{
+    transform: perspective(600px) rotateY(180deg); 
+}
+
+.ubication-card:hover .back{
+    transform: perspective(600px) rotateY(360deg); 
+}
