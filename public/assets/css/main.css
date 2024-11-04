@@ -1,0 +1,62 @@
+* {
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: Helvetica-Neue;
+    src: url(../font/helvetica-neue-regular.ttf) format('truetype');
+    font-size: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family:  Barskerville-MT-Bold;
+    src: url(../font/BaskervilleMTStd-Bold.otf) format('opentype');
+    font-weight: normal;
+    font-size: normal;
+}
+
+body{
+    font-family: Helvetica-Neue,Barskerville-MT-Bold, Helvetica, sans-serif;
+}
+
+.oficial-blue {
+    background-color: #002c9e;
+    
+}
+
+.oficial-yellow {
+    background-color: #ffb300;
+}
+
+.background-white {
+    background-color: #f7f7ff;
+}
+
+.btn-yellow{
+    background-color: #ffb300;
+    stroke: none;
+    color: #f7f7ff;
+    font-weight: bolder;
+    font-size: large;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: box-shadow, transform;
+    transition-property: box-shadow, transform;
+}
+
+.btn-yellow:hover, .btn-yellow:focus{
+    background-color: #ffb300;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5) ;
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    
+}
+
+
+

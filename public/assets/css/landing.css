@@ -1,0 +1,251 @@
+body{
+    padding-top: 10vh;
+
+   
+}
+
+
+@font-face {
+    font-family: Helvetica-Neue;
+    src: url(../font/helvetica-neue-regular.ttf) format('truetype');
+    font-size: normal;
+    font-weight: normal;
+}
+
+.header{
+    padding: 0;  
+    width: 100vw; 
+    height: 10vh; 
+    position: fixed; 
+    z-index: 999;
+    top:0;
+}
+
+.navbar-menu{
+ display: flex;
+ justify-content: space-evenly;
+ position: absolute;
+  bottom: 0;
+  right: 0vw;
+  width: 50vw;
+  font-size: large;
+  font-weight: bold;
+  font-family:Helvetica-Neue;
+  font-style: normal;  
+  z-index: 99999;
+}
+
+
+.navbar-menu-item{
+    list-style: none;
+}
+
+.navbar-menu  button{
+    background: none;
+    color: #fff ;
+    border: none;
+} 
+.navbar-menu  a{
+    text-decoration: none;
+    color: #fff ;
+    border: none;
+} 
+
+
+.navbar-menu label{
+    color: #fff;
+}
+
+.navbar-menu select{
+    background: none;
+    border: none;
+    color: white;
+}
+
+
+.dropdown ul{
+    background-color:none;
+    padding: 0;
+}
+
+.dropdown li{
+    background-color: #002c9e;
+    margin: 2px;
+}
+.dropdown a{
+    padding: 0;
+    background-color: #002c9e;
+}
+
+
+
+
+
+.bar{
+    
+    height: 10vh;
+    transform: skewX(-30deg);
+    overflow: hidden;
+    border: none;
+}
+
+.my-carousel-item{
+    height: 70vh ;
+}
+
+.carousel-image{
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.carousel-text{
+    font-size: 1vw;
+}
+
+.carousel-button{
+    width: 5vw !important;
+    height: 0.7vh !important ;
+}
+
+.slider{
+    width: 100vw;
+    height: auto;
+    margin: auto;
+    overflow: hidden;
+}
+
+.slider .slide-track{
+    display: flex;
+    animation: scroll 40s linear infinite;
+    -webkit-animation:scroll 40s linear infinite ;
+    width: calc(100px * 22 );
+}
+
+.slider .slide{
+    width: 100px;
+    margin: 10px;
+}
+
+.slider .slider .slider-img{
+    width: 100px;
+    
+}
+
+@keyframes  scroll {
+    0%{
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    100%{
+        -webkit-transform: translateX(calc(-50px*11 ));
+        transform: translateX(calc(-50px*11 ));
+    }
+}
+
+
+
+.redirection-section{
+    margin-top: 3rem; 
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-top: solid 2px #ffb300;
+    border-bottom: solid 2px #ffb300;
+}
+
+.redirection-card{
+    background-image: url(https://placehold.co/600x400);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover ;
+    width: 35vw;
+    height: 75vh;
+    border-radius: 20px;
+    stroke:solid 2px #fff ;
+    text-align: center;
+    color: #fff;
+    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    padding: 1vh;          
+}
+
+.redirection-card button{
+    width: 20%;
+}
+
+footer{
+    min-height: 30vh;
+    height: fit-content;
+    background-color:#002c9e;
+    padding: 1vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    
+}
+
+footer p{
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    
+}
+
+.footer-icon img{
+    width: 1vw;
+    
+}
+
+.social-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+
+.footer-icon{
+    color: #fff;
+    font-size: medium;
+    display: inline-block;
+    margin: 0 10px;
+    transition: 0.5s;
+}
+
+.footer-icon:hover{
+    transform: translateY(-10px);
+}
+
+.footer-menu{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.footer-menu-item{
+    list-style: none;
+}
+
+.footer-menu-icon{
+    color: #fff;
+    font-size: 20px;
+    display: inline-block;
+    text-decoration: none;
+    margin: 5px 10px;
+    opacity: 0.75;
+    transition: 0.3s;
+}
+
+.footer-menu-icon:hover{
+    opacity: 1;
+}
