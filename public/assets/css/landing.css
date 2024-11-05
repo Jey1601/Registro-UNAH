@@ -12,6 +12,7 @@ body{
     font-weight: normal;
 }
 
+/*  <!--Header/navar==============================================================================--> */
 .header{
     padding: 0;  
     width: 100vw; 
@@ -102,8 +103,39 @@ body{
     border: none;
 }
 
+.yellow-bar{
+    min-height:10vh ;  
+    height:auto; 
+    width: 1.5%;
+    position: relative; 
+    left: 90px;
+}
+
+.blue-bar{
+    min-height: 10vh; 
+    height:auto; 
+    width:10%; 
+    position: relative; 
+    left: 90px;
+}
+
+.blue-banner{
+    min-height: 10vh; 
+    height:auto; 
+    width:75%; 
+    position: relative;  
+    z-index: 10;
+}
+
+/*<!--Carousel==============================================================================-->*/
+
 .my-carousel-item{
+    width: 100vw;
     height: 70vh ;
+}
+
+.my-carousel-item h5{
+    font-weight: bolder;
 }
 
 .carousel-image{
@@ -121,28 +153,38 @@ body{
     height: 0.7vh !important ;
 }
 
+/* <!--Slider==============================================================================-->*/
 .slider{
     width: 100vw;
-    height: auto;
-    margin: auto;
+    height: 100px;
+    margin:10px 0 10px 0;
     overflow: hidden;
+    
+
 }
 
 .slider .slide-track{
     display: flex;
-    animation: scroll 20s linear infinite;
-    -webkit-animation:scroll 20s linear infinite ;
-    width: calc(120px * 22 );
+    animation: scroll 100s linear infinite;
+    -webkit-animation:scroll 100s linear infinite ;
+    width: calc(120px * 62 ); /*calc(slide size including margin * (number of slides*2))*/
 }
 
-.slider .slide{
+.slider-slide{
     width: 100px;
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-.slider .slider .slider-img{
+.slider .slider-slide .slider-img{
+    width: 100px; 
+    height: 100px;   
+}
+
+.slider-img{
+    object-fit: contain;
     width: 100px;
-    
+    height: 100px;
 }
 
 @keyframes  scroll {
@@ -151,8 +193,8 @@ body{
         transform: translateX(0);
     }
     100%{
-        -webkit-transform: translateX(calc(-30px*11 ));
-        transform: translateX(calc(-30px*11 ));
+        -webkit-transform: translateX(calc(-120px*31 ));
+        transform: translateX(calc(-120px*31 )); /*calc(slide size including margin * number of slides)*/
     }
 }
 
@@ -167,10 +209,7 @@ body{
 }
 
 .redirection-card{
-    background-image: url(https://placehold.co/600x400);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size:cover ;
+  
     width: 35vw;
     height: 75vh;
     border-radius: 20px;
@@ -182,13 +221,19 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: end;
-    padding: 1vh;          
+    padding: 1vh; 
+    
+   
 }
 
 .redirection-card button{
     width: 20%;
 }
 
+
+
+
+/*  <!--Footer=================================================================================-->*/
 footer{
     min-height: 30vh;
     height: fit-content;
