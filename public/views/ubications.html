@@ -27,7 +27,7 @@
   <nav class="header">
 
     <div class="container-fluid background-white my-navbar" >
-      <a href="/public/index.html" class="logo-header">
+      <a href="../index.html" class="logo-header">
         <img class="navbar-logo" src="../assets/img/logos/UNAH-version-horizontal.png" alt="UNAH" style="width: 50%;">
       </a>
       <div class="oficial-yellow bar yellow-bar " ></div>
@@ -36,10 +36,10 @@
 
         <div class="navbar-menu">
           <div class="navbar-menu-item">
-            <a href="/public/views/careers.html">Oferta Académica</a>
+            <a href="careers.html">Oferta Académica</a>
           </div>
           <div class="navbar-menu-item">
-            <button>Inscripción</button>
+            <button data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
           </div>
           <div class="navbar-menu-item">
             <button>Estudiantes</button>
@@ -388,6 +388,100 @@
     <p class="footer-text">@año | Todos los derechos reservados</p>
 
   </footer>
+
+  <!--Incription-modal-form=================================================================================-->
+
+<div class="modal fade" id="Inscription-form" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Registro De Inscripción</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+            <form>
+            <div class="row">
+              <div class="col-6">
+                  <h5>Información personal</h5>
+                  
+                    <div class="mb-3">
+                      <label for="applicant-name" class="form-label">Nombre</label>
+                      <input type="text" class="form-control" id="-applicant-name" >
+                    </div>
+                    <div class="mb-3">
+                      <label for="applicant-last-name" class="form-label">Apellidos</label>
+                      <input type="text" class="form-control" id="applicant-last-name" >
+                    </div>
+                    <div class="mb-3">
+                      <label for="applicant-identification" class="form-label">Número de identidad</label>
+                      <input type="text" class="form-control" id="applicant-identification" >
+                    </div>
+                    <div class="mb-3">
+                      <label for="applicant-phone-number" class="form-label">Teléfono</label>
+                      <input type="text" class="form-control" id="applicant-phone-number" >
+                    </div>
+                    <div class="mb-3">
+                      <label for="applicant-email" class="form-label">Correo electrónico</label>
+                      <input type="email" class="form-control" id="applicant-email" >
+                    </div>
+                   <!-- <div class="mb-3">
+                      <label for="applicant-direction" class="form-label">Example textarea</label>
+                      <textarea class="form-control" id="applicant-direction" rows="4"></textarea>
+                    </div>-->
+                    <div class="mb-3">
+                      <label for="formFile" class="form-label">Certificado de secundaria</label>
+                      <input class="form-control" type="file" id="formFile">
+                    </div>
+                  
+              </div>
+              <div class="col-6">
+                <h5>Información sobre solicitud</h5>
+                 
+                   
+                    <div>
+                      <label for="applicant-study-center"></label>
+                      <select id="applicant-study-center" class="form-select" >
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      </select>
+                   </div>
+                    <div>
+                      <label for="applicant-first-choice"></label>
+                      <select id="applicant-first-choice" class="form-select" >
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      </select>
+                   </div>
+                   <div>
+                    <label for="applicant-second-choice"></label>
+                    <select id="applicant-second-choice" class="form-select" >
+                      <option selected>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                 </div>
+                    <br>
+                  
+                  </form>
+              </div>
+            </div>
+
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary oficial-yellow" data-bs-dismiss="modal" style="border: none;">Cerrar</button>
+        <button type="submit" class="btn btn-primary oficial-blue" style="border: none;">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
