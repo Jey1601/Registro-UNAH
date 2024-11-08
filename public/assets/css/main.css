@@ -65,7 +65,7 @@ body{
 @media only screen and (max-width: 600px) {
     .btn-yellow{
         
-        font-size: small;
+        font-size: xx-small;
         border-radius: 10px;
         width: 60vw;
         height: 3vh;
