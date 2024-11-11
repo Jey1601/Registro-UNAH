@@ -1566,6 +1566,7 @@ footer p{
         height: 100px;
         margin:10px 0 10px 0;
         overflow: hidden;
+    
         
     
     }
@@ -1583,7 +1584,7 @@ footer p{
         margin-right: 10px;
     }
     
-    .slider .slider-slide .slider-img{
+    .slider .slider-slide {
         width: 100px; 
         height: 100px;   
     }

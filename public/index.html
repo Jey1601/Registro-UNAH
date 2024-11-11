@@ -278,38 +278,38 @@
       </div>
       <div class="modal-body">
           <div class="container-fluid">
-            <form>
+            <form id="inscriptionForm">
             <div class="row">
               <div class="col-6">
                   <h5>Información personal</h5>
                   
                     <div class="mb-3">
-                      <label for="applicant-name" class="form-label">Nombre</label>
-                      <input type="text" class="form-control" id="-applicant-name" >
+                      <label for="applicantName" class="form-label">Nombre</label>
+                      <input type="text" class="form-control"   id="applicantName" required>
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-last-name" class="form-label">Apellidos</label>
-                      <input type="text" class="form-control" id="applicant-last-name" >
+                      <label for="applicantLastName" class="form-label">Apellidos</label>
+                      <input type="text" class="form-control" id="applicantLastName" required >
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-identification" class="form-label">Número de identidad</label>
-                      <input type="text" class="form-control" id="applicant-identification" >
+                      <label for="applicantIdentification" class="form-label">Número de identidad</label>
+                      <input type="text" class="form-control" id="applicantIdentification" required>
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-phone-number" class="form-label">Teléfono</label>
-                      <input type="text" class="form-control" id="applicant-phone-number" >
+                      <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
+                      <input type="text" class="form-control" id="applicantPhoneNumber" required >
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-email" class="form-label">Correo electrónico</label>
-                      <input type="email" class="form-control" id="applicant-email" >
+                      <label for="applicantEmail" class="form-label">Correo electrónico</label>
+                      <input type="email" class="form-control" id="applicantEmail" required>
                     </div>
-                   <!-- <div class="mb-3">
-                      <label for="applicant-direction" class="form-label">Example textarea</label>
-                      <textarea class="form-control" id="applicant-direction" rows="4"></textarea>
-                    </div>-->
+                   <div class="mb-3">
+                      <label for="applicantDirection" class="form-label">Dirección</label>
+                      <textarea class="form-control" id="applicantDirection" rows="4" required></textarea>
+                    </div>
                     <div class="mb-3">
-                      <label for="formFile" class="form-label">Certificado de secundaria</label>
-                      <input class="form-control" type="file" id="formFile">
+                      <label for="aplicantCertificate" class="form-label">Certificado de secundaria</label>
+                      <input class="form-control" type="file" id="aplicantCertificate" accept=".jpg, .jpeg, .png" required>
                     </div>
                   
               </div>
@@ -318,27 +318,27 @@
                  
                    
                     <div>
-                      <label for="applicant-study-center"></label>
-                      <select id="applicant-study-center" class="form-select" >
-                        <option selected>Open this select menu</option>
+                      <label for="applicantStudyCenter">Centro Regional</label>
+                      <select id="applicantStudyCenter" class="form-select" required>
+                        <option  value="" disabled selected> </option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                       </select>
                    </div>
                     <div>
-                      <label for="applicant-first-choice"></label>
-                      <select id="applicant-first-choice" class="form-select" >
-                        <option selected>Open this select menu</option>
+                      <label for="applicantFirstChoice">Carrera Principal</label>
+                      <select id="applicantFirstChoice" class="form-select" required>
+                        <option value="" disabled selected></option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                       </select>
                    </div>
                    <div>
-                    <label for="applicant-second-choice"></label>
-                    <select id="applicant-second-choice" class="form-select" >
-                      <option selected>Open this select menu</option>
+                    <label for="applicantSecondChoice">Carrera Secundaria</label>
+                    <select id="applicantSecondChoice" class="form-select" required >
+                      <option  value="" disabled selected></option>
                       <option value="1">One</option>
                       <option value="2">Two</option>
                       <option value="3">Three</option>
@@ -346,7 +346,7 @@
                  </div>
                     <br>
                   
-                  </form>
+                
               </div>
             </div>
 
@@ -355,8 +355,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary oficial-yellow" data-bs-dismiss="modal" style="border: none;">Cerrar</button>
-        <button type="submit" class="btn btn-primary oficial-blue" style="border: none;">Enviar</button>
+        <button id="inscriptionButton" type="submit" class="btn btn-primary oficial-blue" style="border: none;">Enviar</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
@@ -364,6 +365,7 @@
   <script src="assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script type="module" src="assets/js/main.js"></script>
 
 </body>
 
