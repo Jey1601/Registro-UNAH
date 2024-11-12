@@ -1,0 +1,32 @@
+/* <!--Content=================================================================================-->*/
+
+.content{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}   
+
+h2{
+    font-weight: bold;
+    color: #4D5057;
+    margin-bottom: 20px;
+
+}
+
+.btn-yellow{
+    font-size: large !important;
+}
+
+#loginApplicant{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+#loginApplicant input{
+    width: 100%;
+}
+
+

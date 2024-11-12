@@ -462,15 +462,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" style="padding:  20px;">
-            <form id="loginAdmissions">
+            <form id="loginStudents">
             <div class="mb-3">
             
-                <input type="text" class="form-control" id="studentAccountNumber"  placeholder="Número de cuenta..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+                <input type="text" class="form-control" id="studentAccountNumber"  placeholder="Número de cuenta..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" required>
                 
             </div>
             <div class="mb-3">
             
-                <input type="password" class="form-control" id="studentPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+                <input type="password" class="form-control" id="studentPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" required>
             </div>
             
             <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
@@ -492,7 +492,7 @@
   <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
+    <script type="module" src="../assets/js/aspects.js"></script>    
   <script type="module" src="../assets/js/main.js"></script>
 
 </body>

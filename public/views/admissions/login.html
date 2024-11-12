@@ -7,18 +7,19 @@
   <meta name="author" content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn">
   <meta name="version" content="0.1.0">
   <meta name="since" content="2024/11/1">
-  <meta name="date" content="2024/11/10">
+  <meta name="date" content="2024/11/11">
   <meta name="description"
-    content="Página principal del administrador de admisiones">
+    content="Pagína de inicio de sesión para visualización de resultados">
 
 
    <link href="../../assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+   <link rel="stylesheet" href="../../assets/css/admissions/main.css"> 
    <link rel="stylesheet" href="../../assets/css/main.css">
-   <link rel="stylesheet" href="../../assets/css/admistration/main.css"> 
-    
-  <title>Administrador</title>
+   <link rel="stylesheet" href="../../assets/css/admissions/login.css">    
+
+  <title>Iniciar Sesión</title>
 </head>
 
 <body class="background-white animation">
@@ -27,85 +28,40 @@
   <!--Header/navar==============================================================================-->
   <nav class="my-nav">
     <div class="nav-container dropdown"  >
-      <a class="" href="./admissions-admin.html">
+      <a class="" href="./login.html">
         <img class="nav-logo" src="../../assets/img/logos/UNAH-version-horizontal-white.png" >
       </a>
-      <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <img class="profile-img-button" src="../../assets/img/icons/profile-icon.png" alt="">
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-      </ul>
+
     </div>
   </nav>
-     <!--Logout=================================================================================-->
+    
 
 
-   <!--Menu=================================================================================-->
-   <section class="menu">
-   <div class="options-menu">
-
-    <a href="../admistration/see-inscriptions.html">
-    <div class="container-fluid  option-card">
-       <div class="row">
-          <div class="col-8 option-text">
-            <p>Ver Inscripciones</p>
-          </div>
-          <div class="col-4 ">
-            <div class="option-background">
-              <img class="option-icon" src="../../assets/img/icons/carpeta.png" alt="">
+   <!--Content=================================================================================-->
+   <section class="content">
+        <div >
+            <div style="display: flex; justify-content: center;">
+                <h2>Autenticación</h2>
             </div>
-          </div>
-       </div> 
-    </div>
-  </a>
-
- 
-    <div class="container-fluid  option-card">
-      <div class="row">
-         <div class="col-8 option-text">
-           <p>Descargar Inscripciones</p>
-         </div>
-         <div class="col-4 ">
-           <div class="option-background">
-             <img class="option-icon" src="../../assets/img/icons/download-csv.png" alt="">
-           </div>
-         </div>
-      </div> 
-   </div>
-  
-  
-  <a href="../admistration/upload-grades.html">
-   <div class="container-fluid option-card">
-    <div class="row">
-       <div class="col-8 option-text">
-         <p>Cargar Calificaciones</p>
-       </div>
-       <div class="col-4 ">
-         <div class="option-background">
-           <img class="option-icon" src="../../assets/img/icons/load-grades-icon.png" alt="">
-         </div>
-       </div>
-    </div> 
- </div>
-</a>
-
- <div class="container-fluid  option-card">
-  <div class="row">
-     <div class="col-8 option-text">
-       <p>Descargar Dictamenes</p>
-     </div>
-     <div class="col-4 ">
-       <div class="option-background">
-         <img class="option-icon" src="../../assets/img/icons/download-grades-icon.png" alt="">
-       </div>
-     </div>
-  </div> 
-</div>
-
-
-</div>
-</section> 
+            <form id="loginApplicant">
+                <div class="mb-3">
+                
+                    <input type="text" class="form-control" id="applicantId"  placeholder="Número de identidad..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" required>
+                    
+                </div>
+                <div class="mb-3">
+                
+                    <input type="number" class="form-control" id="applicationNumber" placeholder="Número de solicitud...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);"  required>
+                </div>
+                
+                <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+                    <button type="submit" class=" btn-yellow" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Ingresar</button>
+                </div>
+                
+                
+            </form>
+        </div>
+   </section> 
 
   <!--Footer=================================================================================-->
   
@@ -162,7 +118,7 @@
   <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  
+    <script type="module" src="../../assets/js/loginApplicant.js" ></script>
   <script type="module" src="../../assets/js/aspects.js" ></script>
 
 </body>
