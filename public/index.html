@@ -19,7 +19,7 @@
   <title>UNAH</title>
 </head>
 
-<body class="background-white">
+<body class="background-white animation">
      <!--Header/navar==============================================================================-->
     <nav class="header"  >
       
@@ -37,10 +37,10 @@
             </div>
             <div class="navbar-menu-item">
                 <!-- Button trigger inscription-modal-form -->
-              <button data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
             </div>
             <div class="navbar-menu-item">
-              <button>Estudiantes</button>
+              <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
             </div>
             <div class="navbar-menu-item">
               <button>Docentes</button>
@@ -52,10 +52,10 @@
                   Admistración
                 </button>
                 <ul class="dropdown-menu" >
-                  <li><a class="dropdown-item" href="#">Gestión estratégica</a></li>
-                  <li><a class="dropdown-item" href="#">Facultades</a></li>
-                  <li><a class="dropdown-item" href="#">Admisiones</a></li>
-                  <li><a class="dropdown-item" href="#">DIPP</a></li>
+                  <li><button class="dropdown-item" >Gestión estratégica</Button></li>
+                  <li><button  class="dropdown-item" >Facultades</Button></li>
+                  <li><button id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
+                  <li><button class="dropdown-item" >DIPP</Button></li>
                 </ul>
               </div>
               
@@ -361,6 +361,82 @@
     </div>
   </div>
 </div>
+ <!-- Login Admissions -->
+ <div class="modal fade " id="loginModalAdmissions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header" style="border-bottom: none;">
+          <div style="width: 100%; display: flex; justify-content: center;">
+          <h1 class="modal-title fs-5" style="color: #4D5057; " >Inicio de sesión</h1>
+          </div>
+      
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:  20px;">
+          <form id="loginAdmissions">
+          <div class="mb-3">
+          
+              <input type="text" class="form-control" id="admissionsUser"  placeholder="Usuario..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+              
+          </div>
+          <div class="mb-3">
+          
+              <input type="password" class="form-control" id="admissionsPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+          </div>
+          
+          <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+              <button type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
+          </div>
+          
+          
+          </form>
+
+      </div>
+      
+      </div>
+  </div>
+  </div>
+
+  <!-- Login Students -->
+  <div class="modal fade " id="loginModalStudents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header" style="border-bottom: none;">
+            <div style="width: 100%; display: flex; justify-content: center;">
+            <h1 class="modal-title fs-5" style="color: #4D5057; " >Inicio de sesión</h1>
+            </div>
+        
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="padding:  20px;">
+            <form id="loginAdmissions">
+            <div class="mb-3">
+            
+                <input type="text" class="form-control" id="studentAccountNumber"  placeholder="Número de cuenta..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+                
+            </div>
+            <div class="mb-3">
+            
+                <input type="password" class="form-control" id="studentPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+            </div>
+            
+            <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+                <button type="submit" class=" btn-yellow" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
+            </div>
+            
+            
+            </form>
+
+            <div id="recoveryPassword" style="width: 100%; display: flex; justify-content: center;">
+            <a href="" style="text-decoration: none; color: rgba(0, 0, 0, 0.2);">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    </div>
+
+
 
   <script src="assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

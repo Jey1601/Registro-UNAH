@@ -33,13 +33,7 @@ body{
 @media only screen and (max-width: 600px) {
     body{
         padding-top: 8vh;
-        background-image: url(../../img/background/gray-sun-background.png);
-        background-size: cover; 
-        background-position: center; 
-        background-attachment: fixed; 
-        background-repeat: no-repeat; 
-        position: relative;
-        z-index: -100; 
+ 
         
     }
    

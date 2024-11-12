@@ -21,7 +21,7 @@
   <title>Oferta Académica</title>
 </head>
 
-<body class="background-white">
+<body class="background-white animation">
 
     <!--Header/navar==============================================================================-->
     <nav class="header" >
@@ -42,7 +42,7 @@
               <button data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
             </div>
             <div class="navbar-menu-item">
-              <button>Estudiantes</button>
+              <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
             </div>
             <div class="navbar-menu-item">
               <button>Docentes</button>
@@ -54,10 +54,10 @@
                   Admistración
                 </button>
                 <ul class="dropdown-menu" >
-                  <li><a class="dropdown-item" href="#">Gestión estratégica</a></li>
-                  <li><a class="dropdown-item" href="#">Facultades</a></li>
-                  <li><a class="dropdown-item" href="#">Admisiones</a></li>
-                  <li><a class="dropdown-item" href="#">DIPP</a></li>
+                  <li><button class="dropdown-item" href="#">Gestión estratégica</button></li>
+                  <li><button class="dropdown-item" href="#">Facultades</button></li>
+                  <li><button id="loginAdmissionsButton" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
+                  <li><button class="dropdown-item" href="#">DIPP</button></li>
                 </ul>
               </div>
               
@@ -319,7 +319,7 @@
       <p class="footer-text">@año | Todos los derechos reservados</p>
   
     </footer>
-    <!--Incription-modal-form=================================================================================-->
+ <!--Incription-modal-form=================================================================================-->
 
 <div class="modal fade" id="Inscription-form" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -330,38 +330,38 @@
       </div>
       <div class="modal-body">
           <div class="container-fluid">
-            <form>
+            <form id="inscriptionForm">
             <div class="row">
               <div class="col-6">
                   <h5>Información personal</h5>
                   
                     <div class="mb-3">
-                      <label for="applicant-name" class="form-label">Nombre</label>
-                      <input type="text" class="form-control" id="-applicant-name" >
+                      <label for="applicantName" class="form-label">Nombre</label>
+                      <input type="text" class="form-control"   id="applicantName" required>
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-last-name" class="form-label">Apellidos</label>
-                      <input type="text" class="form-control" id="applicant-last-name" >
+                      <label for="applicantLastName" class="form-label">Apellidos</label>
+                      <input type="text" class="form-control" id="applicantLastName" required >
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-identification" class="form-label">Número de identidad</label>
-                      <input type="text" class="form-control" id="applicant-identification" >
+                      <label for="applicantIdentification" class="form-label">Número de identidad</label>
+                      <input type="text" class="form-control" id="applicantIdentification" required>
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-phone-number" class="form-label">Teléfono</label>
-                      <input type="text" class="form-control" id="applicant-phone-number" >
+                      <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
+                      <input type="text" class="form-control" id="applicantPhoneNumber" required >
                     </div>
                     <div class="mb-3">
-                      <label for="applicant-email" class="form-label">Correo electrónico</label>
-                      <input type="email" class="form-control" id="applicant-email" >
+                      <label for="applicantEmail" class="form-label">Correo electrónico</label>
+                      <input type="email" class="form-control" id="applicantEmail" required>
                     </div>
-                   <!-- <div class="mb-3">
-                      <label for="applicant-direction" class="form-label">Example textarea</label>
-                      <textarea class="form-control" id="applicant-direction" rows="4"></textarea>
-                    </div>-->
+                   <div class="mb-3">
+                      <label for="applicantDirection" class="form-label">Dirección</label>
+                      <textarea class="form-control" id="applicantDirection" rows="4" required></textarea>
+                    </div>
                     <div class="mb-3">
-                      <label for="formFile" class="form-label">Certificado de secundaria</label>
-                      <input class="form-control" type="file" id="formFile">
+                      <label for="aplicantCertificate" class="form-label">Certificado de secundaria</label>
+                      <input class="form-control" type="file" id="aplicantCertificate" accept=".jpg, .jpeg, .png" required>
                     </div>
                   
               </div>
@@ -370,27 +370,27 @@
                  
                    
                     <div>
-                      <label for="applicant-study-center"></label>
-                      <select id="applicant-study-center" class="form-select" >
-                        <option selected>Open this select menu</option>
+                      <label for="applicantStudyCenter">Centro Regional</label>
+                      <select id="applicantStudyCenter" class="form-select" required>
+                        <option  value="" disabled selected> </option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                       </select>
                    </div>
                     <div>
-                      <label for="applicant-first-choice"></label>
-                      <select id="applicant-first-choice" class="form-select" >
-                        <option selected>Open this select menu</option>
+                      <label for="applicantFirstChoice">Carrera Principal</label>
+                      <select id="applicantFirstChoice" class="form-select" required>
+                        <option value="" disabled selected></option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                       </select>
                    </div>
                    <div>
-                    <label for="applicant-second-choice"></label>
-                    <select id="applicant-second-choice" class="form-select" >
-                      <option selected>Open this select menu</option>
+                    <label for="applicantSecondChoice">Carrera Secundaria</label>
+                    <select id="applicantSecondChoice" class="form-select" required >
+                      <option  value="" disabled selected></option>
                       <option value="1">One</option>
                       <option value="2">Two</option>
                       <option value="3">Three</option>
@@ -398,7 +398,7 @@
                  </div>
                     <br>
                   
-                  </form>
+                
               </div>
             </div>
 
@@ -407,16 +407,93 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary oficial-yellow" data-bs-dismiss="modal" style="border: none;">Cerrar</button>
-        <button type="submit" class="btn btn-primary oficial-blue" style="border: none;">Enviar</button>
+        <button id="inscriptionButton" type="submit" class="btn btn-primary oficial-blue" style="border: none;">Enviar</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
 
+ <!-- Login Admissions -->
+ <div class="modal fade " id="loginModalAdmissions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header" style="border-bottom: none;">
+          <div style="width: 100%; display: flex; justify-content: center;">
+          <h1 class="modal-title fs-5" style="color: #4D5057; " >Inicio de sesión</h1>
+          </div>
+      
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:  20px;">
+          <form id="loginAdmissions">
+          <div class="mb-3">
+          
+              <input type="text" class="form-control" id="admissionsUser"  placeholder="Usuario..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+              
+          </div>
+          <div class="mb-3">
+          
+              <input type="password" class="form-control" id="admissionsPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+          </div>
+          
+          <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+              <button type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
+          </div>
+          
+          
+          </form>
+
+      </div>
+      
+      </div>
+  </div>
+  </div>
+
+  <!-- Login Students -->
+  <div class="modal fade " id="loginModalStudents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header" style="border-bottom: none;">
+            <div style="width: 100%; display: flex; justify-content: center;">
+            <h1 class="modal-title fs-5" style="color: #4D5057; " >Inicio de sesión</h1>
+            </div>
+        
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="padding:  20px;">
+            <form id="loginAdmissions">
+            <div class="mb-3">
+            
+                <input type="text" class="form-control" id="studentAccountNumber"  placeholder="Número de cuenta..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+                
+            </div>
+            <div class="mb-3">
+            
+                <input type="password" class="form-control" id="studentPassword" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+            </div>
+            
+            <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+                <button type="submit" class=" btn-yellow" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
+            </div>
+            
+            
+            </form>
+
+            <div id="recoveryPassword" style="width: 100%; display: flex; justify-content: center;">
+            <a href="" style="text-decoration: none; color: rgba(0, 0, 0, 0.2);">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    </div>
+
   <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="../assets/js/careers.js"></script>
+
+  <script type="module" src="../assets/js/main.js"></script>
 
 </body>
 
