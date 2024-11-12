@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn">
+  <meta name="version" content="0.1.0">
+  <meta name="since" content="2024/11/1">
+  <meta name="date" content="2024/11/2">
+  <meta name="description"
+    content="Página principal del administrador de admisiones">
+
+
+   <link href="../../assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="../../assets/css/main.css">
+   <link rel="stylesheet" href="../../assets/css/admistration/main.css"> 
+   <link rel="stylesheet" href="../../assets/css/admistration/upload-grades.css"> 
+    
+  <title>Administrador</title>
+</head>
+
+<body class="background-white animation">
+
+
+  <!--Header/navar==============================================================================-->
+  <nav class="my-nav">
+    <div class="nav-container dropdown"  >
+      <a class="" href="./admisions-admin.html">
+        <img class="nav-logo" src="../../assets/img/logos/UNAH-version-horizontal-white.png" >
+      </a>
+      <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="profile-img-button" src="../../assets/img/icons/profile-icon.png" alt="">
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </nav>
+     <!--Logout=================================================================================-->
+
+
+   <!--Cargar calificaciones=================================================================================-->
+   
+   <section class="upload-section">
+    <div class="title-container">
+        <div class="section-title">
+            <h2>Cargar Calificaciones</h2>
+        </div>
+    </div>
+    <div>
+        <form id="formInscriptionGrades" action="">
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Seleccione un archivo .csv con la estructura correcta para una carga de calificaciones satisfactoria</label>
+                <input class="form-control" type="file" id="formFile" accept=".csv,text/csv">
+           </div>
+           <button type="submit" class="btn btn-success">Cargar</button>
+        </form>
+    </div>
+    </section> 
+
+  <!--Footer=================================================================================-->
+  
+  <footer class="footer">
+    
+    <img class="logo-footer" src="../../assets/img/logos/UNAH-version-horizontal-white.png"  >
+
+    <ul class="social-icon">
+      <li class="footer-icon">
+        <a href="https://facebook.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_facebook_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://instagram.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_insta_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://www.unah.edu.hn/" >
+          <img src="../../assets/img/icons/icon_linkedin_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://x.com/UNAHoficial" >
+          <img src="../../assets/img/icons/icon_x_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://youtube.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_youtube_white.png" alt="">
+        </a>
+      </li>
+    </ul>
+    
+    <ul class="footer-menu">
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Inicio</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Equipo</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Contacto</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Sobre Nosotros</a>
+      </li>
+    </ul>
+    <p class="footer-text">@año | Todos los derechos reservados</p>
+
+  </footer>
+
+  <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  
+  <script type="module" src="../../assets/js/main.js" ></script>
+
+</body>
+
+</html>

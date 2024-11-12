@@ -26,4 +26,4 @@ const regular_expressions = {
 
 
 
-export{regular_expressions, rate_limit};
+export{regular_expressions};
