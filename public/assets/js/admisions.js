@@ -1,12 +1,14 @@
 import { Results } from "./modules/results.js";
- import { Login } from "./modules/login.js";
 
-
-
-
-const loginApplicant = document.getElementById('loginApplicant');
-loginApplicant.addEventListener('submit',function(event){
+const resultsForm = document.getElementById('resultsForm');
+resultsForm.addEventListener('submit',function(event){
     event.preventDefault();
-    Login.getDataApplicant();
-    console.log('Estoy aquí');
-}); 
+    Results.verify();
+})
+
+const selectionCorrectBtn = document.getElementById('selectionCorrectBtn');
+        selectionCorrectBtn.addEventListener('click', function(event){
+            event.preventDefault();
+            Results.getSelection();
+} )
+

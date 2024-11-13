@@ -1,6 +1,6 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-        
+ 
     .table-container{
         min-height: 90vh;
         max-width: 100%;

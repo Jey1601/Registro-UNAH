@@ -48,13 +48,10 @@ class Inscription{
 
     }
         
-  
+    
 
     static DataCorrect(applicant_Data) {
    
-      // Destructure the properties from the applicant_Data object
-      const { name, LastName, idNum, phone, email, address } = applicant_Data;
-  
       // Check that all the fields pass their respective regular expression tests 
       // and that the other required fields are not null
 
@@ -76,23 +73,16 @@ class Inscription{
         return false; // If any validation fails, return false
       }
 
+   
 
 
   };
+
+
+  
+
+  } 
   
  
-
-
-
-
-
-
-
-
-
-
-
-
-}
 
 export{Inscription}; 

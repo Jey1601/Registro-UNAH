@@ -1,3 +1,6 @@
+import { regular_expressions } from "../configuration.js";
+
+
 class Results {
     static modalInstance = null;
 
@@ -40,6 +43,8 @@ class Results {
             this.modalInstance = null; 
         }
     }
+
+    
 }
 
 export { Results };
