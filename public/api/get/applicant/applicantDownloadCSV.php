@@ -1,0 +1,14 @@
+<?php
+include_once "../Registro-UNAH-ladingpage/src/applicant/applicant.php";
+
+//Establecer cabeceras para que el navegador entienda que es un archivo descargable
+header('Content-Type: text/csv');
+header('Content-Disposition: attachment; filename="'.$filename.'.csv"');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+
+//Crear objecto DAO
+$applicantDAO = new ApplicantDAO();
+$applicants = $applicantDAO->getApplicantsInfoCSV();
+
+echo $applicants;
+?>

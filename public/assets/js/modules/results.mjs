@@ -1,4 +1,4 @@
-import { regular_expressions } from "../configuration.js";
+import { regular_expressions } from "./configuration.mjs";
 
 
 class Results {

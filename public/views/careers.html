@@ -39,7 +39,7 @@
               <a href="careers.html">Oferta Académica</a>
             </div>
             <div class="navbar-menu-item">
-              <button data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
+              <button  class="btn-inscription" data-bs-toggle="modal" >Inscripción</button>
             </div>
             <div class="navbar-menu-item">
               <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
@@ -337,31 +337,31 @@
                   
                     <div class="mb-3">
                       <label for="applicantName" class="form-label">Nombre</label>
-                      <input type="text" class="form-control"   id="applicantName" required>
+                      <input type="text" class="form-control"   name="applicantName" required>
                     </div>
                     <div class="mb-3">
                       <label for="applicantLastName" class="form-label">Apellidos</label>
-                      <input type="text" class="form-control" id="applicantLastName" required >
+                      <input type="text" class="form-control" name="applicantLastName" required >
                     </div>
                     <div class="mb-3">
                       <label for="applicantIdentification" class="form-label">Número de identidad</label>
-                      <input type="text" class="form-control" id="applicantIdentification" required>
+                      <input type="text" class="form-control" name="applicantIdentification" required>
                     </div>
                     <div class="mb-3">
                       <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
-                      <input type="text" class="form-control" id="applicantPhoneNumber" required >
+                      <input type="text" class="form-control" name="applicantPhoneNumber" required >
                     </div>
                     <div class="mb-3">
                       <label for="applicantEmail" class="form-label">Correo electrónico</label>
-                      <input type="email" class="form-control" id="applicantEmail" required>
+                      <input type="email" class="form-control" name="applicantEmail" required>
                     </div>
                    <div class="mb-3">
                       <label for="applicantDirection" class="form-label">Dirección</label>
-                      <textarea class="form-control" id="applicantDirection" rows="4" required></textarea>
+                      <textarea class="form-control" name="applicantDirection" rows="4" required></textarea>
                     </div>
                     <div class="mb-3">
                       <label for="aplicantCertificate" class="form-label">Certificado de secundaria</label>
-                      <input class="form-control" type="file" id="aplicantCertificate" accept=".jpg, .jpeg, .png" required>
+                      <input class="form-control" type="file" name="aplicantCertificate" accept=".jpg,  .png" required>
                     </div>
                   
               </div>
@@ -371,29 +371,23 @@
                    
                     <div>
                       <label for="applicantStudyCenter">Centro Regional</label>
-                      <select id="applicantStudyCenter" class="form-select" required>
+                      <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
                         <option  value="" disabled selected> </option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      
                       </select>
                    </div>
                     <div>
                       <label for="applicantFirstChoice">Carrera Principal</label>
-                      <select id="applicantFirstChoice" class="form-select" required>
+                      <select id="applicantFirstChoice" name="applicantFirstChoice" class="form-select" required>
                         <option value="" disabled selected></option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                     
                       </select>
                    </div>
                    <div>
                     <label for="applicantSecondChoice">Carrera Secundaria</label>
-                    <select id="applicantSecondChoice" class="form-select" required >
+                    <select id="applicantSecondChoice"  name="applicantSecondChoice" class="form-select" required >
                       <option  value="" disabled selected></option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                 
                     </select>
                  </div>
                     <br>

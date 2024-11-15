@@ -37,7 +37,7 @@
             </div>
             <div class="navbar-menu-item">
                 <!-- Button trigger inscription-modal-form -->
-              <button type="button" data-bs-toggle="modal" data-bs-target="#Inscription-form">Inscripción</button>
+              <button class="btn-inscription" type="button" data-bs-toggle="modal" >Inscripción</button>
             </div>
             <div class="navbar-menu-item">
               <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
@@ -54,7 +54,7 @@
                 <ul class="dropdown-menu" >
                   <li><button class="dropdown-item" >Gestión estratégica</Button></li>
                   <li><button  class="dropdown-item" >Facultades</Button></li>
-                  <li><button id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
+                  <li ><button   id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
                   <li><button class="dropdown-item" >DIPP</Button></li>
                 </ul>
               </div>
@@ -191,8 +191,8 @@
     </div>
   </section>
      <!--Inscription==============================================================================-->
-    <div data-bs-toggle="modal" data-bs-target="#Inscription-form" class="d-grid gap-2 col-4 mx-auto inscription-container " >
-      <button class="btn btn-yellow" type="button">¡Quiero estudiar en la UNAH!</button>
+    <div data-bs-toggle="modal"  class="d-grid gap-2 col-4 mx-auto inscription-container " >
+      <button class="btn btn-yellow btn-inscription" type="button">¡Quiero estudiar en la UNAH!</button>
     </div>
 
 
@@ -213,7 +213,7 @@
       </div>
       
     </div>
-
+  
   </section>
   
   <!--Footer=================================================================================-->
@@ -248,10 +248,10 @@
         </a>
       </li>
     </ul>
-    
+
     <ul class="footer-menu">
       <li class="footer-menu-item">
-        <a href="" class="footer-menu-icon">Inicio</a>
+        <a href="./views/administration/admissions-admin.html" class="footer-menu-icon">Inicio</a>
       </li>
       <li class="footer-menu-item">
         <a href="" class="footer-menu-icon">Equipo</a>
@@ -278,38 +278,38 @@
       </div>
       <div class="modal-body">
           <div class="container-fluid">
-            <form id="inscriptionForm">
+            <form enctype="multipart/form-data" id="inscriptionForm">
             <div class="row">
               <div class="col-6">
                   <h5>Información personal</h5>
                   
                     <div class="mb-3">
                       <label for="applicantName" class="form-label">Nombre</label>
-                      <input type="text" class="form-control"   id="applicantName" required>
+                      <input type="text" class="form-control"   name="applicantName" required>
                     </div>
                     <div class="mb-3">
                       <label for="applicantLastName" class="form-label">Apellidos</label>
-                      <input type="text" class="form-control" id="applicantLastName" required >
+                      <input type="text" class="form-control" name="applicantLastName" required >
                     </div>
                     <div class="mb-3">
                       <label for="applicantIdentification" class="form-label">Número de identidad</label>
-                      <input type="text" class="form-control" id="applicantIdentification" required>
+                      <input type="text" class="form-control" name="applicantIdentification" required>
                     </div>
                     <div class="mb-3">
                       <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
-                      <input type="text" class="form-control" id="applicantPhoneNumber" required >
+                      <input type="text" class="form-control" name="applicantPhoneNumber" required >
                     </div>
                     <div class="mb-3">
                       <label for="applicantEmail" class="form-label">Correo electrónico</label>
-                      <input type="email" class="form-control" id="applicantEmail" required>
+                      <input type="email" class="form-control" name="applicantEmail" required>
                     </div>
                    <div class="mb-3">
                       <label for="applicantDirection" class="form-label">Dirección</label>
-                      <textarea class="form-control" id="applicantDirection" rows="4" required></textarea>
+                      <textarea class="form-control" name="applicantDirection" rows="4" required></textarea>
                     </div>
                     <div class="mb-3">
                       <label for="aplicantCertificate" class="form-label">Certificado de secundaria</label>
-                      <input class="form-control" type="file" id="aplicantCertificate" accept=".jpg, .jpeg, .png" required>
+                      <input class="form-control" type="file" name="aplicantCertificate" accept=".jpg, .png" required>
                     </div>
                   
               </div>
@@ -319,29 +319,23 @@
                    
                     <div>
                       <label for="applicantStudyCenter">Centro Regional</label>
-                      <select id="applicantStudyCenter" class="form-select" required>
+                      <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
                         <option  value="" disabled selected> </option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      
                       </select>
                    </div>
                     <div>
                       <label for="applicantFirstChoice">Carrera Principal</label>
-                      <select id="applicantFirstChoice" class="form-select" required>
+                      <select id="applicantFirstChoice" name="applicantFirstChoice" class="form-select" required>
                         <option value="" disabled selected></option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                     
                       </select>
                    </div>
                    <div>
                     <label for="applicantSecondChoice">Carrera Secundaria</label>
-                    <select id="applicantSecondChoice" class="form-select" required >
+                    <select id="applicantSecondChoice"  name="applicantSecondChoice" class="form-select" required >
                       <option  value="" disabled selected></option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                 
                     </select>
                  </div>
                     <br>
@@ -385,7 +379,7 @@
           </div>
           
           <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
-              <button type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
+              <button  type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">Iniciar Sesión</button>
           </div>
           
           

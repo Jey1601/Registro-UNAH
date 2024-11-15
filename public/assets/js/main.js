@@ -1,4 +1,14 @@
-import {Inscription} from "./modules/Inscription.js";
+import {Inscription} from "./modules/Inscription.mjs";
+import { RegionalCenter } from "./modules/RegionalCenter.js";
+import { Career } from "./modules/Career.js";
+
+const inscriptionButton = document.querySelectorAll('.btn-inscription')
+inscriptionButton.forEach(button => {
+    button.addEventListener('click', function() {
+        RegionalCenter.renderSelectRegionalCenters();
+        Inscription.showModal('Inscription-form');
+    });
+});
 
 
 
@@ -8,13 +18,5 @@ inscriptionForm.addEventListener('submit',function(event){
     Inscription.getData();
 }); 
 
-/*const loginAdmissionsButton =document.getElementById('loginAdmissionsButton');
-loginAdmissionsButton.addEventListener('click',function(){
-    Login.showLoginAdmissions();
-});
 
-const loginStudentsButton =document.getElementById('loginStudentsButton');
-    loginStudentsButton.addEventListener('click',function(){
-    Login.showLoginEstudents();
-});*/
 
