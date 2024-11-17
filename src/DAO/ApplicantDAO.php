@@ -1,7 +1,8 @@
 <?php
 
 
-Class ApplicantDAO{
+class ApplicantDAO
+{
 
 
     public function __construct(string $host, string $username, string $password, string $dbName)
@@ -13,13 +14,14 @@ Class ApplicantDAO{
             printf("Failed connection: %s\n", $error->getMessage());
         }
 
-       
+
     }
 
-     // Método para obtener los aspirantes
-     public function getApplicants() {
+    // Método para obtener los aspirantes
+    public function getApplicants()
+    {
         $applicants = [];
-    
+
         // Ejecutamos la consulta
         $result = $this->connection->query("SELECT * FROM Applicants;");
 
@@ -38,12 +40,32 @@ Class ApplicantDAO{
         return $applicants;
     }
 
-    
+    // Método para obtener los información de los aspirantes que será visa por el administrador de admisiones
+    public function viewData()
+    {
+        $applicationsData = [];
 
-    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant) {
+
+        if ($result = $this->connection->query("CALL SP_ASPIRANTS_DATA_VIEW();")) {
+            // Si la consulta fue exitosa
+            while ($row = $result->fetch_assoc()) {
+                $applicationsData[] = $row;
+            }
+        } else {
+            echo json_encode(["error" => "Error en la consulta SP_ASPIRANTS_DATA_VIEW: " . $this->connection->error]);
+
+        }
+
+        // Retornamos el array, sea con datos o vacío
+        return $applicationsData;
+    }
+
+
+    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
+    {
         // Iniciar una transacción
         $this->connection->begin_transaction();
-    
+
         try {
             // Verificamos si el aspirante ya tenía información guardada anteriormente
             if ($this->isCreated($id_applicant)) {
@@ -55,36 +77,36 @@ Class ApplicantDAO{
                     // Si no tiene una solicitud activa actualizamos su información
                     if (!$this->updateApplicant($id_applicant, $email, $phone_number, $address, $status)) {
                         echo json_encode(["error" => "Ha ocurrido un error en la actualización de la información"]);
-                  
+
                     }
                     // Creamos la nueva solicitud
                     if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
                         echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
-                    }else{
+                    } else {
                         echo json_encode(["message" => "Inscripción creada exitosamente"]);
                     }
                 }
             } else {
                 // Si no está creado hacemos el insert
                 if (!$this->insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)) {
-  
+
                     echo json_encode(["error" => "Ha ocurrido un error al guardar la información del aspirante"]);
                 }
                 // Creamos la nueva solicitud
                 if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
-         
+
                     echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
-                }else{
+                } else {
                     echo json_encode(["message" => "Inscripción creada exitosamente"]);
                 }
             }
-            
+
             // Si todo fue exitoso, confirmamos la transacción
             $this->connection->commit();
-            
+
         } catch (Exception $e) {
             // En caso de error, revertimos la transacción
-           $this->connection->rollback();
+            $this->connection->rollback();
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
@@ -92,13 +114,14 @@ Class ApplicantDAO{
 
 
     // Método para insertar un nuevo aspirante
-    Private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status) {
-        
-       
+    private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
+    {
+
+
         // Preparar la consulta SQL de inserción
         $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {
             // Vinculamos los parámetros a la consulta
@@ -106,7 +129,7 @@ Class ApplicantDAO{
 
             // Ejecutamos la consulta
             if ($stmt->execute()) {
-               return true;
+                return true;
             } else {
                 return false;
             }
@@ -120,7 +143,8 @@ Class ApplicantDAO{
 
 
 
-    Private function updateApplicant( $id_applicant, $email, $phone_number, $address, $status){
+    private function updateApplicant($id_applicant, $email, $phone_number, $address, $status)
+    {
         // Preparar la consulta SQL de  Actualización, solo actualizamos campos email, phone, y address 
         $query = "UPDATE Applicants 
                   SET  email_applicant = ?,
@@ -128,7 +152,7 @@ Class ApplicantDAO{
                        address_applicant = ?, 
                        status_applicant = ?
                   WHERE id_applicant = ?";
-        
+
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {
             // Vinculamos los parámetros a la consulta
@@ -137,79 +161,123 @@ Class ApplicantDAO{
             // Ejecutamos la consulta
             if ($stmt->execute()) {
                 $stmt->close();
-               return true;
+                return true;
             } else {
                 $stmt->close();
-               return false;
+                return false;
             }
 
-           
-           
+
+
         } else {
             echo json_encode(["error" => "Error en la preparación de la consulta updateApplicant: " . $this->connection->error]);
         }
 
-    }    
+    }
 
 
-    private function createApplication( $id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant) {
+    private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
+    {
         // Extraer el proceso de admisión activo
         $id_admission_process = $this->getAdmissionProcess();
         if (!$id_admission_process) {
             echo json_encode(["error" => "No hay un proceso de admisión activo." . $this->connection->error]);
-   
+
             return false; // No se puede continuar sin un proceso activo
         }
-    
+
         $status_application = 1; // Nueva solicitud, siempre activa
-    
+
         // Consulta de inserción
         $query = "INSERT INTO Applications 
                   (id_admission_process, id_applicant, id_aplicant_type, secondary_certificate_applicant, idregional_center, regionalcenter_admissiontest_applicant, intendedprimary_undergraduate_applicant, intendedsecondary_undergraduate_applicant, status_application) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
         // Preparar la consulta
         if ($stmt = $this->connection->prepare($query)) {
             // Vincular parámetros
             $stmt->bind_param(
-                "iiisiiiii", 
-                $id_admission_process, 
-                $id_applicant, 
-                $id_aplicant_type, 
-                $secondary_certificate_applicant, 
-                $id_regional_center, 
-                $regionalcenter_admissiontest_applicant, 
-                $intendedprimary_undergraduate_applicant, 
-                $intendedsecondary_undergraduate_applicant, 
+                "iiisiiiii",
+                $id_admission_process,
+                $id_applicant,
+                $id_aplicant_type,
+                $secondary_certificate_applicant,
+                $id_regional_center,
+                $regionalcenter_admissiontest_applicant,
+                $intendedprimary_undergraduate_applicant,
+                $intendedsecondary_undergraduate_applicant,
                 $status_application
             );
-    
+
             // Ejecutar la consulta
             if ($stmt->execute()) {
-                $stmt->close();
-                return true; // Éxito
+
+                $id_application = $this->connection->insert_id;
+
+                //Se crea el usuario del aspirante relacionado con la solicitud recien creada
+                if($this->createUserApplicant($id_applicant,$id_application)){
+
+                    $stmt->close();
+                    return true; // Éxito
+                }else{
+                    echo json_encode(["error" => "Error en la creación de la solicitud: " . $stmt->error]);
+                };
+
             } else {
                 // Registrar error en la ejecución
                 echo json_encode(["error" => "Error en la creación de la solicitud: " . $stmt->error]);
-              
+
                 $stmt->close();
                 return false;
             }
         } else {
             // Registrar error en la preparación
-           
+
             echo json_encode(["error" => "Error en la preparación de la consulta createApplication: " . $this->connection->error]);
-            $stmt->close();     
+            $stmt->close();
             return false;
         }
     }
 
-    private function getAdmissionProcess() {
+    private function createUserApplicant($id_applicant, $id_application)
+    {
+        
+        $status_user_applicant = 1;
+        // Consulta de inserción
+        $query = "INSERT INTO UsersApplicants (username_user_applicant,password_user_applicant,status_user_applicant)  VALUES (?, ?, ?)";
+        
+        // Preparar la consulta
+        if ($stmt = $this->connection->prepare($query)) {
+            // Vincular parámetros
+            $stmt->bind_param(
+                "sii", $id_applicant,$id_application, $status_user_applicant 
+            );
+
+            // Ejecutar la consulta
+            if ($stmt->execute()) {
+
+                $stmt->close();
+                return true; // Éxito
+            } else {
+                // Registrar error en la ejecución
+                $stmt->close();
+                return false;
+            }
+        } else {
+            // Registrar error en la preparación
+
+            $stmt->close();
+            return false;
+        }
+    }
+
+    private function getAdmissionProcess()
+    {
         $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
-    
+
         // Ejecutar la consulta
         $result = $this->connection->query($query);
-    
+
         if ($result) {
             // Verificar si hay resultados
             if ($result->num_rows > 0) {
@@ -223,46 +291,27 @@ Class ApplicantDAO{
         } else {
             // Registrar error y devolver null
             echo json_encode(["error" => "Error en la consulta getAdmissionProcess: " . $this->connection->error]);
-     
+
             return null;
         }
     }
 
 
 
-    // Método para obtener los información de los aspirantes que será visa por el administrador de admisiones
-    public function viewData() {
-        $applicationsData = [];
-        
-     
-        if ($result = $this->connection->query("CALL SP_ASPIRANTS_DATA_VIEW();")) {
-            // Si la consulta fue exitosa
-            while ($row = $result->fetch_assoc()) {
-                $applicationsData[] = $row;
-            }
-        } else {
-            echo json_encode(["error" => "Error en la consulta SP_ASPIRANTS_DATA_VIEW: " . $this->connection->error]);
-      
-        }
-    
-        // Retornamos el array, sea con datos o vacío
-        return $applicationsData;
-    }
-
-
-    private function isCreated($id_applicant){
+    private function isCreated($id_applicant)
+    {
         $query = "SELECT id_applicant FROM Applicants WHERE id_applicant = ?";
-    
+
         // Preparar la consulta para evitar inyecciones SQL
         if ($stmt = $this->connection->prepare($query)) {
             // Vincular los parámetros
             $stmt->bind_param("s", $id_applicant);
-    
+
             // Ejecutar la consulta
             if ($stmt->execute()) {
                 // Almacenar el resultado
                 $stmt->store_result();
-    
+
                 // Verificar si hay filas
                 if ($stmt->num_rows > 0) {
                     $stmt->close();
@@ -274,32 +323,33 @@ Class ApplicantDAO{
             } else {
                 // Registrar el error de ejecución
                 echo json_encode(["error" => "Error al ejecutar la consulta isCreated:  " . $stmt->error]);
-            
+
                 $stmt->close();
                 return false;
             }
         } else {
             // Registrar el error al preparar la consulta
-            echo json_encode(["error" => "Error al preparar la consulta isCreated: "  . $this->connection->error]);
-            
+            echo json_encode(["error" => "Error al preparar la consulta isCreated: " . $this->connection->error]);
+
 
             return false;
         }
     }
 
-    private function hasActiveApplication($id_applicant) {
+    private function hasActiveApplication($id_applicant)
+    {
         $query = "SELECT 1 FROM Applications WHERE id_applicant = ? AND status_application = 1";
-    
+
         // Preparar la consulta para evitar inyecciones SQL
         if ($stmt = $this->connection->prepare($query)) {
             // Vincular los parámetros
             $stmt->bind_param("s", $id_applicant);
-    
+
             // Ejecutar la consulta
             if ($stmt->execute()) {
                 // Almacenar el resultado
                 $stmt->store_result();
-    
+
                 // Verificar si hay filas
                 if ($stmt->num_rows > 0) {
                     $stmt->close();
@@ -312,20 +362,22 @@ Class ApplicantDAO{
                 // Registrar el error de ejecución
                 $stmt->close();
                 //echo json_encode(["error" => "Error al ejecutar la consulta hasActiveApplication:"   . $stmt->error]);
-                
+
                 return false;
             }
         } else {
             // Registrar el error al preparar la consulta
-           //echo json_encode(["error" => "Error al preparar la consulta hasActiveApplication: "   . $this->connection->error]);
+            //echo json_encode(["error" => "Error al preparar la consulta hasActiveApplication: "   . $this->connection->error]);
 
             return false;
         }
     }
-    
+
+
 
     // Método para cerrar la conexión 
-    public function closeConnection() {
+    public function closeConnection()
+    {
         if ($this->connection) {
             $this->connection->close();
         }
