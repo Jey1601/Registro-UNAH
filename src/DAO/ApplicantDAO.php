@@ -1,6 +1,6 @@
 <?php
 
-
+include_once "../util/jwt.php";
 class ApplicantDAO
 {
 
@@ -14,6 +14,7 @@ class ApplicantDAO
             printf("Failed connection: %s\n", $error->getMessage());
         }
 
+      
 
     }
 
@@ -40,25 +41,58 @@ class ApplicantDAO
         return $applicants;
     }
 
-    // Método para obtener los información de los aspirantes que será visa por el administrador de admisiones
     public function viewData()
     {
         $applicationsData = [];
-
-
-        if ($result = $this->connection->query("CALL SP_ASPIRANTS_DATA_VIEW();")) {
-            // Si la consulta fue exitosa
+    
+        // Ejecutamos la consulta
+        $result = $this->connection->query("CALL SP_ASPIRANTS_DATA_VIEW()");
+    
+        // Verificamos si la consulta fue exitosa
+        if ($result) {
+            // Recorremos los resultados y los agregamos al array $applicationsData
             while ($row = $result->fetch_assoc()) {
-                $applicationsData[] = $row;
+
+                $imageData = $row['image_data'];
+                $imageType = finfo_buffer(finfo_open(), $imageData, FILEINFO_MIME_TYPE);  // Detectar tipo MIME
+
+                // Convertir la imagen binaria a base64
+               $imageBase64 = base64_encode($imageData);
+
+                 // Crear el prefijo adecuado según el tipo MIME
+                 $imageSrc = "data:" . $imageType . ";base64," . $imageBase64;
+                 
+                // Crear un arreglo asociativo con claves más descriptivas
+                $application = [
+                    "id_applicant" => $row['id_applicant'],
+                    "name" => $row['name'],
+                    "lastname" => $row['lastname'],
+                    "phone_number_applicant" => $row['phone_number_applicant'],
+                    "address_applicant" => $row['address_applicant'],
+                    "id_admission_application_number" => $row['id_admission_application_number'],
+                    "name_regional_center" => $row['name_regional_center'],
+                    "firstC" => $row['firstC'],
+                    "secondC" => $row['secondC'],
+                    "certificate" => $imageSrc
+                ];
+    
+                // Añadimos cada fila al array
+                $applicationsData[] = $application;
             }
+    
         } else {
+            // Si hubo un error con la consulta
             echo json_encode(["error" => "Error en la consulta SP_ASPIRANTS_DATA_VIEW: " . $this->connection->error]);
-
         }
-
-        // Retornamos el array, sea con datos o vacío
-        return $applicationsData;
+    
+        // Devolvemos los datos como JSON
+        echo json_encode($applicationsData);
     }
+
+
+
+
+ 
 
 
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
@@ -111,7 +145,76 @@ class ApplicantDAO
         }
     }
 
+    public function validateApplicant(string $numID, int $numReq) {
+        if (isset($numID) && isset($numReq)) {
+            //Busca al aspirante
+            $query = "SELECT id_applicant, id_admission_applicantion_number FROM Applicants INNER JOIN Applications ON Applicants.id_applicant = Applications.id_applicant WHERE Applicants.id_applicant = ? AND Applications.id_applicantion_number = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('si', $numID, $numReq);
+            $stmt->execute();
+            $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
 
+            if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
+                $payload = [
+                    'applicantID' => $numID,
+                    'numAdmissionRequest' => $numReq
+                ];
+                $newToken = JWT::generateToken($payload);
+                
+                $response = [
+                    'httpCode' => http_response_code(200),
+                    'message' => 'Credential validation successful.',
+                    'token' => $newToken
+                ];
+            } else {
+                $response = [
+                    'httpCode' => http_response_code(401),
+                    'message' => 'User and/or request number not found.',
+                    'token' => null
+                ];
+            }
+
+        } else {
+            $response = [
+                'httpCode' => http_response_code(401),
+                'message' => 'Credentials not received.',
+                'token' => null
+            ];
+        }
+
+        return $response;
+    }
+
+    public function getApplicantsInfoCSV(){
+        $query = "CALL SP_APPLICANT_DATA();";
+        $applicants = $this->connection->execute_query($query);
+
+        $csvHeaders = ["id_applicant", "first_name_applicant", "second_name_applicant", "third_name_applicant", "first_last_name_applicant", "second_last_name_applicant", "email_applicant", "phone_number_applicant", "status_applicant"];
+
+        //Crear un stream en memoria para el archivo CSV
+        $csvFile = fopen('php://temp', '+r');
+
+        //Escribir las cabeceras del CSV
+        fputcsv($csvFile, $csvHeaders);
+
+        //Llenado de datos del CSV
+        foreach ($applicants as $applicant) {
+            foreach ($csvHeaders as $header) {
+                fputcsv($csvFile, $applicant["$header"]);
+            }
+        }
+
+        //Volver al inicio del archivo para que pueda ser enviado
+        rewind($csvFile);
+
+        //Leer el contenido del archivo CSV en memoria
+        $csvContent =  stream_get_contents($csvFile);
+
+        //Cerrar el stream
+        fclose($csvFile);
+
+        return $csvContent;
+    }
 
     // Método para insertar un nuevo aspirante
     private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
@@ -215,13 +318,14 @@ class ApplicantDAO
                 $id_application = $this->connection->insert_id;
 
                 //Se crea el usuario del aspirante relacionado con la solicitud recien creada
-                if($this->createUserApplicant($id_applicant,$id_application)){
+                if ($this->createUserApplicant($id_applicant, $id_application)) {
 
                     $stmt->close();
                     return true; // Éxito
-                }else{
+                } else {
                     echo json_encode(["error" => "Error en la creación de la solicitud: " . $stmt->error]);
-                };
+                }
+                ;
 
             } else {
                 // Registrar error en la ejecución
@@ -241,16 +345,19 @@ class ApplicantDAO
 
     private function createUserApplicant($id_applicant, $id_application)
     {
-        
+
         $status_user_applicant = 1;
         // Consulta de inserción
         $query = "INSERT INTO UsersApplicants (username_user_applicant,password_user_applicant,status_user_applicant)  VALUES (?, ?, ?)";
-        
+
         // Preparar la consulta
         if ($stmt = $this->connection->prepare($query)) {
             // Vincular parámetros
             $stmt->bind_param(
-                "sii", $id_applicant,$id_application, $status_user_applicant 
+                "sii",
+                $id_applicant,
+                $id_application,
+                $status_user_applicant
             );
 
             // Ejecutar la consulta

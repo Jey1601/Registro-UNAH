@@ -1,5 +1,5 @@
 <?php
-include_once "../Registro-UNAH-ladingpage/src/applicant/applicant.php";
+include_once "../../../../src/DAO/ApplicantDAO.php";
 
 //Establecer cabeceras para que el navegador entienda que es un archivo descargable
 header('Content-Type: text/csv');

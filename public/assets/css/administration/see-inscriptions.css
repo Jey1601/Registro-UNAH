@@ -1,13 +1,13 @@
 @font-face {
     font-family: Helvetica-Neue;
-    src: url(../font/helvetica-neue-regular.ttf) format('truetype');
+    src: url(../../font/helvetica-neue-regular.ttf) format('truetype');
     font-size: normal;
     font-weight: normal;
 }
 
 @font-face {
     font-family:  Barskerville-MT-Bold;
-    src: url(../font/BaskervilleMTStd-Bold.otf) format('opentype');
+    src: url(../../font/BaskervilleMTStd-Bold.otf) format('opentype');
     font-weight: normal;
     font-size: normal;
 }

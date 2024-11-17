@@ -39,4 +39,15 @@ class Modal{
 }
 
 
-export{Alert, Modal};
+class Cell{
+
+    // Función para crear celdas de manera reutilizable
+  static createCell(type, content) {
+    const cell = document.createElement(type);
+    cell.textContent = content || '';  // Si no hay contenido, poner un string vacío
+    return cell;
+  }
+
+}
+
+export{Alert, Modal,Cell};
