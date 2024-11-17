@@ -4,3 +4,5 @@ const  viewInscriptionsBtn = document.getElementById('viewInscriptionsBtn');
 viewInscriptionsBtn.addEventListener('click', function(){
     Applicant.renderData();
 })
+
+const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsBtn');
