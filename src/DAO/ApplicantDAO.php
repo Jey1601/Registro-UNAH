@@ -60,6 +60,8 @@ Class ApplicantDAO{
                     // Creamos la nueva solicitud
                     if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
                         echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
+                    }else{
+                        echo json_encode(["message" => "Inscripción creada exitosamente"]);
                     }
                 }
             } else {
@@ -72,15 +74,17 @@ Class ApplicantDAO{
                 if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
          
                     echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
+                }else{
+                    echo json_encode(["message" => "Inscripción creada exitosamente"]);
                 }
             }
-    
+            
             // Si todo fue exitoso, confirmamos la transacción
             $this->connection->commit();
-            echo json_encode(["message" => "Inscripción creada exitosamente"]);
+            
         } catch (Exception $e) {
             // En caso de error, revertimos la transacción
-            $this->connection->rollback();
+           $this->connection->rollback();
             echo json_encode(["error" => $e->getMessage()]);
         }
     }
@@ -110,7 +114,7 @@ Class ApplicantDAO{
             // Cerramos el statement
             $stmt->close();
         } else {
-            echo json_encode(["error" => "Error en la preparación de la consulta insertApplicant: " . $this->connection->error]);
+            //echo json_encode(["error" => "Error en la preparación de la consulta insertApplicant: " . $this->connection->error]);
         }
     }
 
@@ -122,7 +126,7 @@ Class ApplicantDAO{
                   SET  email_applicant = ?,
                        phone_number_applicant = ?, 
                        address_applicant = ?, 
-                       status_applicant = ?)
+                       status_applicant = ?
                   WHERE id_applicant = ?";
         
         // Prepared statement para evitar SQL injection
@@ -132,13 +136,15 @@ Class ApplicantDAO{
 
             // Ejecutamos la consulta
             if ($stmt->execute()) {
+                $stmt->close();
                return true;
             } else {
+                $stmt->close();
                return false;
             }
 
-            // Cerramos el statement
-            $stmt->close();
+           
+           
         } else {
             echo json_encode(["error" => "Error en la preparación de la consulta updateApplicant: " . $this->connection->error]);
         }
@@ -192,7 +198,8 @@ Class ApplicantDAO{
         } else {
             // Registrar error en la preparación
            
-            echo json_encode(["error" => "Error en la preparación de la consulta createApplication: " . $this->connection->error]);     
+            echo json_encode(["error" => "Error en la preparación de la consulta createApplication: " . $this->connection->error]);
+            $stmt->close();     
             return false;
         }
     }
@@ -281,7 +288,7 @@ Class ApplicantDAO{
     }
 
     private function hasActiveApplication($id_applicant) {
-        $query = "SELECT * FROM Applications WHERE id_applicant = ? AND status_application = 1";
+        $query = "SELECT 1 FROM Applications WHERE id_applicant = ? AND status_application = 1";
     
         // Preparar la consulta para evitar inyecciones SQL
         if ($stmt = $this->connection->prepare($query)) {
@@ -303,13 +310,14 @@ Class ApplicantDAO{
                 }
             } else {
                 // Registrar el error de ejecución
-               echo json_encode(["error" => "Error al ejecutar la consulta hasActiveApplication:"   . $stmt->error]);
                 $stmt->close();
+                //echo json_encode(["error" => "Error al ejecutar la consulta hasActiveApplication:"   . $stmt->error]);
+                
                 return false;
             }
         } else {
             // Registrar el error al preparar la consulta
-           // echo json_encode(["error" => "Error al preparar la consulta hasActiveApplication: "   . $this->connection->error]);
+           //echo json_encode(["error" => "Error al preparar la consulta hasActiveApplication: "   . $this->connection->error]);
 
             return false;
         }

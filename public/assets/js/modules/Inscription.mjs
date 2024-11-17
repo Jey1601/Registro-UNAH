@@ -38,19 +38,14 @@ class Inscription{
       formData.append('applicantFirstLastName', first_lastname);
       formData.append('applicantSecondLastName', second_lastname);  // Si no hay segundo apellido, pasará null
 
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola
-}
+      /*for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
+      } */
 
     if(this.validateFileSize(formData.get('applicantCertificate'))){
       
       if(this.DataCorrect(formData)){
         alert("Estamos cargando su información");
-
-
-          for (let [key, value] of formData.entries()) {
-            console.log(key, value);  // Muestra cada clave y valor del FormData
-        }
 
 
         this.insertData(formData);
