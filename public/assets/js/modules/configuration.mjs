@@ -6,7 +6,7 @@ const regular_expressions = {
     // Last name follows the same pattern as the name (alphabetic characters and accents)
     LastName: /^[A-Za-záéíóúÁÉÍÓÚ]+(?: [A-Za-záéíóúÁÉÍÓÚ]+)?$/, 
     // ID number pattern (for example, specific to some country ID formats)
-    idNum: /(0|1)[1-8][0-2][0-8](1|2)(0|9)\d{7}$/, 
+    idNum: /(0[1-9]|1[0-8])[0-2][0-8](1|2)(0|9)\d{7}$/, 
     // Phone number pattern for a valid number starting with specific digits
     phone: /(9|8|7|3)\d{7}$/, 
     // Email validation (standard email format)

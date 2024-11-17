@@ -1,9 +1,10 @@
 import { regular_expressions } from "./configuration.mjs";
+import { Alert } from "./support.mjs";
 
 class Inscription{
 
   static modalInstance = null;
-
+  
   static async  getData(){
       const inscriptionForm = document.getElementById('inscriptionForm');
         // Crear un nuevo objeto FormData
@@ -45,12 +46,14 @@ class Inscription{
     if(this.validateFileSize(formData.get('applicantCertificate'))){
       
       if(this.DataCorrect(formData)){
-        alert("Estamos cargando su información");
-
+        
+        Alert.display('Estamos cargando su información','success');
+       
 
         this.insertData(formData);
         }else{
-          alert("Uno o más datos no están correctos");
+          Alert.display('Uno o más datos no están correctos', 'danger');
+        
         }
        
       }
@@ -102,13 +105,13 @@ class Inscription{
 
         const result = await response.json();  // Esperamos que la respuesta sea convertida a JSON
 
-
-        alert(result.message);
-      
-        this.hideModal();
+        Alert.display(result.message, 'warning');
+ 
+    
     } catch (error) {
        console.error('Error:', error);  // Manejamos el error si ocurre
-       alert('Hubo un error al cargar la información');
+       Alert.display('Hubo un error al cargar la información', 'danger');
+
     }
     
 }
@@ -119,24 +122,13 @@ class Inscription{
             const maxSize = 16 * 1024 * 1024; // 16 MB en bytes
 
             if (file && file.size > maxSize) {
-                alert("El archivo es demasiado grande. Debe ser de 16 MB o menos.");
+                Alert.display('El archivo es demasiado grande. Debe ser de 16 MB o menos', 'danger');
                 return false;  // Impide el envío del formulario
             }
             return true; // Permite el envío si el archivo es válido
           }
 
-        static showModal(id) {
-          const modalElement = document.getElementById(id);
-          this.modalInstance = new bootstrap.Modal(modalElement);
-          this.modalInstance.show();
-        }
-
-        static hideModal() {
-          if (this.modalInstance) {
-              this.modalInstance.hide();
-              this.modalInstance = null; 
-          }
-        }
+  
 
   } 
   
