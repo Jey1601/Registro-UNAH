@@ -1,4 +1,4 @@
-import { Career } from "./Career.js";
+import { Career } from "./Career.mjs";
 
 class RegionalCenter {
 

@@ -1,6 +1,6 @@
 import {Inscription} from "./modules/Inscription.mjs";
-import { RegionalCenter } from "./modules/RegionalCenter.js";
-import { Career } from "./modules/Career.js";
+import { RegionalCenter } from "./modules/RegionalCenter.mjs";
+import { Career } from "./modules/Career.mjs";
 
 const inscriptionButton = document.querySelectorAll('.btn-inscription')
 inscriptionButton.forEach(button => {

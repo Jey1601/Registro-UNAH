@@ -112,8 +112,8 @@ class Inscription{
       
         this.hideModal();
     } catch (error) {
-        console.error('Error:', error);  // Manejamos el error si ocurre
-        alert('Hubo un error al cargar la información');
+       console.error('Error:', error);  // Manejamos el error si ocurre
+       alert('Hubo un error al cargar la información');
     }
     
 }
