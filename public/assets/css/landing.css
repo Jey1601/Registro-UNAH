@@ -188,7 +188,7 @@ body{
     display: flex;
     animation: scroll 100s linear infinite;
     -webkit-animation:scroll 100s linear infinite ;
-    width: calc(120px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+    width: calc(120px * 21 ); /*calc(slide size including margin * (number of slides*2))*/
 }
 
 .slider-slide{
@@ -214,8 +214,8 @@ body{
         transform: translateX(0);
     }
     100%{
-        -webkit-transform: translateX(calc(-120px*11 ));
-        transform: translateX(calc(-120px*11 )); /*calc(slide size including margin * number of slides)*/
+        -webkit-transform: translateX(calc(-120px*10 ));
+        transform: translateX(calc(-120px*10 )); /*calc(slide size including margin * number of slides)*/
     }
 }
 
@@ -469,7 +469,7 @@ footer p{
         display: flex;
         animation: scroll 100s linear infinite;
         -webkit-animation:scroll 100s linear infinite ;
-        width: calc(90px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+        width: calc(90px * 20 ); /*calc(slide size including margin * (number of slides*2))*/
     }
     
     .slider-slide{
@@ -495,8 +495,8 @@ footer p{
             transform: translateX(0);
         }
         100%{
-            -webkit-transform: translateX(calc(-90px*11 ));
-            transform: translateX(calc(-90px*11 )); /*calc(slide size including margin * number of slides)*/
+            -webkit-transform: translateX(calc(-90px*10 ));
+            transform: translateX(calc(-90px*10 )); /*calc(slide size including margin * number of slides)*/
         }
     }
     
@@ -682,7 +682,7 @@ footer p{
     display: flex;
     animation: scroll 100s linear infinite;
     -webkit-animation:scroll 100s linear infinite ;
-    width: calc(90px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+    width: calc(90px * 20 ); /*calc(slide size including margin * (number of slides*2))*/
 }
 
 .slider-slide{
@@ -708,8 +708,8 @@ footer p{
         transform: translateX(0);
     }
     100%{
-        -webkit-transform: translateX(calc(-90px*11 ));
-        transform: translateX(calc(-90px*11 )); /*calc(slide size including margin * number of slides)*/
+        -webkit-transform: translateX(calc(-90px*10 ));
+        transform: translateX(calc(-90px*10 )); /*calc(slide size including margin * number of slides)*/
     }
 }
 
@@ -963,7 +963,7 @@ footer p{
         display: flex;
         animation: scroll 100s linear infinite;
         -webkit-animation:scroll 100s linear infinite ;
-        width: calc(90px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+        width: calc(90px * 20 ); /*calc(slide size including margin * (number of slides*2))*/
     }
     
     .slider-slide{
@@ -989,8 +989,8 @@ footer p{
             transform: translateX(0);
         }
         100%{
-            -webkit-transform: translateX(calc(-90px*11 ));
-            transform: translateX(calc(-90px*11 )); /*calc(slide size including margin * number of slides)*/
+            -webkit-transform: translateX(calc(-90px*10 ));
+            transform: translateX(calc(-90px*10 )); /*calc(slide size including margin * number of slides)*/
         }
     }
     
@@ -1239,7 +1239,7 @@ footer p{
         display: flex;
         animation: scroll 100s linear infinite;
         -webkit-animation:scroll 100s linear infinite ;
-        width: calc(120px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+        width: calc(120px * 20 ); /*calc(slide size including margin * (number of slides*2))*/
     }
     
     .slider-slide{
@@ -1265,8 +1265,8 @@ footer p{
             transform: translateX(0);
         }
         100%{
-            -webkit-transform: translateX(calc(-120px*11 ));
-            transform: translateX(calc(-120px*11 )); /*calc(slide size including margin * number of slides)*/
+            -webkit-transform: translateX(calc(-120px*10 ));
+            transform: translateX(calc(-120px*10 )); /*calc(slide size including margin * number of slides)*/
         }
     }
     
@@ -1567,19 +1567,19 @@ footer p{
         height: 100px;
         margin:10px 0 10px 0;
         overflow: hidden;
-    
         
-    
     }
     
-    .slider .slide-track{
+    .slide .slide-track{
         display: flex;
         animation: scroll 100s linear infinite;
         -webkit-animation:scroll 100s linear infinite ;
-        width: calc(120px * 22 ); /*calc(slide size including margin * (number of slides*2))*/
+        width: calc(120px * 30 ); /*calc(slide size including margin * (number of slides*2))*/
+        
     }
     
     .slider-slide{
+        flex: 0 0 auto;
         width: 100px;
         margin-left: 10px;
         margin-right: 10px;
@@ -1602,8 +1602,8 @@ footer p{
             transform: translateX(0);
         }
         100%{
-            -webkit-transform: translateX(calc(-120px*11 ));
-            transform: translateX(calc(-120px*11 )); /*calc(slide size including margin * number of slides)*/
+            -webkit-transform: translateX(calc(-120px * 10 ));
+            transform: translateX(calc(-120px * 10 )); /*calc(slide size including margin * number of slides)*/
         }
     }
 
