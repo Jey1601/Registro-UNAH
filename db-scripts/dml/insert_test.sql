@@ -20,10 +20,10 @@ VALUES
     ('Centro Regional Sur', 'CRS', 'Tegucigalpa', 'sur@unah.edu', '2555-5678', 'Avenida 5, Tegucigalpa', 1);
 
 -- Insertar en la tabla NumberExtensions
-INSERT INTO NumberExtensions (number_extension)
+INSERT INTO NumberExtensions (number_extension, status_number_extension)
 VALUES
-    ('12345'),
-    ('67890');
+    ('12345', 1),
+    ('67890', 1);
 
 -- Insertar en la tabla NumberExtensionsRegionalCenters
 INSERT INTO NumberExtensionsRegionalCenters (id_number_extension, id_regional_center, status_number_extension_regional_center)
@@ -44,26 +44,26 @@ VALUES
     ('Departamento de Ingeniería Informática', 2, 1);
 
 -- Insertar en la tabla Undergraduates
-INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate)
+INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate,duration_undergraduate, mode_undergraduate)
 VALUES
-    ('Licenciatura en Sociología', 1, 1),
-    ('Licenciatura en Ingeniería Informática', 2, 1);
+    ('Licenciatura en Sociología', 1, 1,5.0,'Presencial'),
+    ('Licenciatura en Ingeniería Informática', 2, 1,5.0,'Presencial');
 
-INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate)
+INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate, duration_undergraduate, mode_undergraduate)
 VALUES 
-('Ingeniería en Sistemas', 1, TRUE),
-('Ingeniería Civil', 1, TRUE),
-('Ingeniería Industrial', 1, TRUE),
-('Ingeniería Mecánica', 1, TRUE),
-('Ingeniería Eléctrica', 1, TRUE);    
+('Ingeniería en Sistemas', 1, 1,5.0,'Presencial'),
+('Ingeniería Civil', 1, 1,5.0,'Presencial'),
+('Ingeniería Industrial', 1, 1,5.0,'Presencial'),
+('Ingeniería Mecánica', 1, 1,5.0,'Presencial'),
+('Ingeniería Eléctrica', 1, 1,5.0,'Presencial');    
 
-INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate)
+INSERT INTO Undergraduates (name_undergraduate, id_department, status_undergraduate,duration_undergraduate, mode_undergraduate)
 VALUES 
-('Derecho', 2, TRUE),
-('Contaduría Pública', 2, TRUE),
-('Administración de Empresas', 2, TRUE),
-('Economía', 2, TRUE),
-('Marketing', 2, TRUE);
+('Derecho', 2, 1,4.0,'Presencial'),
+('Contaduría Pública', 2, 1,4.0,'Presencial'),
+('Administración de Empresas', 2, 1,4.0,'Presencial'),
+('Economía', 2, 1,4.0,'Presencial'),
+('Marketing', 2, 1,4.0,'Presencial');|
 
 -- Insertar en la tabla DepartmentsRegionalCenters
 INSERT INTO DepartmentsRegionalCenters (id_department, id_regionalcenter, status_department_regional_center)
@@ -138,10 +138,7 @@ VALUES
 (12, 2, TRUE);  -- Marketing en Centro Regional 2    
 
 -- Insertar en la tabla Applicants
-INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant)
-VALUES
-    ('0801200119258', 'Juan', 'Carlos', NULL, 'Pérez', 'García', 'juan.perez@example.com', '2555-2345', 'Calle 1, San Pedro Sula', 1),
-    ('0801200119259', 'María', 'José', NULL, 'López', 'Martínez', 'maria.lopez@example.com', '2555-5678', 'Calle 2, Tegucigalpa', 1);
+
 
 -- Insertar en la tabla ApplicantType
 INSERT INTO ApplicantType (name_aplicant_type, admission_test_aplicant, status_aplicant_type)
@@ -150,10 +147,6 @@ VALUES
     ('Reingreso', 0, 1);
 
 -- Insertar en la tabla Applications
-INSERT INTO Applications (id_admission_application_number, id_admission_process, id_applicant, id_aplicant_type, secondary_certificate_applicant, idregional_center, regionalcenter_admissiontest_applicant, intendedprimary_undergraduate_applicant, intendedsecondary_undergraduate_applicant, status_application)
-VALUES
-    (1001, 1, '0801200119258', 1, 'sec_cert_juan.pdf', 1, 1, 1, 2, 1),
-    (1002, 2, '0801200119259', 2, 'sec_cert_maria.pdf', 2, 2, 2, 1, 1);
 
 -- Insertar en la tabla TypesAdmissionTests
 INSERT INTO TypesAdmissionTests (name_type_admission_tests, status_type_admission_tests)
@@ -168,25 +161,10 @@ VALUES
     (2, 2, 80.00, 1);
 
 -- Insertar en la tabla RatingApplicantsTest
-INSERT INTO RatingApplicantsTest (id_admission_application_number, id_type_admission_tests, rating_applicant, status_rating_applicant_test)
-VALUES
-    (1001, 1, 85.50, 1),
-    (1002, 2, 90.00, 1);
+
 
 -- Insertar en la tabla ResolutionIntendedUndergraduateApplicant
-INSERT INTO ResolutionIntendedUndergraduateApplicant (id_rating_applicants_test, intended_undergraduate_applicant, resolution_intended, status_resolution_intended_undergraduate_applicant)
-VALUES
-    (1, 1, 1, 1),
-    (2, 2, 1, 1);
 
 -- Insertar en la tabla NotificationsApplicationsResolution
-INSERT INTO NotificationsApplicationsResolution (id_resolution_intended_undergraduate_applicant, email_sent_application_resolution, date_email_sent_application_resolution)
-VALUES
-    (1, 1, '2024-06-01'),
-    (2, 1, '2024-06-01');
 
 -- Insertar en la tabla ApplicantAcceptance
-INSERT INTO ApplicantAcceptance (id_applicant_acceptance, id_notification_application_resolution, id_applicant, date_applicant_acceptance, applicant_acceptance, status_applicant_acceptance, id_admission_process, status_admission_process)
-VALUES
-    (1, 1, '0801200119258', '2024-06-10', 1, 1, 1, 1),
-    (2, 2, '0801200119259', '2024-06-10', 1, 1, 2, 1);

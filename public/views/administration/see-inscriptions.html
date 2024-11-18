@@ -14,7 +14,7 @@
 
    <link href="../../assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <link rel="icon" type="image/png" href="../../assets/img/icons/UNAH-escudo.png"  sizes="16x16">
    <link rel="stylesheet" href="../../assets/css/main.css">
    <link rel="stylesheet" href="../../assets/css/administration/main.css"> 
    <link rel="stylesheet" href="../../assets/css/administration/see-inscriptions.css"> 
@@ -49,16 +49,19 @@
         <div class="table-title">
             <h2>Inscripciones</h2>
         </div>
+        
    </div>
-   
+  
 
 
    <section class="table-container" > 
-   
-  
+    <div style="margin-bottom: 10px;">
+      <input id="searchApplication" type="text" placeholder="Buscar" style="border-radius: 5px; border: solid 1px rgba(0, 0, 0, 0.4); height: 30px; ">
+    </div>
+    
     <table id="viewDataApplicants" class="table table-striped table-hover" >
-     
-        <thead >
+      <div id="alertPlaceholder"></div>
+        <thead  >
           <tr>
             <th scope="col">#</th>
             <th scope="col"># Solicitud</th>
@@ -76,35 +79,13 @@
             
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
+        <tbody id="viewDataApplicantsBody">
+         
           
         </tbody>
       </table>
     </section> 
+
 
   <!--Footer=================================================================================-->
   
@@ -157,6 +138,26 @@
     <p class="footer-text">@año | Todos los derechos reservados</p>
 
   </footer>
+
+
+  <!-- Modal De Ver Certificado-->
+<div class="modal fade" id="viewCertificate" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewCertificateTitle">Certificado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div  class="modal-body">
+        <img id="certificateImage" src="" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
   <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

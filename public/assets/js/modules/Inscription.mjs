@@ -18,7 +18,7 @@ class Inscription{
 
       const file = formData.get('aplicantCertificate');
 
-      const allowedTypes = ["image/jpeg", "image/png"];
+      const allowedTypes = [ "image/jpg", "image/png"];
       if (allowedTypes.includes(file.type)) {
         const myBlob = new Blob([file], { type: file.type });
       
@@ -28,10 +28,10 @@ class Inscription{
 
     // Dividir el nombre y apellido
       const first_name = applicant_name.split(' ')[0];  // Primer nombre
-      const second_name = applicant_name.split(' ')[1] || null; // Segundo nombre (si existe, si no asignamos null)
-      const third_name = applicant_name.split(' ')[2] || null;  // Tercer nombre (si existe, si no asignamos null)
+      const second_name = applicant_name.split(' ')[1] || ''; // Segundo nombre (si existe, si no asignamos null)
+      const third_name = applicant_name.split(' ')[2] || '';  // Tercer nombre (si existe, si no asignamos null)
       const first_lastname = applicant_last_name.split(' ')[0];  // Primer apellido
-      const second_lastname = applicant_last_name.split(' ')[1] || null; // Segundo apellido (si existe, si no asignamos null)
+      const second_lastname = applicant_last_name.split(' ')[1] || ''; // Segundo apellido (si existe, si no asignamos null)
 
       formData.append('applicantFirstName', first_name);
       formData.append('applicantSecondName', second_name);  // Si no hay segundo nombre, pasará null
@@ -58,9 +58,8 @@ class Inscription{
        
       }
       
-      
-    
-              
+      //Limpiamos el formulario
+      inscriptionForm.reset();
 
     }
         
@@ -105,7 +104,7 @@ class Inscription{
 
         const result = await response.json();  // Esperamos que la respuesta sea convertida a JSON
 
-        Alert.display(result.message, 'warning');
+        Alert.display(result.message , 'warning');
  
     
     } catch (error) {

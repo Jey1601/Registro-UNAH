@@ -1,9 +1,9 @@
 <?php
 
-include_once "../util/jwt.php";
+//include_once "../util/jwt.php";
 class ApplicantDAO
 {
-
+   
 
     public function __construct(string $host, string $username, string $password, string $dbName)
     {
@@ -53,7 +53,7 @@ class ApplicantDAO
             // Recorremos los resultados y los agregamos al array $applicationsData
             while ($row = $result->fetch_assoc()) {
 
-                $imageData = $row['image_data'];
+                $imageData = $row['certificate'];
                 $imageType = finfo_buffer(finfo_open(), $imageData, FILEINFO_MIME_TYPE);  // Detectar tipo MIME
 
                 // Convertir la imagen binaria a base64
@@ -69,11 +69,15 @@ class ApplicantDAO
                     "lastname" => $row['lastname'],
                     "phone_number_applicant" => $row['phone_number_applicant'],
                     "address_applicant" => $row['address_applicant'],
+                    "email_applicant" => $row['email_applicant'],
                     "id_admission_application_number" => $row['id_admission_application_number'],
+                    "name_admission_process" => $row['name_admission_process'],
                     "name_regional_center" => $row['name_regional_center'],
                     "firstC" => $row['firstC'],
                     "secondC" => $row['secondC'],
                     "certificate" => $imageSrc
+                    
+                    
                 ];
     
                 // Añadimos cada fila al array
@@ -126,6 +130,8 @@ class ApplicantDAO
 
                     echo json_encode(["error" => "Ha ocurrido un error al guardar la información del aspirante"]);
                 }
+
+        
                 // Creamos la nueva solicitud
                 if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
 
@@ -219,31 +225,35 @@ class ApplicantDAO
     // Método para insertar un nuevo aspirante
     private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
     {
-
-
+        
+    
         // Preparar la consulta SQL de inserción
         $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+    
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {
             // Vinculamos los parámetros a la consulta
-            $stmt->bind_param("issssssssi", $id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status);
-
+            $stmt->bind_param("sssssssssi", $id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status);
+    
             // Ejecutamos la consulta
             if ($stmt->execute()) {
+                // Commit explícito de la transacción actual
+                $this->connection->commit();
+                $stmt->close();
                 return true;
             } else {
+                // Si la ejecución falla, hacemos un rollback para evitar inconsistencias
+                $this->connection->rollback();
+                $stmt->close();
                 return false;
             }
-
-            // Cerramos el statement
-            $stmt->close();
         } else {
-            //echo json_encode(["error" => "Error en la preparación de la consulta insertApplicant: " . $this->connection->error]);
+            // Si hay un error en la preparación de la consulta
+            $this->connection->rollback();
+            return false;
         }
     }
-
 
 
     private function updateApplicant($id_applicant, $email, $phone_number, $address, $status)
@@ -300,7 +310,7 @@ class ApplicantDAO
         if ($stmt = $this->connection->prepare($query)) {
             // Vincular parámetros
             $stmt->bind_param(
-                "iiisiiiii",
+                "isisiiiii",
                 $id_admission_process,
                 $id_applicant,
                 $id_aplicant_type,
@@ -318,7 +328,7 @@ class ApplicantDAO
                 $id_application = $this->connection->insert_id;
 
                 //Se crea el usuario del aspirante relacionado con la solicitud recien creada
-                if ($this->createUserApplicant($id_applicant, $id_application)) {
+                if ($this->createUserApplicant(id_applicant: $id_applicant, id_application: $id_application)) {
 
                     $stmt->close();
                     return true; // Éxito
@@ -368,6 +378,7 @@ class ApplicantDAO
             } else {
                 // Registrar error en la ejecución
                 $stmt->close();
+                
                 return false;
             }
         } else {

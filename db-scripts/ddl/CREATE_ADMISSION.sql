@@ -1,6 +1,5 @@
 DROP DATABASE unah_registration;
 
-
 CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
@@ -45,7 +44,8 @@ CREATE TABLE RegionalCenters (
 
 CREATE TABLE NumberExtensions (
     id_number_extension INT PRIMARY KEY AUTO_INCREMENT,
-    number_extension VARCHAR(20) NOT NULL
+    number_extension VARCHAR(20) NOT NULL,
+    status_number_extension BOOLEAN NOT NULL
 );
 
 
@@ -83,6 +83,10 @@ CREATE TABLE Undergraduates (
     name_undergraduate VARCHAR(100) NOT NULL,
     id_department INT NOT NULL,
     status_undergraduate BOOLEAN NOT NULL,
+    duration_undergraduate FLOAT(2,1) NOT NULL,
+    mode_undergraduate ENUM('Presencial', 'Virtual', 'Distancia') NOT NULL,
+    study_plan_undergraduate LONGBLOB,
+    CHECK (duration_undergraduate > 0),
     FOREIGN KEY (id_department) REFERENCES Departments(id_department)
 );
 
@@ -149,7 +153,8 @@ CREATE TABLE UsersApplicants (
 	username_user_applicant VARCHAR(50) NOT NULL,
 	password_user_applicant INT NOT NULL,
 	status_user_applicant BOOLEAN NOT NULL,
-        FOREIGN KEY (password_user_applicant) REFERENCES Applications( id_admission_application_number)
+        FOREIGN KEY (password_user_applicant) REFERENCES Applications( id_admission_application_number),
+	FOREIGN KEY (username_user_applicant) REFERENCES Applicants(id_applicant)
 );
 
 CREATE TABLE TypesAdmissionTests (

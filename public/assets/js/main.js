@@ -11,12 +11,14 @@ inscriptionButton.forEach(button => {
 });
 
 
-
 const inscriptionForm = document.getElementById('inscriptionForm');
 inscriptionForm.addEventListener('submit',function(event){
     event.preventDefault();
     Inscription.getData();
 }); 
+
+
+
 
 
 

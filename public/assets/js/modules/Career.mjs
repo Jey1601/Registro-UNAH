@@ -13,10 +13,10 @@ class Career {
             }
 
             const data = await response.json();
-            console.log("Datos recibidos:", data);
+            
             return data;  // Retorna los centros regionales
         } catch (error) {
-            console.error("Hubo un error:", error);
+     
             return [];  // Si hay un error, retornamos un array vacío
         }
     }
