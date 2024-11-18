@@ -1,10 +1,11 @@
 <?php
-
+/**
+ * Controlador de Aspirante
+*/
 include_once "../util/jwt.php";
+
 class ApplicantDAO
 {
-
-
     public function __construct(string $host, string $username, string $password, string $dbName)
     {
         $this->connection = null;
@@ -13,9 +14,6 @@ class ApplicantDAO
         } catch (Exception $error) {
             printf("Failed connection: %s\n", $error->getMessage());
         }
-
-      
-
     }
 
     // Método para obtener los aspirantes
@@ -57,11 +55,11 @@ class ApplicantDAO
                 $imageType = finfo_buffer(finfo_open(), $imageData, FILEINFO_MIME_TYPE);  // Detectar tipo MIME
 
                 // Convertir la imagen binaria a base64
-               $imageBase64 = base64_encode($imageData);
+                $imageBase64 = base64_encode($imageData);
 
                  // Crear el prefijo adecuado según el tipo MIME
-                 $imageSrc = "data:" . $imageType . ";base64," . $imageBase64;
-                 
+                $imageSrc = "data:" . $imageType . ";base64," . $imageBase64;
+                
                 // Crear un arreglo asociativo con claves más descriptivas
                 $application = [
                     "id_applicant" => $row['id_applicant'],
@@ -88,12 +86,6 @@ class ApplicantDAO
         // Devolvemos los datos como JSON
         echo json_encode($applicationsData);
     }
-
-
-
-
- 
-
 
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {
@@ -145,7 +137,7 @@ class ApplicantDAO
         }
     }
 
-    public function validateApplicant(string $numID, int $numReq) {
+    public function authApplicant(string $numID, int $numReq) {
         if (isset($numID) && isset($numReq)) {
             //Busca al aspirante
             $query = "SELECT id_applicant, id_admission_applicantion_number FROM Applicants INNER JOIN Applications ON Applicants.id_applicant = Applications.id_applicant WHERE Applicants.id_applicant = ? AND Applications.id_applicantion_number = ?";
@@ -162,22 +154,22 @@ class ApplicantDAO
                 $newToken = JWT::generateToken($payload);
                 
                 $response = [
-                    'httpCode' => http_response_code(200),
-                    'message' => 'Credential validation successful.',
+                    'success' => true,
+                    'message' => 'Validacion de credenciales exitosa.',
                     'token' => $newToken
                 ];
             } else {
                 $response = [
-                    'httpCode' => http_response_code(401),
-                    'message' => 'User and/or request number not found.',
+                    'success' => false,
+                    'message' => 'Usuario y/o numero de solicitud no encontrados.',
                     'token' => null
                 ];
             }
 
         } else {
             $response = [
-                'httpCode' => http_response_code(401),
-                'message' => 'Credentials not received.',
+                'success' => false,
+                'message' => 'Credenciales invalidas.',
                 'token' => null
             ];
         }
@@ -222,8 +214,7 @@ class ApplicantDAO
 
 
         // Preparar la consulta SQL de inserción
-        $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {
@@ -249,12 +240,7 @@ class ApplicantDAO
     private function updateApplicant($id_applicant, $email, $phone_number, $address, $status)
     {
         // Preparar la consulta SQL de  Actualización, solo actualizamos campos email, phone, y address 
-        $query = "UPDATE Applicants 
-                  SET  email_applicant = ?,
-                       phone_number_applicant = ?, 
-                       address_applicant = ?, 
-                       status_applicant = ?
-                  WHERE id_applicant = ?";
+        $query = "UPDATE Applicants SET  email_applicant = ?, phone_number_applicant = ?,  address_applicant = ?, status_applicant = ? WHERE id_applicant = ?";
 
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {

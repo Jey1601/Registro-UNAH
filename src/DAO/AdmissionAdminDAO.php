@@ -81,9 +81,9 @@ class AdmissionAdminDAO {
      * 
      * @return array $response Arreglo asociativo con resultado del procesamiento del archivo y mensaje descriptivo indicando el numero de filas insertadas en la base de datos
     */
-    public function readCSVFile($csvData) {
+    public function readCSVFile($csvData, bool $headers) {
         $lines = explode(PHP_EOL, $csvData); //Cada linea del csv se convierte en un elemento del array
-        $firstRow = true; //Para identificar la primera linea como cabeceras
+        $firstRow = $headers; //Para identificar la primera linea como cabeceras
         $rowsInserted = 0; //Contador de registros insertados
 
         foreach ($lines as $line) {
@@ -123,12 +123,10 @@ class AdmissionAdminDAO {
             if ($result) {
                 $rowsInserted++;
             }
-
-            
         }
         
         $response = [
-            'httpCode' => http_response_code(200),
+            'success' => true,
             'message' => "Numero de filas insertadas: $rowsInserted"
         ];
         
