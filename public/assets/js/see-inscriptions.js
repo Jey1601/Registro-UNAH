@@ -1,4 +1,4 @@
-import { Applicant } from "./modules/Applicant.mjs";
+import { Applicant } from "./modules/request/Applicant.mjs";
 
 
 window.addEventListener('load', function(){

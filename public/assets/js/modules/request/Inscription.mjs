@@ -1,5 +1,5 @@
-import { regular_expressions } from "./configuration.mjs";
-import { Alert } from "./support.mjs";
+import { regular_expressions } from "../behavior/configuration.mjs";
+import { Alert } from "../behavior/support.mjs";
 
 class Inscription {
  

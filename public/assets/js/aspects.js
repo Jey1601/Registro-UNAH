@@ -1,4 +1,4 @@
-import {AnimationLoad} from "./modules/animations.mjs";
+import {AnimationLoad} from "./modules/behavior/animations.mjs";
 
 
 window.addEventListener('load', function() {

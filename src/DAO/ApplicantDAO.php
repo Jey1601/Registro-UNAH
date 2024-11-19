@@ -1,15 +1,21 @@
 <?php
 
 //include_once "../util/jwt.php";
-class ApplicantDAO
-{
+class ApplicantDAO{
+
+    private $host = 'localhost';
+    private $user = 'root';
+    private $password = 'your_password';
+    private $dbName = 'unah_registration';
     private $connection;
 
-    public function __construct(string $host, string $username, string $password, string $dbName)
+  
+
+    public function __construct()
     {
         $this->connection = null;
         try {
-            $this->connection = new mysqli($host, $username, $password, $dbName);
+            $this->connection = new mysqli($this->host, $this->user, $this->password, $this->dbName);
         } catch (Exception $error) {
             printf("Failed connection: %s\n", $error->getMessage());
         }
@@ -193,12 +199,51 @@ class ApplicantDAO
         return $response;
     }
 
-    public function getApplicantsInfoCSV()
-    {
+    public function authApplicant(string $numID, int $numReq) {
+        if (isset($numID) && isset($numReq)) {
+            //Busca al aspirante
+            $query = "SELECT id_applicant, id_admission_applicantion_number FROM Applicants INNER JOIN Applications ON Applicants.id_applicant = Applications.id_applicant WHERE Applicants.id_applicant = ? AND Applications.id_applicantion_number = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('si', $numID, $numReq);
+            $stmt->execute();
+            $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
+
+            if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
+                $payload = [
+                    'applicantID' => $numID,
+                    'numAdmissionRequest' => $numReq
+                ];
+                $newToken = JWT::generateToken($payload);
+                
+                $response = [
+                    'success' => true,
+                    'message' => 'Validacion de credenciales exitosa.',
+                    'token' => $newToken
+                ];
+            } else {
+                $response = [
+                    'success' => false,
+                    'message' => 'Usuario y/o numero de solicitud no encontrados.',
+                    'token' => null
+                ];
+            }
+
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Credenciales invalidas.',
+                'token' => null
+            ];
+        }
+
+        return $response;
+    }
+
+    public function getApplicantsInfoCSV(){
         $query = "CALL SP_APPLICANT_DATA();";
         $applicants = $this->connection->execute_query($query);
 
-        $csvHeaders = ["id_applicant", "first_name_applicant", "second_name_applicant", "third_name_applicant", "first_last_name_applicant", "second_last_name_applicant", "email_applicant", "phone_number_applicant", "status_applicant"];
+        $csvHeaders = ["id_aspirante", "num_aplicacion", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];
 
         //Crear un stream en memoria para el archivo CSV
         $csvFile = fopen('php://temp', '+r');
@@ -208,16 +253,14 @@ class ApplicantDAO
 
         //Llenado de datos del CSV
         foreach ($applicants as $applicant) {
-            foreach ($csvHeaders as $header) {
-                fputcsv($csvFile, $applicant["$header"]);
-            }
+            fputcsv($csvFile, $applicant);
         }
 
         //Volver al inicio del archivo para que pueda ser enviado
         rewind($csvFile);
 
         //Leer el contenido del archivo CSV en memoria
-        $csvContent = stream_get_contents($csvFile);
+        $csvContent =  stream_get_contents($csvFile);
 
         //Cerrar el stream
         fclose($csvFile);

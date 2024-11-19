@@ -1,6 +1,6 @@
-import {Inscription} from "./modules/Inscription.mjs";
-import { RegionalCenter } from "./modules/RegionalCenter.mjs";
-import { Modal } from "./modules/support.mjs";
+import {Inscription} from "./modules/request/Inscription.mjs";
+import { RegionalCenter } from "./modules/request/RegionalCenter.mjs";
+import { Modal } from "./modules/behavior/support.mjs";
 
 const inscriptionButton = document.querySelectorAll('.btn-inscription')
 inscriptionButton.forEach(button => {

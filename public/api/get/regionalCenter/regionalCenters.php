@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 include_once "../../../../src/DAO/RegionalCenterDAO.php";
 
 
-$dao = new RegionalCenterDAO("localhost", "root", "your_password", "unah_registration");
+$dao = new RegionalCenterDAO();
 
 
 $regionalCenters = $dao->getRegionalCenters();

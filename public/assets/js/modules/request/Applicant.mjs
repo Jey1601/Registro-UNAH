@@ -1,4 +1,4 @@
-import { Cell, Modal, Alert,Search } from "./support.mjs";
+import { Cell, Modal, Alert,Search } from "../behavior/support.mjs";
 class Applicant {
   static modalInstance = null;
 

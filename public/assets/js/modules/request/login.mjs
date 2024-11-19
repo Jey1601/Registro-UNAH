@@ -1,5 +1,3 @@
-import { regular_expressions } from "./configuration.mjs";
-
 class Login {
   
   static getDataApplicant(){
@@ -18,7 +16,7 @@ class Login {
 
 
    
-   if(this.credentiaIsCorrect(credentials)){
+   if(this.regexValidation(credentials)){
      alert("Estamos cargando su información");
      //Call the php method to insert in the database
    }else{
@@ -31,9 +29,31 @@ class Login {
 
  }
 
+  static async authRequestAdmissionAdmin() {
+    const credentials = {
+      userAdmissionAdmin: document.getElementById('admissionsUser').value,
+      passwordAdmissionAdmin: document.getElementById('admissionsPassword').value
+    };
+    
+    fetch('../../../api/post/admissionAdmin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    }).then(response => response.json()).then(result => {
+      if (result.success) {
+        sessionStorage.setItem('token', result.token);
+        window.location.href = '../../../views/administration/admissions-admin.html';
+      } else {
+        Alert.display(result.message, 'warning');
+      }
+    }).catch(error => {
+      console.log("Peticion fallida: ", error);
+    });
+  }
 
-
-  static credentiaIsCorrect(credentials){
+  static regexValidation(credentials){
     if (
       
       regular_expressions.idNum.test(credentials.applicant_identification) &&             // Validate ID number

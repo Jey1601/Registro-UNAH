@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 include_once "../../../../src/DAO/CareerDAO.php";
 
 
-$dao = new CareerDAO("localhost", "root", "your_password", "unah_registration");
+$dao = new CareerDAO();
 
 
 // Leer el parámetro 'id_center' desde la URL

@@ -3,16 +3,20 @@
 
 Class RegionalCenterDAO{
 
+    private $host = 'localhost';
+    private $user = 'root';
+    private $password = 'your_password';
+    private $dbName = 'unah_registration';
     private $connection;
-    public function __construct(string $host, string $username, string $password, string $dbName)
+    public function __construct()
     {
-        $this->connection = null;
+        
         try {
-            $this->connection = new mysqli($host, $username, $password, $dbName);
+            $this->connection = new mysqli($this->host, $this->user, $this->password, $this->dbName);
         } catch (Exception $error) {
             printf("Failed connection: %s\n", $error->getMessage());
         }
-
+      
     }
 
      // Método para obtener los centros regionales
