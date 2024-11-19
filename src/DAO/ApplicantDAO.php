@@ -181,7 +181,7 @@ class ApplicantDAO
         $query = "CALL SP_APPLICANT_DATA();";
         $applicants = $this->connection->execute_query($query);
 
-        $csvHeaders = ["id_applicant", "first_name_applicant", "second_name_applicant", "third_name_applicant", "first_last_name_applicant", "second_last_name_applicant", "email_applicant", "phone_number_applicant", "status_applicant"];
+        $csvHeaders = ["id_aspirante", "num_aplicacion", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];
 
         //Crear un stream en memoria para el archivo CSV
         $csvFile = fopen('php://temp', '+r');
@@ -191,9 +191,7 @@ class ApplicantDAO
 
         //Llenado de datos del CSV
         foreach ($applicants as $applicant) {
-            foreach ($csvHeaders as $header) {
-                fputcsv($csvFile, $applicant["$header"]);
-            }
+            fputcsv($csvFile, $applicant);
         }
 
         //Volver al inicio del archivo para que pueda ser enviado
