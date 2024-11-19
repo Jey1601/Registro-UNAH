@@ -37,7 +37,7 @@ body{
 
 
 .animation{
-    
+
     animation: growBackground 5s ease-in-out infinite; /* Aplica la animación */
 }
 

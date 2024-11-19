@@ -152,13 +152,22 @@ VALUES
 INSERT INTO TypesAdmissionTests (name_type_admission_tests, status_type_admission_tests)
 VALUES
     ('Examen de Matemáticas', 1),
-    ('Examen de Lengua y Literatura', 1);
+    ('Examen de Lengua y Literatura', 1),
+    ('Examen de Conocimiento de las ciencias', 1);
+
 
 -- Insertar en la tabla UndergraduateTypesAdmissionTests
 INSERT INTO UndergraduateTypesAdmissionTests (id_type_admission_tests, id_undergraduate, required_rating, status_undergraduate_type_admission_tests)
 VALUES
     (1, 1, 70.00, 1),
-    (2, 2, 80.00, 1);
+    (2, 2, 80.00, 1),
+     (1, 3, 70.00, 1),
+    (2, 3, 80.00, 1),
+    (2, 4, 80.00, 1),
+    (3, 4, 90.00, 1),
+    (1, 5, 70.00, 1),
+    (2, 5, 80.00, 1),
+    (3, 5, 90.00, 1);
 
 -- Insertar en la tabla RatingApplicantsTest
 

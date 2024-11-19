@@ -13,7 +13,7 @@ class Alert{
           ].join('')
 
 
-          alertPlaceholder.append(wrapper)
+          this.alertPlaceholder.append(wrapper)
     }
 
 

@@ -3,7 +3,7 @@
 
 Class CareerDAO{
 
-
+    private $connection;
     public function __construct(string $host, string $username, string $password, string $dbName)
     {
         $this->connection = null;
@@ -29,7 +29,7 @@ Class CareerDAO{
         $stmt = $this->connection->prepare($query);
 
         if ($stmt === false) {
-            die("Error al preparar la consulta: " . $this->conexion->error);
+            die("Error al preparar la consulta: " . $this->connection->error);
         }
         
         $stmt->bind_param("i", $id_regionalCenter); 

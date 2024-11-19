@@ -3,7 +3,7 @@
 
 Class RegionalCenterDAO{
 
-
+    private $connection;
     public function __construct(string $host, string $username, string $password, string $dbName)
     {
         $this->connection = null;
@@ -13,7 +13,6 @@ Class RegionalCenterDAO{
             printf("Failed connection: %s\n", $error->getMessage());
         }
 
-        return $this->connection;
     }
 
      // Método para obtener los centros regionales
