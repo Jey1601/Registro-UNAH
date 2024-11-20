@@ -29,9 +29,9 @@ class Login {
    console.log(credentials);
            
 
- }
+}
 
-  static async authRequestAdmissionAdmin() {
+  async function authRequestAdmissionAdmin() {
     const credentials = {
       userAdmissionAdmin: document.getElementById('admissionsUser').value,
       passwordAdmissionAdmin: document.getElementById('admissionsPassword').value
