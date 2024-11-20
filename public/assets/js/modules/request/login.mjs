@@ -31,30 +31,6 @@ class Login {
 
 }
 
-  async function authRequestAdmissionAdmin() {
-    const credentials = {
-      userAdmissionAdmin: document.getElementById('admissionsUser').value,
-      passwordAdmissionAdmin: document.getElementById('admissionsPassword').value
-    };
-    
-    fetch('../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: credentials
-    }).then(response => response.json()).then(result => {
-      if (result.success) {
-        sessionStorage.setItem('token', result.token);
-        window.location.href = '../../../views/administration/admissions-admin.html';
-      } else {
-        Alert.display(result.message, 'warning');
-      }
-    }).catch(error => {
-      console.log("Peticion fallida: ", error);
-    });
-  }
-
   static regexValidation(credentials){
     if (
       
