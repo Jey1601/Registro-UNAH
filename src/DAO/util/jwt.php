@@ -1,7 +1,14 @@
 <?php
 class JWT {
-    private $secret_key = 'is802';
+    private static $secret_key = 'is802';
 
+    /**
+     * Metodo para genera un token JWT a partir de un payload.
+     *
+     * @param array $payload Información del aspirante que se almacenara en el token.
+     * @param int $expTime Tiempo en segundos hasta la expiración del token.
+     * @return string Token JWT generado.
+     */
     public static function generateToken(array $payload, int $expTime = 3600):string {
         $header = json_encode([
             'alg' => 'HS256',
@@ -19,6 +26,12 @@ class JWT {
         return $base64Header.".".$base64Payload.".".$base64Signature;
     }
 
+    /**
+     * Metodo de validacion de un token JWT y verificacion de su firma y expiración.
+     *
+     * @param string $jwt Token JWT a validar.
+     * @return bool|array Retorna el payload si el token es válido, o `false` si no lo es.
+     */
     public static function validateToken(string $jwt):bool|array {
         $partes = explode('.', $jwt);
         if(count($partes) !== 3) {
@@ -47,10 +60,22 @@ class JWT {
         return $payload; //Token valido
     }
 
+    /**
+     * Metodo para codificar una cadena en Base64 de manera segura para URL.
+     *
+     * @param string $data La cadena a codificar.
+     * @return string La cadena codificada en Base64 URL seguro.
+     */
     private static function base64UrlEncode(string $data):string {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
     }
 
+    /**
+     * Metodo para decodificar una cadena en Base64 de URL seguro.
+     *
+     * @param string $data La cadena codificada en Base64 URL seguro.
+     * @return string La cadena decodificada.
+     */
     private static function base64UrlDecode(string $data):string {
         $padding = 4 - (strlen($data) % 4);
         if ($padding !== 4) {

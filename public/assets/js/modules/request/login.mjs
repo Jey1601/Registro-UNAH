@@ -1,3 +1,5 @@
+import { Alert } from "../behavior/support";
+
 class Login {
   
   static getDataApplicant(){

@@ -1,11 +1,11 @@
 <?php
-include_once '../Registro-UNAH-ladingpage/src/applicant/applicant.php';
+include_once '../../../../src/DAO/ApplicantDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
-        'httpCode' => http_response_code(405),
-        'message' => 'Method Not Allowed'
+        'success' => false,
+        'message' => 'Metodo no permitido.'
     ]);
     exit;
 }
@@ -19,17 +19,18 @@ $numRequest = trim($inputBody['numRequest'] ?? '');
 
 //Validacion de numero de identidad
 $regexValidationID = '/(0|1)[1-8][0-2][0-8](1|2)(0|9)\d{7}$/';
-if (!preg_match($regexValidationID, $numID)) {
+$validation = preg_match($regexValidationID, $numID);
+if (!$validation) {
     echo json_encode([
-        'httpCode' => http_response_code(401),
-        'message' => 'Invalid credentials.'
+        'success' => false,
+        'message' => 'Credenciales invalidas.'
     ]);
     exit;
 }
 $numRequest = intval($numRequest);
 
 $auth = new ApplicantDAO();
-$response = $auth->validateApplicant($numID, $numRequest);
+$response = $auth->authApplicant($numID, $numRequest);
 
-echo $response;
+echo json_encode($response);
 ?>

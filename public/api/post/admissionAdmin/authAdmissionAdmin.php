@@ -4,12 +4,12 @@
  * 
 */
 
-include_once '../Registro-UNAH/src/DAO/admissionAdminDAO.php';
+include_once '../../../../src/DAO/AdmissionAdminDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         'success' => false,
-        'message' => 'Method Not Allowed'
+        'message' => 'Metodo no permitido.'
     ]);
     exit;
 }
@@ -20,10 +20,11 @@ $userAdmissionAdmin = trim($inputBody['userAdmissionAdmin']);
 $passwordAdmissionAdmin = trim($inputBody['passwordAdmissionAdmin']);
 
 $regexValidationPassword = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+*\-_])[A-Za-z\d+*\-_]{8,}$/';
-if (!preg_match($regexValidationPassword, $passwordAdmissionAdmin)) {
+$validation = preg_match($regexValidationPassword, $passwordAdmissionAdmin);
+if (!$validation) {
     echo json_encode([
         'success' => false,
-        'message' => 'Invalid credentials.'
+        'message' => 'Credenciales invalidas.'
     ]);
     exit;
 }

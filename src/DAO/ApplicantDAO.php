@@ -8,12 +8,12 @@
  * @property string $dbName Nombre de la base de datos
  * @property mysqli $connection Objeto de conexion con la base de datos
 */
-//include_once "../util/jwt.php";
-class ApplicantDAO{
 
+include_once 'util/jwt.php';
+class ApplicantDAO{
     private $host = 'localhost';
-    private $user = 'root';
-    private $password = '12345';
+    private $user = 'prueba';
+    private $password = '123';
     private $dbName = 'unah_registration';
     private $connection;
 
@@ -163,7 +163,7 @@ class ApplicantDAO{
     public function authApplicant(string $numID, int $numReq) {
         if (isset($numID) && isset($numReq)) {
             //Busca al aspirante
-            $query = "SELECT id_applicant, id_admission_applicantion_number FROM Applicants INNER JOIN Applications ON Applicants.id_applicant = Applications.id_applicant WHERE Applicants.id_applicant = ? AND Applications.id_applicantion_number = ?";
+            $query = "SELECT id_applicant, id_admission_application_number FROM Applications WHERE id_applicant = ? AND id_admission_application_number = ?;";
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param('si', $numID, $numReq);
             $stmt->execute();
@@ -266,7 +266,6 @@ class ApplicantDAO{
         }
     }
 
-
     private function updateApplicant($id_applicant, $email, $phone_number, $address, $status)
     {
         // Preparar la consulta SQL de  Actualización, solo actualizamos campos email, phone, y address 
@@ -298,7 +297,6 @@ class ApplicantDAO{
         }
 
     }
-
 
     private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {
@@ -425,8 +423,6 @@ class ApplicantDAO{
             return null;
         }
     }
-
-
 
     private function isCreated($id_applicant)
     {
@@ -574,8 +570,6 @@ class ApplicantDAO{
         // Si todas las inserciones fueron exitosas, devolver true
         return true;
     }
-
-
 
     /**
      * Esta función obtiene la información de las carreras de las solicitudes a las que
@@ -780,8 +774,6 @@ class ApplicantDAO{
         return true;
     }
 
-
-
     // Método para cerrar la conexión 
     public function closeConnection()
     {
@@ -791,3 +783,5 @@ class ApplicantDAO{
     }
 
 }
+
+?>

@@ -8,9 +8,8 @@
  * @property string $dbName Nombre de la base de datos
  * @property mysqli $connection Objeto de conexion con la base de datos
 */
-//include_once '../Registro-UNAH/src/util/jwt.php';
 
-//include_once '../util/jwt.php';
+include_once 'util/jwt.php';
 class AdmissionAdminDAO {
     private $host = 'localhost';
     private $user = 'prueba';
