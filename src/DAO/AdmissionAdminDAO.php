@@ -8,13 +8,14 @@
  * @property string $dbName Nombre de la base de datos
  * @property mysqli $connection Objeto de conexion con la base de datos
 */
-include_once '../Registro-UNAH/src/util/jwt.php';
+//include_once '../Registro-UNAH/src/util/jwt.php';
 
+//include_once '../util/jwt.php';
 class AdmissionAdminDAO {
     private $host = 'localhost';
-    private $user = 'root';
-    private $password = '';
-    private $dbName = 'Registro-UNAH';
+    private $user = 'prueba';
+    private $password = '123';
+    private $dbName = 'unah_registration';
     private $connection;
 
     public function __construct () {
@@ -77,77 +78,59 @@ class AdmissionAdminDAO {
     /** 
      * Metodo para leer un archivo CSV subido por el Administrador de admisiones
      * 
-     * @param string $csvData Texto del archivo CSV
+     * @param file $csvFile Archivo CSV
      * 
      * @return array $response Arreglo asociativo con resultado del procesamiento del archivo
     */
-    public function readCSVFile($csvData) {
-        $lines = explode(PHP_EOL, $csvData); //Cada linea del csv se convierte en un elemento del array
-        $firstRow = true; //Para identificar la primera linea como cabeceras
-        $rowsInserted = 0; //Contador de registros insertados
-        $errors = [];
+    public function readCSVFile($csvFile) {
+        $fileTmpPath = $csvFile['tmp_name'];
 
-        foreach ($lines as $line) {
-            $row = str_getcsv($line); //Convertir la linea de datos en un array (el caracter de separacion es la coma)
+        if (($handle = fopen($fileTmpPath, 'r')) !== FALSE) {
+            $firstRow = true; //Para identificar la primera linea como cabeceras
+            $rowsInserted = 0; //Contador de registros insertados
+            $errors = [];
 
-            if($firstRow) {
-                $firstRow = false;
-                continue;
-            }
-
-            if(count($row) < 6) { //Para verificar que la linea tenga al menos 6 campos
-                $errors[] = "Registro con menos de 6 campos";
-                continue;
-            }
-
-            //Escapar los valors para prevenir inyecciones SQL
-            $idApplicant = $this->connection->real_escape_string($row[0]);
-            $idAdmissionApplicationNumber = $this->connection->real_escape_string($row[1]);
-            $nameTypeAdmissionTest = $this->connection->real_escape_string($row[2]);
-            $ratingApplicant = $this->connection->real_escape_string($row[3]);
-            $fullNameApplicant = $this->connection->real_escape_string($row[4]);
-            $nameRegionalCenter = $this->connection->real_escape_string($row[5]);
-
-
-            $idAdmissionNumber = intval($idAdmissionApplicationNumber);
-            $rating = floatval($ratingApplicant);
-            $status = 1;
-
-            //Obtener el ID del tipo de examen y convertirlo a entero
-            $queryTypeTest = "SELECT id_type_admission_tests FROM TypesAdmissionTests WHERE name_type_admission_tests = ?";
-            $typetestStmt = $this->connection->prepare($queryTypeTest);
-            $typetestStmt->bind_param('s',$nameTypeAdmissionTest);
-            if($typetestStmt->execute()) {
-                $result = $typetestStmt->get_result();
-                $resultArray = $result->fetch_assoc();
-                if (count($resultArray) > 0) {
-                    $idTypeAdmissionTest = intval($resultArray['id_type_admission_tests']);
-                } else {
-                    $errors[] = "Tipo de examen no encontrado para: ".$idApplicant;
+            while (($row = fgetcsv($handle, 0, ',')) !== FALSE) {
+                if($firstRow) {
+                    $firstRow = false;
                     continue;
                 }
-            } else {
-                $errors[] = "Error en la consulta de busqueda del tipo de examen de: ".$idApplicant;
-                continue;
+                
+                //Escapar los valors para prevenir inyecciones SQL
+                $idApplicant = $this->connection->real_escape_string($row[0]);
+                $idAdmissionApplicationNumber = $this->connection->real_escape_string($row[1]);
+                $nameTypeAdmissionTest = $this->connection->real_escape_string($row[2]);
+                $ratingApplicant = $this->connection->real_escape_string($row[3]);
+                $fullNameApplicant = $this->connection->real_escape_string($row[4]);
+                $nameRegionalCenter = $this->connection->real_escape_string($row[5]);
+
+                $idAdmissionNumber = intval($idAdmissionApplicationNumber);
+                $rating = floatval($ratingApplicant);
+
+                //Actualizar datos la linea
+                $queryInsert = "UPDATE RatingApplicantsTest SET rating_applicant = ? WHERE id_admission_application_number = ?";
+                $insertStmt = $this->connection->prepare($queryInsert);
+                $insertStmt->bind_param('di', $rating, $idAdmissionNumber);
+                $result = $insertStmt->execute();
+                if ($result) {
+                    $rowsInserted++;
+                } else {
+                    $errors[] = "Error en el update de la aplicacion: ".$idAdmissionNumber;
+                }
             }
 
-            //Insertar la linea
-            $queryInsert = "UPDATE RatingApplicantsTest SET id_admission_tests = ?, rating_applicant = ?, status_rating_applicant_test = ? WHERE id_admission_application_number = ?";
-            $insertStmt = $this->connection->prepare($queryInsert);
-            $insertStmt->bind_param('idii', $idTypeAdmissionTest, $rating, $status, $idAdmissionNumber);
-            $result = $insertStmt->execute();
-            if ($result) {
-                $rowsInserted++;
-            } else {
-                $errors[] = "Error en el update de la aplicacion: ".$idAdmissionNumber;
-            }
+            fclose($handle);
+            $response = [
+                'success' => true,
+                'message' => "Numero de filas insertadas: $rowsInserted",
+                'errors' => $errors
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Error al abrir el archivo CSV.'
+            ];
         }
-        
-        $response = [
-            'success' => true,
-            'message' => "Numero de filas insertadas: $rowsInserted",
-            'errors' => $errors
-        ];
         
         return $response;
     }

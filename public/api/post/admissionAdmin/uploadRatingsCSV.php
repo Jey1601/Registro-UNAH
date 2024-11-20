@@ -1,25 +1,28 @@
 <?php
-include_once '../Registro-UNAH-ladingpage/src/admissionAdmin/admissionAdmin.php';
+include_once '../../../../src/DAO/AdmissionAdminDAO.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //Obtener el body de la consulta
-    $bodyData = json_decode(file_get_contents('php://input'), true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvFile'])) {
+    $fileTmpPath = $_FILES['csvFile']['tmp_name'];
+    $csvController = new AdmissionAdminDAO();
+    $response = $csvController->readCSVFile($_FILES['csvFile']);
+    
+    // //Obtener el body de la consulta
+    // $bodyData = json_decode(file_get_contents('php://input'), true);
 
-    if (isset($bodyData['csvData'])) {
-        $csvController = new AdmissionAdminDAO();
-        $response = $csvController->readCSVFile($bodyData['csvData']);
-    } else {
-        $response = [
-            'httpCode' => http_response_code(400),
-            'message' => 'No CSV data received'
-        ];
-    }
-
-
+    // //printf($bodyData['csvData']);
+    // if (isset($bodyData)) {
+    //     $csvController = new AdmissionAdminDAO();
+    //     $response = $csvController->readCSVFile($bodyData);
+    // } else {
+    //     $response = [
+    //         'success' => false,
+    //         'message' => 'Datos no recibidos.'
+    //     ];
+    // }
 } else {
     $response = [
-        'httpCode' => http_response_code(405),
-        'message' => 'Method not allowed.'
+        'success' => false,
+        'message' => 'Metodo no permitido.'
     ];
     exit;
 }

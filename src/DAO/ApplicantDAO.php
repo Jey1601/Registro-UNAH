@@ -3,6 +3,7 @@
  * Controlador de Aspirante
 */
 include_once "../util/jwt.php";
+//use mysqli;
 
 class ApplicantDAO
 {
@@ -178,7 +179,7 @@ class ApplicantDAO
     }
 
     public function getApplicantsInfoCSV(){
-        $query = "CALL SP_APPLICANT_DATA();";
+        $query = "CALL SP_APPLICANTS_DATA();";
         $applicants = $this->connection->execute_query($query);
 
         $csvHeaders = ["id_aspirante", "num_aplicacion", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];

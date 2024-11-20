@@ -2,7 +2,6 @@ CREATE PROCEDURE SP_ASPIRANTS_DATA()
 BEGIN
     SELECT id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_last_name_applicant, second_last_name_applicant, email_applicant, phone_number_applicant, status_applicant FROM Aspirants;
 END$$
- 
 
 
 DELIMITER $$

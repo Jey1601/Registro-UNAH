@@ -7,7 +7,7 @@ header('Content-Disposition: attachment; filename="aspirantes.csv"');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 
 //Crear objecto DAO
-$applicantDAO = new ApplicantDAO();
+$applicantDAO = new ApplicantDAO('localhost', 'prueba', '123', 'unah_registration');
 $applicants = $applicantDAO->getApplicantsInfoCSV();
 
 echo $applicants;
