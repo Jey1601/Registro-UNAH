@@ -1,3 +1,5 @@
+DELIMITER $$
+
 CREATE PROCEDURE SP_APPLICANTS_DATA()
 BEGIN
     SELECT A.id_applicant, A.id_admission_application_number, E.name_type_admission_tests, C.rating_applicant,
@@ -19,6 +21,8 @@ BEGIN
     LEFT JOIN TypesAdmissionTests E on C.id_type_admission_tests = E.id_type_admission_tests
     WHERE A.status_application=TRUE;
 END $$
+
+DELIMITER;
 
 DELIMITER $$
 
