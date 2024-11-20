@@ -50,8 +50,9 @@
             <h2>Cargar Calificaciones</h2>
         </div>
     </div>
+    <div id="alertPlaceholder"></div>
     <div>
-        <form id="formInscriptionGrades" action="">
+        <form method="POST" enctype="multipart/form-data" id="formInscriptionGrades" action="">
             <div class="mb-3">
                 <label for="formFile" class="form-label">Seleccione un archivo .csv con la estructura correcta para una carga de calificaciones satisfactoria</label>
                 <input class="form-control" type="file" id="csvFile" name="csvFile" accept=".csv">

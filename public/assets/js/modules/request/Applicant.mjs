@@ -140,25 +140,6 @@ class Applicant {
     }
   }
 
-  static async getApplicantsInfoCSV(){
-    try {
-      const response = await fetch("../../../api/get/applicant/applicantDownloadCSV.php");
-
-      if (!response.ok) {
-          throw new Error("Error en la solicitud: " + response.status);
-      }
-
-      const data = await response.json();
-     
-      return data;  // Retorna los centros regionales
-  } catch (error) {
-    
-      return [];  // Si hay un error, retornamos un array vacío
-  }
-  }
-
-
-
   
   
 }
