@@ -24,3 +24,6 @@ async function submitCSVFile(params) {
         }
     })
 }
+
+const btn_upload = document.getElementById('btnUpload');
+btn_upload.addEventListener('click', submitCSVFile);
