@@ -1,15 +1,21 @@
 <?php
-
+/**
+ * Controlador de Aspirantes
+ * 
+ * @property string $host Direccion de host de base de datos
+ * @property string $user Usuario de acceso a la base de datos
+ * @property string $password Clave de acceso del respectivo usuario
+ * @property string $dbName Nombre de la base de datos
+ * @property mysqli $connection Objeto de conexion con la base de datos
+*/
 //include_once "../util/jwt.php";
 class ApplicantDAO{
 
     private $host = 'localhost';
     private $user = 'root';
-    private $password = 'your_password';
+    private $password = '12345';
     private $dbName = 'unah_registration';
     private $connection;
-
-  
 
     public function __construct()
     {
@@ -19,9 +25,6 @@ class ApplicantDAO{
         } catch (Exception $error) {
             printf("Failed connection: %s\n", $error->getMessage());
         }
-
-
-
     }
 
     // Método para obtener los aspirantes
@@ -82,8 +85,6 @@ class ApplicantDAO{
                     "firstC" => $row['firstC'],
                     "secondC" => $row['secondC'],
                     "certificate" => $imageSrc
-
-
                 ];
 
                 // Añadimos cada fila al array
@@ -98,12 +99,6 @@ class ApplicantDAO{
         // Devolvemos los datos como JSON
         echo json_encode($applicationsData);
     }
-
-
-
-
-
-
 
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {
@@ -138,7 +133,6 @@ class ApplicantDAO{
                     echo json_encode(["error" => "Ha ocurrido un error al guardar la información del aspirante"]);
                 }
 
-
                 // Creamos la nueva solicitud
                 if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
 
@@ -158,47 +152,14 @@ class ApplicantDAO{
         }
     }
 
-    public function validateApplicant(string $numID, int $numReq)
-    {
-        if (isset($numID) && isset($numReq)) {
-            //Busca al aspirante
-            $query = "SELECT id_applicant, id_admission_applicantion_number FROM Applicants INNER JOIN Applications ON Applicants.id_applicant = Applications.id_applicant WHERE Applicants.id_applicant = ? AND Applications.id_applicantion_number = ?";
-            $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('si', $numID, $numReq);
-            $stmt->execute();
-            $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
-
-            if ($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
-                $payload = [
-                    'applicantID' => $numID,
-                    'numAdmissionRequest' => $numReq
-                ];
-                $newToken = JWT::generateToken($payload);
-
-                $response = [
-                    'httpCode' => http_response_code(200),
-                    'message' => 'Credential validation successful.',
-                    'token' => $newToken
-                ];
-            } else {
-                $response = [
-                    'httpCode' => http_response_code(401),
-                    'message' => 'User and/or request number not found.',
-                    'token' => null
-                ];
-            }
-
-        } else {
-            $response = [
-                'httpCode' => http_response_code(401),
-                'message' => 'Credentials not received.',
-                'token' => null
-            ];
-        }
-
-        return $response;
-    }
-
+    /**
+     * Metodo para autenticacion de un aspirante.
+     * 
+     * @param string $numID Numero de identidad del aspirante.
+     * @param int $numReq Numero de solicitud del aspirante.
+     * 
+     * @return array $response Arreglo asociativo con resultado de la autenticacion y un token (valido en caso de exito, nulo en caso de fallo).
+     */
     public function authApplicant(string $numID, int $numReq) {
         if (isset($numID) && isset($numReq)) {
             //Busca al aspirante
@@ -239,8 +200,13 @@ class ApplicantDAO{
         return $response;
     }
 
+    /**
+     * Metodo para obtener numero de identidad, numero de solicitud, nombre del tipo de examen, nota del examen, nombre completo y centro regional de los aspirantes en un CSV.
+     * 
+     * @return string $csvContent Informacion de los aspirantes.
+     */
     public function getApplicantsInfoCSV(){
-        $query = "CALL SP_APPLICANT_DATA();";
+        $query = "CALL SP_APPLICANTS_DATA();";
         $applicants = $this->connection->execute_query($query);
 
         $csvHeaders = ["id_aspirante", "num_aplicacion", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];
@@ -268,12 +234,9 @@ class ApplicantDAO{
         return $csvContent;
     }
 
-
-
     // Método para insertar un nuevo aspirante
     private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
     {
-
 
         // Preparar la consulta SQL de inserción
         $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) 

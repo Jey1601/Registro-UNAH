@@ -1,9 +1,24 @@
-CREATE PROCEDURE SP_ASPIRANTS_DATA()
+CREATE PROCEDURE SP_APPLICANTS_DATA()
 BEGIN
-    SELECT id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_last_name_applicant, second_last_name_applicant, email_applicant, phone_number_applicant, status_applicant FROM Aspirants;
-END$$
- 
-
+    SELECT A.id_applicant, A.id_admission_application_number, E.name_type_admission_tests, C.rating_applicant,
+        CONCAT(
+            COALESCE(B.first_name_applicant, ''),
+            ' ',
+            COALESCE(B.second_name_applicant, ''),
+            ' ',
+            COALESCE(B.third_name_applicant, ''),
+            ' ',
+            COALESCE(B.first_lastname_applicant, ''),
+            ' ',
+            COALESCE(B.second_lastname_applicant, '')
+        ) AS name, D.name_regional_center 
+    FROM Applications A
+    LEFT JOIN Applicants B on A.id_applicant = B.id_applicant
+    LEFT JOIN RatingApplicantsTest C on A.id_admission_application_number = C.id_admission_application_number
+    LEFT JOIN RegionalCenters D on A.idregional_center = D.id_regional_center
+    LEFT JOIN TypesAdmissionTests E on C.id_type_admission_tests = E.id_type_admission_tests
+    WHERE A.status_application=TRUE;
+END $$
 
 DELIMITER $$
 
