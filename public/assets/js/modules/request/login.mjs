@@ -5,12 +5,12 @@ class Login {
   static getDataApplicant(){
       
 
-    //Obtaining the applicant data from the login form
+    //Se obtiene la data del aplicante desde el login
     const applicant_identification = document.getElementById('applicantId').value;
     const applicant_application_number = document.getElementById('applicationNumber').value;
 
 
-   // Creating an object with the information
+   
    const credentials = {
      applicant_identification,
      applicant_application_number
@@ -37,7 +37,7 @@ class Login {
       passwordAdmissionAdmin: document.getElementById('admissionsPassword').value
     };
     
-    fetch('../../../api/post/admissionAdmin', {
+    fetch('../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
