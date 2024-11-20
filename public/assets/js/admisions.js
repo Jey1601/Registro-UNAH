@@ -1,4 +1,4 @@
-import { Results } from "./modules/results.mjs";
+import { Results } from "./modules/request/results.mjs";
 
 const resultsForm = document.getElementById('resultsForm');
 resultsForm.addEventListener('submit',function(event){

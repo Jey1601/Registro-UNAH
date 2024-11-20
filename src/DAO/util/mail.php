@@ -16,32 +16,46 @@ function DBConection($host, $user, $password, $database) {
     return $connection;
 }
 
+
 /*
   Consulta para obtener usuarios.
   Se concatenan los nombres del aplicante bajo el alias "full_name",
   posteriormente, "IFNULL" verifica si el campo es NULL y, en ese caso, 
   lo reemplaza con una cadena vacía (''). Esto evita que aparezca NULL en el resultado concatenado.
+  También obtenemos el email de los aspirantes, su contraseña para acceder al sistema y elegir una carrera,
+  la nota que obtuvieron en el examen de admisión y un ID de la resolución de su examen, de esta manera podrémos
+  almacenar la información referente al envio de correo a cada aspiante más adelante.
 */
-function getUsers($connection) {
-    $sql = "SELECT 
-    Applicants.id_applicant,
-    CONCAT(
-        Applicants.first_name_applicant, ' ',
-        IFNULL(Applicants.second_name_applicant, ''), ' ',
-        IFNULL(Applicants.third_name_applicant, ''), ' ',
-        Applicants.first_lastname_applicant, ' ',
-        IFNULL(Applicants.second_lastname_applicant, '')
-    ) AS full_name,
-    Applications.id_admission_application_number
-FROM 
-    Applicants
-JOIN 
-    Applications ON Applicants.id_applicant = Applications.id_applicant;
-";
+function getUsersWithResults($connection) {
+    $sql = "
+          SELECT 
+            Applicants.id_applicant,
+            CONCAT(
+                Applicants.first_name_applicant, ' ',
+                IFNULL(Applicants.second_name_applicant, ''), ' ',
+                IFNULL(Applicants.third_name_applicant, ''), ' ',
+                Applicants.first_lastname_applicant, ' ',
+                IFNULL(Applicants.second_lastname_applicant, '')
+            ) AS full_name,
+            Applicants.email_applicant,
+            UsersApplicants.password_user_applicant,
+            `TypesAdmissionTests`.name_type_admission_tests,
+            `RatingApplicantsTest`.rating_applicant
+        FROM 
+            Applicants
+        LEFT JOIN 
+            Applications ON Applicants.id_applicant = Applications.id_applicant
+        LEFT JOIN 
+            UsersApplicants ON Applications.id_admission_application_number = UsersApplicants.password_user_applicant
+        LEFT JOIN
+            RatingApplicantsTest ON Applications.id_admission_application_number = RatingApplicantsTest.id_admission_application_number
+        LEFT JOIN `TypesAdmissionTests` ON `RatingApplicantsTest`.id_type_admission_tests = `TypesAdmissionTests`.id_type_admission_tests   
+        WHERE 
+            Applicants.status_applicant = 1 AND status_rating_applicant_test =1;";
     return $connection->query($sql);
 }
 
-//PHPMailer
+//Configuración PHPMailer
 function PHPMailerConfig() {
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -55,65 +69,176 @@ function PHPMailerConfig() {
     return $mail;
 }
 
-//Correo
-function Message($full_name, $application_number) {
+//Correo con información esencial (nombre completo, calificación obtenida, contraseña y enlace)
+function Message($full_name, $exams, $password_user_applicant) {
+    // Construir la parte de los exámenes dinámicamente
+    $exams_details = "";
+    foreach ($exams as $exam) {
+        $exams_details .= "<p><strong>Nombre del examen: </strong>{$exam['name_type_admission_tests']}</p>";
+        $exams_details .= "<p><strong>Resultado: </strong>{$exam['rating_applicant']}</p>";
+    }
+
+    // Crear el mensaje HTML
     return "
         <html>
             <body>
                 <h2>Hola, $full_name</h2>
-                <p>Te informamos que puedes acceder al enlace adjunto en este correo para seleccionar la carrera en la que
+                <p>Te informamos que obtuviste los siguientes resultados en tu examen de admisión para 
+                la máxima casa de estudios:</p>
+                $exams_details
+                <p>Puedes acceder al enlace adjunto en este correo para seleccionar la carrera en la que
                 te gustaría inscribirte. Usa tu número de identidad como usuario y la siguiente
                 contraseña para ingresar al sitio.</p>
-                <p><strong>Contraseña: </strong>$application_number</p>
+                <p><strong>Contraseña: </strong>$password_user_applicant</p>
                 <p><a href='https://www.facebook.com' target='_blank'>Elige tu carrera aquí</a></p>
                 <p>Saludos,<br>El equipo de Admisiones</p>
             </body>
         </html>
     ";
 }
+//Función para obtener la hora de envío desde la tabla AdmissionProcess verifica que el proceso de admisión este vigente
+function getSendingTime($connection) {
+    $sql = "SELECT timeof_sending_notifications_admission_process FROM AdmissionProcess 
+    WHERE current_status_admission_process = 1 LIMIT 1";
+    $result = $connection->query($sql);
+    if ($result && $row = $result->fetch_assoc()) {
+        return $row['timeof_sending_notifications_admission_process'];
+    }
+    return null;
+}
 
-//Función para enviar correo
-function sendMail($mail, $email, $subject, $body) {
+//Almacena los correos que ya fueron enviados
+function saveNotification($connection, $id_resolution, $email_sent, $date_sent) {
+    //La cosulta inserta nuevo registro en la tabla utilizando valores preparados (?) para evitar inyecciones SQL
+    $sql = "
+        INSERT INTO NotificationsApplicationsResolution 
+        (id_resolution_intended_undergraduate_applicant, email_sent_application_resolution, date_email_sent_application_resolution)
+        VALUES (?, ?, ?)
+    ";
+    $stmt = $connection->prepare($sql);
+    //"iis" especifica los tipos de los parámetros: i: Entero ($id_resolution y $email_sent). s: Cadena ($date_sent).
+    $stmt->bind_param("iis", $id_resolution, $email_sent, $date_sent);
+    $stmt->execute();
+    $stmt->close();
+}
+
+//Enviar correo
+function sendMail($connection, $mail, $email, $subject, $body, $id_resolution) {
     try {
         $mail->addAddress($email);
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $body;
         $mail->send();
-        echo "Correo enviado a $email<br>";
+
+        //Guardar notificación en la base de datos
+        $date_sent = date('Y-m-d');
+        saveNotification($connection, $id_resolution, true, $date_sent);
+
+        echo "Correo enviado a $email y registrado en la base de datos.<br>";
     } catch (Exception $e) {
         echo "Error al enviar correo a $email: {$mail->ErrorInfo}<br>";
-    } finally {
-        $mail->clearAddresses();
     }
+    $mail->clearAddresses();
 }
 
-//Función para enviar correos a todos los usuarios
-function SendToUsers($connection) {
-    $result = getUsers($connection);
+//Enviar correos limitados
+function LimitedMailing($connection, $maxEmailsPerDay) {
+    //Verificar la hora de envío
+    $sendingTime = getSendingTime($connection);
+    if (!$sendingTime || date('H:i:s') < $sendingTime) {
+        echo "No es el momento configurado para enviar correos.<br>";
+        return;
+    }
+
+    $result = getUsersWithResults($connection);
+    if (!$result || $result->num_rows === 0) {
+        echo "No se encontraron usuarios para enviar correos.<br>";
+        return;
+    }
+
     $mail = PHPMailerConfig();
+    $emailCount = 0;
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $full_name = $row['full_name'];
-            $email = $row['email_applicant'];
-            $application_number = $row['id_admission_application_number'];
-            $message = Message($full_name, $application_number);
-            sendMail($mail, $email, 'Resultado Examen de Admisión - Universidad Nacional Autónoma de Honduras', $message);
+    $applicants = [];
+    
+    while ($row = $result->fetch_assoc()) {
+        if ($emailCount >= $maxEmailsPerDay) break;
+
+        $id_applicant = $row['id_applicant'];
+        $full_name = $row['full_name'];
+        $email = $row['email_applicant'];
+        $password_user_applicant = $row['password_user_applicant'];
+        $name_type_admission_tests = $row['name_type_admission_tests'];
+        $rating_applicant = $row['rating_applicant'];
+    
+        // Si el aspirante no existe en el arreglo, se inicializa
+        if (!isset($applicants[$id_applicant])) {
+            $applicants[$id_applicant] = [
+                'full_name' => $full_name,
+                'email' => $email,
+                'password_user_applicant' => $password_user_applicant,
+                'exams' => []
+            ];
         }
-    } else {
-        echo "No se encontraron usuarios en la base de datos.";
+        
+         // Agregar el examen al arreglo del aspirante
+            $applicants[$id_applicant]['exams'][] = [
+                'name_type_admission_tests' => $name_type_admission_tests,
+                'rating_applicant' => $rating_applicant
+            ];
+
+       
     }
+
+    foreach ($applicants as $id_applicant => $applicant_data) {
+        if ($emailCount >= $maxEmailsPerDay) break;
+    
+        $full_name = $applicant_data['full_name'];
+        $email = $applicant_data['email'];
+        $password_user_applicant = $applicant_data['password_user_applicant'];
+    
+        // Construir el mensaje del correo con los exámenes del aspirante
+        $examsDetails = "";
+        foreach ($applicant_data['exams'] as $exam) {
+            $examsDetails .= "<p><strong>{$exam['name_type_admission_tests']}:</strong> {$exam['rating_applicant']}</p>";
+        }
+        
+
+
+        $message = Message($full_name, $examsDetails, $password_user_applicant);
+        
+    
+        // Llamada para enviar el correo
+        sendMail(
+            $connection,
+            $mail,
+            $email,
+            'Resultado Examen de Admisión - Universidad Nacional Autónoma de Honduras',
+            $message,
+            $password_user_applicant
+        );
+    
+        $emailCount++;
+
+
+    }
+
+    echo "Se enviaron $emailCount correos hoy.<br>";
 }
 
-//Conexión BD
+//Configuración de conexión y envío
 $host = 'localhost';
 $user = 'root';
-$password = 'root';
+$password = '12345';
 $database = 'unah_registration';
+//Máximo de correos que se pueden enviar en un día
+$maxEmailsPerDay = 500;
 
-//Enviar correo
+//Ejecutar envio
 $connection = DBConection($host, $user, $password, $database);
-SendToUsers($connection);
+LimitedMailing($connection, $maxEmailsPerDay);
 $connection->close();
 ?>
+
+

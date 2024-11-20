@@ -4,7 +4,7 @@
 Class CareerDAO{
     private $host = 'localhost';
     private $user = 'root';
-    private $password = 'your_password';
+    private $password = '12345';
     private $dbName = 'unah_registration';
     private $connection;
    

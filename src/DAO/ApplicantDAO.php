@@ -234,6 +234,118 @@ class ApplicantDAO{
         return $csvContent;
     }
 
+
+    public function getResults($id_applicant){
+        // Asegurarse de que la conexión esté activa
+        if (!$this->connection) {
+            echo json_encode(['error' => 'No hay conexión a la base']);
+            return;
+        }
+    
+        // Primera consulta: Obtener las resoluciones de aspirante
+        $queryResolutions = "
+            SELECT 
+                C.id_applicant,
+                E.id_undergraduate,
+                E.name_undergraduate,
+                A.resolution_intended,
+                D.name_regional_center
+            FROM `ResolutionIntendedUndergraduateApplicant` A
+            INNER JOIN `Applications` B ON A.id_admission_application_number = B.id_admission_application_number
+            INNER JOIN `Applicants` C ON B.id_applicant = C.id_applicant
+            INNER JOIN `RegionalCenters` D ON B.idregional_center = D.id_regional_center
+            INNER JOIN `Undergraduates` E ON A.intended_undergraduate_applicant = E.id_undergraduate
+            WHERE A.status_resolution_intended_undergraduate_applicant = true
+            AND B.id_applicant = ?";
+    
+        // Preparar la consulta y verificar errores
+        $stmt = $this->connection->prepare($queryResolutions);
+        if ($stmt === false) {
+            echo json_encode(['error' => 'Error preparando la consulta: ' . $this->connection->error]);
+            return;
+        }
+    
+        // Vincular el parámetro y ejecutar la consulta
+        $stmt->bind_param('s', $id_applicant);
+        if (!$stmt->execute()) {
+            echo json_encode(['error' => 'Error ejecutando la consulta  ' . $stmt->error]);
+            return;
+        }
+    
+        $resultResolutions = $stmt->get_result();
+        $resolutions = [];
+    
+        if ($resultResolutions && $resultResolutions->num_rows > 0) {
+            while ($row = $resultResolutions->fetch_assoc()) {
+                $resolutions[] = [
+                    "id_applicant" => $row['id_applicant'],
+                    "id_undergraduate" => $row['id_undergraduate'],
+                    "name_undergraduate" => $row['name_undergraduate'],
+                    "resolution_intended" => $row['resolution_intended'],
+                    "name_regional_center" => $row['name_regional_center'],
+                ];
+            }
+        }
+    
+        // Segunda consulta: Obtener los resultados de los exámenes
+        $queryResults = "
+            SELECT 
+                A.id_applicant, 
+                CONCAT(
+                    D.first_name_applicant, ' ',
+                    IFNULL(D.second_name_applicant, ''), ' ',
+                    IFNULL(D.third_name_applicant, ''), ' ',
+                    D.first_lastname_applicant, ' ',
+                    IFNULL(D.second_lastname_applicant, '')
+                ) AS name,
+                A.id_admission_application_number, 
+                C.name_type_admission_tests, 
+                B.rating_applicant
+            FROM `Applicants` D
+            LEFT JOIN `Applications` A ON D.id_applicant = A.id_applicant
+            LEFT JOIN `RatingApplicantsTest` B ON A.id_admission_application_number = B.id_admission_application_number
+            LEFT JOIN `TypesAdmissionTests` C ON B.id_type_admission_tests = C.id_type_admission_tests
+            WHERE A.status_application = TRUE
+            AND A.id_applicant = ?";
+    
+        // Preparar la consulta y verificar errores
+        $stmt = $this->connection->prepare($queryResults);
+        if ($stmt === false) {
+            echo json_encode(['error' => 'Error preparando la consulta: ' . $this->connection->error]);
+            return;
+        }
+    
+        // Vincular el parámetro y ejecutar la consulta
+        $stmt->bind_param('s', $id_applicant);
+        if (!$stmt->execute()) {
+            echo json_encode(['error' => 'Error excutando la consulta : ' . $stmt->error]);
+            return;
+        }
+    
+        $resultResultsTest = $stmt->get_result();
+        $resultsTest = [];
+    
+        if ($resultResultsTest && $resultResultsTest->num_rows > 0) {
+            while ($row = $resultResultsTest->fetch_assoc()) {
+                $resultsTest[] = [
+                    "name" => $row['name'],
+                    "id_admission_application_number" => $row['id_admission_application_number'],
+                    "name_type_admission_tests" => $row['name_type_admission_tests'],
+                    "rating_applicant" => $row['rating_applicant'],
+                ];
+            }
+        }
+    
+        // Preparar la respuesta final
+        $response = [
+            "resolutions" => $resolutions,
+            "resultsTest" => $resultsTest
+        ];
+    
+   
+        echo json_encode($response);
+    }
+
     // Método para insertar un nuevo aspirante
     private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
     {

@@ -42,7 +42,7 @@ class Login {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(credentials)
+      body: credentials
     }).then(response => response.json()).then(result => {
       if (result.success) {
         sessionStorage.setItem('token', result.token);
