@@ -1,6 +1,7 @@
 import {Inscription} from "./modules/request/Inscription.mjs";
 import { RegionalCenter } from "./modules/request/RegionalCenter.mjs";
 import { Modal } from "./modules/behavior/support.mjs";
+import { Login } from "./modules/request/login.mjs";
 
 const inscriptionButton = document.querySelectorAll('.btn-inscription')
 inscriptionButton.forEach(button => {
@@ -17,6 +18,11 @@ inscriptionForm.addEventListener('submit',function(event){
     Inscription.getData();
 }); 
 
+const loginAdmissions= document.getElementById('loginAdmissions');
+loginAdmissions.addEventListener('submit', function(event){
+    event.preventDefault();
+    Login.authRequestAdmissionAdmin();
+})
 
 
 

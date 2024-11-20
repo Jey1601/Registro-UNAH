@@ -1,4 +1,4 @@
-import { Alert } from "../behavior/support";
+import { Alert } from "../behavior/support.mjs";
 
 class Login {
   

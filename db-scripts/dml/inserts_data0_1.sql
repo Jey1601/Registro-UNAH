@@ -1,5 +1,10 @@
 USE unah_registration;
 
+INSERT INTO UsersAdmissionsAdministrator (username_user_admissions_administrator, password_user_admissions_administrator, status_user_admissions_administrator) 
+VALUES 
+	('admin_nouser', 'secure_password_54321', FALSE),
+	('admin_user', 'secure_password_12345', TRUE);
+
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('Rutilia Calderón Padilla', TRUE);
 
