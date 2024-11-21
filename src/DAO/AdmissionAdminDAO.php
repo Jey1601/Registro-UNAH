@@ -12,8 +12,8 @@
 include_once 'util/jwt.php';
 class AdmissionAdminDAO {
     private $host = 'localhost';
-    private $user = 'root';
-    private $password = '12345';
+    private $user = 'prueba';
+    private $password = '123';
     private $dbName = 'unah_registration';
     private $connection;
 

@@ -57,7 +57,7 @@ class JWT {
             return false; //Token expirado
         }
         
-        return $payload; //Token valido
+        return json_encode($payload); //Token valido
     }
 
     /**
