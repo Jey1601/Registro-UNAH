@@ -87,4 +87,21 @@ class Search{
 }
 }
 
-export{Alert, Modal,Cell , Search};
+class Entry{
+
+  static createEntry(subtitleText, textContent) {
+    const entry = document.createElement("div");
+    const subtitle = document.createElement("h5");
+    const text = document.createElement("p");
+
+    subtitle.innerText = subtitleText;
+    text.innerHTML = textContent;
+
+    entry.appendChild(subtitle);
+    entry.appendChild(text);
+
+    return entry;
+}
+}
+
+export{Alert, Modal,Cell , Search, Entry};

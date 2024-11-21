@@ -1,8 +1,9 @@
 
-import { Login } from "./modules/login.mjs";
+import { Login } from "./modules/request/login.mjs";
+import { Applicant} from "./modules/request/Applicant.mjs";
 
 const loginApplicant = document.getElementById('loginApplicant');
 loginApplicant.addEventListener('submit',function(event){
-    event.preventDefault();
-    Login.getDataApplicant();
+    //event.preventDefault();
+    window.location.href='./results.html';
 }); 

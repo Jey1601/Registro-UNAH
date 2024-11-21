@@ -1,14 +1,20 @@
 import { regular_expressions } from "../behavior/configuration.mjs";
+import { Modal, Alert } from "../behavior/support.mjs";
 
 
 class Results {
     static modalInstance = null;
 
     static verify() {
-        this.showModal('verifySelection');
+        Modal.showModal('verifySelection');
     }
 
-    static getSelection() {
+    static async  getSelection() {
+
+
+        const resultsForm = document.getElementById("resultsForm");
+        // Crear un nuevo objeto FormData
+        const formData = new FormData(resultsForm);
         const selection = document.querySelector('input[name="option"]:checked');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -16,34 +22,56 @@ class Results {
 
         if (selection) {
             console.log("Valor seleccionado:", selection.value);
-            submitBtn.remove();
-            this.hideModal();
-            alert("Información enviada con exito");
+            console.log("Valor seleccionado:", formData.get('option'));
+            Modal.hideModal();
             
-            setTimeout(function(){
-                window.location.href='../../index.html';
-            },2000);
+
+            const success = await this.registerAcceptance(formData);
+            
+            if (success) {
+                submitBtn.remove();
+
+                Alert.display(success.message, "success"); 
+                /*setTimeout(() => {
+                    window.location.href = '../../index.html';
+                }, 2000);*/
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Enviar";
+                Alert.display(success.message, "danger");
+            }
+
 
             
 
         } else {
-            console.log("No se ha seleccionado ninguna opción.");
+            Alert.display("Debes seleccionar una opción antes de continuar.", "warning");
         }
     }
 
-    static showModal(id) {
-        const modalElement = document.getElementById(id);
-        this.modalInstance = new bootstrap.Modal(modalElement);
-        this.modalInstance.show();
-    }
+    static async registerAcceptance(formData){
 
-    static hideModal() {
-        if (this.modalInstance) {
-            this.modalInstance.hide();
-            this.modalInstance = null; 
-        }
-    }
+          
 
+        try {
+        
+            const response = await fetch(
+              "../../../api/post/applicant/applicantAcceptance.php",
+              {
+                method: "POST", 
+                body: formData,
+              }
+            );
+        
+            const result = await response.json();
+            return result;
+         
+          } catch (error) {
+         // Manejamos el error si ocurre
+            Alert.display(result.message, "danger");
+          }
+    }
+    
     
 }
 

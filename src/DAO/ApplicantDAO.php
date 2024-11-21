@@ -245,6 +245,7 @@ class ApplicantDAO{
         // Primera consulta: Obtener las resoluciones de aspirante
         $queryResolutions = "
             SELECT 
+                F.id_notification_application_resolution,
                 C.id_applicant,
                 E.id_undergraduate,
                 E.name_undergraduate,
@@ -255,6 +256,7 @@ class ApplicantDAO{
             INNER JOIN `Applicants` C ON B.id_applicant = C.id_applicant
             INNER JOIN `RegionalCenters` D ON B.idregional_center = D.id_regional_center
             INNER JOIN `Undergraduates` E ON A.intended_undergraduate_applicant = E.id_undergraduate
+            INNER JOIN `NotificationsApplicationsResolution` F ON F.id_resolution_intended_undergraduate_applicant = A.id_resolution_intended_undergraduate_applicant
             WHERE A.status_resolution_intended_undergraduate_applicant = true
             AND B.id_applicant = ?";
     
@@ -278,6 +280,7 @@ class ApplicantDAO{
         if ($resultResolutions && $resultResolutions->num_rows > 0) {
             while ($row = $resultResolutions->fetch_assoc()) {
                 $resolutions[] = [
+                    "id_notification_application_resolution" => $row['id_notification_application_resolution'],
                     "id_applicant" => $row['id_applicant'],
                     "id_undergraduate" => $row['id_undergraduate'],
                     "name_undergraduate" => $row['name_undergraduate'],
@@ -328,6 +331,7 @@ class ApplicantDAO{
         if ($resultResultsTest && $resultResultsTest->num_rows > 0) {
             while ($row = $resultResultsTest->fetch_assoc()) {
                 $resultsTest[] = [
+                    "id_applicant"=>$row['id_applicant'],
                     "name" => $row['name'],
                     "id_admission_application_number" => $row['id_admission_application_number'],
                     "name_type_admission_tests" => $row['name_type_admission_tests'],
@@ -344,6 +348,27 @@ class ApplicantDAO{
     
    
         echo json_encode($response);
+    }
+
+
+    public function registerAcceptance($id_applicant_acceptance ){
+        date_default_timezone_set('America/Tegucigalpa');
+        $currentDate = date("Y-m-d");  //Se actualiza posteriomente cuando la acepta
+        $applicant_acceptance = 1; // se actualiza del formulario solo uno de los ApplicantAcceptance, la que es positiva.
+
+        $acceptanceQuery = "UPDATE `ApplicantAcceptance`
+                            SET  date_applicant_acceptance = ?,
+                                applicant_acceptance = ?
+                            WHERE id_applicant_acceptance = ?";
+
+        $insertNotStmt = $this->connection->prepare($acceptanceQuery);
+        $insertNotStmt->bind_param("sii", $currentDate,$applicant_acceptance, $id_applicant_acceptance );
+        
+        if(!$insertNotStmt->execute()){
+         echo json_encode(["message"=> "Ha ocurrido un error guardando la decisión"]);
+        }
+
+        echo json_encode(["message"=> "Su decisión ha sido guardada correctamente"]);
     }
 
     // Método para insertar un nuevo aspirante

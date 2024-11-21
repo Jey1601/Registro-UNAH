@@ -154,15 +154,15 @@ class AdmissionAdminDAO {
      private function makeResolutions()
      {
          // Extrae la solicitudes activas  de los aspirantes y las carreras a las que optó.
-         $queryApplications = "SELECT A.id_admission_application_number, A.intendedprimary_undergraduate_applicant as id_undergraduate
-                     FROM `Applications` A
-                     WHERE
-                         A.status_application = 1
-                     UNION
-                     SELECT A.id_admission_application_number, A.intendedsecondary_undergraduate_applicant as id_undergraduate
-                     FROM `Applications` A
-                     WHERE
-                         A.status_application = 1";
+         $queryApplications = "SELECT A.id_admission_application_number, A.intendedprimary_undergraduate_applicant as id_undergraduate, A.id_admission_process, A.id_applicant
+                                FROM `Applications` A
+                                WHERE
+                                    A.status_application = 1
+                                UNION
+                                SELECT A.id_admission_application_number, A.intendedsecondary_undergraduate_applicant as id_undergraduate, A.id_admission_process,  A.id_applicant
+                                FROM `Applications` A
+                                WHERE
+                                    A.status_application = 1";
  
          // Preparar la consulta
          $stmt = $this->connection->prepare($queryApplications);
@@ -185,11 +185,14 @@ class AdmissionAdminDAO {
  
  
                  $application = [
+                    "id_applicant" => $row["id_applicant"],
+                    "id_admission_process" => $row['id_admission_process'],
                      "id_admission_application_number" => $row['id_admission_application_number'],
                      "id_undergraduate" => $row['id_undergraduate'],
                      "resolution_intended" => 1 // Esta varible nos permitirá almacenar el valor de la carrera.
                  ];
- 
+                 
+      
                  // Añadimos cada fila al array
                  $applications[] = $application;
              }
@@ -335,16 +338,79 @@ class AdmissionAdminDAO {
          $id_rating_applicants_test = 2; //Valor por defecto para prueba eliminar luego de actualización
          // Insertar los resultados en la tabla RatingApplicantsTest
          foreach ($applications as $application) {
+             $id_applicant = $application['id_applicant'];
+             $id_admission_process = $application['id_admission_process'];
              $insertStmt->bind_param("iiiii", $id_rating_applicants_test, $application['id_admission_application_number'], $application['id_undergraduate'], $application['resolution_intended'], $status_resolution_intended_undergraduate_applicant);
              if (!$insertStmt->execute()) {
-                 // Si hay un error al ejecutar la inserción
-                 return false;
+               
+                return false;
+             }else{
+                //id de la resolución
+                $lastInsertId = $this->connection->insert_id;
+
+                if(!$this->createNotification( $lastInsertId)){
+                    return false;
+                }else{
+                    //id de la notificación guardada
+                    $lastInsertId = $this->connection->insert_id;
+                    if(!$this->createApplicantAcceptance($lastInsertId,$id_applicant, $id_admission_process)){
+                        return false;
+                    }
+                }
+               
+               
              }
          }
          // Si todas las inserciones fueron exitosas, devolver true
          return true;
      }
+
+
+     private function createNotification($lastInsertId): bool{
+        date_default_timezone_set('America/Tegucigalpa');
+        $currentDate = date("Y-m-d");  
+        $emailSent = 0;
+        $notificationQuery = "INSERT INTO `NotificationsApplicationsResolution` (id_resolution_intended_undergraduate_applicant,email_sent_application_resolution,date_email_sent_application_resolution) VALUES(?,?,?)";
+
+        $insertNotStmt = $this->connection->prepare($notificationQuery);
+        $insertNotStmt->bind_param("iis", $lastInsertId, $emailSent, $currentDate);
+        
+        if(!$insertNotStmt->execute()){
+            return false;
+        }
+
+        return true;
+     }
+
+     private function createApplicantAcceptance($lastInsertId, $id_applicant, $id_admission_process): bool{
+        date_default_timezone_set('America/Tegucigalpa');
+        $currentDate = date("Y-m-d");  //Se actualiza posteriomente cuando la acepta
+        $default = false;
+
+        $acceptanceQuery = "INSERT INTO
+                                `ApplicantAcceptance` (
+                                    id_notification_application_resolution,
+                                    id_applicant,
+                                    date_applicant_acceptance,
+                                    applicant_acceptance,
+                                    status_applicant_acceptance,
+                                    id_admission_process,
+                                    status_admission_process
+                                )
+                                values (?,?,?,?,?,?,?)";
+
+        $insertNotStmt = $this->connection->prepare($acceptanceQuery);
+        $insertNotStmt->bind_param("issiiii", $lastInsertId, $id_applicant, $currentDate, $default, $default,$id_admission_process, $default );
+        
+        if(!$insertNotStmt->execute()){
+            return false;
+        }
+
+        return true;
+     }
  
 }
 
 ?>
+
+

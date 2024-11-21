@@ -5,7 +5,7 @@
 include_once "../../../../src/DAO/ApplicantDAO.php";
 
 
-$dao = new ApplicantDAO("localhost", "root", "your_password", "unah_registration");
+$dao = new ApplicantDAO();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

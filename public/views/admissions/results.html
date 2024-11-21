@@ -46,30 +46,15 @@
       <div class="table-title">
         <h2>Resultados</h2>
       </div>
+      <div id="alertPlaceholder"></div>
       <div id="resultsInformation" class="applicant-data">
-        <div>
-            <h5>Nombre :</h5><p>Juan Jośe Perez Sosa</p>
-        </div>
-     
-        <div>
-            <h5>Número de identidad :</h5><p>0820-2002-15823</p>
-        </div>
-        <div>
-          <h5>Examen 1 :</h5><p>0820-2002-15823</p>
-        </div>
-
-        <div>
-          <h5>Examen 2 :</h5><p>0820-2002-15823</p>
-        </div>
-        <div>
-          <h5>Examen 3 :</h5><p>0820-2002-15823</p>
-        </div>
+        
       </div>
     </div>
 
     <section class="table-container">
-      <form id="resultsForm" action=""> 
-      <table class="table table-striped table-hover">
+      <form method="POST" enctype="multipart/form-data" id="resultsForm" action=""> 
+      <table id="resultsTable" class="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -80,46 +65,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
          
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="option"
-                  value="1"
-                  id="firstOption"
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-    
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="option"
-                  id="secondOption"
-                  value="2"
-                  checked
-                />
-              </div>
-            </td>
-          </tr>
         </tbody>
       </table>
-      <button id="submitBtn" type="submit" class="btn btn-success" >Enviar</button>
+      <button id="submitBtn" type="submit" class="btn btn-success" >Aceptar</button>
     </form> 
     </section>
 
@@ -192,7 +141,7 @@
          </p>
         </div>
         <div class="modal-footer">
-          <button id="selectionCorrectBtn" type="submit" class="btn btn-yellow">Enviar</button>
+          <button id="selectionCorrectBtn" type="submit" class="btn btn-yellow">Aceptar</button>
         </div>
       </div>
     </div>
@@ -206,5 +155,6 @@
 
     <script type="module" src="../../assets/js/aspects.js"></script>
     <script type="module" src="../../assets/js/admisions.js"></script>
+    <script type="module" src="../../assets/js/results.js"></script>
   </body>
 </html>
