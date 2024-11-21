@@ -12,3 +12,8 @@ downloadInscriptionsBtn.addEventListener('click', function() {
    // Redirige al usuario a la URL del endpoint que genera el CSV
    window.location.href = "../../../api/get/applicant/applicantDownloadCSV.php";
 });
+
+const downloadApplicantAdmittedBtn = document.getElementById('downloadApplicantAdmittedBtn');
+downloadApplicantAdmittedBtn.addEventListener('click', function() {
+   window.location.href = "../../../api/get/applicant/applicantDownloadAdmittedCSV.php";
+});
