@@ -146,7 +146,7 @@ CREATE TABLE Applications (
     FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process),
     FOREIGN KEY (intendedprimary_undergraduate_applicant) REFERENCES Undergraduates(id_undergraduate),
     FOREIGN KEY (intendedsecondary_undergraduate_applicant) REFERENCES Undergraduates(id_undergraduate)
-);
+)AUTO_INCREMENT = 1001;
 
 CREATE TABLE UsersApplicants (
 	id_user_applicant INT PRIMARY KEY AUTO_INCREMENT,
@@ -183,11 +183,11 @@ CREATE TABLE RatingApplicantsTest (
 
 CREATE TABLE ResolutionIntendedUndergraduateApplicant (
     id_resolution_intended_undergraduate_applicant INT PRIMARY KEY AUTO_INCREMENT,
-    id_rating_applicants_test INT NOT NULL,
+    id_admission_application_number INT NOT NULL,
     intended_undergraduate_applicant INT NOT NULL,
     resolution_intended BOOLEAN NOT NULL,
     status_resolution_intended_undergraduate_applicant BOOLEAN NOT NULL,
-    FOREIGN KEY (id_rating_applicants_test) REFERENCES RatingApplicantsTest(id_rating_applicant_test),
+    FOREIGN KEY (id_admission_application_number) REFERENCES Applications(id_admission_application_number),
     FOREIGN KEY (intended_undergraduate_applicant) REFERENCES Undergraduates(id_undergraduate)
 );
 

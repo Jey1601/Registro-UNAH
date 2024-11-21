@@ -298,7 +298,8 @@ class ApplicantDAO{
             INNER JOIN `Undergraduates` E ON A.intended_undergraduate_applicant = E.id_undergraduate
             INNER JOIN `NotificationsApplicationsResolution` F ON F.id_resolution_intended_undergraduate_applicant = A.id_resolution_intended_undergraduate_applicant
             WHERE A.status_resolution_intended_undergraduate_applicant = true
-            AND B.id_applicant = ?";
+            AND B.id_applicant = ?
+             AND B.status_application = 1";
     
         // Preparar la consulta y verificar errores
         $stmt = $this->connection->prepare($queryResolutions);

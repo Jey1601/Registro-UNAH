@@ -1,4 +1,4 @@
-import { Applicant } from "./modules/request/Applicant.mjs";
+import { Login } from "./modules/request/login.mjs";
 
 const  viewInscriptionsBtn = document.getElementById('viewInscriptionsBtn');
 viewInscriptionsBtn.addEventListener('click', function(){
@@ -17,3 +17,10 @@ const downloadApplicantAdmittedBtn = document.getElementById('downloadApplicantA
 downloadApplicantAdmittedBtn.addEventListener('click', function() {
    window.location.href = "../../../api/get/applicant/applicantDownloadAdmittedCSV.php";
 });
+
+
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout('../../index.html')
+});  

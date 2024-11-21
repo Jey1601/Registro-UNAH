@@ -72,7 +72,7 @@ static async authAdmisionAdmin() {
   }
 
   try {
-      fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+      fetch('../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -105,6 +105,18 @@ static async authAdmisionAdmin() {
     return false; // If any validation fails, return false
   }
 
+}
+
+static getPayloadFromToken(token) {
+  const payloadBase64 = token.split('.')[1]; // Obtén el payload
+  const payload = atob(payloadBase64); // Decodifica de Base64
+  return JSON.parse(payload); // Convierte el JSON a un objeto
+}
+
+
+static logout(url){
+  sessionStorage.setItem('token','');
+  window.location.href = url;
 }
 
 }

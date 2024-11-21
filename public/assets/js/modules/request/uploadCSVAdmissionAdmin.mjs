@@ -1,5 +1,5 @@
 import { Alert } from "../behavior/support.mjs"; 
-
+import { Login } from "./login.mjs";
 
 async function submitCSVFile(params) {
     
@@ -37,3 +37,10 @@ async function submitCSVFile(params) {
 
 const btn_upload = document.getElementById('btnUpload');
 btn_upload.addEventListener('click', submitCSVFile);
+
+
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout('../../index.html')
+});  

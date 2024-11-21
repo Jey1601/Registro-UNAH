@@ -85,10 +85,13 @@ class Inscription {
       );
 
       const result = await response.json(); // Esperamos que la respuesta sea convertida a JSON
-
-      Alert.display(result.message.concat("<br> Numero de solicitud : ", result.id_application ), "warning");
+      if (result.id_application== null ){
+        Alert.display(result.message , "warning");
+      }else{
+        Alert.display(result.message.concat("<br> Numero de solicitud : ", result.id_application ), "warning");
+      }
+     
     } catch (error) {
-      console.error("Error:", error); // Manejamos el error si ocurre
       Alert.display("Hubo un error al cargar la información", "danger");
     }
   }

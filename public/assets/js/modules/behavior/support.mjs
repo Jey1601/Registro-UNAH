@@ -104,4 +104,7 @@ class Entry{
 }
 }
 
+
+
+
 export{Alert, Modal,Cell , Search, Entry};

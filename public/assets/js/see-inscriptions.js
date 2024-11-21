@@ -1,5 +1,5 @@
 import { Applicant } from "./modules/request/Applicant.mjs";
-
+import { Login } from "./modules/request/login.mjs";
 
 window.addEventListener('load', function(){
     Applicant.renderData();
@@ -9,3 +9,8 @@ window.addEventListener('load', function(){
 
 
 
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout('../../index.html')
+});  

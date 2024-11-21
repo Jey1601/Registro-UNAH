@@ -320,13 +320,12 @@ class AdmissionAdminDAO {
  
          // Definir la consulta de inserción
          $insertQuery = "INSERT   INTO `ResolutionIntendedUndergraduateApplicant` (
-                                         id_rating_applicants_test,
                                          id_admission_application_number,
                                          intended_undergraduate_applicant,
                                          resolution_intended,
                                          status_resolution_intended_undergraduate_applicant
                                      )
-                                 values (?,?,?,?,?);";
+                                 values (?,?,?,?);";
          $insertStmt = $this->connection->prepare($insertQuery);
          if (!$insertStmt) {
              // Si hay un error preparando la consulta de inserción
@@ -335,12 +334,11 @@ class AdmissionAdminDAO {
  
          //Valor por defecto, indica que sus notas son validas
          $status_resolution_intended_undergraduate_applicant = 1;
-         $id_rating_applicants_test = 2; //Valor por defecto para prueba eliminar luego de actualización
          // Insertar los resultados en la tabla RatingApplicantsTest
          foreach ($applications as $application) {
              $id_applicant = $application['id_applicant'];
              $id_admission_process = $application['id_admission_process'];
-             $insertStmt->bind_param("iiiii", $id_rating_applicants_test, $application['id_admission_application_number'], $application['id_undergraduate'], $application['resolution_intended'], $status_resolution_intended_undergraduate_applicant);
+             $insertStmt->bind_param("iiii",  $application['id_admission_application_number'], $application['id_undergraduate'], $application['resolution_intended'], $status_resolution_intended_undergraduate_applicant);
              if (!$insertStmt->execute()) {
                
                 return false;
