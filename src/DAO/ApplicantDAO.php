@@ -244,7 +244,7 @@ class ApplicantDAO{
         $query = "CALL SP_APPLICANTS_ADMITTED_DATA();";
         $applicants = $this->connection->execute_query($query);
 
-        $csvAcceptanceHeaders = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "carrera_aspirante_admitido", "direccion_aspirante_admitido", "correo_personal_aspirante_admitido", "centro_regional_aspirante_admitido"];
+        $csvAcceptanceHeaders = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "direccion_aspirante_admitido","correo_personal_aspirante_admitido", "carrera_aspirante_admitido", "centro_regional_aspirante_admitido"];
 
         //Crear un stream en memoria para el archivo CSV
         $csvApplicantsAdmitted = fopen('php://temp', '+r');
