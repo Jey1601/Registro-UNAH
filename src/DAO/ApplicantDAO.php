@@ -206,7 +206,7 @@ class ApplicantDAO{
      * @return string $csvContent Informacion de los aspirantes.
      */
     public function getApplicantsInfoCSV(){
-        $query = "CALL SP_APPLICANTS_ADMITTED_DATA();";
+        $query = "CALL SP_APPLICANTS_DATA();";
         $applicants = $this->connection->execute_query($query);
 
         $csvHeaders = ["id_aspirante", "num_aplicacion","id_examen", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];
@@ -241,7 +241,7 @@ class ApplicantDAO{
 */
 
     public function getApplicantsAdmittedCSV(){
-        $query = "CALL SP_APPLICANTS_DATA();";
+        $query = "CALL SP_APPLICANTS_ADMITTED_DATA();";
         $applicants = $this->connection->execute_query($query);
 
         $csvAcceptanceHeaders = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "carrera_aspirante_admitido", "direccion_aspirante_admitido", "correo_personal_aspirante_admitido", "centro_regional_aspirante_admitido"];
