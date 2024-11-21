@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    fetch('../../../../../public/api/post/tokenValidation.php', {
+    fetch('../../api/post/tokenValidation.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'token': token
         })
     }).then(response => response.json()).then(data => {
-        if (data === false) {
+        if (data.success === false) {
             window.location.href = '../../../../index.html';
         }
     }).catch (error => {

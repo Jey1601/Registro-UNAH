@@ -3,7 +3,7 @@ include_once '../../../src/DAO/util/jwt.php';
 
 header("Content-Type: application/json");
 
-$data = json_decode(file_get_contents('php://input', true));
+$data = json_decode(file_get_contents('php://input'), true);
 
 if (!isset($data['token']) || empty($data['token'])) {
     echo json_encode([
