@@ -4,6 +4,6 @@ import { Applicant} from "./modules/request/Applicant.mjs";
 
 const loginApplicant = document.getElementById('loginApplicant');
 loginApplicant.addEventListener('submit',function(event){
-    //event.preventDefault();
-    window.location.href='./results.html';
+    event.preventDefault();
+    Login.authApplicant();
 }); 

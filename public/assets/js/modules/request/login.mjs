@@ -31,6 +31,68 @@ class Login {
 
 }
 
+static async authApplicant() {
+  const idNum = document.getElementById('id_applicant').value;
+  const numReq = document.getElementById('id_application').value;
+
+  const credentials = {
+    "numID": idNum,
+    "numRequest": numReq
+  }
+
+  try{
+    fetch('../../../../api/post/applicant/authApplicant.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    }).then(response => response.json()).then(result => {
+      console.log(result);
+
+      if (result.success) {
+        sessionStorage.setItem('token', result.token);
+        window.location.href = '../../../../views/admissions/results.html';
+      } else {
+        Alert.display(result.message, "danger");
+      }
+    });
+  } catch (error) {
+    console.log('Error al mandar la peticion: ',error);
+  }
+}
+
+static async authAdmisionAdmin() {
+  const username = document.getElementById('admissionsUser').value;
+  const password = document.getElementById('admissionsPassword').value;
+
+  const credentials = {
+      "userAdmissionAdmin": username,
+      "passwordAdmissionAdmin": password
+  }
+
+  try {
+      fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(credentials)
+      }).then(response => response.json()).then(result => {
+          console.log(result);
+          
+          if (result.success) {
+              sessionStorage.setItem('token', result.token);
+              window.location.href = '../../../../views/administration/admissions-admin.html';
+          } else {
+              Alert.display(result.message, "danger");
+          }
+      })
+  } catch (error) {
+      console.log('Error al mandar la peticion: ',error);
+  }
+}
+
   static regexValidation(credentials){
     if (
       
