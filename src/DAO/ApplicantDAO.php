@@ -234,6 +234,40 @@ class ApplicantDAO{
         return $csvContent;
     }
 
+      /**
+     * Metodo para obtener numero de identidad, numero de solicitud, nombre del tipo de examen, nota del examen, nombre completo y centro regional de los aspirantes en un CSV.
+     * 
+     * @return string $applicantsAdmitted Informacion de todos aquellos  aspirantes admitidos.
+*/
+
+    public function getApplicantsAdmittedCSV(){
+        $query = "CALL SP_APPLICANTS_DATA();";
+        $applicants = $this->connection->execute_query($query);
+
+        $csvAcceptanceHeaders = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "carrera_aspirante_admitido", "direccion_aspirante_admitido", "correo_personal_aspirante_admitido", "centro_regional_aspirante_admitido"];
+
+        //Crear un stream en memoria para el archivo CSV
+        $csvApplicantsAdmitted = fopen('php://temp', '+r');
+
+        //Escribir las cabeceras del CSV
+        fputcsv($csvApplicantsAdmitted, $csvAcceptanceHeaders);
+
+        //Llenado de datos del CSV
+        foreach ($applicants as $applicant) {
+            fputcsv($csvApplicantsAdmitted, $applicant);
+        }
+
+        //Volver al inicio del archivo para que pueda ser enviado
+        rewind($csvApplicantsAdmitted);
+
+        //Leer el contenido del archivo CSV en memoria
+        $applicantsAdmitted =  stream_get_contents($csvApplicantsAdmitted);
+
+        //Cerrar el stream
+        fclose($csvApplicantsAdmitted);
+
+        return $applicantsAdmitted;
+    }
 
     public function getResults($id_applicant){
         // Asegurarse de que la conexión esté activa
