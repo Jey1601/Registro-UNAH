@@ -144,18 +144,16 @@ class Applicant {
   static async renderResults(id_applicant) {
     const results = await this.getResults(id_applicant);
 
-    if (!(Object.keys(results).length === 0)) {
+    if (!(Object.keys(results.resolutions).length === 0)) {
       const information = document.getElementById("resultsInformation");
       information.innerHTML = ""; 
 
       const tableBody = document.querySelector("#resultsTable tbody");
       tableBody.innerHTML = "";
-
-      const entry = document.createElement("div");
-      const subtitle = document.createElement("h5");
-      const text = document.createElement("p");
+      
 
       const entry1 = Entry.createEntry("Número de solicitud : ", results.resultsTest[0].id_admission_application_number);
+     
       information.appendChild(entry1);
       
       // Renderizar el nombre
@@ -173,6 +171,7 @@ class Applicant {
       });
       let counter = 0;
       //Renderizamos la tabla de resultados
+      let career = 0;
       results.resolutions.forEach((resolution) => {
         counter++;
 
@@ -191,6 +190,8 @@ class Applicant {
         );
 
         const cellSelection = Cell.createCell("td", "");
+        cellSelection.id="resolution".concat(counter);
+        cellSelection.setAttribute("data-resolution", resolution.id_resolution_intended_undergraduate_applicant); 
         if( resolution.resolution_intended === 1 ){
             //Se crea el radiocheck
 
@@ -205,6 +206,10 @@ class Applicant {
             input.name = "option";
             input.value = resolution.id_notification_application_resolution;
             input.id = "firstOption";
+           
+               
+         
+
 
             // Agregar el input al div
             div.appendChild(input);
@@ -225,17 +230,22 @@ class Applicant {
 
         // Añadir la fila al cuerpo de la tabla
         tableBody.appendChild(row);
+
+        career ++;
       });
     } else {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.remove();
       Alert.display("No se encontraron resultados", "warning");
     }
   }
 
-  static async getResults(id_applicant) {
+  static async getResults(id_applicant ) {
     //const inscriptionForm = document.getElementById("loginApplicant");
     // Crear un nuevo objeto FormData
     const formData = new FormData();
     formData.append('id_applicant', id_applicant);
+
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(

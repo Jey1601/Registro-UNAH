@@ -13,10 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
   $id_applicant_acceptance = $_POST['option'];
-
+  $primaryResolution = $_POST['primaryResolution'];
+  $secondaryResolution = $_POST['secondaryResolution'];
 
         // Llamamos al método createInscription para insertar los datos
-        $dao->registerAcceptance($id_applicant_acceptance);
+        $dao->registerAcceptance($id_applicant_acceptance, $primaryResolution, $secondaryResolution);
    
         
 

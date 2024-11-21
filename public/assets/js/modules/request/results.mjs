@@ -18,11 +18,22 @@ class Results {
         const selection = document.querySelector('input[name="option"]:checked');
         const submitBtn = document.getElementById('submitBtn');
 
-        
+        if(selection === null){
+            formData.append('option',0);
+        }
 
-        if (selection) {
-            console.log("Valor seleccionado:", selection.value);
-            console.log("Valor seleccionado:", formData.get('option'));
+        
+        const primaryResolution = document.getElementById('resolution1').getAttribute("data-resolution");
+        const secondaryResolution = document.getElementById('resolution2').getAttribute("data-resolution");
+        console.log(formData.get('option'));
+        console.log(primaryResolution);
+        console.log(secondaryResolution);
+
+        formData.append("primaryResolution", primaryResolution);
+        formData.append("secondaryResolution", secondaryResolution);
+
+        
+         
             Modal.hideModal();
             
 
@@ -32,9 +43,9 @@ class Results {
                 submitBtn.remove();
 
                 Alert.display(success.message, "success"); 
-                /*setTimeout(() => {
+                setTimeout(() => {
                     window.location.href = '../../index.html';
-                }, 2000);*/
+                }, 2000);
             } else {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Enviar";
@@ -44,9 +55,7 @@ class Results {
 
             
 
-        } else {
-            Alert.display("Debes seleccionar una opción antes de continuar.", "warning");
-        }
+     
     }
 
     static async registerAcceptance(formData){

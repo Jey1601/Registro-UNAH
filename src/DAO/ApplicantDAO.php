@@ -17,6 +17,8 @@ class ApplicantDAO{
     private $dbName = 'unah_registration';
     private $connection;
 
+    private $id_application_inserted = null;
+
     public function __construct()
     {
         $this->connection = null;
@@ -116,14 +118,15 @@ class ApplicantDAO{
                     // Si no tiene una solicitud activa actualizamos su información
                     if (!$this->updateApplicant($id_applicant, $email, $phone_number, $address, $status)) {
                         echo json_encode(["error" => "Ha ocurrido un error en la actualización de la información"]);
-
+                        
                     }
                     // Creamos la nueva solicitud
                     if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
                         echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
-
-                        echo json_encode(["message" => "Inscripción creada exitosamente"]);
+                        
+                        echo json_encode(["message" => "Inscripción creada exitosamente",
+                                                  "id_application" => $this->id_application_inserted  ]);
                     }
                 }
             } else {
@@ -138,7 +141,9 @@ class ApplicantDAO{
 
                     echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
                 } else {
-                    echo json_encode(["message" => "Inscripción creada exitosamente"]);
+                    
+                    echo json_encode(["message" => "Inscripción creada exitosamente",
+                    "id_application" => $this->id_application_inserted  ]);
                 }
             }
 
@@ -279,6 +284,7 @@ class ApplicantDAO{
         // Primera consulta: Obtener las resoluciones de aspirante
         $queryResolutions = "
             SELECT 
+                A.id_resolution_intended_undergraduate_applicant,
                 F.id_notification_application_resolution,
                 C.id_applicant,
                 E.id_undergraduate,
@@ -314,6 +320,7 @@ class ApplicantDAO{
         if ($resultResolutions && $resultResolutions->num_rows > 0) {
             while ($row = $resultResolutions->fetch_assoc()) {
                 $resolutions[] = [
+                    'id_resolution_intended_undergraduate_applicant'=> $row['id_resolution_intended_undergraduate_applicant'],
                     "id_notification_application_resolution" => $row['id_notification_application_resolution'],
                     "id_applicant" => $row['id_applicant'],
                     "id_undergraduate" => $row['id_undergraduate'],
@@ -385,7 +392,7 @@ class ApplicantDAO{
     }
 
 
-    public function registerAcceptance($id_applicant_acceptance ){
+    public function registerAcceptance($id_applicant_acceptance, $primaryResolution, $secondaryResolution ){
         date_default_timezone_set('America/Tegucigalpa');
         $currentDate = date("Y-m-d");  //Se actualiza posteriomente cuando la acepta
         $applicant_acceptance = 1; // se actualiza del formulario solo uno de los ApplicantAcceptance, la que es positiva.
@@ -402,6 +409,20 @@ class ApplicantDAO{
          echo json_encode(["message"=> "Ha ocurrido un error guardando la decisión"]);
         }
 
+        $resolutionQuery = " UPDATE `ResolutionIntendedUndergraduateApplicant` 
+                            SET status_resolution_intended_undergraduate_applicant = 0
+                            WHERE id_resolution_intended_undergraduate_applicant = ? 
+                            OR id_resolution_intended_undergraduate_applicant = ?";
+
+        $insertResolutionStmt = $this->connection->prepare($resolutionQuery);
+        $insertResolutionStmt->bind_param("ii", $primaryResolution, $secondaryResolution  );
+        
+        if(!$insertResolutionStmt->execute()){
+         echo json_encode(["message"=> "Ha ocurrido un error guardando la decisión"]);
+        }
+
+
+    
         echo json_encode(["message"=> "Su decisión ha sido guardada correctamente"]);
     }
 
@@ -506,7 +527,7 @@ class ApplicantDAO{
             if ($stmt->execute()) {
 
                 $id_application = $this->connection->insert_id;
-
+                $this->id_application_inserted = $id_application;
                 //Se crea el usuario del aspirante relacionado con la solicitud recien creada y los rating test
                 if ($this->createUserApplicant(id_applicant: $id_applicant, id_application: $id_application) && $this->createRatingApplicantsTest($id_application)) {
 

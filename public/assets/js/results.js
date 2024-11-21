@@ -19,3 +19,8 @@ const selectionCorrectBtn = document.getElementById('selectionCorrectBtn');
             Results.getSelection();
 } )
 
+
+const closeAndRedirect = document.getElementById('closeAndRedirect');
+closeAndRedirect.addEventListener('click', function(){
+    window.location.href = "../../index.html";
+})
