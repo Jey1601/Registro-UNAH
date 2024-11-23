@@ -90,11 +90,23 @@ class AdmissionAdminDAO {
             $firstRow = true; //Para identificar la primera linea como cabeceras
             $rowsInserted = 0; //Contador de registros insertados
             $errors = [];
+            $headers = ["id_aspirante", "num_aplicacion","id_examen", "tipo_examen", "nota_examen", "nombre_completo", "centro_regional"];
 
             while (($row = fgetcsv($handle, 0, ',')) !== FALSE) {
                 if($firstRow) {
-                    $firstRow = false;
-                    continue;
+                    if($row == $headers) {
+                        $firstRow = false;
+                        continue;
+                    } else {
+                        $errors[] = "Error en la lectura de las cabeceras.";
+                        return $response = [
+                            'success' => false,
+                            'message' => 'Cabeceras de CSV erroneas.',
+                            'errors' => $errors
+                        ];
+                        break;
+                    }
+                    
                 }
                 
                 //Escapar los valors para prevenir inyecciones SQL
