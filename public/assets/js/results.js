@@ -10,7 +10,9 @@ window.addEventListener('load', function(){
         const applicantID = payload.userApplicant; 
         Applicant.renderResults(applicantID);
 
-    } 
+    } else{
+        window.location.href = '../../index.html';
+    }
    
 });
 
