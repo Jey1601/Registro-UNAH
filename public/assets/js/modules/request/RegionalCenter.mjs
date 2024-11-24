@@ -14,20 +14,30 @@ class RegionalCenter {
 
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (regionalCenters && Array.isArray(regionalCenters)) {
+            let counter = 0;
             regionalCenters.forEach(center => {
                 const option = document.createElement("option");
                 option.value = center.id_regional_center;
                 option.innerText = center.name_regional_center;
-
+       
+                
+                if(counter == 0){
+                    option.selected = true;    
+                  
+                }
+                
                 applicantStudyCenter.appendChild(option);
 
+                counter++;
               
             });
             
             //Cargamos las carreras del centro regional escogido
             applicantStudyCenter.addEventListener('change',function(){
-                Career.updateFirstOption()
+                Career.updateFirstOption();
             })
+            // pero también se llama una vez por el valor de defecto
+            Career.updateFirstOption();
         } else {
             console.error("No se encontraron centros regionales o los datos no son válidos.");
         }

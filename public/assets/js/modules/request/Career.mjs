@@ -37,19 +37,27 @@ class Career {
 
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (Careers && Array.isArray(Careers)) {
+            let counter = 0;
             Careers.forEach(career => {
                 const option = document.createElement("option");
                 option.value = career.id_undergraduate;
                 option.innerText = career.name_undergraduate;
+                if(counter == 0){
+                    option.selected = true;
+                }
 
                 firstOption.appendChild(option);
-
+                
+                counter++;
             });
 
               //Cargamos las carreras del segundo select,eliminando la primera opción
               firstOption.addEventListener('change', () => {
                 this.updateSecondOption(Careers);
-            });
+              });
+
+              // por el valor seleccionado por defecto también cargamos la segunda opción:
+              this.updateSecondOption(Careers);
         } else {
             console.error("No se encontraron carreras en el centro regional o los datos no son válidos.");
         }

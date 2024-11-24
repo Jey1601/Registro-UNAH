@@ -12,7 +12,7 @@ const regular_expressions = {
     // Email validation (standard email format)
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 
     // Address validation (letters, numbers, spaces, commas, periods, and hyphens)
-    address: /^[a-zA-ZáéíóúÁÉÍÓÚ0-9\s,.-]+$/, 
+    address: /^[^\s][a-zA-ZáéíóúÁÉÍÓÚÜü0-9\s,.-]*$/, 
 
     // Password must be at least 8 characters long and contain:
     // - at least one lowercase letter

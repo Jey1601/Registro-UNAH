@@ -102,7 +102,7 @@ class ApplicantDAO{
         echo json_encode($applicationsData);
     }
 
-    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
+    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type,$image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {
         // Iniciar una transacción
         $this->connection->begin_transaction();
@@ -131,7 +131,7 @@ class ApplicantDAO{
                 }
             } else {
                 // Si no está creado hacemos el insert
-                if (!$this->insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)) {
+                if (!$this->insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address,$image_id_applicant, $status)) {
 
                     echo json_encode(["error" => "Ha ocurrido un error al guardar la información del aspirante"]);
                 }
@@ -428,17 +428,17 @@ class ApplicantDAO{
     }
 
     // Método para insertar un nuevo aspirante
-    private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status)
+    private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address,$image_id_applicant, $status)
     {
 
         // Preparar la consulta SQL de inserción
-        $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, status_applicant) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, image_id_applicant, status_applicant) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 
         // Prepared statement para evitar SQL injection
         if ($stmt = $this->connection->prepare($query)) {
             // Vinculamos los parámetros a la consulta
-            $stmt->bind_param("sssssssssi", $id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status);
+            $stmt->bind_param("ssssssssssi", $id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address,$image_id_applicant, $status);
 
             // Ejecutamos la consulta
             if ($stmt->execute()) {

@@ -1,0 +1,94 @@
+#notifications{
+    position: fixed;
+    top: 30px;
+    right: 20px;
+    z-index: 99999;
+}
+
+.notification{
+    position: relative;
+    padding: 10px;
+    color: #4D5057;
+    margin-bottom: 10px;
+    width: 400px;
+    display: grid;
+    grid-template-columns: 70px 1fr 20px;
+    border-radius: 5px;
+    --color: #47d764;
+    background-color:  #f7f7ff;
+    border-left: 8px solid #47d764; 
+    animation: show 0.3s ease 1 forwards;
+}
+
+.notification i{
+    color: var(--color);
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+}
+
+.notification .title{
+    font-size: large;
+    font-weight: bold;
+}
+
+.notification span, .notification i:nth-child(3){
+    color: #4D5057;
+    opacity: 0.6;
+}
+
+@keyframes show{
+    0%{
+        transform: translateX(100%);
+    }
+    40%{
+        transform: translateX(-5%);
+    }
+    80%{
+        transform: translateX(0%);
+    }
+    100%{
+        transform: translateX(-10px);
+    }
+}
+
+
+
+.notification::before{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color);
+    width: 100%;
+    height: 3px;
+    content: '';
+    box-shadow: 0 0 10px var(--color);
+    animation: timeOut 7s linear 1 forwards;
+  
+}
+
+
+@keyframes timeOut{
+    to{
+        width: 0;
+    }
+}
+
+
+.notification.error{
+    --color:#f24d4c;
+    background-color:  #f7f7ff;
+    border-left: 8px solid #f24d4c; 
+}
+
+.notification.warning{
+    --color:#e9bd0c;
+    background-color:  #f7f7ff;
+    border-left: 8px solid #e9bd0c; 
+}
+
+.notification.info{
+    --color:#3498db;
+    background-color:  #f7f7ff;
+    border-left: 8px solid #3498db; 
+}

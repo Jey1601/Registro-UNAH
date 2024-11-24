@@ -2,7 +2,7 @@ import { regular_expressions } from "../behavior/configuration.mjs";
 import { Alert } from "../behavior/support.mjs";
 
 class Inscription {
- 
+  
 
   static async getData() {
     const inscriptionForm = document.getElementById("inscriptionForm");
@@ -13,14 +13,23 @@ class Inscription {
     const applicant_name = formData.get("applicantName");
     const applicant_last_name = formData.get("applicantLastName");
 
-    const file = formData.get("aplicantCertificate");
+    const certificateFile = formData.get("applicantCertificate");
+    const idFile = formData.get('applicantIdDocument');
 
-    const allowedTypes = ["image/jpg", "image/png"];
-    if (allowedTypes.includes(file.type)) {
-      const myBlob = new Blob([file], { type: file.type });
+    const allowedTypes = ["image/jpg",  "image/jpeg",  "image/png" ,"application/pdf"];
+    
+    if (allowedTypes.includes(certificateFile.type)) {
+      const myBlob = new Blob([certificateFile], { type: certificateFile.type });
 
-      const formData = new FormData();
-      formData.set("aplicantCertificate", myBlob, file.name);
+     // const formData = new FormData();
+      formData.set("applicantCertificate", myBlob, certificateFile.name);
+    }
+        
+    if (allowedTypes.includes(idFile.type)) {
+      const myBlob = new Blob([idFile], { type: idFile.type });
+
+      //const formData = new FormData();
+      formData.set("applicantCertificate", myBlob, idFile.name);
     }
 
     // Dividir el nombre y apellido
@@ -39,22 +48,31 @@ class Inscription {
     /*for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
       } */
-
-    if (this.validateFileSize(formData.get("applicantCertificate"))) {
-      if (this.DataCorrect(formData)) {
-        Alert.display("Estamos cargando su información", "success");
-
+    const isCertificateValid = await this.validateFile(certificateFile);
+    const isIdValid = await this.validateFile(idFile); 
+    if (isCertificateValid && isIdValid) {
+      
+        Alert.display('warning','Espere','Estamos cargando su información');
         this.insertData(formData);
-      } else {
-        Alert.display("Uno o más datos no están correctos", "danger");
-      }
+      
+    }
+    
+    if(!isCertificateValid){
+      document.getElementById('applicantCertificate').value='';
+      Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de certificado");
+    }
+    
+    if(!isIdValid){
+      document.getElementById('applicantIdDocument').value='';
+      Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de identificación");
     }
 
+
     //Limpiamos el formulario
-    inscriptionForm.reset();
+    //inscriptionForm.reset();
   }
 
-  static DataCorrect(formData) {
+ /* static DataCorrect(formData) {
     if (
       regular_expressions.name.test(formData.get("applicantName")) && // Validate name
       regular_expressions.LastName.test(formData.get("applicantLastName")) && // Validate last name
@@ -71,7 +89,7 @@ class Inscription {
     } else {
       return false;
     }
-  }
+  }*/
 
   static async insertData(formData) {
     try {
@@ -86,28 +104,63 @@ class Inscription {
 
       const result = await response.json(); // Esperamos que la respuesta sea convertida a JSON
       if (result.id_application== null ){
-        Alert.display(result.message , "warning");
+        Alert.display('warning','Aviso', result.message);
       }else{
-        Alert.display(result.message.concat("<br> Numero de solicitud : ", result.id_application ), "warning");
+        Alert.display('success', 'Felicidades', result.message.concat("<br> Numero de solicitud : ", result.id_application ), "warning");
       }
      
     } catch (error) {
-      Alert.display("Hubo un error al cargar la información", "danger");
+      Alert.display('error','Lamentamo decirte esto', 'Hubo un error al cargar la información');
     }
   }
 
-  static validateFileSize(file) {
-    const maxSize = 16 * 1024 * 1024; // 16 MB en bytes
+  static validateFile(file) {
+    console.log(file);
+    const maxSize = 16 * 1024 * 1024;  // 16 MB en bytes
 
-    if (file && file.size > maxSize) {
-      Alert.display(
-        "El archivo es demasiado grande. Debe ser de 16 MB o menos",
-        "danger"
-      );
-      return false; // Impide el envío del formulario
+    // Verificar el tamaño del archivo
+    if (file.size > maxSize) {
+        return Promise.resolve(false);  // Si es demasiado grande, retornamos false inmediatamente
+    }else if(file.type != 'application/pdf'){
+      // Crear un FileReader para leer la imagen
+    const reader = new FileReader();
+
+    // Retornamos una promesa que se resolverá después de la lectura
+    return new Promise((resolve) => {
+        reader.onload = function(event) {
+            const img = new Image();
+
+            img.onload = function() {
+                const width = img.width;
+                const height = img.height;
+
+                // Verificar las dimensiones de la imagen
+                if (width < 600 || height < 800) {
+                    console.log('false');
+                    console.log(`La imagen tiene dimensiones: ${width}x${height}`);
+                    resolve(false);  // Resolvemos la promesa con false
+                } else {
+                    console.log('true');
+                    console.log(`La imagen tiene dimensiones: ${width}x${height}`);
+                    resolve(true);  // Resolvemos la promesa con true
+                }
+            };
+
+            img.src = event.target.result;  // Cargar la imagen en el objeto Image
+        };
+
+        // Leer el archivo como URL de datos (esto activa el evento onload)
+        reader.readAsDataURL(file);
+    });
+    }else{
+      return true;
     }
-    return true; // Permite el envío si el archivo es válido
-  }
+    
+}
+
+
+
+
 }
 
 

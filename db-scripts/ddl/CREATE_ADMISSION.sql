@@ -3,12 +3,36 @@ DROP DATABASE unah_registration;
 CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
+CREATE TABLE Roles (
+	id_role INT PRIMARY KEY AUTO_INCREMENT,
+	role VARCHAR (50) NOT NULL,
+	description_role VARCHAR (200) NOT NULL,
+	status_role BOOLEAN NOT NULL
+);
+
+CREATE TABLE AccessControl (
+	id_access_control CHAR(8) NOT NULL PRIMARY KEY,
+	description_access_control VARCHAR(150) NOT NULL,
+	status_access_control BOOLEAN NOT NULL
+);
+
+CREATE TABLE AccessControlRoles (
+    id_role INT NOT NULL,
+    id_access_control CHAR(8) NOT NULL,
+    status_access_control_roles BOOLEAN NOT NULL,
+    CONSTRAINT id_access_control_roles PRIMARY KEY (id_role, id_access_control), 
+    FOREIGN KEY (id_role) REFERENCES Roles(id_role),
+    FOREIGN KEY (id_access_control) REFERENCES AccessControl(id_access_control)
+);
+
+
 CREATE TABLE UsersAdmissionsAdministrator (
 	id_user_admissions_administrator INT PRIMARY KEY AUTO_INCREMENT,
 	username_user_admissions_administrator VARCHAR(50) NOT NULL,
 	password_user_admissions_administrator VARCHAR(100) NOT NULL,
 	status_user_admissions_administrator BOOLEAN NOT NULL
 );
+
 
 CREATE TABLE AcademicYear (
     id_academic_year INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,6 +65,16 @@ CREATE TABLE RegionalCenters (
     status_regional_center BOOLEAN NOT NULL
 );
 
+CREATE TABLE RolesUsersAdmissionsAdministrator (
+	id_user_admissions_administrator INT NOT NULL,
+	id_role_admissions_administrator INT NOT NULL,
+	status_role_admissions_administrator BOOLEAN NOT NULL,
+	id_regional_center INT,
+	CONSTRAINT id_rol_user_admission_administrator PRIMARY KEY (id_user_admissions_administrator, id_role_admissions_administrator), 
+	FOREIGN KEY (id_user_admissions_administrator) REFERENCES  UsersAdmissionsAdministrator(id_user_admissions_administrator),
+	FOREIGN KEY (id_role_admissions_administrator) REFERENCES Roles(id_role),
+	FOREIGN KEY (id_regional_center) REFERENCES RegionalCenters(id_regional_center)
+);
 
 CREATE TABLE NumberExtensions (
     id_number_extension INT PRIMARY KEY AUTO_INCREMENT,
@@ -118,6 +152,7 @@ CREATE TABLE Applicants (
     email_applicant VARCHAR(100)NOT NULL,
     phone_number_applicant VARCHAR(20) NOT NULL,
     address_applicant VARCHAR(255)NOT NULL,
+    image_id_applicant MEDIUMBLOB NOT NULL,
     status_applicant BOOLEAN NOT NULL
 );
 
@@ -148,12 +183,33 @@ CREATE TABLE Applications (
     FOREIGN KEY (intendedsecondary_undergraduate_applicant) REFERENCES Undergraduates(id_undergraduate)
 )AUTO_INCREMENT = 1001;
 
+CREATE TABLE CheckApplicantApplications (
+    id_check_applicant_applications INT PRIMARY KEY AUTO_INCREMENT,
+    id_applicant VARCHAR(20) NOT NULL,
+    id_admission_application_number INT NOT NULL,
+    verification_status_data_applicant BOOLEAN NOT NULL,
+    date_check_applicant_applications DATE NOT NULL,
+    revision_status_check_applicant_applications BOOLEAN NOT NULL,
+    admissions_administrator_check_applicant_applications INT NOT NULL,
+    FOREIGN KEY (id_applicant) REFERENCES Applicants(id_applicant),
+    FOREIGN KEY (id_admission_application_number) REFERENCES Applications(id_admission_application_number),
+    FOREIGN KEY (admissions_administrator_check_applicant_applications) REFERENCES UsersAdmissionsAdministrator(id_user_admissions_administrator)
+);
+
+CREATE TABLE  CheckErrorsApplicantApplications(
+	id_check_errors_applicant_applications INT PRIMARY KEY AUTO_INCREMENT,
+	id_check_applicant_applications INT NOT NULL,
+	incorrect_data VARCHAR(100) NOT NULL,
+	description_incorrect_data VARCHAR(255) NOT NULL,
+	FOREIGN KEY (id_check_applicant_applications) REFERENCES CheckApplicantApplications(id_check_applicant_applications)
+);
+
+
 CREATE TABLE UsersApplicants (
 	id_user_applicant INT PRIMARY KEY AUTO_INCREMENT,
 	username_user_applicant VARCHAR(50) NOT NULL,
-	password_user_applicant INT NOT NULL,
+	password_user_applicant VARCHAR(100) NOT NULL,
 	status_user_applicant BOOLEAN NOT NULL,
-        FOREIGN KEY (password_user_applicant) REFERENCES Applications( id_admission_application_number),
 	FOREIGN KEY (username_user_applicant) REFERENCES Applicants(id_applicant)
 );
 
