@@ -53,7 +53,7 @@ class Inscription {
     if (isCertificateValid && isIdValid) {
       
         Alert.display('warning','Espere','Estamos cargando su información');
-        this.insertData(formData);
+        this.insertData(formData, inscriptionForm);
       
     }
     
@@ -91,7 +91,7 @@ class Inscription {
     }
   }*/
 
-  static async insertData(formData) {
+  static async insertData(formData, form) {
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(
@@ -106,7 +106,8 @@ class Inscription {
       if (result.id_application== null ){
         Alert.display('warning','Aviso', result.message);
       }else{
-        Alert.display('success', 'Felicidades', result.message.concat("<br> Numero de solicitud : ", result.id_application ), "warning");
+        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ), "warning");
+        form.reset();
       }
      
     } catch (error) {
