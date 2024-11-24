@@ -9,7 +9,7 @@
  * @property mysqli $connection Objeto de conexion con la base de datos
  * */
 
-include_once '../util/jwt.php';
+include_once 'jwt.php';
 
 class TokenVerification {
     private $host = 'localhost';

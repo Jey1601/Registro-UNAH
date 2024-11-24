@@ -26,7 +26,7 @@ if (!isset($data['token']) || empty($data['token'])) {
         echo json_encode([
             'success' => true,
             'message' => 'Validacion exitosa.',
-            'payload' => $response['tokenExpiration']
+            'tokenExpiration' => $response['tokenExpiration']
         ]);
     }
 }

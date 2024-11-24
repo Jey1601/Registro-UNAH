@@ -52,13 +52,23 @@ class AdmissionAdminDAO {
 
             if($result->num_rows > 0) { //Si es mayor que 0 es porque la consulta encontro un registro, o sea, ese usuario con esa contrasena existe.
                 //Para obtener un array con los IDs de los controles de accesos que tiene el usuario que se autentica 
-                $queryAccessArray = "SP_GET_ACCESS_CONTROL_USER_ADMISSION_ADMIN_BY_ID(?)";
+                $row = $result->fetch_array();
+                $auxID = $row[0];
+                $queryAccessArray = "CALL SP_GET_ACCESS_CONTROL_USER_ADMISSION_ADMIN_BY_ID(?)";
                 $stmtAccessArray = $this->connection->prepare($queryAccessArray);
-                $stmtAccessArray->bind_param('i', intval($result["id_user_admissions_administrator"]));
+                $stmtAccessArray->bind_param('i', $auxID);
                 $stmtAccessArray->execute();
                 $resultAccessArray = $stmtAccessArray->get_result();
                 $accessArray = $resultAccessArray->fetch_array();
+                $resultAccessArray->free();
+                $stmtAccessArray->close(); 
 
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
+                }
                 //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
                 $payload = [
                     'userAdmissionAdmin' => $user,
@@ -67,19 +77,19 @@ class AdmissionAdminDAO {
                 $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
 
                 //Insercion del token en la tabla relacional entre token y usuario administrador de admisiones
-                $queryInsert = "INSERT INTO TokenUserAdmissionAdmin (token ,id_user_admissions_administrator) VALUES (?,?);";
-                $stmtInsert = $this->connection->prepare($queryInsert);
-                $stmtInsert->bind_param('si', $newToken);
-                $stmtInsert->execute();
-                $resultInsert = $stmtInsert->get_result();
+                $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
+                $stmtUpdate = $this->connection->prepare($queryUpdate);
+                $stmtUpdate->bind_param('si', $newToken, $auxID);
+                $resultUpdate = $stmtUpdate->execute();
 
-                if ($resultInsert === false) { //Si la insercion falla
+                if ($resultUpdate === false) { //Si la insercion falla
                     return $response = [
                         'success' => false,
                         'message' => 'Token no registrado.'
                     ];
                 }
-
+                $stmtUpdate->close();
+                
                 $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
                     'success' => true,
                     'message' => 'Validacion de credenciales exitosa.',
@@ -444,9 +454,7 @@ class AdmissionAdminDAO {
 
     return true;
     }
- 
 }
-
 ?>
 
 
