@@ -20,6 +20,7 @@ BEGIN
         email_applicant, 
         phone_number_applicant, 
         address_applicant, 
+        image_id_applicant,
         AdmissionProcess.name_admission_process,
         RegionalCenters.name_regional_center,
         first.name_undergraduate as firstC,

@@ -2,7 +2,7 @@ import { Cell, Modal, Alert, Search, Entry } from "../behavior/support.mjs";
 class Applicant {
   static modalInstance = null;
 
-  static async renderData() {
+  static async renderData(role) {
     const applications = await this.viewData();
 
     const tableBody = document.querySelector("#viewDataApplicants tbody");
@@ -54,11 +54,10 @@ class Applicant {
         const button = document.createElement("button");
         button.classList.add("view-document");
         button.style = "border:none; background:none; width:30px; heigth:30px;";
-
-        button.setAttribute("data-certificate", application.certificate);
+        
         button.setAttribute(
-          "data-application",
-          application.id_admission_application_number
+          "data-applicant",
+          application.id_applicant
         );
 
         // Creamos la imagen y configuramos su fuente
@@ -97,26 +96,106 @@ class Applicant {
         document.querySelectorAll(".view-document");
       viewCertificateButtons.forEach((button) => {
         button.addEventListener("click", function () {
-          Applicant.showCertificate(
-            button.getAttribute("data-certificate"),
-            button.getAttribute("data-application")
+          Applicant.showDataApplication(applications,
+            button.getAttribute("data-applicant"),
+            role
           );
         });
       });
 
       Search.onInputChange("searchApplication", "viewDataApplicantsBody");
+
+       //Botón de descarga de aplicaciones, solo asociado a role valido
+       const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsBtn');
+
+      if(role != 3){
+        downloadInscriptionsBtn.style.display = 'none';
+      }
+
     } else {
-      Alert.display("No se encontraron solicitudes de aplicación", "warning");
+      Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas');
     }
   }
 
   //Carga la imagen del certificado del aplicante en la modal y luego la despliega
-  static showCertificate(certificate, IdApplication) {
+  static showDataApplication(applications, idApplicant, role) {
+   const application = applications.find(applicant => applicant.id_applicant === idApplicant);
+    
+    //Apartado de verificación para roles de revisión, no edición.
+    const verifyDataCheckList = document.getElementById('verifyDataCheckList');
+   
+   
+    
+    //Tomamos todos los input del formulario de visualización
+    const applicantName = document.getElementById('applicantName');
+    const applicantLastName = document.getElementById('applicantLastName');
+    const applicantIdentification = document.getElementById('applicantIdentification');
+    const applicantPhoneNumber = document.getElementById('applicantPhoneNumber');
+    const applicantEmail = document.getElementById('applicantEmail');
+    const applicantDirection = document.getElementById('applicantDirection')
     const certificateImage = document.getElementById("certificateImage");
-    certificateImage.src = certificate; // La cadena base64 con el tipo MIME
+    const idImage = document.getElementById("idImage");
+    const applicantStudyCenter = document.getElementById('applicantStudyCenter');
+    const applicantFirstChoice = document.getElementById('applicantFirstChoice');
+    const applicantSecondChoice = document.getElementById('applicantSecondChoice');
+
+    //Si el role no tiene acceso de edición lo quitamos
+      applicantStudyCenter.disabled = true;
+      applicantFirstChoice.disabled = true;
+      applicantSecondChoice.disabled = true;
+    
+    switch(role){
+
+      case 1:
+        verifyDataCheckList.style.display = 'none';
+     
+   
+      break;
+
+      case 2:
+       
+        applicantName.disabled = true;
+        applicantLastName.disabled = true;
+        applicantIdentification.disabled = true;
+        applicantPhoneNumber.disabled = true;
+        applicantEmail.disabled = true;
+        applicantDirection.disabled = true;
+      break;
+
+      case 3:
+        verifyDataCheckList.style.display = 'none';
+
+        applicantName.disabled = true;
+        applicantLastName.disabled = true;
+        applicantIdentification.disabled = true;
+        applicantPhoneNumber.disabled = true;
+        applicantEmail.disabled = true;
+        applicantDirection.disabled = true;
+
+      break;
+    }
+
+ 
+   
+    
+    // Cambiamos el valor de los input 
+    applicantName.value = application.name;
+    applicantLastName.value = application.lastname;
+    applicantIdentification.value = application.id_applicant;
+    applicantPhoneNumber.value = application.phone_number_applicant;
+    applicantEmail.value = application.email_applicant;
+    applicantDirection.value = application.address_applicant;
+    applicantStudyCenter.value = application.name_regional_center;
+    applicantFirstChoice.value = application.firstC;
+    applicantSecondChoice.value = application.secondC;
+
+
+   
+    certificateImage.innerHTML = application.certificate; 
+    idImage.innerHTML = application.idImage;
 
     const modalTitle = document.getElementById("viewCertificateTitle");
-    modalTitle.innerText = "Certificado de Solicitud Número: " + IdApplication;
+    modalTitle.innerText = "Información de Solicitud Número: " +  application.id_admission_application_number;
     // Establecer un tamaño adecuado para la imagen (opcional)
     certificateImage.style.maxWidth = "100%"; // Limitar el ancho de la imagen a 100px
     certificateImage.style.maxHeight = "100%"; // Limitar el alto de la imagen a 100px*/

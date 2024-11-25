@@ -2,21 +2,7 @@
 import { regular_expressions } from "./configuration.mjs"
 class Alert{
 
-    /*static alertPlaceholder = document.getElementById('alertPlaceholder')*/
-
-    /*static display(message, type) {
-        const wrapper = document.createElement('div')
-
-        wrapper.innerHTML = [
-            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-            `   <div>${message}</div>`,
-            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-            '</div>'
-          ].join('')
-
-
-          this.alertPlaceholder.append(wrapper)
-    }*/
+   
 
           static display(type, title, message) {
 
@@ -50,8 +36,14 @@ class Alert{
             
             // Agregar eventos de cierre
             closeIcon.addEventListener('click', () => {
-              notification.remove(); // Eliminar la notificación del DOM
-            });
+              // Añadir la clase para la animación de salida
+              notification.classList.add('hide');
+          
+              
+              setTimeout(() => {
+                  notification.remove(); // Eliminar la notificación del DOM
+              }, 300); // 
+          });
           
             // Construir la notificación
             notificationContent.appendChild(notificationTitle);
@@ -63,10 +55,16 @@ class Alert{
             // Insertar la notificación en el contenedor de notificaciones
             const notifications = document.getElementById('notifications');
             notifications.appendChild(notification);
-
-            notification.timeOut = setTimeout(
-              ()=>notification.remove(), 7000
-            )
+            
+            notification.timeOut = setTimeout(() => {
+              if (notification) {
+                  // Añade una clase para la animación de salida
+                  notification.classList.add('hide');
+                  
+                  // Espera a que termine la animación antes de eliminar el elemento
+                  setTimeout(() => notification.remove(), 300); // Ajusta según la duración de la animación "hide"
+              }
+          }, 7000);
           }
 
 
@@ -266,6 +264,36 @@ class Form{
   
     return isFormValid;
   }
+
+
+  static changeActionByChecks(idForm,idButton,messageTrue,messageFalse, actionTrue, actionFalse){
+     const submitButton = document.getElementById(idButton);
+
+     // Crear un objeto para almacenar los checkboxes seleccionados
+     var selectedCheckboxes = [];
+
+     // Iterar sobre todos los checkboxes seleccionados y agregar sus valores a selectedCheckboxes
+     document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(checkbox) {
+       selectedCheckboxes.push(checkbox.value);
+     });
+
+     if(selectedCheckboxes.length>0){
+      submitButton.classList.remove('oficial-blue');
+      submitButton.classList.add('wrong-form');
+      submitButton.innerText = messageFalse;
+      submitButton.setAttribute('data-action','Deny')
+
+    
+
+     }else{
+      submitButton.classList.add('oficial-blue');
+      submitButton.classList.remove('wrong-form');
+      submitButton.innerText = messageTrue;
+      submitButton.setAttribute('data-action','Approve');
+   
+     }
+  }
+ 
 
 }
 

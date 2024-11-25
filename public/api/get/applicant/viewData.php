@@ -7,7 +7,7 @@ include_once "../../../../src/DAO/ApplicantDAO.php";
 
 $dao = new ApplicantDAO();
 
-$applicationsData = $dao->viewData();
+$dao->viewData();
 
 
 ?>

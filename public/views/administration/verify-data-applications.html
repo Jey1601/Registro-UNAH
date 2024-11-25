@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn">
+  <meta name="version" content="0.1.0">
+  <meta name="since" content="2024/11/1">
+  <meta name="date" content="2024/11/10">
+  <meta name="description"
+    content="Página de visualización de inscripciones">
+
+
+   <link href="../../assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="../../assets/img/icons/UNAH-escudo.png"  sizes="16x16">
+   <link rel="stylesheet" href="../../assets/css/main.css">
+   <link rel="stylesheet" href="../../assets/css/administration/main.css"> 
+   <link rel="stylesheet" href="../../assets/css/administration/see-inscriptions.css"> 
+   <link rel="stylesheet" href="../../assets/css/support.css">
+
+
+    
+  <title>Inscripciones</title>
+  <script src="../../assets/js/tokenValidation.js"></script>
+</head>
+
+<body class="background-white animation">
+
+
+  <!--Header/navar==============================================================================-->
+  <nav class="my-nav">
+    <div class="nav-container dropdown"  >
+      <a class="" href="./admissions-admin.html">
+        <img class="nav-logo" src="../../assets/img/logos/UNAH-version-horizontal-white.png" >
+      </a>
+      <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="profile-img-button" src="../../assets/img/icons/profile-icon.png" alt="">
+      </button>
+      <ul class="dropdown-menu">
+        <li><button id="logoutBtn" style="border:none; background: none; height: auto;" class="dropdown-item" href="#">Cerrar sesión</button></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="notifications"></div>
+     <!--Logout=================================================================================-->
+
+    
+   <!--Tabla=================================================================================-->
+   <div class="title-container">
+        <div class="table-title">
+            <h2>Inscripciones</h2>
+        </div>
+        
+   </div>
+  
+
+
+   <section class="table-container" > 
+    <div style="margin-bottom: 10px; display: flex; justify-content: left; gap:10px;">
+      <input id="searchApplication" type="text" placeholder="Buscar" style="border-radius: 5px; border: solid 1px rgba(0, 0, 0, 0.4); height: 30px; ">
+      <img role="button" id="downloadInscriptionsCsv" src="../../assets/img/icons/download-icon.png" alt="Descargar">
+    </div>
+    
+    <table id="viewDataApplicants" class="table table-striped table-hover" >
+
+        <thead  >
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col"># Solicitud</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Identidad</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Proceso de Admisión</th>
+            <th scope="col">Centro</th>
+            <th scope="col">Carrera1</th>
+            <th scope="col">Carrera2</th>
+            <th scope="col">Ver</th>
+            
+          </tr>
+        </thead>
+        <tbody id="viewDataApplicantsBody">
+         
+          
+        </tbody>
+      </table>
+    </section> 
+
+
+  <!--Footer=================================================================================-->
+  
+  <footer class="footer">
+    
+    <img class="logo-footer" src="../../assets/img/logos/UNAH-version-horizontal-white.png"  >
+
+    <ul class="social-icon">
+      <li class="footer-icon">
+        <a href="https://facebook.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_facebook_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://instagram.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_insta_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://www.unah.edu.hn/" >
+          <img src="../../assets/img/icons/icon_linkedin_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://x.com/UNAHoficial" >
+          <img src="../../assets/img/icons/icon_x_white.png" alt="">
+        </a>
+      </li>
+      <li class="footer-icon">
+        <a href="https://youtube.com/unahoficial" >
+          <img src="../../assets/img/icons/icon_youtube_white.png" alt="">
+        </a>
+      </li>
+    </ul>
+    
+    <ul class="footer-menu">
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Inicio</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Equipo</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Contacto</a>
+      </li>
+      <li class="footer-menu-item">
+        <a href="" class="footer-menu-icon">Sobre Nosotros</a>
+      </li>
+    </ul>
+    <p class="footer-text">@año | Todos los derechos reservados</p>
+
+  </footer>
+
+
+  <!-- Modal De Ver infromación-->
+<div class="modal fade" id="viewCertificate" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewCertificateTitle">Certificado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div  class="modal-body">
+
+              <form enctype="multipart/form-data" id="dataApplication">
+                <div class="row">
+                  <div class="col-6">
+                      <h5>Información personal</h5>
+                      
+                        <div class="mb-3">
+                          <label for="applicantName" class="form-label">Nombre</label>
+                          <input type="text" class="form-control input-entry" id="applicantName"  name="applicantName"   required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="applicantLastName" class="form-label">Apellidos</label>
+                          <input type="text" class="form-control input-entry" id="applicantLastName" name="applicantLastName"  required >
+                      
+                        </div>
+                        <div class="mb-3">
+                          <label for="applicantIdentification" class="form-label">Número de identidad</label>
+                          <input type="text" class="form-control input-entry" id="applicantIdentification"   name="applicantIdentification"  required>
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
+                          <input type="text" class="form-control input-entry" id="applicantPhoneNumber" name="applicantPhoneNumber"   required >
+                          
+                        </div>
+                        <div class="mb-3">
+                          <label for="applicantEmail" class="form-label">Correo electrónico</label>
+                          <input type="email" class="form-control input-entry" id="applicantEmail" name="applicantEmail"  required>
+                        
+                        </div>
+                      <div class="mb-3">
+                          <label for="applicantDirection" class="form-label">Dirección</label>
+                          <textarea class="form-control" id="applicantDirection"  name="applicantDirection" rows="4"   required></textarea>
+                          
+                        </div>
+
+                        
+                      
+                  </div>
+                  <div class="col-6">
+                    <h5>Información sobre solicitud</h5>
+   
+                        <div>
+                          <label class="form-label" for="applicantStudyCenter">Centro Regional</label>
+                          <input  style="margin-bottom: 10px;" id="applicantStudyCenter" name="applicantStudyCenter" class="form-control" required></input>
+                  
+                      </div>
+                        <div>
+                          <label class="form-label" for="applicantFirstChoice">Carrera Principal</label>
+                          <input style="margin-bottom: 10px;" id="applicantFirstChoice"  name="applicantFirstChoice" class="form-control" required> </input>
+                      </div>
+                      <div>
+                        <label  class="form-label"for="applicantSecondChoice">Carrera Secundaria</label>
+                        <input style="margin-bottom: 10px;" id="applicantSecondChoice"   name="applicantSecondChoice" class="form-control" required ></input>
+                    </div>
+                  <div id="verifyDataCheckList">
+                        <h5>Verificar Información</h5>
+                        <p>Seleccione los campos que el aspirante ha ingresado incorrectamente</p>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="form-check">
+                              <input class="form-check-input" name="name_applicant" type="checkbox" value="" id="defaultCheck1">
+                              <label class="form-check-label" for="defaultCheck1">
+                                Nombre
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" name="id_applicant" type="checkbox" value="id_applicant" id="id_applicant" >
+                              <label class="form-check-label" for="id_applicant">
+                                Número de identidad
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" name="email_applicant" type="checkbox" value="" id="email_applicant" >
+                              <label class="form-check-label" for="email_applicant">
+                                Correo electrónico
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" name="secondary_certificate_applicant" type="checkbox" value="" id="" >
+                              <label class="form-check-label" for="secondary_certificate_applicant">
+                                Certificado de secundaria
+                              </label>
+                            </div>
+                            
+                            
+
+                          </div>
+                          <div class="col-6">
+                            <div class="form-check">
+                              <input class="form-check-input" name="invalidApplicantLastName" type="checkbox" value="" id="">
+                              <label class="form-check-label" for="">
+                                Apellido
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" name="phone_number_applicant"  type="checkbox" value="" id="" >
+                              <label class="form-check-label" for="phone_number_applicant">
+                                Teléfono
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" name="address_applicant"  type="checkbox" value="" id="" >
+                              <label class="form-check-label" for="address_applicant">
+                                Dirección
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input"  name="image_id_applicant"  type="checkbox" value="" id="" >
+                              <label class="form-check-label" for="image_id_applicant">
+                                Imagen de identificación / partida de nacimiento
+                              </label>
+                            </div>
+
+
+                          </div>
+                        </div> 
+          
+                    <div class="row">
+                        <p>Ingrese una justificación de su dictamen</p>
+                        <textarea maxlength="600" style="width: 90%; margin: 0 0 10px 0;" name="checkJustification" id=""></textarea>
+              
+                    </div> 
+                  </div>  <!--Fin de apartado de checks-->
+                  </div>
+                </div>
+                <h5>Certificado</h5>
+                <div id="certificateImage" class="row">
+                 
+                </div>
+                <h5>Documento de identidad nacional/ Partida de nacimiento</h5>
+                <div id="idImage" class="row">
+                  
+                </div>
+        
+          
+  
+       
+      </div> <!--Final del body del modal -->
+      <div class=" modal-footer">
+        <button type="button" class="btn btn-secondary oficial-yellow" data-bs-dismiss="modal" style="border: none;">Cerrar</button>
+        <button id="checkButton" type="submit" class="btn btn-primary oficial-blue" style="border: none;">Aprobar</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+  <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  
+  <script type="module" src="../../assets/js/aspects.js" ></script>
+  <script type="module" src="../../assets/js/verify-data-applications.js" ></script>
+  
+
+</body>
+
+</html>

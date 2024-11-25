@@ -15,7 +15,12 @@ inscriptionButton.forEach(button => {
 const inscriptionForm = document.getElementById('inscriptionForm');
 inscriptionForm.addEventListener('submit',function(event){
     event.preventDefault();
-    Inscription.getData();
+
+    Modal.showModal('modalEmailCodeVerification');
+
+   /* submitButton.classList.remove('wrong-form');
+    submitButton.innerText = "Enviar";
+    Inscription.getData();*/
   
    
 }); 

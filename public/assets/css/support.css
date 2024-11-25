@@ -20,6 +20,10 @@
     animation: show 0.3s ease 1 forwards;
 }
 
+.notification.hide {
+    animation: hide 0.3s ease forwards;
+}
+
 .notification i{
     color: var(--color);
     justify-content: center;
@@ -52,7 +56,20 @@
     }
 }
 
-
+@keyframes hide {
+    0% {
+        transform: translateX(-10px); /* Posición inicial ligeramente a la izquierda */
+    }
+    40% {
+        transform: translateX(0%); /* Regresa a su posición original */
+    }
+    80% {
+        transform: translateX(5%); /* Avanza un poco hacia la derecha */
+    }
+    100% {
+        transform: translateX(100%); /* Desaparece hacia la derecha */
+    }
+}
 
 .notification::before{
     position: absolute;
@@ -66,6 +83,7 @@
     animation: timeOut 7s linear 1 forwards;
   
 }
+
 
 
 @keyframes timeOut{
@@ -91,4 +109,37 @@
     --color:#3498db;
     background-color:  #f7f7ff;
     border-left: 8px solid #3498db; 
+}
+
+
+.wrong-form{
+    background-color: tomato !important; 
+    animation: 0.2s valid 3;
+}
+
+.input-entry{
+    outline: none;
+}
+
+.right-input{
+    border: 2px solid #47d764 !important;
+  
+}
+
+.wrong-input {
+    border: 2px solid #f24d4c !important;
+    animation: 0.2s valid 3;
+}
+
+.input-error-active{
+    display: block !important;
+}
+
+.input-error{
+    display: none;
+}
+
+@keyframes valid{
+    to{transform: translateX(0);}
+    from { transform: translateX(10px);}
 }

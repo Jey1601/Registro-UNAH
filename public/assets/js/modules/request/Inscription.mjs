@@ -106,8 +106,13 @@ class Inscription {
       if (result.id_application== null ){
         Alert.display('warning','Aviso', result.message);
       }else{
-        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ), "warning");
+        
         form.reset();
+        
+        Array.from(form.elements).forEach(input => {
+          input.classList.remove('right-input');
+        });
+        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ), "warning");
       }
      
     } catch (error) {
@@ -116,7 +121,7 @@ class Inscription {
   }
 
   static validateFile(file) {
-    console.log(file);
+   
     const maxSize = 16 * 1024 * 1024;  // 16 MB en bytes
 
     // Verificar el tamaño del archivo
@@ -137,12 +142,10 @@ class Inscription {
 
                 // Verificar las dimensiones de la imagen
                 if (width < 600 || height < 800) {
-                    console.log('false');
-                    console.log(`La imagen tiene dimensiones: ${width}x${height}`);
+          
                     resolve(false);  // Resolvemos la promesa con false
                 } else {
-                    console.log('true');
-                    console.log(`La imagen tiene dimensiones: ${width}x${height}`);
+                   
                     resolve(true);  // Resolvemos la promesa con true
                 }
             };

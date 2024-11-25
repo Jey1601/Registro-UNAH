@@ -10,13 +10,13 @@
 */
 
 include_once 'util/jwt.php';
+include_once 'util/mail.php';
 class ApplicantDAO{
     private $host = 'localhost';
     private $user = 'root';
     private $password = '12345';
     private $dbName = 'unah_registration';
     private $connection;
-
     private $id_application_inserted = null;
 
     public function __construct()
@@ -63,15 +63,50 @@ class ApplicantDAO{
         if ($result) {
             // Recorremos los resultados y los agregamos al array $applicationsData
             while ($row = $result->fetch_assoc()) {
+                // Abrir una instancia de finfo para detección MIME
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
-                $imageData = $row['certificate'];
-                $imageType = finfo_buffer(finfo_open(), $imageData, FILEINFO_MIME_TYPE);  // Detectar tipo MIME
+                // Procesar el certificado
+                $imageDataCertificate = $row['certificate'];
+                $fileTypeCertificate = finfo_buffer($finfo, $imageDataCertificate);
 
-                // Convertir la imagen binaria a base64
-                $imageBase64 = base64_encode($imageData);
+                // Procesar la identificación del solicitante
+                $imageDataId = $row['image_id_applicant'];
+                $fileTypeId = finfo_buffer($finfo, $imageDataId);
 
-                // Crear el prefijo adecuado según el tipo MIME
-                $imageSrc = "data:" . $imageType . ";base64," . $imageBase64;
+                // Cerrar la instancia de finfo
+                finfo_close($finfo);
+
+                // Certificado
+                if (strpos($fileTypeCertificate, 'image/') === 0) {
+                    // Es una imagen
+                    $imageBase64Certificate = base64_encode($imageDataCertificate);
+                    $fileSrcCertificate = "data:" . $fileTypeCertificate . ";base64," . $imageBase64Certificate;
+                    $certificateHTML = "<img src='$fileSrcCertificate' alt='Certificate'>";
+                } elseif ($fileTypeCertificate === 'application/pdf') {
+                    // Es un PDF
+                    $fileSrcCertificate = "data:" . $fileTypeCertificate . ";base64," . base64_encode($imageDataCertificate);
+                    $certificateHTML = "<iframe src='$fileSrcCertificate' width='100%' height='600px'></iframe>";
+                } else {
+                    // No es un tipo soportado
+                    $certificateHTML = "Archivo no soportado para el certificado.";
+                }
+
+                // ID del solicitante
+                if (strpos($fileTypeId, 'image/') === 0) {
+                    // Es una imagen
+                    $imageBase64Id = base64_encode($imageDataId);
+                    $fileSrcId = "data:" . $fileTypeId . ";base64," . $imageBase64Id;
+                    $idHTML = "<img src='$fileSrcId' alt='Applicant ID'>";
+                } elseif ($fileTypeId === 'application/pdf') {
+                    // Es un PDF
+                    $fileSrcId = "data:" . $fileTypeId . ";base64," . base64_encode($imageDataId);
+                    $idHTML = "<iframe src='$fileSrcId' width='100%' height='600px'></iframe>";
+                } else {
+                    // No es un tipo soportado
+                    $idHTML = "Archivo no soportado para la identificación.";
+                }
+
 
                 // Crear un arreglo asociativo con claves más descriptivas
                 $application = [
@@ -86,7 +121,8 @@ class ApplicantDAO{
                     "name_regional_center" => $row['name_regional_center'],
                     "firstC" => $row['firstC'],
                     "secondC" => $row['secondC'],
-                    "certificate" => $imageSrc
+                    "certificate" => $certificateHTML,
+                    "idImage" =>$idHTML
                 ];
 
                 // Añadimos cada fila al array
@@ -104,6 +140,8 @@ class ApplicantDAO{
 
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type,$image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {
+        
+        $mail = new mail();  
         // Iniciar una transacción
         $this->connection->begin_transaction();
 
@@ -124,7 +162,8 @@ class ApplicantDAO{
                     if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
                         echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
-                        
+                        $name = $first_name." ".$second_name." ".$third_name." ".$first_lastname." ".$second_lastname;
+                        $mail->sendConfirmation( $name, $this->id_application_inserted, $email );
                         echo json_encode(["message" => "Inscripción creada exitosamente",
                                                   "id_application" => $this->id_application_inserted  ]);
                     }
@@ -142,8 +181,13 @@ class ApplicantDAO{
                     echo json_encode(["error" => "Ha ocurrido un error al crear la solicitud"]);
                 } else {
                     
+                    
+                    $name = $first_name." ".$second_name." ".$third_name." ".$first_lastname." ".$second_lastname;
+                    $mail->sendConfirmation($name,$this->id_application_inserted, $email );
                     echo json_encode(["message" => "Inscripción creada exitosamente",
                     "id_application" => $this->id_application_inserted  ]);
+
+
                 }
             }
 

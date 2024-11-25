@@ -58,37 +58,7 @@ body{
    
 }
 
-.wrong-form{
-    background-color: tomato !important; 
-    animation: 0.2s valid 3;
-}
 
-.input-entry{
-    outline: none;
-}
-
-.right-input{
-    border: 2px solid #47d764 !important;
-  
-}
-
-.wrong-input {
-    border: 2px solid #f24d4c !important;
-    animation: 0.2s valid 3;
-}
-
-.input-error-active{
-    display: block !important;
-}
-
-.input-error{
-    display: none;
-}
-
-@keyframes valid{
-    to{transform: translateX(0);}
-    from { transform: translateX(10px);}
-}
 
 .oficial-yellow {
     background-color: #ffb300 !important;

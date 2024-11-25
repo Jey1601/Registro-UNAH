@@ -395,9 +395,37 @@
     </div>
   </div>
 </div>
+
+ <!--================================Modal de verificación de correo================================================-->
+ <div class="modal fade" id="modalEmailCodeVerification" aria-hidden="true"  tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEmailCodeVerification">Verificación de correo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <span class="form-text">
+            Se ha enviado un código de verificación a tu correo, ingresalo aquí para poder continuar.
+          </span>
+          <div class="mb-3">
+            <label for="emailCodeVerification" class="form-label">Código de Verificación</label>
+            <input type="text" class="form-control" id="emailCodeVerification">
+          </div>
+       
+    
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-blue"  data-bs-toggle="modal" data-bs-dismiss="modal">Verificar</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
  <!-- Login Admissions -->
  <div class="modal fade " id="loginModalAdmissions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
       <div class="modal-header" style="border-bottom: none;">
           <div style="width: 100%; display: flex; justify-content: center;">
