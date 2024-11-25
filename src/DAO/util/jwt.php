@@ -85,5 +85,4 @@ class JWT {
         return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
     }
 }
-
 ?>

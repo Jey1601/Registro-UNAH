@@ -1,5 +1,5 @@
 <?php
-include_once '../../../src/DAO/util/jwt.php';
+include_once '../../../src/DAO/util/tokenVerification.php';
 
 header("Content-Type: application/json");
 
@@ -13,9 +13,10 @@ if (!isset($data['token']) || empty($data['token'])) {
     exit;
 } else {
     $token = $data['token'];
-    $response = JWT::validateToken($token);
+    $tokenValidation = new TokenVerification();
+    $response = $tokenValidation->tokenVerification($token);
 
-    if ($response === false) {
+    if ($response['success'] === false) {
         echo json_encode([
             'success' => false,
             'message' => 'Token invalido.'
@@ -25,7 +26,7 @@ if (!isset($data['token']) || empty($data['token'])) {
         echo json_encode([
             'success' => true,
             'message' => 'Validacion exitosa.',
-            'payload' => $response
+            'tokenExpiration' => $response['tokenExpiration']
         ]);
     }
 }

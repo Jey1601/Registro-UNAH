@@ -1,5 +1,4 @@
 DROP DATABASE unah_registration;
-
 CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
