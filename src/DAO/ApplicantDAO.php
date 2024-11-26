@@ -62,10 +62,17 @@ class ApplicantDAO{
 
             if ($applicantCheckPending) { 
                     $dataApplicantCheckPending = $applicantCheckPending->fetch_assoc();
-                    return [
-                        "status" => "success",
-                        "applicantCheckDataPending" => $dataApplicantCheckPending
-                    ];
+                    if($dataApplicantCheckPending != null){
+                        return [
+                            "status" => "success",
+                            "applicantCheckDataPending" => $dataApplicantCheckPending
+                        ];
+                    }else{
+                        return [
+                            "status" => "error",
+                            "message" => "Solicitud ya procesada "
+                        ];
+                    }
                  
             } else {
                 return [
@@ -83,7 +90,6 @@ class ApplicantDAO{
     }
 
     public function getPendingCheckData ($userNameAdmin){
-        //recordatorio de hacer el include del DAO: include_once "AdmissionAdminDAO.php";
         $admissionAdmin = new AdmissionAdminDAO();
         $dataIdUser = $admissionAdmin->getUserAdminId($userNameAdmin); //obtener el id del usuario administrador
         if($dataIdUser['status']=='success'){
@@ -135,7 +141,7 @@ class ApplicantDAO{
                                 $idHTML = "<iframe src='$fileSrcId' width='100%' height='600px'></iframe>";
                             } else {
                                 // No es un tipo soportado
-                                $idHTML = "Archivo no soportado para la identificación.";
+                                $idHTML = "Archivo no soportado para la identificacion.";
                             }
             
             
@@ -156,13 +162,11 @@ class ApplicantDAO{
                                 "idImage" =>$idHTML
                             ];
                             $applicationsData[] = $application;
-                    } else {
-                        return json_encode(["error" => "Error al obtener la informacion de un aspirante en getPendingCheckData: ".$responseGetData['message']]);
                     }
                 }
-                finfo_close($finfo);   // Cerrar la instancia de finfo
+                finfo_close($finfo); 
             }
-            return json_encode($applicationsData);
+            echo json_encode($applicationsData);
 
         }
     }
@@ -204,7 +208,7 @@ class ApplicantDAO{
                     $certificateHTML = "<iframe src='$fileSrcCertificate' width='100%' height='600px'></iframe>";
                 } else {
                     // No es un tipo soportado
-                    $certificateHTML = "Archivo no soportado para el certificado.";
+                    $certificateHTML = "Archivo no soportado para el certificado";
                 }
 
                 // ID del solicitante
@@ -219,7 +223,7 @@ class ApplicantDAO{
                     $idHTML = "<iframe src='$fileSrcId' width='100%' height='600px'></iframe>";
                 } else {
                     // No es un tipo soportado
-                    $idHTML = "Archivo no soportado para la identificación.";
+                    $idHTML = "Archivo no soportado para la identificacion";
                 }
 
 
