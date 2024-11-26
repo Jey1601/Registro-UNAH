@@ -32,12 +32,12 @@ class Login {
 }
 
 static async authApplicant() {
-  const idNum = document.getElementById('id_applicant').value;
-  const numReq = document.getElementById('id_application').value;
+  const username = document.getElementById('id_applicant').value;
+  const password = document.getElementById('id_application').value;
 
   const credentials = {
-    "numID": idNum,
-    "numRequest": numReq
+    "username": username,
+    "password": password
   }
 
   try{

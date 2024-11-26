@@ -18,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $inputBody = json_decode(file_get_contents('php://input'), true);
 
 //Captura y limpieza de datos
-$numID = trim($inputBody['numID'] ?? '');
-$numRequest = trim($inputBody['numRequest'] ?? '');
+$username = trim($inputBody['username'] ?? '');
+$password = trim($inputBody['password'] ?? '');
 
 //Validacion de numero de identidad
 $regexValidationID = '/(0|1)[1-8][0-2][0-8](1|2)(0|9)\d{7}$/';
-$validation = preg_match($regexValidationID, $numID);
+$validation = preg_match($regexValidationID, $username);
 if (!$validation) {
     echo json_encode([
         'success' => false,
@@ -31,10 +31,9 @@ if (!$validation) {
     ]);
     exit;
 }
-$numRequest = intval($numRequest);
 
 $auth = new ApplicantDAO();
-$response = $auth->authApplicant($numID, $numRequest);
+$response = $auth->authApplicant($username, $password);
 
 echo json_encode($response);
 ?>

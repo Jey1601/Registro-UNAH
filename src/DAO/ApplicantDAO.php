@@ -221,15 +221,11 @@ class ApplicantDAO{
             if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
                 $row = $result->fetch_array();
                 $auxID = $row[0];
-                $queryAccessArray = "CALL SP_GET_ACCESS_CONTROL_USER_APPLICANT_BY_ID(?);"; //Se buscan los accesos que tenga el usuario
-                $stmtAccessArray = $this->connection->prepare($queryAccessArray);
-                $stmtAccessArray->bind_param('i', $auxID);
-                $stmtAccessArray->execute();
-                $resultAccessArray = $stmtAccessArray->get_result();
+                $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
+                $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
                 $accessArray = $resultAccessArray->fetch_array();
                 //Liberacion de resultados de la query:
-                $resultAccessArray->free();
-                $stmtAccessArray->close();
+                $resultAccessArray->free_result();
 
                 while ($this->connection->more_results() && $this->connection->next_result()) {
                     $extraResult = $this->connection->store_result();

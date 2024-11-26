@@ -1,4 +1,6 @@
 --TABLA RELACIONAL ENTRE UN TOKEN GENERADO Y UN USUARIO ADMINISTRADOR DE ADMISIONES
+USE unah_registration;
+
 CREATE TABLE TokenUserAdmissionAdmin (
     id_token_user_admission_administrator INT PRIMARY KEY AUTO_INCREMENT,
     token VARCHAR(512) UNIQUE,

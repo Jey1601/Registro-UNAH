@@ -15,8 +15,34 @@ VALUES
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('Rutilia Calderón Padilla', TRUE);
 
-INSERT INTO AdmissionProcess (name_admission_process,id_academic_year, start_dateof_admission_process, end_dateof_admission_process, timeof_sending_notifications_admission_process, current_status_admission_process, status_admission_process) 
-VALUES ('Proceso de Admisión 2024',2024,'2024-01-01','2024-12-31','09:00:00',FALSE,TRUE);
+INSERT INTO AdmissionProcess (name_admission_process,id_academic_year, start_dateof_admission_process, end_dateof_admission_process, current_status_admission_process, status_admission_process) 
+VALUES ('Proceso de Admisión 2024',2024,'2024-01-01','2024-12-31',FALSE,TRUE);
+
+INSERT INTO InscriptionAdmissionProcess (id_admission_process,start_dateof_inscription_admission_process,end_dateof_inscription_admission_process,current_status_inscription_admission_process, status_inscription_admission_processs) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
+INSERT INTO DocumentValidationAdmissionProcess (id_admission_process, start_dateof_document_validation_admission_process, end_dateof_document_validation_admission_process, current_status_document_validation_admission_process, status_document_validation_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
+INSERT INTO AdmissionTestAdmissionProcess (id_admission_process, dateof_admission_test_admission_process, current_status_admission_test_admission_process, status_admission_test_admission_process) 
+VALUES (1, '2024-01-01', FALSE, TRUE);
+
+INSERT INTO RegistrationRatingAdmissionProcess (id_admission_process, start_dateof_registration_rating_admission_process, end_dateof_registration_rating_admission_process, current_status_registration_rating_admission_process, status_sending_registration_rating_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
+INSERT INTO SendingNotificationsAdmissionProcess ( id_admission_process, start_dateof_sending_notifications_admission_process, end_dateof_sending_notifications_admission_process, star_timeof_sending_notifications_admission_process, end_timeof_sending_notifications_admission_process, current_status_sending_notifications_admission_process, status_sending_notifications_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', '21:00:00', '04:00:00', FALSE, TRUE);
+
+INSERT INTO AcceptanceAdmissionProcess (id_admission_process,start_dateof_acceptance_admission_process,end_dateof_acceptance_admission_process,current_status_acceptance_admission_process, status_acceptance_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
+INSERT INTO RectificationPeriodAdmissionProcess (id_admission_process, start_dateof_rectification_period_admission_process, end_dateof_rectification_period_admission_process, current_status_rectification_period_admission_process, status_rectification_period_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
+INSERT INTO DownloadApplicantAdmittedInformationAdmissionProcess (
+	id_admission_process, start_dateof_download_applicant_information_admission_process, end_dateof_download_applicant_information_admission_process, current_status_download_applicant_information_admission_process, status_download_applicant_information_admission_process) 
+VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);
+
 
 
 INSERT INTO RegionalCenters (name_regional_center, acronym_regional_center, location_regional_center, email_regional_center, phone_number_regional_center, address_regional_center, status_regional_center) 
@@ -119,4 +145,7 @@ VALUES
 	(1001, 1, 0, FALSE), (1001, 2, 0, FALSE), 
 	(1002, 2, 0, FALSE), 
 	(1003, 2, 0, FALSE), 
-	(1004, 2, 0, FALSE);
+	(1004, 2, 0, FALSE); 
+
+
+

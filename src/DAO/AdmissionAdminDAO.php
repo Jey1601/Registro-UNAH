@@ -54,7 +54,7 @@ class AdmissionAdminDAO {
                 //Para obtener un array con los IDs de los controles de accesos que tiene el usuario que se autentica 
                 $row = $result->fetch_array();
                 $auxID = $row[0];
-                $queryAccessArray = "CALL SP_GET_ACCESS_CONTROL_USER_ADMISSION_ADMIN_BY_ID(?)";
+                $queryAccessArray = "SELECT  AccessControl.id_access_control FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersAdmissionsAdministrator ON AccessControlRoles.id_role = RolesUsersAdmissionsAdministrator.id_role_admissions_administrator INNER JOIN UsersAdmissionsAdministrator ON RolesUsersAdmissionsAdministrator.id_user_admissions_administrator = UsersAdmissionsAdministrator.id_user_admissions_administrator WHERE UsersAdmissionsAdministrator.id_user_admissions_administrator = ?;";
                 $stmtAccessArray = $this->connection->prepare($queryAccessArray);
                 $stmtAccessArray->bind_param('i', $auxID);
                 $stmtAccessArray->execute();
