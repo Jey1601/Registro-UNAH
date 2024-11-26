@@ -3,8 +3,7 @@ class Applicant {
   static modalInstance = null;
 
   static async renderData(role) {
-    const applications = await this.viewData();
-
+    const applications = await this.viewPendingCheckData();
     const tableBody = document.querySelector("#viewDataApplicants tbody");
     tableBody.innerHTML = "";
 
@@ -207,6 +206,22 @@ class Applicant {
   static async viewData() {
     try {
       const response = await fetch("../../../api/get/applicant/viewData.php");
+
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.status);
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      return []; // Si hay un error, retornamos un array vacio
+    }
+  }
+
+  static async viewPendingCheckData() {
+    try {
+      const response = await fetch("../../../api/get/applicant/PendingCheckData.php");
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
