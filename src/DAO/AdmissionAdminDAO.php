@@ -113,6 +113,86 @@ class AdmissionAdminDAO {
         return $response;
     }
 
+    /**
+     * Obtener el Identificador de un Usuario Administrador basandose en su Nombre de usuario, 
+     * usando el procedimiento almacenado USER_ADMIN_BY_USERNAME(); Debe devolver un solo registro, que contenga el id del usuario administrador.
+     * 
+     * @param string $userNameAdmin Nombre del usuario administrador.
+     * @return array Resultado de la operación con un estado ('status') y un mensaje o datos asociados:
+     *               - 'success': Operación exitosa, incluye el identificador del administrador.
+     *               - 'not_found': No se encontró un único usuario con el nombre de usuario especificado.
+     *               - 'error': Error durante la ejecución del procedimiento o una excepción capturada.
+     */
+    public function getUserAdminId ($userNameAdmin){
+        try {
+            if (!is_string($userNameAdmin)) {
+                throw new InvalidArgumentException("No se ha ingresado el parámetro correcto, debe ser una cadena de texto (varchar).");
+            }            
+            $IdUserAdmin = $this->connection->execute_query("CALL USER_ADMIN_BY_USERNAME('$userNameAdmin')");
+
+            if ($IdUserAdmin) { 
+                if ( $IdUserAdmin->num_rows == 1) { 
+                    $IdUserAdmissionAdministrator=  $IdUserAdmin->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "IdUserAdmissionAdministrator" => $IdUserAdmissionAdministrator['id_user_admissions_administrator']
+                    ];
+                } else {
+                    return [
+                        "status" => "not_found",
+                        "message" => "Se encontraron mas de un usuario"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento USER_ADMIN_BY_USERNAME(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getUserAdminId() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+    public function getPendingCheckApplicant($userId){ 
+        try {
+            if (!is_int($userId)) {
+                throw new InvalidArgumentException("No se ha ingresado el parámetro correcto, debe ser un entero.");
+            }           
+            $applicantsCheckPending = $this->connection->execute_query("CALL CHECK_PENDING_BY_USER_ADMINISTRADOR($userId)");
+            if ($applicantsCheckPending) { 
+                if ( $applicantsCheckPending->num_rows > 0) {
+                    while ($applicant = $applicantsCheckPending->fetch_assoc()) {
+                        $dataApplicantsCheckPending[] = $applicant;
+                    }
+                    return [
+                        "status" => "success",
+                        "AllApplicantsCheckPending" => $dataApplicantsCheckPending
+                    ];
+                } else {
+                    return [
+                        "status" => "warring",
+                        "message" => "Se encontraron aspirantes pendientes de revision"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento CHECK_PENDING_BY_USER_ADMINISTRADOR(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getPendingCheckApplicant() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
     /** 
      * Metodo para leer un archivo CSV subido por el Administrador de admisiones
      * 
