@@ -11,6 +11,7 @@
 
 include_once 'util/jwt.php';
 include_once 'util/mail.php';
+include_once "AdmissionAdminDAO.php";
 class ApplicantDAO{
     private $host = 'localhost';
     private $user = 'root';
@@ -50,6 +51,120 @@ class ApplicantDAO{
         }
 
         return $applicants;
+    }
+
+    public function getDataApplicant ($idApplicant){
+        try {
+            if (!is_string($idApplicant)) {
+                throw new InvalidArgumentException("No se ha ingresado el parámetro correcto, debe ser un VARCHAR(20).");
+            }            
+            $applicantCheckPending = $this->connection->execute_query("CALL APPLICANT_DATA_VIEW('$idApplicant')");
+
+            if ($applicantCheckPending) { 
+                    $dataApplicantCheckPending = $applicantCheckPending->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "applicantCheckDataPending" => $dataApplicantCheckPending
+                    ];
+                 
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento APPLICANT_DATA_VIEW(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getDataApplicant() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    public function getPendingCheckData ($userNameAdmin){
+        //recordatorio de hacer el include del DAO: include_once "AdmissionAdminDAO.php";
+        $admissionAdmin = new AdmissionAdminDAO();
+        $dataIdUser = $admissionAdmin->getUserAdminId($userNameAdmin); //obtener el id del usuario administrador
+        if($dataIdUser['status']=='success'){
+            $idUser = $dataIdUser['IdUserAdmissionAdministrator'];
+            $applicantsCheckPending = $admissionAdmin->getPendingCheckApplicant($idUser); // primero obtengo los id de los aspirantes asignados al usuario administrador.
+            if ($applicantsCheckPending['status'] !== 'success') {
+                return json_encode(["error" => "No se ha encontrado aspirantes asignados al usuario administrador"]);
+            }
+            if ($applicantsCheckPending['status'] == 'success') {
+                $applicationsData = [];
+                $finfo = finfo_open(FILEINFO_MIME_TYPE); // Abrir una instancia de finfo para detección MIME
+                foreach ($applicantsCheckPending['AllApplicantsCheckPending'] as $pendingApplicant) {
+                    $idApplicantCheck = $pendingApplicant['id_applicant'];
+                    $responseGetData = $this->getDataApplicant ($idApplicantCheck);
+                    if ($responseGetData['status']== 'success') {
+                            $dataApplicant = $responseGetData['applicantCheckDataPending'];
+                            // Procesar el certificado
+                            $imageDataCertificate = $dataApplicant['certificate'];
+                            $fileTypeCertificate = finfo_buffer($finfo, $imageDataCertificate);
+            
+                            // Procesar la identificación del solicitante
+                            $imageDataId = $dataApplicant['image_id_applicant'];
+                            $fileTypeId = finfo_buffer($finfo, $imageDataId);
+            
+                            // Certificado
+                            if (strpos($fileTypeCertificate, 'image/') === 0) {
+                                // Es una imagen
+                                $imageBase64Certificate = base64_encode($imageDataCertificate);
+                                $fileSrcCertificate = "data:" . $fileTypeCertificate . ";base64," . $imageBase64Certificate;
+                                $certificateHTML = "<img src='$fileSrcCertificate' alt='Certificate'>";
+                            } elseif ($fileTypeCertificate === 'application/pdf') {
+                                // Es un PDF
+                                $fileSrcCertificate = "data:" . $fileTypeCertificate . ";base64," . base64_encode($imageDataCertificate);
+                                $certificateHTML = "<iframe src='$fileSrcCertificate' width='100%' height='600px'></iframe>";
+                            } else {
+                                // No es un tipo soportado
+                                $certificateHTML = "Archivo no soportado para el certificado.";
+                            }
+            
+                            // ID del solicitante
+                            if (strpos($fileTypeId, 'image/') === 0) {
+                                // Es una imagen
+                                $imageBase64Id = base64_encode($imageDataId);
+                                $fileSrcId = "data:" . $fileTypeId . ";base64," . $imageBase64Id;
+                                $idHTML = "<img src='$fileSrcId' alt='Applicant ID'>";
+                            } elseif ($fileTypeId === 'application/pdf') {
+                                // Es un PDF
+                                $fileSrcId = "data:" . $fileTypeId . ";base64," . base64_encode($imageDataId);
+                                $idHTML = "<iframe src='$fileSrcId' width='100%' height='600px'></iframe>";
+                            } else {
+                                // No es un tipo soportado
+                                $idHTML = "Archivo no soportado para la identificación.";
+                            }
+            
+            
+                            // Crear un arreglo asociativo con claves más descriptivas
+                            $application = [
+                                "id_applicant" => $dataApplicant['id_applicant'],
+                                "name" => $dataApplicant['name'],
+                                "lastname" => $dataApplicant['lastname'],
+                                "phone_number_applicant" => $dataApplicant['phone_number_applicant'],
+                                "address_applicant" => $dataApplicant['address_applicant'],
+                                "email_applicant" => $dataApplicant['email_applicant'],
+                                "id_admission_application_number" => $dataApplicant['id_admission_application_number'],
+                                "name_admission_process" => $dataApplicant['name_admission_process'],
+                                "name_regional_center" => $dataApplicant['name_regional_center'],
+                                "firstC" => $dataApplicant['firstC'],
+                                "secondC" => $dataApplicant['secondC'],
+                                "certificate" => $certificateHTML,
+                                "idImage" =>$idHTML
+                            ];
+                            $applicationsData[] = $application;
+                    } else {
+                        return json_encode(["error" => "Error al obtener la informacion de un aspirante en getPendingCheckData: ".$responseGetData['message']]);
+                    }
+                }
+                finfo_close($finfo);   // Cerrar la instancia de finfo
+            }
+            return json_encode($applicationsData);
+
+        }
     }
 
     public function viewData()
