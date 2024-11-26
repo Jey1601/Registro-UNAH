@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
+    const type_user = sessionStorage.getItem('typeUser');
 
     if(!token) {
         console.log("No se encontro token en el sessionStorage.");
@@ -13,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            'token': token
+            'token': token,
+            'typeUser': type_user
         })
     }).then(response => response.json()).then(data => {
         if (data.success === false) {

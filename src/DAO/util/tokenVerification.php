@@ -38,13 +38,30 @@ class TokenVerification {
      * Metodo para verificar un token con la base de datos.
      * 
      * @param string $token El token que se quiere verificar.
-     * @return array $response Arreglo asociativo con el resultado de la verificacion, un mensaje de retroalimentacion, y el tiempo de expiracion si la verificacion es exitosa o un token nulo si la verificacion fall.
+     * @param string $typeUser El tipo de usuario del que se desea verificar el token.
+     * 
+     * @return array $response Arreglo asociativo con el resultado de la verificacion, un mensaje de retroalimentacion, y el tiempo de expiracion si la verificacion es exitosa o un token nulo si la verificacion falla.
      */
-    public function tokenVerification(string $token) {
-        if(isset($token)) { //Verificando que el token no sea nulo
+    public function tokenVerification(string $token, string $typeUser) {
+        if(isset($token) && isset($typeUser)) { //Verificando que el token y el typeUser no sean nulos
             $validToken = JWT::validateToken($token); 
             if ($validToken !== false) { //Verificando que la estructura del token sea valida 
-                $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
+                switch ($typeUser) {
+                    case 'admissionAdministrator':
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
+                        break;
+                    case 'applicant':
+                        $query = "SELECT id_user_applicant FROM TokenUserApplicant WHERE token = ?;";
+                        break;
+                    default:
+                        return $response = [
+                            'success' => false,
+                            'message' => 'Tipo de usuario invalido.',
+                            'token' => null
+                        ];
+                        break;
+                }
+                
                 $stmt = $this->connection->prepare($query);
                 $stmt->bind_param('s', $token);
                 $stmt->execute();

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Endpoint para la carga de un archivo CSV para la subida de notas de los exámenes de admisión.
+ */
 include_once '../../../../src/DAO/AdmissionAdminDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvFile'])) {

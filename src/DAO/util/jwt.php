@@ -1,4 +1,9 @@
 <?php
+/**
+ * Script que contiene la clase JWT para la creación y verificación de JSON Web Token.
+ * 
+ * @property static string $secret_key Llace secreta para la codificación de tokens.
+ */
 class JWT {
     private static $secret_key = 'is802';
 
@@ -57,7 +62,7 @@ class JWT {
             return false; //Token expirado
         }
         
-        return json_encode($payload); //Token valido
+        return $payload; //Token valido
     }
 
     /**

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Endpoint para la autenticación de usuarios de aspirantes.
+ */
+
 include_once '../../../../src/DAO/ApplicantDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

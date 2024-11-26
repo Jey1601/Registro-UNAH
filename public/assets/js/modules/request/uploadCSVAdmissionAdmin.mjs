@@ -1,7 +1,7 @@
 import { Alert } from "../behavior/support.mjs"; 
 import { Login } from "./login.mjs";
 
-async function submitCSVFile(params) {
+async function submitCSVFile() {
     
     const formInscriptionGrades=document.getElementById('formInscriptionGrades');
 
@@ -23,10 +23,8 @@ async function submitCSVFile(params) {
                 const result = await response.json();
                 formInscriptionGrades.reset();
                 Alert.display(result.message, "warning");
-          
             } catch (error) {
                 Alert.display("No se pudo cargar el archivo", "warning");
-              
             }
         } else {
             alert('Por favor, seleccionar un archivo CSV.');
@@ -34,13 +32,11 @@ async function submitCSVFile(params) {
     })
 }
 
-
 const btn_upload = document.getElementById('btnUpload');
 btn_upload.addEventListener('click', submitCSVFile);
-
 
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
     Login.logout('../../index.html')
-});  
+});

@@ -34,10 +34,10 @@ class AdmissionAdminDAO {
     }
 
     /** 
-     * Metodo para autenticacion de Administrador de admisiones
+     * Metodo para autenticacion de Administrador de admisiones: busca al usuario, los accesos del usuario y actualiza el token en la base de datos.
      * 
-     * @param string $user Nombre de usuario del Administrador de admisiones
-     * @param string $password Contrasena del respectivo usuario
+     * @param string $user Nombre de usuario del Administrador de admisiones.
+     * @param string $password Contrasena del respectivo usuario.
      * 
      * @return array $response Arreglo asociativo con resultado de la autenticacion, mensaje descriptivo y nuevo token (o token nulo en caso de fallo de autenticacion)
     */
@@ -82,10 +82,10 @@ class AdmissionAdminDAO {
                 $stmtUpdate->bind_param('si', $newToken, $auxID);
                 $resultUpdate = $stmtUpdate->execute();
 
-                if ($resultUpdate === false) { //Si la insercion falla
+                if ($resultUpdate === false) { //Si la actualizacion falla
                     return $response = [
                         'success' => false,
-                        'message' => 'Token no registrado.'
+                        'message' => 'Token no actualizado.'
                     ];
                 }
                 $stmtUpdate->close();
@@ -93,7 +93,8 @@ class AdmissionAdminDAO {
                 $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
                     'success' => true,
                     'message' => 'Validacion de credenciales exitosa.',
-                    'token' => $newToken
+                    'token' => $newToken,
+                    'typeUser' => 'admissionAdministrator'
                 ];
             } else { //En caso de que no se encuentre el usuario con esa contrasena
                 $response = [
@@ -121,8 +122,6 @@ class AdmissionAdminDAO {
      * @return array $response Arreglo asociativo con resultado del procesamiento del archivo
     */
     public function readCSVFile($csvFile) {
-
-      
         $fileTmpPath = $csvFile['tmp_name'];
 
         if (($handle = fopen($fileTmpPath, 'r')) !== FALSE) {

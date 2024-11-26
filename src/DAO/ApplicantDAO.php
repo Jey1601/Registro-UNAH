@@ -202,33 +202,67 @@ class ApplicantDAO{
     }
 
     /**
-     * Metodo para autenticacion de un aspirante.
+     * Metodo para autenticacion de un aspirante: busca al usuario, los accesos del usuario y actualiza el token en la base de datos.
      * 
-     * @param string $numID Numero de identidad del aspirante.
-     * @param int $numReq Numero de solicitud del aspirante.
+     * @param string $username Username del usuario aspirante.
+     * @param string $password Password del usuario aspirante.
      * 
      * @return array $response Arreglo asociativo con resultado de la autenticacion y un token (valido en caso de exito, nulo en caso de fallo).
      */
-    public function authApplicant(string $numID, int $numReq) {
-        if (isset($numID) && isset($numReq)) {
+    public function authApplicant(string $username, string $password) {
+        if (isset($username) && isset($password)) {
             //Busca al aspirante
-            $query = "SELECT id_applicant, id_admission_application_number FROM Applications WHERE id_applicant = ? AND id_admission_application_number = ?;";
+            $query = "SELECT id_user_applicant FROM UsersApplicants WHERE username_user_applicant = ? AND password_user_applicant = ?;";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('si', $numID, $numReq);
+            $stmt->bind_param('si', $username, $password);
             $stmt->execute();
             $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
 
             if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
+                $row = $result->fetch_array();
+                $auxID = $row[0];
+                $queryAccessArray = "CALL SP_GET_ACCESS_CONTROL_USER_APPLICANT_BY_ID(?);"; //Se buscan los accesos que tenga el usuario
+                $stmtAccessArray = $this->connection->prepare($queryAccessArray);
+                $stmtAccessArray->bind_param('i', $auxID);
+                $stmtAccessArray->execute();
+                $resultAccessArray = $stmtAccessArray->get_result();
+                $accessArray = $resultAccessArray->fetch_array();
+                //Liberacion de resultados de la query:
+                $resultAccessArray->free();
+                $stmtAccessArray->close();
+
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
+                }
+
+                //Definicion del payload con el username y los accesos que tiene
                 $payload = [
-                    'applicantID' => $numID,
-                    'numAdmissionRequest' => $numReq
+                    'userApplicant' => $username,
+                    'accessArray' => $accessArray
                 ];
                 $newToken = JWT::generateToken($payload);
                 
+                $queryUpdate = "UPDATE `TokenUserApplicant` SET token = ? WHERE id_token_user_applicant = ?;";
+                $stmtUpdate = $this->connection->prepare($queryUpdate);
+                $stmtUpdate->bind_param('si', $newToken, $auxID);
+                $resultUpdate = $stmtUpdate->execute();
+
+                if ($resultUpdate === false) { //Si la actualizacion falla
+                    return $response = [
+                        'success' => false,
+                        'message' => 'Token no actualizado.'
+                    ];
+                }
+                $stmtUpdate->close();
+
                 $response = [
                     'success' => true,
                     'message' => 'Validacion de credenciales exitosa.',
-                    'token' => $newToken
+                    'token' => $newToken,
+                    'typeUser' => 'applicant'
                 ];
             } else {
                 $response = [

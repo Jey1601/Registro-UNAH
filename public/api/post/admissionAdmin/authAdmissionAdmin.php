@@ -1,6 +1,6 @@
 <?php
 /** 
- * Endpoint para autenticacion de Administrador de admisiones
+ * Endpoint para autenticacion de usuarios administradores de admisiones.
  * 
 */
 

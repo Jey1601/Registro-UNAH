@@ -52,9 +52,10 @@ static async authApplicant() {
 
       if (result.success) {
         sessionStorage.setItem('token', result.token);
+        sessionStorage.setItem('typeUser',result.typeUser);
         window.location.href = '../../../../views/admissions/results.html';
       } else {
-        Alert.display(result.message, "danger");
+        Alert.display("warning", "Error en la autenticacion", result.message);
       }
     });
   } catch (error) {
@@ -83,9 +84,10 @@ static async authAdmisionAdmin() {
           
           if (result.success) {
               sessionStorage.setItem('token', result.token);
+              sessionStorage.setItem('typeUser',result.typeUser);
               window.location.href = '../../../../views/administration/admissions-admin.html';
           } else {
-              Alert.display(result.message, "danger");
+            Alert.display("warning", "Error en la autenticacion", result.message);
           }
       })
   } catch (error) {

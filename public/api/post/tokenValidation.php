@@ -1,4 +1,7 @@
 <?php
+/**
+ * Endpoint para la validación del token de la sesión. Precarga a páginas HTML.
+ */
 include_once '../../../src/DAO/util/tokenVerification.php';
 
 header("Content-Type: application/json");
@@ -13,8 +16,9 @@ if (!isset($data['token']) || empty($data['token'])) {
     exit;
 } else {
     $token = $data['token'];
-    $tokenValidation = new TokenVerification();
-    $response = $tokenValidation->tokenVerification($token);
+    $typeUser = $data['typeUser'];
+    $tokenVerification = new TokenVerification();
+    $response = $tokenVerification->tokenVerification($token, $typeUser);
 
     if ($response['success'] === false) {
         echo json_encode([
@@ -30,5 +34,4 @@ if (!isset($data['token']) || empty($data['token'])) {
         ]);
     }
 }
-
 ?>
