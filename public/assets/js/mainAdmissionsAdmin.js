@@ -1,5 +1,26 @@
 import { Login } from "./modules/request/login.mjs";
 
+
+window.addEventListener('load', function(){
+   const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+
+   if (token) {
+       const payload = Login.getPayloadFromToken(token);
+     console.log(payload.accessArray);
+
+   } 
+  
+});
+
+
+
+const  verifyInscriptionsBtn = document.getElementById('verifyInscriptionsBtn');
+verifyInscriptionsBtn.addEventListener('click', function(){
+   window.location.href='../administration/verify-data-applications.html';
+})
+
+
+
 const  viewInscriptionsBtn = document.getElementById('viewInscriptionsBtn');
 viewInscriptionsBtn.addEventListener('click', function(){
    window.location.href='../administration/see-inscriptions.html';

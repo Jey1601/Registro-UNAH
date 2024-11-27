@@ -13,10 +13,30 @@ VALUES
 	('P3pwBDfx', 'Administrador Admisiones see-inscriptions.html', TRUE),
 	('Fz1YeRgv', 'Administrador Admisiones upload-grades.html', TRUE);
 
+	INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
+VALUES
+	('lwx50K7f', 'Administrador Admisiones Verificar la información personal y de solicitud de los aspirantes.', TRUE),
+	('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
+	('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones el proceso admisión', TRUE);
+
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(5, 'Fz1YeRgv', TRUE);
 
+INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
+VALUES 
+	(2, 'lwx50K7f', TRUE),
+	(3, 'IeMfti20', TRUE),
+	(4, 'rllHaveq', TRUE);
+
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
-	(2, 5, TRUE, 1);
+	(3, 3, TRUE, 1),
+	(4, 4, TRUE, 1);
+
+INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
+VALUES 
+	(2, 2, TRUE, 1);
+
+
+select * from RolesUsersAdmissionsAdministrator;

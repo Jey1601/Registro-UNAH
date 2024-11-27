@@ -3,7 +3,7 @@ import { Inscription } from "./Inscription.mjs";
 class Applicant {
   static modalInstance = null;
 
-  static async renderData(role) {
+  static async renderData(accessess) {
     const applications = await this.viewData();
 
     const tableBody = document.querySelector("#viewDataApplicants tbody");
@@ -92,26 +92,35 @@ class Applicant {
         tableBody.appendChild(row);
       });
 
-      //Agregamos el evento a los botones para poder ver el certificado
-      const viewCertificateButtons =
-        document.querySelectorAll(".view-document");
-      viewCertificateButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-          Applicant.showDataApplication(applications,
-            button.getAttribute("data-applicant"),
-            role
-          );
-        });
-      });
+      
+      if(!accessess.includes('rllHaveq')){
+        downloadInscriptionsCsv.style.display = 'none';
+      }
+
+      accessess.forEach(access =>{
+        
+        console.log(access);
+
+              //Agregamos el evento a los botones para poder ver el certificado
+            const viewCertificateButtons =
+                document.querySelectorAll(".view-document");
+
+                viewCertificateButtons.forEach((button) => {
+                button.addEventListener("click", function () {
+                Applicant.showDataApplication(applications,
+                button.getAttribute("data-applicant"),
+                access
+              );
+            });
+          });
+
+
+      })
+      
 
       Search.onInputChange("searchApplication", "viewDataApplicantsBody");
 
-       //Botón de descarga de aplicaciones, solo asociado a role valido
-       const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsBtn');
-
-      if(role != 3){
-        downloadInscriptionsBtn.style.display = 'none';
-      }
+    
 
     } else {
       Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas');
@@ -119,13 +128,16 @@ class Applicant {
   }
 
   //Carga la imagen del certificado del aplicante en la modal y luego la despliega
-  static showDataApplication(applications, idApplicant, role) {
+  static showDataApplication(applications, idApplicant, access) {
    const application = applications.find(applicant => applicant.id_applicant === idApplicant);
     
     //Apartado de verificación para roles de revisión, no edición.
     const verifyDataCheckList = document.getElementById('verifyDataCheckList');
    
-   
+      //Botón de descarga de aplicaciones, solo asociado a role valido
+      const downloadInscriptionsCsv = document.getElementById('downloadInscriptionsCsv');
+
+     
     
     //Tomamos todos los input del formulario de visualización
     const applicantName = document.getElementById('applicantName');
@@ -140,38 +152,46 @@ class Applicant {
     const applicantFirstChoice = document.getElementById('applicantFirstChoice');
     const applicantSecondChoice = document.getElementById('applicantSecondChoice');
 
-    //Si el role no tiene acceso de edición lo quitamos
+    //Inicialmente todo esta deshabilitado
       applicantStudyCenter.disabled = true;
       applicantFirstChoice.disabled = true;
       applicantSecondChoice.disabled = true;
+      applicantName.disabled = true;
+      applicantLastName.disabled = true;
+      applicantIdentification.disabled = true;
+      applicantPhoneNumber.disabled = true;
+      applicantEmail.disabled = true;
+      applicantDirection.disabled = true;
     
-    switch(role){
+    //El apartado de verificación no se muestra
 
-      case 1:
-        verifyDataCheckList.style.display = 'none';
+    verifyDataCheckList.style.display = 'none';
+
+
+    switch(access){
+
+      //Tiene acceso a verificar
+      case 'lwx50K7f':
+        verifyDataCheckList.style.display = 'block';
      
-   
+      
       break;
 
-      case 2:
-       
-        applicantName.disabled = true;
-        applicantLastName.disabled = true;
-        applicantIdentification.disabled = true;
-        applicantPhoneNumber.disabled = true;
-        applicantEmail.disabled = true;
-        applicantDirection.disabled = true;
+      //Tiene acceso a editar
+      case 'IeMfti20':
+      console.log('entreo aquí');  
+      applicantName.disabled = false;
+      applicantLastName.disabled = false;
+      applicantIdentification.disabled = false;
+      applicantPhoneNumber.disabled = false;
+      applicantEmail.disabled = false;
+      applicantDirection.disabled = false;
       break;
 
-      case 3:
+      //Tiene acceso a ver y descargar más no editar
+      case 'rllHaveq':
         verifyDataCheckList.style.display = 'none';
 
-        applicantName.disabled = true;
-        applicantLastName.disabled = true;
-        applicantIdentification.disabled = true;
-        applicantPhoneNumber.disabled = true;
-        applicantEmail.disabled = true;
-        applicantDirection.disabled = true;
 
       break;
     }

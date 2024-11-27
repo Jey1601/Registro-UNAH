@@ -2,7 +2,7 @@ import { Applicant } from "./modules/request/Applicant.mjs";
 import { Results } from "./modules/request/results.mjs";
 import { Login } from "./modules/request/login.mjs";
 
-/*window.addEventListener('load', function(){
+window.addEventListener('load', function(){
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
     if (token) {
@@ -12,7 +12,7 @@ import { Login } from "./modules/request/login.mjs";
 
     } 
    
-});*/
+});
 
 
 window.addEventListener('load', function(){

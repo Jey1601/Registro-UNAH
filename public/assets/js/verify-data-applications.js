@@ -3,7 +3,23 @@ import { Login } from "./modules/request/login.mjs";
 import { Form } from "./modules/behavior/support.mjs";
 
 window.addEventListener('load', function(){
-    Applicant.renderData(3);
+    const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+    let access = [];
+
+    if (token) {
+        const payload = Login.getPayloadFromToken(token);
+        access = payload.accessArray;
+
+        if(!access.includes('lwx50K7f') || !access.includes('rllHaveq') || !access.includes('IeMfti20') ){
+            this.window.location.href = '../../index.html'
+        }else{
+            Applicant.renderData(access);
+        }
+ 
+    } 
+    
+
+    
 
  
 });
@@ -30,7 +46,7 @@ dataApplication.addEventListener('submit', function(event){
 })
 
 
-const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsBtn');
+const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsCsv');
 downloadInscriptionsBtn.addEventListener('click', function() {
    // Redirige al usuario a la URL del endpoint que genera el CSV
    window.location.href = "../../../api/get/applicant/applicantDownloadCSV.php";

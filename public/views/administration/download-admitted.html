@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="author"
+      content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn"
+    />
+    <meta name="version" content="0.1.0" />
+    <meta name="since" content="2024/11/1" />
+    <meta name="date" content="2024/11/10" />
+    <meta
+      name="description"
+      content="Página de visualización de inscripciones"
+    />
+
+    <link
+      href="../../assets/css/bootstrap/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/icons/UNAH-escudo.png"
+      sizes="16x16"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" />
+    <link rel="stylesheet" href="../../assets/css/administration/main.css" />
+    <link
+      rel="stylesheet"
+      href="../../assets/css/administration/see-inscriptions.css"
+    />
+    <link rel="stylesheet" href="../../assets/css/support.css" />
+    <title>Admitidos</title>
+    <script src="../../assets/js/tokenValidation.js"></script>
+  </head>
+
+  <body class="background-white animation">
+    <!--Header/navar==============================================================================-->
+    <nav class="my-nav">
+      <div class="nav-container dropdown">
+        <a class="" href="./admissions-admin.html">
+          <img
+            class="nav-logo"
+            src="../../assets/img/logos/UNAH-version-horizontal-white.png"
+          />
+        </a>
+        <button
+          class="dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            class="profile-img-button"
+            src="../../assets/img/icons/profile-icon.png"
+            alt=""
+          />
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <button
+              id="logoutBtn"
+              style="border: none; background: none; height: auto"
+              class="dropdown-item"
+              href="#"
+            >
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="notifications"></div>
+    <!--Logout=================================================================================-->
+
+    <!--Tabla=================================================================================-->
+    <div class="title-container">
+      <div class="table-title">
+        <h2>Aspirantes Admitidos</h2>
+      </div>
+    </div>
+
+    <section class="table-container">
+      <!-- Contenido Principal -->
+<div class="container py-5">
+  <div class="row">
+      <!-- Información de la página -->
+      <div class="col-md-8 mx-auto">
+          <div class="card shadow-lg">
+              <div class="card-header bg-dark text-white">
+                  <h4>Descargar archivo CSV</h4>
+              </div>
+              <div class="card-body">
+                  <p class="lead">
+                      La lista de aspirantes admitidos al proceso de admisión 2024 está disponible en formato CSV. Puedes descargar el archivo y abrirlo en cualquier editor de hojas de cálculo para visualizar la información de los admitidos.
+                  </p>
+                  
+                  <h5>Instrucciones:</h5>
+                  <ul>
+                      <li>El archivo contiene datos como:
+                        <ul> 
+                          <li>Nombre completo</li>
+                          <li>Número de identidad</li>
+                          <li>Dirección</li>
+                          <li>Correo electrónico</li>
+                          <li>Carrera a ingresar</li>
+                          <li>Centro regional a ingresar</li>
+                        </ul> 
+                      </li>
+                      <li>Para visualizar los datos, puedes usar herramientas como Excel o Google Sheets.</li>
+                  </ul>
+                 
+                  
+                  
+                  <div class="text-center mt-4">
+                      <button class="btn btn-success"  id="downloadApplicantAdmittedBtn">
+                        Descargar CSV
+                      </button> 
+                  </div>
+              </div>
+              <div class="card-footer text-center">
+                  <p>&copy; 2024 Universidad Nacional Autónoma De Honduras. Todos los derechos reservados.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Sección de Contacto -->
+<section id="contacto" class="py-5">
+  <div class="container text-center">
+      <h2>¿Tienes preguntas?</h2>
+      <p>Si necesitas más información o tienes dudas sobre el archivo, no dudes en ponerte en contacto con nosotros.</p>
+      <ul class="list-inline">
+          <li class="list-inline-item">
+              <i class="fa fa-envelope fa-2x"></i><br>
+              <strong>Correo:</strong> <a href="mailto:support@universidad.edu">suporte@unah.edu.hn</a>
+          </li>
+          <li class="list-inline-item">
+              <i class="fa fa-phone fa-2x"></i><br>
+              <strong>Teléfono:</strong> +504 2216 3043
+          </li>
+      </ul>
+  </div>
+</section>
+    </section>
+
+    <!--Footer=================================================================================-->
+
+    <footer class="footer">
+      <img
+        class="logo-footer"
+        src="../../assets/img/logos/UNAH-version-horizontal-white.png"
+      />
+
+      <ul class="social-icon">
+        <li class="footer-icon">
+          <a href="https://facebook.com/unahoficial">
+            <img src="../../assets/img/icons/icon_facebook_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://instagram.com/unahoficial">
+            <img src="../../assets/img/icons/icon_insta_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://www.unah.edu.hn/">
+            <img src="../../assets/img/icons/icon_linkedin_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://x.com/UNAHoficial">
+            <img src="../../assets/img/icons/icon_x_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://youtube.com/unahoficial">
+            <img src="../../assets/img/icons/icon_youtube_white.png" alt="" />
+          </a>
+        </li>
+      </ul>
+
+      <ul class="footer-menu">
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Inicio</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Equipo</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Contacto</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Sobre Nosotros</a>
+        </li>
+      </ul>
+      <p class="footer-text">@año | Todos los derechos reservados</p>
+    </footer>
+
+    <script
+      src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="../../assets/js/download-admitted.js"></script>
+    <script type="module" src="../../assets/js/aspects.js"></script>
+  </body>
+</html>

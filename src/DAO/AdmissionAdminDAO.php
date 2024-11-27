@@ -59,7 +59,11 @@ class AdmissionAdminDAO {
                 $stmtAccessArray->bind_param('i', $auxID);
                 $stmtAccessArray->execute();
                 $resultAccessArray = $stmtAccessArray->get_result();
-                $accessArray = $resultAccessArray->fetch_array();
+
+                 $accessArray = [];
+                    while ($row = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $row['id_access_control'];
+                    }
                 $resultAccessArray->free();
                 $stmtAccessArray->close(); 
 
