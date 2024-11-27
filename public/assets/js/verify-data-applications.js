@@ -1,4 +1,4 @@
-import { Applicant } from "./modules/request/Applicant.mjs";
+ import { Applicant } from "./modules/request/Applicant.mjs";
 import { Login } from "./modules/request/login.mjs";
 import { Form } from "./modules/behavior/support.mjs";
 

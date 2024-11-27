@@ -1,5 +1,6 @@
 USE unah_registration;
 
+
 INSERT INTO UsersAdmissionsAdministrator (username_user_admissions_administrator, password_user_admissions_administrator, status_user_admissions_administrator) 
 VALUES 
 	('admin_nouser', 'MiContraseña1+', FALSE),
@@ -7,6 +8,7 @@ VALUES
 	('admin07031987016', 'Cat4*Dog', TRUE),
 	('admin11021995037', 'Happy7+T', TRUE),
 	('admin02012000043', 'Book2-Tea', TRUE),
+
 	('admin19041985058', 'Tree9+Fly', TRUE),
 	('admin05011993066', 'Light8-Now', TRUE),
 	('admin15031989071', 'Star5*Moon', TRUE),
@@ -17,6 +19,8 @@ VALUES ('Rutilia Calderón Padilla', TRUE);
 
 INSERT INTO AdmissionProcess (name_admission_process,id_academic_year, start_dateof_admission_process, end_dateof_admission_process, current_status_admission_process, status_admission_process) 
 VALUES ('Proceso de Admisión 2024',2024,'2024-01-01','2024-12-31',FALSE,TRUE);
+
+
 
 INSERT INTO InscriptionAdmissionProcess (id_admission_process,start_dateof_inscription_admission_process,end_dateof_inscription_admission_process,current_status_inscription_admission_process, status_inscription_admission_processs) 
 VALUES (1, '2024-01-01', '2024-12-31', FALSE, TRUE);

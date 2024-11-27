@@ -57,9 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
 
 
-} else {
-    // Si no es una solicitud POST, respondemos con un error
-    echo json_encode(["error" => "Método no permitido. Use POST."]);
-}
+} 
 
 ?>

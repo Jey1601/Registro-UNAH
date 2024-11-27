@@ -35,7 +35,25 @@ function getTemplate($type, $placeholders = []) {
                 <h2>Hola, {{full_name}}</h2>
                 <p>Fuiste aceptado en {{career_name}}. ¡Bienvenido Pumita!</p>
             </body>
-            </html>"
+            </html>",
+            'verification_email' => "
+            <html>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; padding: 20px;'>
+                <div style='max-width: 600px; margin: auto; background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);'>
+                    <h2 style='color: #0056b3; text-align: center;'>Verificación de Correo Electrónico</h2>
+                    <p>Estimado(a) {{full_name}},</p>
+                    <p>Gracias por registrarte en nuestro sistema. Para completar tu registro, por favor ingresa el siguiente código de verificación en la página de registro:</p>
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <h3 style='font-size: 24px; color: #333;'>{{verification_code}}</h3>
+                    </div>
+                    <p>Si no realizaste esta solicitud, por favor ignora este mensaje.</p>
+                    <p>Atentamente,</p>
+                    <p style='color: #0056b3;'><strong>Equipo de Soporte</strong></p>
+                    <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
+                </div>
+            </body>
+            </html>
+            "
     ];
 
     $message = $templates[$type] ?? '';

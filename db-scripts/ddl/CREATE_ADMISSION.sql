@@ -28,6 +28,7 @@ CREATE TABLE AccessControlRoles (
 CREATE TABLE UsersAdmissionsAdministrator (
 	id_user_admissions_administrator INT PRIMARY KEY AUTO_INCREMENT,
 	username_user_admissions_administrator VARCHAR(50) UNIQUE NOT NULL,
+	username_user_admissions_administrator VARCHAR(50) UNIQUE NOT NULL,
 	password_user_admissions_administrator VARCHAR(100) NOT NULL,
 	status_user_admissions_administrator BOOLEAN NOT NULL
 );
@@ -50,6 +51,89 @@ CREATE TABLE AdmissionProcess (
     status_admission_process BOOLEAN NOT NULL,
     FOREIGN KEY (id_academic_year) REFERENCES AcademicYear(id_academic_year)
 );
+
+CREATE TABLE InscriptionAdmissionProcess (
+	id_inscription_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_inscription_admission_process DATE NOT NULL,
+	end_dateof_inscription_admission_process DATE NOT NULL,
+	current_status_inscription_admission_process BOOLEAN NOT NULL,
+	status_inscription_admission_processs BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE DocumentValidationAdmissionProcess (	
+	id_document_validation_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_document_validation_admission_process DATE NOT NULL,
+	end_dateof_document_validation_admission_process DATE NOT NULL,
+	current_status_document_validation_admission_process BOOLEAN NOT NULL,
+	status_document_validation_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE AdmissionTestAdmissionProcess (
+	id_admission_test_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	dateof_admission_test_admission_process DATE NOT NULL,
+	current_status_admission_test_admission_process BOOLEAN NOT NULL,
+	status_admission_test_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+
+CREATE TABLE RegistrationRatingAdmissionProcess (
+	id_registration_rating_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_registration_rating_admission_process DATE NOT NULL,
+	end_dateof_registration_rating_admission_process DATE NOT NULL,
+	current_status_registration_rating_admission_process BOOLEAN NOT NULL,
+	status_sending_registration_rating_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE SendingNotificationsAdmissionProcess (
+	id_sending_notifications_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_sending_notifications_admission_process DATE NOT NULL,
+	end_dateof_sending_notifications_admission_process DATE NOT NULL,
+	star_timeof_sending_notifications_admission_process TIME NOT NULL,
+	end_timeof_sending_notifications_admission_process TIME NOT NULL,
+	current_status_sending_notifications_admission_process BOOLEAN NOT NULL,
+	status_sending_notifications_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE AcceptanceAdmissionProcess (
+	id_acceptance_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_acceptance_admission_process DATE NOT NULL,
+	end_dateof_acceptance_admission_process DATE NOT NULL,
+	current_status_acceptance_admission_process BOOLEAN NOT NULL,
+	status_acceptance_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE RectificationPeriodAdmissionProcess (
+	id_rectification_period_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_rectification_period_admission_process DATE NOT NULL,
+	end_dateof_rectification_period_admission_process DATE NOT NULL,
+	current_status_rectification_period_admission_process BOOLEAN NOT NULL,
+	status_rectification_period_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+CREATE TABLE DownloadApplicantAdmittedInformationAdmissionProcess (
+	id_download_applicant_information_admission_process INT PRIMARY KEY AUTO_INCREMENT,
+	id_admission_process INT NOT NULL,
+	start_dateof_download_applicant_information_admission_process DATE NOT NULL,
+	end_dateof_download_applicant_information_admission_process DATE NOT NULL,
+	current_status_download_applicant_information_admission_process BOOLEAN NOT NULL,
+	status_download_applicant_information_admission_process BOOLEAN NOT NULL,
+	FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+	
 
 CREATE TABLE InscriptionAdmissionProcess (
 	id_inscription_admission_process INT PRIMARY KEY AUTO_INCREMENT,
@@ -234,6 +318,18 @@ CREATE TABLE ConfirmationEmailApplicants (
 	attempts_email_confirmation INT DEFAULT 0
 );
 
+
+CREATE TABLE ConfirmationEmailApplicants (
+	id_confirmation_email_applicant INT PRIMARY KEY AUTO_INCREMENT,
+	applicant_id_email_confirmation VARCHAR(20) NOT NULL,
+	email_sent_email_confirmation BOOLEAN NOT NULL,
+	date_email_sent_email_confirmation DATETIME DEFAULT CURRENT_TIMESTAMP,
+	confirmation_code_email_confirmation VARCHAR(255) NOT NULL,
+	experied_email_confirmation DATETIME NOT NULL,
+	status_email_confirmation ENUM('pending', 'used', 'expired') DEFAULT 'pending',
+	attempts_email_confirmation INT DEFAULT 0
+);
+
 CREATE TABLE Applicants (
     id_applicant VARCHAR(20) PRIMARY KEY,
     first_name_applicant VARCHAR(50) NOT NULL,
@@ -241,6 +337,7 @@ CREATE TABLE Applicants (
     third_name_applicant VARCHAR(50),
     first_lastname_applicant VARCHAR(50) NOT NULL,
     second_lastname_applicant VARCHAR(50),
+    email_applicant VARCHAR(100) UNIQUE NOT NULL,
     email_applicant VARCHAR(100) UNIQUE NOT NULL,
     phone_number_applicant VARCHAR(20) NOT NULL,
     address_applicant VARCHAR(255)NOT NULL,
@@ -299,6 +396,7 @@ CREATE TABLE  CheckErrorsApplicantApplications(
 
 CREATE TABLE UsersApplicants (
 	id_user_applicant INT PRIMARY KEY AUTO_INCREMENT,
+	username_user_applicant VARCHAR(50) UNIQUE NOT NULL,
 	username_user_applicant VARCHAR(50) UNIQUE NOT NULL,
 	password_user_applicant VARCHAR(100) NOT NULL,
 	status_user_applicant BOOLEAN NOT NULL,
@@ -359,4 +457,23 @@ CREATE TABLE ApplicantAcceptance (
     FOREIGN KEY (id_notification_application_resolution) REFERENCES NotificationsApplicationsResolution(id_notification_application_resolution),
     FOREIGN KEY (id_applicant) REFERENCES Applicants(id_applicant),
     FOREIGN KEY (id_admission_process) REFERENCES AdmissionProcess(id_admission_process)
+);
+
+
+--TABLA RELACIONAL ENTRE UN TOKEN GENERADO Y UN USUARIO ADMINISTRADOR DE ADMISIONES
+CREATE TABLE TokenUserAdmissionAdmin (
+    id_token_user_admission_administrator INT PRIMARY KEY AUTO_INCREMENT,
+    token VARCHAR(512) UNIQUE,
+    id_user_admissions_administrator INT NOT NULL,
+    FOREIGN KEY (id_user_admissions_administrator) 
+        REFERENCES UsersAdmissionsAdministrator(id_user_admissions_administrator)
+        ON UPDATE CASCADE
+);
+
+--TABLA RELACIONAL ENTRE UN TOKEN GENERADO Y UN USUARIO ASPIRANTE
+CREATE TABLE TokenUserApplicant (
+    id_token_user_applicant INT PRIMARY KEY AUTO_INCREMENT,
+    token VARCHAR(512) UNIQUE,
+    id_user_applicant INT NOT NULL,
+    FOREIGN KEY (id_user_applicant) REFERENCES UsersApplicants(id_user_applicant)
 );

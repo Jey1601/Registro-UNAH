@@ -55,7 +55,7 @@ Class AdmissionProccessDAO{
                     ];
                 } else {
                     return [
-                        "status" => "not_found",
+                        "status" => "warning",
                         "message" => "No se encontraron procesos de admisión activos"
                     ];
                 }
@@ -94,7 +94,7 @@ Class AdmissionProccessDAO{
         
      *   -Si el ID de admisión es válido pero no se encuentra la fecha de inicio**
      *   [
-     *       "status" => "not_found",   
+     *       "status" => "warning",   
      *       "message" => "No se encontró la fecha de acuerdo al ID de admisión proporcionado" 
      *   ]
 
@@ -124,7 +124,7 @@ Class AdmissionProccessDAO{
                     ];
                 }else{
                     return [
-                        "status" => "not_found",
+                        "status" => "warning",
                         "message" => "No se encontro la fecha deacuerdo al id de admision proporcionado"
                     ];
                 }
@@ -164,7 +164,7 @@ Class AdmissionProccessDAO{
         
      *   -Si el ID de admisión es válido pero no se encuentra la fecha de finalización**
      *   [
-     *       "status" => "not_found",   
+     *       "status" => "warning",   
      *       "message" => "No se encontró la fecha de acuerdo al ID de admisión proporcionado" 
      *   ]
 
@@ -194,7 +194,7 @@ Class AdmissionProccessDAO{
                     ];
                 }else{
                     return [
-                        "status" => "not_found",
+                        "status" => "warning",
                         "message" => "No se encontro la fecha deacuerdo al id de admision proporcionado"
                     ];
                 }

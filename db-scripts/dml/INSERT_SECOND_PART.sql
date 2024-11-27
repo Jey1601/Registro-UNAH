@@ -1,6 +1,7 @@
 USE unah_registration;
 
 
+
 	UPDATE RatingApplicantsTest SET rating_applicant = 400, status_rating_applicant_test = TRUE WHERE id_rating_applicant_test=1;
 	UPDATE RatingApplicantsTest SET rating_applicant = 750, status_rating_applicant_test = TRUE WHERE id_rating_applicant_test=2;
 	UPDATE RatingApplicantsTest SET rating_applicant = 899, status_rating_applicant_test = TRUE WHERE id_rating_applicant_test=3;

@@ -2,17 +2,28 @@ import { Applicant } from "./modules/request/Applicant.mjs";
 import { Results } from "./modules/request/results.mjs";
 import { Login } from "./modules/request/login.mjs";
 
-window.addEventListener('load', function(){
+/*window.addEventListener('load', function(){
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
     if (token) {
         const payload = Login.getPayloadFromToken(token);
         const applicantID = payload.applicantID; 
         Applicant.renderResults(applicantID);
+
     } 
    
-});
+});*/
 
+
+window.addEventListener('load', function(){
+    
+
+   
+        Applicant.renderResults('0801200119258');
+
+    
+   
+});
 
 const resultsForm = document.getElementById('resultsForm');
 resultsForm.addEventListener('submit',function(event){

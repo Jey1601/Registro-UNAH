@@ -91,20 +91,78 @@ class Inscription {
     }
   }*/
 
+    static async setConfirmationEmailApplicants() {
+      const inscriptionForm = document.getElementById("inscriptionForm");
+      // Crear un nuevo objeto FormData
+      const formData = new FormData(inscriptionForm);
+
+
+      try {
+        // Realizar la solicitud POST usando fetch
+        const response = await fetch(
+          "../../../api/post/applicant/verifyEmail.php",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        
+        const result = await response.json(); // Esperamos que la respuesta sea convertida a JSON
+        
+
+        
+          Alert.display( result.status, 'Aviso', result.message);
+        
+       
+      } catch (error) {
+        console.log(error);
+        Alert.display('error', 'Algo ha salido mal', 'No hemos podido enviar el código de confirmación,intentalo más tarde');
+      }
+    }
+
+
+      // Método para confirmar el correo 
+      static async getConfirmationEmailApplicants() {
+        const emailCodeVerification = document.getElementById('emailCodeVerification').value;
+        const applicantIdentification = document.getElementById('applicantIdentification').value;
+
+        try {
+          const response = await fetch(`../../../api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
+          
+          if (!response.ok) {
+                throw new Error("Error en la solicitud: " + response.status);
+            }
+            const result = await response.json();
+    
+            if(result.status === 'success'){
+
+              Alert.display(result.status, 'Gracias', result.message);
+              this.getData();
+            }else{
+              Alert.display(result.status, 'Algo ha salido mal', result.message);
+            }
+        } catch (error) {
+     
+          console.log(error);
+          Alert.display('error', 'Algo ha salido mal', 'No hemos podido confirmar el código de confirmación,intentalo más tarde');
+        }
+    }
+
   static async insertData(formData, form) {
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(
-        "../../../api/post/applicant/insertApplicant.php",
+        "../../../api/post/applicant/updateApplicant.php",
         {
           method: "POST",
           body: formData,
         }
       );
 
-      const result = await response.json(); // Esperamos que la respuesta sea convertida a JSON
-      if (result.id_application== null ){
-        Alert.display('warning','Aviso', result.message);
+      const result = await response.json(); 
+     
+      if (result.id_application == null ){
+        Alert.display(result.status,'Aviso', result.message);
       }else{
         
         form.reset();
@@ -112,11 +170,12 @@ class Inscription {
         Array.from(form.elements).forEach(input => {
           input.classList.remove('right-input');
         });
-        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ), "warning");
+        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ));
       }
      
     } catch (error) {
-      Alert.display('error','Lamentamo decirte esto', 'Hubo un error al cargar la información');
+      console.log(error);
+      Alert.display('error','Lamentamos decirte esto', 'Hubo un error al cargar la información');
     }
   }
 

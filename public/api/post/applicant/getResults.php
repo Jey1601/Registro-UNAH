@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    
 
         // Llamamos al método createInscription para insertar los datos
-        $dao->getResults(($id_applicant));
+        $dao->redirect($id_applicant);
    
 
 } else {

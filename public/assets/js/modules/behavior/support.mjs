@@ -4,7 +4,7 @@ class Alert{
 
    
 
-          static display(type, title, message) {
+          static display(type, title, message, path = '') {
 
             
 
@@ -14,7 +14,7 @@ class Alert{
             notification.classList.add(`${type}`);
             // Crear el icono de la información
             const infoIcon = document.createElement('img');
-            infoIcon.src=`assets/img/icons/${type}-icon.png`;
+            infoIcon.src=path.concat(`assets/img/icons/${type}-icon.png`);
             
             // Crear el contenedor del contenido
             const notificationContent = document.createElement('div');
@@ -31,7 +31,7 @@ class Alert{
             
             // Crear el icono de cerrar
             const closeIcon = document.createElement('img');
-            closeIcon.src="assets/img/icons/x-icon.png"
+            closeIcon.src=path.concat("assets/img/icons/x-icon.png")
             closeIcon.setAttribute('role', 'button');
             
             // Agregar eventos de cierre
@@ -223,28 +223,30 @@ class Form{
     // Recorre todos los inputs del formulario
     inputsForm.forEach(input => {
       
-
-      // Verificación para los archivos
-      if(input.type === 'file'){
-        if(input.files.length === 0){
-          isFormValid = false;
-        
-        }
-  
-      // Verificación para los selects
-      } else if(input.tagName === 'SELECT'){
-        if(!input.value){
-          isFormValid = false;
-        
-        }
-  
-      // Verificación para otros inputs
-      } else {
-        if (input.classList.contains('wrong-input')) {
-          isFormValid = false;
-        
+      if(input.disabled == 'false' || input.type != 'hidden'){
+        // Verificación para los archivos
+        if(input.type === 'file'){
+          if(input.files.length === 0){
+            isFormValid = false;
+          
+          }
+    
+        // Verificación para los selects
+        } else if(input.tagName === 'SELECT'){
+          if(!input.value){
+            isFormValid = false;
+          
+          }
+    
+        // Verificación para otros inputs
+        } else {
+          if (input.classList.contains('wrong-input')) {
+            isFormValid = false;
+          
+          }
         }
       }
+
     });
   
     // Aquí se maneja el estado del botón al final de todas las verificaciones

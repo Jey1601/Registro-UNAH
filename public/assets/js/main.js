@@ -2,14 +2,16 @@ import {Inscription} from "./modules/request/Inscription.mjs";
 import { RegionalCenter } from "./modules/request/RegionalCenter.mjs";
 import { Modal, Form, Alert } from "./modules/behavior/support.mjs";
 import { Login } from "./modules/request/login.mjs";
+import { AdmissionProccess } from "./modules/request/AdmissionProcces.mjs";
 
 const inscriptionButton = document.querySelectorAll('.btn-inscription')
 inscriptionButton.forEach(button => {
     button.addEventListener('click', function() {
-        RegionalCenter.renderSelectRegionalCenters();
-        Modal.showModal('Inscription-form');
+
+        AdmissionProccess.getCurrentProccess();
     });
 });
+
 
 
 const inscriptionForm = document.getElementById('inscriptionForm');
@@ -17,7 +19,7 @@ inscriptionForm.addEventListener('submit',function(event){
     event.preventDefault();
 
     Modal.showModal('modalEmailCodeVerification');
-
+    Inscription.setConfirmationEmailApplicants();
    /* submitButton.classList.remove('wrong-form');
     submitButton.innerText = "Enviar";
     Inscription.getData();*/
@@ -47,6 +49,14 @@ loginAdmissions.addEventListener('submit', function(event){
     event.preventDefault();
     Login.authAdmisionAdmin();
 })
+
+
+const verifyEmailBtn = document.getElementById('verifyEmailBtn');
+verifyEmailBtn.addEventListener('click', function(event){
+  event.preventDefault();
+  Inscription.getConfirmationEmailApplicants();
+
+}) 
 
 
 

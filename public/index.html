@@ -39,7 +39,7 @@
             </div>
             <div class="navbar-menu-item">
                 <!--Boón que activa el modal de -->
-              <button class="btn-inscription" type="button" data-bs-toggle="modal" >Inscripción</button>
+              <button  class="btn-inscription" type="button" data-bs-toggle="modal" >Inscripción</button>
             </div>
             <div class="navbar-menu-item">
               <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
@@ -298,7 +298,7 @@
 <!--Incription-modal-form=================================================================================-->
 
 <div class="modal fade" id="Inscription-form" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Registro De Inscripción</h1>
@@ -323,7 +323,7 @@
                     </div>
                     <div class="mb-3">
                       <label for="applicantIdentification" class="form-label">Número de identidad</label>
-                      <input type="text" class="form-control input-entry" title=" Número de identidad con 13 dígitos, no introducir guiones ni espacios en blanco (Ej. 0701200119258)" name="applicantIdentification" placeholder="Ejemplo: 0701200119258" required>
+                      <input type="text" class="form-control input-entry" title=" Número de identidad con 13 dígitos, no introducir guiones ni espacios en blanco (Ej. 0701200119258)" id="applicantIdentification" name="applicantIdentification" placeholder="Ejemplo: 0701200119258" required>
                       <p class="input-error"> Número de identidad con 13 dígitos, no introducir guiones ni espacios en blanco (Ej. 0701200119258)</p>
                     </div>
                     <div class="mb-3">
@@ -397,7 +397,7 @@
 </div>
 
  <!--================================Modal de verificación de correo================================================-->
- <div class="modal fade" id="modalEmailCodeVerification" aria-hidden="true"  tabindex="-1">
+ <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalEmailCodeVerification" aria-hidden="true"  tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -417,7 +417,7 @@
     
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-blue"  data-bs-toggle="modal" data-bs-dismiss="modal">Verificar</button>
+        <button id="verifyEmailBtn" type="submit" class="btn btn-blue"  >Verificar</button>
       </div>
     </form>
     </div>
@@ -485,7 +485,7 @@
             </div>
             
             <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
-                <button type="submit" class=" btn-yellow" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >Iniciar Sesión</button>
+                <button type="button" class=" btn-yellow" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >Iniciar Sesión</button>
             </div>
             
             
