@@ -31,8 +31,7 @@ class ApplicantDAO{
     }
 
     // Método para obtener los aspirantes
-    public function getApplicants()
-    {
+    public function getApplicants(){
         $applicants = [];
 
         // Ejecutamos la consulta
@@ -171,8 +170,7 @@ class ApplicantDAO{
         }
     }
 
-    public function viewData()
-    {
+    public function viewData(){
         $applicationsData = [];
 
         // Ejecutamos la consulta
@@ -257,8 +255,7 @@ class ApplicantDAO{
         echo json_encode($applicationsData);
     }
 
-    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type,$image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
-    {
+    public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type,$image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant){
         
         $mail = new mail();  
         // Iniciar una transacción
@@ -402,12 +399,11 @@ class ApplicantDAO{
         return $csvContent;
     }
 
-      /**
+    /**
      * Metodo para obtener numero de identidad, numero de solicitud, nombre del tipo de examen, nota del examen, nombre completo y centro regional de los aspirantes en un CSV.
      * 
      * @return string $applicantsAdmitted Informacion de todos aquellos  aspirantes admitidos.
 */
-
     public function getApplicantsAdmittedCSV(){
         $query = "CALL SP_APPLICANTS_ADMITTED_DATA();";
         $applicants = $this->connection->execute_query($query);
@@ -554,8 +550,6 @@ class ApplicantDAO{
    
         echo json_encode($response);
     }
-
-
     public function registerAcceptance($id_applicant_acceptance, $primaryResolution, $secondaryResolution ){
         date_default_timezone_set('America/Tegucigalpa');
         $currentDate = date("Y-m-d");  //Se actualiza posteriomente cuando la acepta
@@ -591,8 +585,7 @@ class ApplicantDAO{
     }
 
     // Método para insertar un nuevo aspirante
-    private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address,$image_id_applicant, $status)
-    {
+    private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address,$image_id_applicant, $status){
 
         // Preparar la consulta SQL de inserción
         $query = "INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, image_id_applicant, status_applicant) 
@@ -622,8 +615,7 @@ class ApplicantDAO{
         }
     }
 
-    private function updateApplicant($id_applicant, $email, $phone_number, $address, $status)
-    {
+    private function updateApplicant($id_applicant, $email, $phone_number, $address, $status){
         // Preparar la consulta SQL de  Actualización, solo actualizamos campos email, phone, y address 
         $query = "UPDATE Applicants 
                   SET  email_applicant = ?,
@@ -654,8 +646,7 @@ class ApplicantDAO{
 
     }
 
-    private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
-    {
+    private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant){
         // Extraer el proceso de admisión activo
         $id_admission_process = $this->getAdmissionProcess();
         if (!$id_admission_process) {
@@ -719,8 +710,7 @@ class ApplicantDAO{
         }
     }
 
-    private function createUserApplicant($id_applicant, $id_application)
-    {
+    private function createUserApplicant($id_applicant, $id_application){
 
         $status_user_applicant = 1;
         // Consulta de inserción
@@ -755,8 +745,7 @@ class ApplicantDAO{
         }
     }
 
-    private function getAdmissionProcess()
-    {
+    private function getAdmissionProcess(){
         $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
 
         // Ejecutar la consulta
@@ -780,8 +769,7 @@ class ApplicantDAO{
         }
     }
 
-    private function isCreated($id_applicant)
-    {
+    private function isCreated($id_applicant){
         $query = "SELECT id_applicant FROM Applicants WHERE id_applicant = ?";
 
         // Preparar la consulta para evitar inyecciones SQL
@@ -818,8 +806,7 @@ class ApplicantDAO{
         }
     }
 
-    private function hasActiveApplication($id_applicant)
-    {
+    private function hasActiveApplication($id_applicant){
         $query = "SELECT 1 FROM Applications WHERE id_applicant = ? AND status_application = 1";
 
         // Preparar la consulta para evitar inyecciones SQL
@@ -863,8 +850,7 @@ class ApplicantDAO{
      *  @param int $id_admission_application_number número de aplicación del aspirante
      *  @return boolean especifica si todo salió bien o no
      */
-    private function createRatingApplicantsTest($id_admission_application_number)
-    {
+    private function createRatingApplicantsTest($id_admission_application_number){
         // Definir la consulta de extracción de tipo de examenes
         $query = "SELECT id_type_admission_tests 
                   FROM `UndergraduateTypesAdmissionTests` 
@@ -925,6 +911,310 @@ class ApplicantDAO{
 
         // Si todas las inserciones fueron exitosas, devolver true
         return true;
+    }
+
+    /**
+      * Obtiene el CheckApplicantApplications que se encuentra activo y pertenece a un aplicante.
+      */
+    public function getCheck($idApplicant, $idAplication){
+        try {
+            if (!is_string($idApplicant) && !is_int($idAplication)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos.");
+            }            
+            $IdCheck = $this->connection->execute_query("CALL GET_CHECK_BY_IDAPPLICANT_IDAPLICATION($idApplicant,$idAplication)");
+
+            if ($IdCheck) { 
+                if ( $IdCheck->num_rows == 1) { 
+                    $IdCheckActivo=  $IdCheck->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "id_check_applicant_applications" => $IdCheckActivo['id_check_applicant_applications']
+                    ];
+                } else {
+                    return [
+                        "status" => "not_found",
+                        "message" => "Se encontraron mas de un usuario"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento GET_CHECK_BY_IDAPPLICANT_IDAPLICATION(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getCheck() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    /**
+     * Funcion que inserta los Check Erros identificados por el usuario administrador.
+     * 
+     * @param int $idCheckApplicant Identificador del CheckApplicantApplications, al que pertenece el CheckError
+     * @param string $wrongData Nombre del campo en el que se encuentra el CheckError
+     * @param string $description Descripcion General Ingresada por el usuario. Puede ser Null.
+     * @return array Resultado del proceso, incluyendo estado y mensaje.
+     *
+     * @throws InvalidArgumentException Si los parámetros proporcionados no son validos.
+     */
+    public function insertCheckErrors($idCheckApplicant, $wrongData, $description){
+        try {
+            if (!is_string($wrongData) && !is_int($idCheckApplicant)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos.");
+            }            
+            $this->connection->execute_query("CALL INSERT_CHECK_ERROR($idCheckApplicant, '$wrongData', '$description')");
+            $this->connection->commit();
+            return [
+                "status" => "success",
+                "message" => "Registro insertado correctamente."
+            ];
+        } catch (Exception $exception) {
+            $this->connection->rollback();
+            return [
+                "status" => "error",
+                "message" => "Excepción en insertCheckErrors() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    /**
+     * Funcion que elimina el estado de activo de todos los errores reportados deacuerdo en el identificador del CheckApplicantApplications. 
+     * 
+     * @param int $idCheckApplicant Id del CheckApplicantApplications al que pertenece el error reportado.
+     * 
+     * @return array Se retorna el estado y mensaje del resultado del proceso.
+     */
+    public function deleteCheckErrors($idCheckApplicant){
+        try {
+            if (!is_int($idCheckApplicant)) {
+                throw new InvalidArgumentException("No se ha ingreso el parametros correcto.");
+            }            
+            $this->connection->execute_query("CALL DELETE_CHECK_ERRORS_BY_APPLICANT($idCheckApplicant)");
+            $this->connection->commit();
+            return [
+                "status" => "success",
+                "message" => "Errores de la informacion del aspirante y su aplicacion, ya no estan activos."
+            ];
+        } catch (Exception $exception) {
+            $this->connection->rollback();
+            return [
+                "status" => "error",
+                "message" => "Excepción en deleteCheckErrors() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+    
+    /**
+     * Realiza la validación de errores para un solicitante y maneja las operaciones de inserción o eliminación de errores.
+     *
+     * Dependiendo del estado de verificación, la función eliminará los errores asociados al solicitante o insertará nuevos errores en la base de datos.
+     *
+     * @param int $idCheckApplicant El ID del solicitante cuyo estado se va a verificar.
+     * @param int $verificationStatus El estado de la verificación (1 para eliminar los errores, cualquier otro valor para insertarlos).
+     * @param array $errorData Los datos de error a insertar si el estado de verificación no es 1.
+     *
+     * @return array Un array con el estado y mensaje de la operación. Si ocurre un error, también se incluye un código de error.
+     *
+     * @throws Exception Si ocurre un error al intentar eliminar o insertar los errores.
+     */
+    public function validationCheckError($idCheckApplicant,$verificationStatus,$errorData){
+        if($verificationStatus==1){ 
+            try {
+                $this->deleteCheckErrors($idCheckApplicant);
+                return [
+                    "status" => "success",
+                    "message" => "Campos Check Error eliminados correctamente" 
+                ];
+            } catch (Exception $exception) {
+                return [
+                    "status" => "error",
+                    "message" => "Fallo al eliminar los errores de la información del aspirante: " . $exception->getMessage(),
+                    "code" => $exception->getCode()
+                ];
+            }
+        }else{
+            try {
+                foreach($errorData as $errorCampo){
+                    $descriptionCampo = "Hemos encontrado informacion que no cumple con nuestros parametros ".$errorCampo;
+                    $this->insertCheckErrors($idCheckApplicant, $errorCampo, $descriptionCampo);
+                }
+                return [
+                    "status" => "success",
+                    "message" => "Campos Check Error creados correctamente" 
+                ];
+            } catch (Exception $exception) {
+                return [
+                    "status" => "error",
+                    "message" => "Fallo al crear los errores de la información del aspirante: " . $exception->getMessage(),
+                    "code" => $exception->getCode()
+                ];
+            }
+        }
+    }
+
+    /**
+     * Actualiza la información de verificación del aspirante.
+     *
+     * Este método actualiza el estado de verificación de un aspirante en la base de datos.
+     * Si el estado de verificación es aprobado (1), se eliminan los errores previos asociados.
+     *  Luego, se realiza la actualización llamando al procedimiento almacenado UPDATE_CHECK_APPLICANT_APPLICATIONS().
+     *
+     * @param int $idCheckApplicant ID único del aspirante a verificar.
+     * @param boolean $verificationStatus Estado de verificación (1: aprobado, 0: rechazado).
+     * @param boolean $revision_status Estado de revisión asociado al Check del aspirante.
+     * @param string $descriptionGeneralCheck Descripción general del estado de verificación.
+     * @param array $errorData Arreglo que contiene información adicional sobre errores en campos especificos a manejar.
+     *
+     * @return array Retorna un arreglo con el estado de la operación, un mensaje descriptivo y, opcionalmente, un código de error.
+     *
+     * @throws InvalidArgumentException Si el ID del aspirante no es un entero válido.
+     * @throws Exception Si ocurre un error durante la eliminación de errores o la ejecución del procedimiento almacenado.
+     */
+    public function updateCheckApplicant($idCheckApplicant, $verificationStatus, $revision_status,$descriptionGeneralCheck, $errorData){
+        $currentDate = new DateTime();
+        $jsonDate = json_encode($currentDate);
+        $decodedDate = json_decode($jsonDate, true);
+        $dateOnly = (new DateTime($decodedDate['date']))->format('Y-m-d');
+        $validationChecks = $this->validationCheckError($idCheckApplicant,$verificationStatus,$errorData);
+        if($validationChecks['status'] =='success' ){
+            try {
+            if (!is_int($idCheckApplicant)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos.");
+            }            
+            $this->connection->execute_query("CALL UPDATE_CHECK_APPLICANT_APPLICATIONS($idCheckApplicant, $verificationStatus,'$dateOnly', $revision_status,'$descriptionGeneralCheck')");
+            $this->connection->commit();
+            $sendMail = $this->connection->sendStatusNotificationAplications($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck);
+            if($sendMail==true){
+                return [
+                    "status" => "success",
+                    "message" => "Información del aspirante actualizada correctamente Y notificado con exito."
+                ];
+            }else{
+                return [
+                    "status" => "success",
+                    "message" => "Información del aspirante actualizada correctamente y  no notificado con exito"
+                ];
+            }
+
+            } catch (Exception $exception) {
+            $this->connection->rollback();
+            return [
+                "status" => "error",
+                "message" => "Excepción en UPDATE_CHECK_APPLICANT_APPLICATIONS() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+        }
+    }
+
+    public function getDataApplicantStatusAplicationsMail($idCheckApplicant){
+        try {
+            if (!is_int($idCheckApplicant)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos.");
+            }            
+            $dataApplicant = $this->connection->execute_query("GET_DATA_APPLICANT_APPLICATIONS_MAIL($idCheckApplicant)");
+            if ($dataApplicant) { 
+                if ($dataApplicant->num_rows == 1) { 
+                    $mailDataApplicant=  $dataApplicant->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "mailDataApplicant" => $mailDataApplicant
+                    ];
+                } else {
+                    return [
+                        "status" => "warning",
+                        "message" => "Se logro encontrar la informacion del aspirante para su notificacion del estado de su aplicacion"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento GET_DATA_APPLICANT_APPLICATIONS_MAIL(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getDataApplicantStatusAplicationsMail() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    /**
+     * Obtiene toda la información necesaria para enviársela al aspirante por correo electrónico
+     * sobre el estado de su aplicación.
+     *
+     * @param int $idCheckApplicant Identificador del aspirante para verificar la aplicación.
+     * @param int $verificationStatus Estado de verificación (1 si es correcta, 0 si tiene errores).
+     * @param int $revision_status Estado de revisión (1 si ya fue revisada, 0 si no ha sido revisada).
+     * @param array $errorData Datos sobre los errores encontrados en caso de que existan.
+     * @param string $descriptionGeneralCheck Descripción general del resultado de la revisión.
+     *
+     * @return array Información estructurada para enviar por correo al aspirante.
+     */
+    public function  applicantApplicationStatusMailNotification($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck){
+        if($revision_status==1){
+            $dataMailApplicant = $this->getDataApplicantStatusAplicationsMail($idCheckApplicant);
+            if($dataMailApplicant['status']=='success'){
+                $dataApplicant = $dataMailApplicant['mailDataApplicant'];
+                $nameApplicant = $dataApplicant['nameApplicant'];
+                $mailApplicant = $dataApplicant['email_applicant'];
+                if($verificationStatus==1){  //la informacion del aspirante fue revisada y esta correcta
+                    $mailData = [
+                        "nombre" => $nameApplicant,
+                        "status" => "sucess",
+                        "mail"=>$mailApplicant
+                    ];
+                }else{ //La informacion del aspirante fue revisada pero contiene errores
+                    $mailData = [
+                        "nombre" => $nameApplicant,
+                        "status" => "warning",
+                        "mail"=>$mailApplicant,
+                        "camposIncorrectos" => $errorData,
+                        "descripcion" => $descriptionGeneralCheck
+                    ];
+                }
+                return $mailData;
+            }
+        }
+        return [
+            "status"=>"error",
+            "message"=>"No se ha revisado el check"
+        ];
+    }
+
+    /**
+     * Envia notificaciones por correo sobre el estado de una aplicación.
+     *
+     * Este método envía correos electrónicos basados en el estado de verificación y revisión de la aplicación,
+     * usando diferentes plantillas según el resultado de la verificación.
+     *
+     * @param int    $idCheckApplicant        ID del solicitante cuya aplicación se está revisando.
+     * @param string $verificationStatus      Estado de la verificación, 1 si son datos correctos.
+     * @param string $revision_status         Estado de la revisión, 1 si fue revisada.
+     * @param array  $errorData               Array con datos de errores, si los hay.
+     * @param string $descriptionGeneralCheck Descripción general del chequeo realizado.
+     *
+     * @return bool `true` si el correo fue enviado exitosamente, `false` en caso de error.
+     */
+    public function sendStatusNotificationAplications($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck){
+        $mail = new mail(); 
+        $dataMailNotificationStatusApplications = $this->applicantApplicationStatusMailNotification($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck);
+        if($dataMailNotificationStatusApplications["status"]=="success"){
+            $mail->sendStatusApplicationCorrect($dataMailNotificationStatusApplications["mail"], $dataMailNotificationStatusApplications["nombre"]);
+            return true; 
+        } elseif($dataMailNotificationStatusApplications["status"]=="warning"){
+            $mail->sendStatusApplicationVerify($dataMailNotificationStatusApplications["mail"], $dataMailNotificationStatusApplications["nombre"],$dataMailNotificationStatusApplications["camposIncorrectos"],$dataMailNotificationStatusApplications["descripcion"]);
+            return true; 
+        }
+        return false;
     }
 
  
