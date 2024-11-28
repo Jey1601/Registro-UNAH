@@ -82,10 +82,26 @@ class AdmissionAdminDAO {
                 $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
 
                 //Insercion del token en la tabla relacional entre token y usuario administrador de admisiones
-                $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
-                $stmtUpdate = $this->connection->prepare($queryUpdate);
-                $stmtUpdate->bind_param('si', $newToken, $auxID);
-                $resultUpdate = $stmtUpdate->execute();
+                $queryCheck = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE id_user_admissions_administrator = ?;";
+                $stmtCheck = $this->connection->prepare($queryCheck);
+                $stmtCheck->bind_param('i', $auxID);
+                $stmtCheck->execute();
+                $stmtCheck->store_result();
+                
+                // Si ya existe el registro, se actualiza, si no, se inserta
+                if ($stmtCheck->num_rows > 0) {
+                    // Si existe, actualizamos el token
+                    $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
+                    $stmtUpdate = $this->connection->prepare($queryUpdate);
+                    $stmtUpdate->bind_param('si', $newToken, $auxID);
+                    $resultUpdate = $stmtUpdate->execute();
+                } else {
+                    // Si no existe, insertamos un nuevo registro
+                    $queryInsert = "INSERT INTO `TokenUserAdmissionAdmin` (id_user_admissions_administrator, token) VALUES (?, ?);";
+                    $stmtInsert = $this->connection->prepare($queryInsert);
+                    $stmtInsert->bind_param('is', $auxID, $newToken);
+                    $resultInsert = $stmtInsert->execute();
+                }
 
                 if ($resultUpdate === false) { //Si la actualizacion falla
                     return $response = [

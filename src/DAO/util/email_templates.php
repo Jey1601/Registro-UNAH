@@ -7,6 +7,8 @@ function getTemplate($type, $placeholders = []) {
                 <h2 style='color: #0056b3;'>Estimado(a) {{full_name}},</h2>
                 <p>Gracias por enviar tu solicitud de admisión. Nos complace informarte que tu solicitud ha sido registrada exitosamente.</p>
                 <p><strong>Número de solicitud:</strong> {{id_application}}</p>
+                <p><strong>Contraseña:</strong> {{password}}</p>
+                 <p><strong>Aviso</strong> No comparta ni pierda esta contraseña, la necesitará para continuar con el proceso exitosamente</p>
                 <p>El siguiente paso en el proceso es la verificación de los datos proporcionados. En breve recibirás un correo nuestro informándote si la información ingresada es correcta o si es necesario realizar algún ajuste.</p>
                 <p>Agradecemos tu interés en formar parte de nuestra comunidad universitaria. Estamos aquí para ayudarte en todo lo necesario durante este proceso.</p>
                 <p>Atentamente,</p>
@@ -53,7 +55,34 @@ function getTemplate($type, $placeholders = []) {
                 </div>
             </body>
             </html>
-            "
+            ",
+            'confirmation_correct' => "
+                <html>
+                <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                    <h2 style='color: #0056b3;'>Estimado(a) {{full_name}},</h2>
+                    <p>Nos complace informarte que la información proporcionada en tu solicitud de admisión ha sido verificada y se encuentra correcta. No es necesario que realices ningún ajuste.</p>
+                    <p>Tu solicitud ha sido procesada exitosamente, y ahora pasaremos al siguiente paso del proceso de admisión. Te mantendremos informado sobre cualquier novedad.</p>
+                    <p>Agradecemos tu interés en formar parte de nuestra comunidad universitaria.</p>
+                    <p>Atentamente,</p>
+                    <p style='color: #0056b3;'><strong>Equipo de Admisiones</strong></p>
+                    <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
+                </body>
+                </html>",
+                'exam_results_warning' => "
+                <html>
+                <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                    <h2 style='color: #ff6600;'>Estimado(a) {{full_name}},</h2>
+                    <p>Te informamos que, tras revisar tu solicitud de admisión, hemos encontrado algunos errores en la información proporcionada. A continuación, te indicamos los campos que necesitan corrección:</p>
+                    <ul>
+                        {{campos_incorrectos}}
+                    </ul>
+                    <p><strong>Descripción:</strong> {{descripcion}}</p>
+                    <p>Por favor, realiza las correcciones necesarias y envía nuevamente la solicitud. Estamos aquí para ayudarte durante este proceso.</p>
+                    <p>Atentamente,</p>
+                    <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
+                    <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
+                </body>
+                </html>"
     ];
 
     $message = $templates[$type] ?? '';

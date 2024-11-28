@@ -16,6 +16,7 @@ include_once "AdmissionAdminDAO.php";
 require_once 'util/encryption.php';
 require_once 'DocumentValidationAdmissionProcessDAO.php';
 require_once 'AcceptanceAdmissionProcessDAO.php';
+require_once 'AdmissionAdminDAO.php';
 class ApplicantDAO
 {
     private $host = 'localhost';
@@ -163,7 +164,8 @@ class ApplicantDAO
                                 "firstC" => $dataApplicant['firstC'],
                                 "secondC" => $dataApplicant['secondC'],
                                 "certificate" => $certificateHTML,
-                                "idImage" =>$idHTML
+                                "idImage" =>$idHTML,
+                                "id_check_applicant_applications" => $dataApplicant['id_check_applicant_applications']
                             ];
                             $applicationsData[] = $application;
                     }
@@ -244,7 +246,8 @@ class ApplicantDAO
                     "firstC" => $row['firstC'],
                     "secondC" => $row['secondC'],
                     "certificate" => $certificateHTML,
-                    "idImage" => $idHTML
+                    "idImage" => $idHTML,
+                    "id_check_applicant_applications" => $row['id_check_applicant_applications']
                 ];
 
                 // Añadimos cada fila al array
@@ -263,7 +266,10 @@ class ApplicantDAO
 
 
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
-    {
+    {   
+        //Configuramos la nueva contraseña:
+        $generated_password = Password::generatePassword();
+        $password_user_applicant = Encryption::hashPassword($generated_password);
 
         $mail = new mail();
         // Iniciar una transacción
@@ -284,12 +290,12 @@ class ApplicantDAO
 
                     }
                     // Creamos la nueva solicitud
-                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
+                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
                         $this->connection->rollback();
                         echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
                         $name = $first_name . " " . $second_name . " " . $third_name . " " . $first_lastname . " " . $second_lastname;
-                        $mail->sendConfirmation($name, $this->id_application_inserted, $email);
+                        $mail->sendConfirmation($name, $this->id_application_inserted, $email,  $generated_password);
                         echo json_encode([
                             "status" => "success",
                             "message" => "Inscripción creada exitosamente",
@@ -306,7 +312,7 @@ class ApplicantDAO
                 }
 
                 // Creamos la nueva solicitud
-                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)) {
+                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
 
                     $this->connection->rollback();
                     echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
@@ -314,7 +320,7 @@ class ApplicantDAO
 
 
                     $name = $first_name . " " . $second_name . " " . $third_name . " " . $first_lastname . " " . $second_lastname;
-                    $mail->sendConfirmation($name, $this->id_application_inserted, $email);
+                    $mail->sendConfirmation($name, $this->id_application_inserted, $email,  $generated_password);
                     echo json_encode([
                         "status" => "success",
                         "message" => "Inscripción creada exitosamente",
@@ -364,54 +370,88 @@ class ApplicantDAO
     public function authApplicant(string $username, string $password) {
         if (isset($username) && isset($password)) {
             //Busca al aspirante
-            $query = "SELECT id_user_applicant FROM UsersApplicants WHERE username_user_applicant = ? AND password_user_applicant = ?;";
+            $query = "SELECT id_user_applicant, password_user_applicant FROM UsersApplicants WHERE username_user_applicant = ?";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('si', $username, $password);
+            $stmt->bind_param('s', $username);
             $stmt->execute();
             $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
 
             if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
                 $row = $result->fetch_array();
                 $auxID = $row[0];
-                $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
-                $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
-                $accessArray = $resultAccessArray->fetch_array();
-                //Liberacion de resultados de la query:
-                $resultAccessArray->free_result();
-
-                while ($this->connection->more_results() && $this->connection->next_result()) {
-                    $extraResult = $this->connection->store_result();
-                    if ($extraResult) {
-                        $extraResult->free();
+                $hashPassword = $row[1];
+                $coincidence = Encryption::verifyPassword($password, $hashPassword);
+                if($coincidence) { //La contrasena ingresada coincide con el hash registrado
+                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
+                    $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
+                    
+                    $accessArray = [];
+                    while ($row = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $row['id_access_control'];
                     }
-                }
+                    //Liberacion de resultados de la query:
+                    $resultAccessArray->free();
 
-                //Definicion del payload con el username y los accesos que tiene
-                $payload = [
-                    'userApplicant' => $username,
-                    'accessArray' => $accessArray
-                ];
-                $newToken = JWT::generateToken($payload);
-                
-                $queryUpdate = "UPDATE `TokenUserApplicant` SET token = ? WHERE id_token_user_applicant = ?;";
-                $stmtUpdate = $this->connection->prepare($queryUpdate);
-                $stmtUpdate->bind_param('si', $newToken, $auxID);
-                $resultUpdate = $stmtUpdate->execute();
+                    while ($this->connection->more_results() && $this->connection->next_result()) {
+                        $extraResult = $this->connection->store_result();
+                        if ($extraResult) {
+                            $extraResult->free();
+                        }
+                    }
+    
+                    //Definicion del payload con el username y los accesos que tiene
+                    $payload = [
+                        'userApplicant' => $username,
+                        'accessArray' => $accessArray
+                    ];
+                    $newToken = JWT::generateToken($payload);
 
-                if ($resultUpdate === false) { //Si la actualizacion falla
+            
+
+                    $queryCheck = "SELECT id_user_applicant FROM TokenUserApplicant WHERE id_user_applicant = ?;";
+                    $stmtCheck = $this->connection->prepare($queryCheck);
+                    $stmtCheck->bind_param('i', $auxID);
+                    $stmtCheck->execute();
+                    $stmtCheck->store_result();
+                    
+                    // Si ya existe el registro, se actualiza, si no, se inserta
+                    if ($stmtCheck->num_rows > 0) {
+                        // Si existe, actualizamos el token
+                        $queryUpdate = "UPDATE `TokenUserApplicant` SET token = ? WHERE id_user_applicant = ?;";
+                        $stmtUpdate = $this->connection->prepare($queryUpdate);
+                        $stmtUpdate->bind_param('si', $newToken, $auxID);
+                        $resultUpdate = $stmtUpdate->execute();
+                    } else {
+                        // Si no existe, insertamos un nuevo registro
+                        $queryInsert = "INSERT INTO `TokenUserApplicant` (id_user_applicant, token) VALUES (?, ?);";
+                        $stmtInsert = $this->connection->prepare($queryInsert);
+                        $stmtInsert->bind_param('is', $auxID, $newToken);
+                        $resultInsert = $stmtInsert->execute();
+                    }
+    
+                    if ($resultUpdate === false) { //Si la actualizacion falla
+                        return $response = [
+                            'success' => false,
+                            'message' => 'Token no actualizado.'
+                        ];
+                    }
+                    $stmtUpdate->close();
+    
+                    $response = [
+                        'success' => true,
+                        'message' => 'Validacion de credenciales exitosa.',
+                        'token' => $newToken,
+                        'typeUser' => 'applicant'
+                    ];
+
+                } else { //Contrasena incorrecta
                     return $response = [
                         'success' => false,
-                        'message' => 'Token no actualizado.'
+                        'message' => 'Credenciales invalidas.',
+                        'token' => null
                     ];
                 }
-                $stmtUpdate->close();
 
-                $response = [
-                    'success' => true,
-                    'message' => 'Validacion de credenciales exitosa.',
-                    'token' => $newToken,
-                    'typeUser' => 'applicant'
-                ];
             } else {
                 $response = [
                     'success' => false,
@@ -985,7 +1025,7 @@ class ApplicantDAO
 
     }
 
-    private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
+    private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )
     {   //Nueva instancia de admision proccess
         $AdmissionProccessDAO = new AdmissionProccessDAO();
         // Extraer el proceso de admisión activo
@@ -1026,7 +1066,7 @@ class ApplicantDAO
                 $id_application = $this->connection->insert_id;
                 $this->id_application_inserted = $id_application;
                 //Se crea el usuario del aspirante relacionado con la solicitud recien creada y los rating test
-                if ($this->createUserApplicant($id_applicant) && $this->createRatingApplicantsTest($id_application)) {
+                if ($this->createUserApplicant($id_applicant,  $password_user_applicant ) && $this->createRatingApplicantsTest($id_application, )) {
 
                     $stmt->close();
                     return true; // Éxito
@@ -1051,10 +1091,9 @@ class ApplicantDAO
         }
     }
 
-    private function createUserApplicant($id_applicant)
+    private function createUserApplicant($id_applicant, $password_user_applicant)
     {
-        $generated_password = Password::generatePassword();
-        $password_user_applicant = Encryption::hashPassword($generated_password);
+      
         $status_user_applicant = 1;
         // Consulta de inserción
         $query = "INSERT INTO UsersApplicants (username_user_applicant,password_user_applicant,status_user_applicant)  VALUES (?, ?, ?)";
@@ -1437,6 +1476,7 @@ class ApplicantDAO
      * @throws Exception Si ocurre un error durante la eliminación de errores o la ejecución del procedimiento almacenado.
      */
     public function updateCheckApplicant($idCheckApplicant, $verificationStatus, $revision_status,$descriptionGeneralCheck, $errorData){
+        $mail = new mail();
         $currentDate = new DateTime();
         $jsonDate = json_encode($currentDate);
         $decodedDate = json_decode($jsonDate, true);
@@ -1447,9 +1487,12 @@ class ApplicantDAO
             if (!is_int($idCheckApplicant)) {
                 throw new InvalidArgumentException("No se han ingresado los parámetros correctos.");
             }            
+            
             $this->connection->execute_query("CALL UPDATE_CHECK_APPLICANT_APPLICATIONS($idCheckApplicant, $verificationStatus,'$dateOnly', $revision_status,'$descriptionGeneralCheck')");
             $this->connection->commit();
-            $sendMail = $this->connection->sendStatusNotificationAplications($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck);
+           // $sendMail = $this->sendStatusNotificationAplications($idCheckApplicant,$verificationStatus,$revision_status,$errorData,$descriptionGeneralCheck);
+       
+            $sendMail = true;
             if($sendMail==true){
                 return [
                     "status" => "success",
