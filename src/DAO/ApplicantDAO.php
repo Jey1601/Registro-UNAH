@@ -12,6 +12,7 @@
 require_once 'util/jwt.php';
 require_once 'util/mail.php';
 require_once 'AdmissionProccessDAO.php';
+include_once "AdmissionAdminDAO.php";
 require_once 'util/encryption.php';
 require_once 'DocumentValidationAdmissionProcessDAO.php';
 require_once 'AcceptanceAdmissionProcessDAO.php';
@@ -1576,7 +1577,42 @@ class ApplicantDAO
         return false;
     }
 
- 
+    public function getAllApplicationsByAdminProcess($idAdminProcess){
+        try {
+            if (!is_int($idAdminProcess)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos en getAllApplicationsByAdminProcess()");
+            }            
+            $registeredApplicants = $this->connection->execute_query(" CALL GET_APPLICATIONS_BY_ADMIN_PROCESS($idAdminProcess)");
+            if ($registeredApplicants) { 
+                if ($registeredApplicants->num_rows > 0) {
+                    $allApplicants = [];
+                    while ($row = $registeredApplicants->fetch_assoc()) {
+                        $allApplicants[] = $row;
+                    }
+                    return [
+                        "status" => "success",
+                        "AplicantesInscritos" => $allApplicants
+                    ];
+                } else {
+                    return [
+                        "status" => "warning",
+                        "message" => "Se logro encontrar aspirantes isncritos en el actual proceso de admision"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento GET_APPLICATIONS_BY_ADMIN_PROCESS(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getAllApplicationsByAdminProcess() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
     // Método para cerrar la conexión 
     public function closeConnection()
     {
