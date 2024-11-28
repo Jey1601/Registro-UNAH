@@ -53,9 +53,10 @@ static async authApplicant() {
       if (result.success) {
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('typeUser',result.typeUser);
+        const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
         window.location.href = '../../../../views/admissions/results.html';
       } else {
-        Alert.display("warning", "Error en la autenticacion", result.message);
+        Alert.display("warning", "Error en la autenticacion", result.message,'../../');
       }
     });
   } catch (error) {

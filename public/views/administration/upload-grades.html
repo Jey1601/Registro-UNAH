@@ -1,127 +1,225 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="author"
+      content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn"
+    />
+    <meta name="version" content="0.1.0" />
+    <meta name="since" content="2024/11/1" />
+    <meta name="date" content="2024/11/10" />
+    <meta
+      name="description"
+      content="Página de carga de calificaciones de examenes de admisión"
+    />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn">
-  <meta name="version" content="0.1.0">
-  <meta name="since" content="2024/11/1">
-  <meta name="date" content="2024/11/10">
-  <meta name="description"
-    content="Página de carga de calificaciones de examenes de admisión">
+    <link
+      href="../../assets/css/bootstrap/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/icons/UNAH-escudo.png"
+      sizes="16x16"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" />
+    <link rel="stylesheet" href="../../assets/css/administration/main.css" />
+    <link
+      rel="stylesheet"
+      href="../../assets/css/administration/upload-grades.css" />
+    <link rel="stylesheet" href="../../assets/css/support.css" />
+    <title>Carga de calificaciones</title>
+    <script src="../../assets/js/tokenValidation.js"></script>
+  </head>
 
+  <body class="background-white animation">
+    <!--Header/navar==============================================================================-->
+    <nav class="my-nav">
+      <div class="nav-container dropdown">
+        <a class="" href="./admissions-admin.html">
+          <img
+            class="nav-logo"
+            src="../../assets/img/logos/UNAH-version-horizontal-white.png"
+          />
+        </a>
+        <button
+          class="dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            class="profile-img-button"
+            src="../../assets/img/icons/profile-icon.png"
+            alt=""
+          />
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <button
+              id="logoutBtn"
+              style="border: none; background: none; height: auto"
+              class="dropdown-item"
+              href="#"
+            >
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="notifications"></div>
+    <!--Logout=================================================================================-->
 
-   <link href="../../assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="icon" type="image/png" href="../../assets/img/icons/UNAH-escudo.png"  sizes="16x16">
-    <link rel="stylesheet" href="../../assets/css/main.css">
-   <link rel="stylesheet" href="../../assets/css/administration/main.css"> 
-   <link rel="stylesheet" href="../../assets/css/administration/upload-grades.css"> 
-    
-  <title>Carga de calificaciones</title>
-  <script src="../../assets/js/tokenValidation.js"></script>
-</head>
+    <!--Cargar calificaciones=================================================================================-->
 
-<body class="background-white animation">
-
-
-  <!--Header/navar==============================================================================-->
-  <nav class="my-nav">
-    <div class="nav-container dropdown"  >
-      <a class="" href="./admissions-admin.html">
-        <img class="nav-logo" src="../../assets/img/logos/UNAH-version-horizontal-white.png" >
-      </a>
-      <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <img class="profile-img-button" src="../../assets/img/icons/profile-icon.png" alt="">
-      </button>
-      <ul class="dropdown-menu">
-        <li><button id="logoutBtn" style="border:none; background: none; height: auto;" class="dropdown-item" href="#">Cerrar sesión</button></li>
-      </ul>
-    </div>
-  </nav>
-     <!--Logout=================================================================================-->
-
-
-   <!--Cargar calificaciones=================================================================================-->
-   
-   <section class="upload-section">
-    <div class="title-container">
-        <div class="section-title">
+    <section class="upload-section py-5">
+      <div class="container">
+        <div class="row">
+          <div class="section-title" style="margin: 10px 0 30px">
             <h2>Cargar Calificaciones</h2>
+          </div>
         </div>
-    </div>
-    <div id="alertPlaceholder"></div>
-    <div>
-        <form method="POST" enctype="multipart/form-data" id="formInscriptionGrades" action="">
-            <div class="mb-3">
-                <label for="formFile" class="form-label">Seleccione un archivo .csv con la estructura correcta para una carga de calificaciones satisfactoria</label>
-                <input class="form-control" type="file" id="csvFile" name="csvFile" accept=".csv">
-           </div>
-           <button type="submit" class="btn btn-success" id="btnUpload">Cargar</button>
-        </form>
-    </div>
-    </section> 
 
-  <!--Footer=================================================================================-->
-  
-  <footer class="footer">
-    
-    <img class="logo-footer" src="../../assets/img/logos/UNAH-version-horizontal-white.png"  >
+        <!-- Instrucciones adicionales -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="alert alert-info">
+              <h4 class="alert-heading">Instrucciones:</h4>
+              <ul>
+                <li>
+                  El archivo CSV debe contener los siguientes campos en el orden
+                  exacto:
+                  <strong
+                    >d_aspirante, num_aplicacion, id_examen, tipo_examen,
+                    nota_examen, nombre_completo, centro_regional</strong
+                  >.
+                </li>
+                <li>
+                  Asegúrese de que el archivo no contenga filas vacías ni comas
+                  adicionales.
+                </li>
+              </ul>
+              <p>Ejemplo de estructura del archivo CSV:</p>
+              <pre>
+d_aspirante,num_aplicacion,id_examen,tipo_examen,nota_examen,nombre_completo,centro_regional
+12345,001,EX001,Teórico,85,"Juan Pérez","Centro Regional 1"
+67890,002,EX002,Práctico,92,"Ana López","Centro Regional 2"
+                  </pre
+              >
+            </div>
+          </div>
+        </div>
 
-    <ul class="social-icon">
-      <li class="footer-icon">
-        <a href="https://facebook.com/unahoficial" >
-          <img src="../../assets/img/icons/icon_facebook_white.png" alt="">
-        </a>
-      </li>
-      <li class="footer-icon">
-        <a href="https://instagram.com/unahoficial" >
-          <img src="../../assets/img/icons/icon_insta_white.png" alt="">
-        </a>
-      </li>
-      <li class="footer-icon">
-        <a href="https://www.unah.edu.hn/" >
-          <img src="../../assets/img/icons/icon_linkedin_white.png" alt="">
-        </a>
-      </li>
-      <li class="footer-icon">
-        <a href="https://x.com/UNAHoficial" >
-          <img src="../../assets/img/icons/icon_x_white.png" alt="">
-        </a>
-      </li>
-      <li class="footer-icon">
-        <a href="https://youtube.com/unahoficial" >
-          <img src="../../assets/img/icons/icon_youtube_white.png" alt="">
-        </a>
-      </li>
-    </ul>
-    
-    <ul class="footer-menu">
-      <li class="footer-menu-item">
-        <a href="" class="footer-menu-icon">Inicio</a>
-      </li>
-      <li class="footer-menu-item">
-        <a href="" class="footer-menu-icon">Equipo</a>
-      </li>
-      <li class="footer-menu-item">
-        <a href="" class="footer-menu-icon">Contacto</a>
-      </li>
-      <li class="footer-menu-item">
-        <a href="" class="footer-menu-icon">Sobre Nosotros</a>
-      </li>
-    </ul>
-    <p class="footer-text">@año | Todos los derechos reservados</p>
+        <!-- Formulario para cargar el CSV -->
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6">
+            <form
+              method="POST"
+              enctype="multipart/form-data"
+              id="formInscriptionGrades"
+              action=""
+            >
+              <div class="mb-4">
+                <label for="csvFile" class="form-label h5"
+                  >Seleccione un archivo .csv</label
+                >
+                <input
+                  class="form-control"
+                  type="file"
+                  id="csvFile"
+                  name="csvFile"
+                  accept=".csv"
+                />
+                <div class="form-text">
+                  Asegúrese de que el archivo esté en formato .csv y contenga
+                  las calificaciones correctamente estructuradas.
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-success btn-lg w-100"
+                id="btnUpload"
+              >
+                Cargar Calificaciones
+              </button>
+            </form>
+          </div>
+        </div>
 
-  </footer>
+        <!-- Mensaje de resultado -->
+        <div id="alertPlaceholder" class="mt-4">
+          <!-- Mensajes de éxito o error se insertarán aquí -->
+        </div>
+      </div>
+    </section>
 
-  <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-  
-  <script type="module" src="../../assets/js/aspects.js" ></script>
-  <script type="module" src="../../assets/js/modules/request/uploadCSVAdmissionAdmin.mjs"></script>
+    <!--Footer=================================================================================-->
 
-</body>
+    <footer class="footer">
+      <img
+        class="logo-footer"
+        src="../../assets/img/logos/UNAH-version-horizontal-white.png"
+      />
 
+      <ul class="social-icon">
+        <li class="footer-icon">
+          <a href="https://facebook.com/unahoficial">
+            <img src="../../assets/img/icons/icon_facebook_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://instagram.com/unahoficial">
+            <img src="../../assets/img/icons/icon_insta_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://www.unah.edu.hn/">
+            <img src="../../assets/img/icons/icon_linkedin_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://x.com/UNAHoficial">
+            <img src="../../assets/img/icons/icon_x_white.png" alt="" />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://youtube.com/unahoficial">
+            <img src="../../assets/img/icons/icon_youtube_white.png" alt="" />
+          </a>
+        </li>
+      </ul>
+
+      <ul class="footer-menu">
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Inicio</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Equipo</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Contacto</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Sobre Nosotros</a>
+        </li>
+      </ul>
+      <p class="footer-text">@año | Todos los derechos reservados</p>
+    </footer>
+
+    <script
+      src="../../assets/js/bootstrap/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="module" src="../../assets/js/aspects.js"></script>
+    <script
+      type="module"
+      src="../../assets/js/modules/request/uploadCSVAdmissionAdmin.mjs"
+    ></script>
+  </body>
 </html>

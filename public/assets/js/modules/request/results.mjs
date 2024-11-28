@@ -42,14 +42,14 @@ class Results {
             if (success) {
                 submitBtn.remove();
 
-                Alert.display(success.message, "success"); 
+                Alert.display("success",'Felicidades',success.message,'../../' ); 
                 setTimeout(() => {
                     window.location.href = '../../index.html';
                 }, 2000);
             } else {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Enviar";
-                Alert.display(success.message, "danger");
+                Alert.display('error','Algo anda mal',success.message, "../../");
             }
 
 

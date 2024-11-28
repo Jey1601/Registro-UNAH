@@ -11,7 +11,7 @@ $dao = new ApplicantDAO();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
    if ($_POST['typeCertificate'] == 'base64') {
-      $image_id_applicant = base64_decode($_POST['applicantCertificate']);
+      $secondary_certificate_applicant = base64_decode($_POST['applicantCertificate']);
   } else {
       $certificateFile = $_FILES['applicantCertificate'];
       $secondary_certificate_applicant = file_get_contents($certificateFile['tmp_name']);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $image_id_applicant = base64_decode($_POST['applicantIdDocument']);
   } else {
       $idFile = $_FILES['applicantIdDocument'];
-      $secondary_certificate_applicant = file_get_contents($idFile['tmp_name']);
+      $image_id_applicant = file_get_contents($idFile['tmp_name']);
   }
 
 

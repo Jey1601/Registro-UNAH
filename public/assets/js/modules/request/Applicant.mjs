@@ -1,10 +1,17 @@
 import { Cell, Modal, Alert, Search, Entry } from "../behavior/support.mjs";
 import { Inscription } from "./Inscription.mjs";
+import { Login } from "./login.mjs";
 class Applicant {
   static modalInstance = null;
 
   static async renderData(accessess) {
-    const applications = await this.viewPendingCheckData();
+    let  applications = [];
+    if(accessess.includes('rllHaveq') || accessess.includes('IeMfti20') ){
+       applications = await this.viewData();
+    }else{
+       applications = await this.viewPendingCheckData();
+    }
+   
 
     const tableBody = document.querySelector("#viewDataApplicants tbody");
     tableBody.innerHTML = "";
@@ -123,19 +130,19 @@ class Applicant {
     
 
     } else {
-      Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas');
+      Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas','../../');
     }
   }
 
   //Carga la imagen del certificado del aplicante en la modal y luego la despliega
-  static showDataApplication(applications, idApplicant, access) {
+   static showDataApplication(applications, idApplicant, access) {
    const application = applications.find(applicant => applicant.id_applicant === idApplicant);
-    
+    console.log(applications);
     //Apartado de verificación para roles de revisión, no edición.
     const verifyDataCheckList = document.getElementById('verifyDataCheckList');
    
-      //Botón de descarga de aplicaciones, solo asociado a role valido
-      const downloadInscriptionsCsv = document.getElementById('downloadInscriptionsCsv');
+    //Botón de descarga de aplicaciones, solo asociado a role valido
+    const downloadInscriptionsCsv = document.getElementById('downloadInscriptionsCsv');
 
      
     
@@ -151,6 +158,8 @@ class Applicant {
     const applicantStudyCenter = document.getElementById('applicantStudyCenter');
     const applicantFirstChoice = document.getElementById('applicantFirstChoice');
     const applicantSecondChoice = document.getElementById('applicantSecondChoice');
+    const id_admission_application_number = document.getElementById('id_admission_application_number');
+    const id_check_applicant_applications = document.getElementById('id_check_applicant_applications'); 
 
     //Inicialmente todo esta deshabilitado
       applicantStudyCenter.disabled = true;
@@ -209,6 +218,8 @@ class Applicant {
     applicantStudyCenter.value = application.name_regional_center;
     applicantFirstChoice.value = application.firstC;
     applicantSecondChoice.value = application.secondC;
+    id_admission_application_number.value = application.id_admission_application_number;
+    id_check_applicant_applications.value = application.id_check_applicant_applications;
 
 
    
@@ -330,8 +341,12 @@ class Applicant {
   }
 
   static async viewPendingCheckData() {
+    const tokenSaved = sessionStorage.getItem('token');
+    const payload = Login.getPayloadFromToken(tokenSaved);
+    const user = payload.userAdmissionAdmin;
+
     try {
-      const response = await fetch("../../../api/get/applicant/PendingCheckData.php");
+      const response = await fetch(`../../../api/get/applicant/PendingCheckData.php?user=${user}`);
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -607,14 +622,14 @@ static async updateData(formData, form) {
    
     if (result.id_application == null ){
       Alert.display(result.status,'Aviso', result.message, '../../');
-    }else{
-      
+
       form.reset();
       
       Array.from(form.elements).forEach(input => {
         input.classList.remove('right-input');
       });
-    
+
+      window.location.href = './login.html'
     }
    
   } catch (error) {
@@ -623,6 +638,94 @@ static async updateData(formData, form) {
   }
 }
 
+static  async getChecks() {
+  // Arreglo para almacenar los valores de los checkboxes activos
+  let checkboxesActivos = [];
 
+  // Obtener todos los checkboxes con 'name' de la forma 'invalid_*' o 'secondary_certificate_applicant' (por ejemplo)
+  const checkboxes = document.querySelectorAll('.form-check-input:checked');
+
+  // Iteramos sobre los checkboxes seleccionados y obtenemos sus valores
+  checkboxes.forEach(function(checkbox) {
+      checkboxesActivos.push(checkbox.value);
+  });
+
+  // Obtener los valores de los campos adicionales
+  const checkJustification =document.getElementById('checkJustification');
+  const justification = checkJustification.value;
+  //const idAdmissionApplicationNumber = document.getElementById('id_admission_application_number').value;
+  const idCheckApplicantApplications = document.getElementById('id_check_applicant_applications').value;
+
+  // Mostrar los valores para depuración (puedes quitarlo en producción)
+  console.log('Checkboxes Activos:', checkboxesActivos);
+  console.log('Justificación:', justification);
+ // console.log('ID de Solicitud:', idAdmissionApplicationNumber);
+  console.log('ID de Check Applicant Applications:', idCheckApplicantApplications);
+  let verificationStatus = 1;
+  if(checkboxesActivos.length>0){
+    verificationStatus = 0;
+  }
+
+  const revisionStatus = 1;
+    // Mostrar los valores para depuración (puedes quitarlo en producción)
+    console.log('Checkboxes Activos:', checkboxesActivos);
+    console.log('Justificación:', justification);
+   // console.log('ID de Solicitud:', idAdmissionApplicationNumber);
+    console.log('ID de Check Applicant Applications:', idCheckApplicantApplications);
+    console.log('status:', verificationStatus);
+    console.log('status:', revisionStatus);
+
+  await this.saveChecks(checkboxesActivos, justification, idCheckApplicantApplications, verificationStatus,revisionStatus);
+  
+
+  // Recorrer cada checkbox y desmarcarlo
+  checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+  });
+
+  checkJustification.value = '';
+
+  Modal.hideModal('viewCertificate');
+  window.location.reload() // Mensaje de éxito
+  
+}
+
+
+ static async  saveChecks(checkboxesActivos, justification, idCheckApplicantApplications, verificationStatus,revisionStatus) {
+  // Crear el objeto de datos que se enviará al backend
+  const requestData = {
+      idCheckApplicant: idCheckApplicantApplications,
+      verificationStatus: verificationStatus, // Los valores de los checkboxes activos
+      revisionStatus: revisionStatus, // o el valor adecuado
+      descriptionGeneralCheck: justification, // Justificación
+      errorData: checkboxesActivos.join(', ') // Unir los valores de los checkboxes activos, si es necesario
+  };
+
+  try {
+      // Enviar los datos al endpoint utilizando fetch
+      const response = await fetch("../../../../api/post/applicant/checkErrorProcess.php", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestData) // Convertir el objeto a JSON
+      });
+
+      // Obtener la respuesta y procesarla
+      const result = await response.json();
+
+      // Mostrar el resultado en consola o tomar las acciones correspondientes
+      if (result.success) {
+          alert(result.message);
+        
+      } else {
+          Alert.display(result.status,'Aviso',result.message, '../../'); // Mensaje de error
+      }
+  } catch (error) {
+      // Manejo de errores en caso de fallo en la solicitud
+      console.error('Error al enviar los datos:', error);
+      alert('Hubo un error al enviar los datos.');
+  }
+}
 }
 export { Applicant };
