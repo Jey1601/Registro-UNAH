@@ -6,7 +6,7 @@ class AdmissionProccess{
     static async getCurrentProccess() {
     
         try {
-            const response = await fetch("../../../api/get/admissionProccess/currentAdmissionProccess.php");
+            const response = await fetch("../../../public/api/get/admissionProccess/currentAdmissionProccess.php");
     
             if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);

@@ -100,7 +100,7 @@ class Inscription {
       try {
         // Realizar la solicitud POST usando fetch
         const response = await fetch(
-          "../../../api/post/applicant/verifyEmail.php",
+          "../../../public/api/post/applicant/verifyEmail.php",
           {
             method: "POST",
             body: formData,
@@ -128,7 +128,7 @@ class Inscription {
         const applicantIdentification = document.getElementById('applicantIdentification').value;
        
         try {
-          const response = await fetch(`../../../api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
+          const response = await fetch(`../../../public/api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
           
           if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);
@@ -155,7 +155,7 @@ class Inscription {
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(
-        "../../../api/post/applicant/insertApplicant.php",
+        "../../../public/api/post/applicant/insertApplicant.php",
         {
           method: "POST",
           body: formData,

@@ -325,7 +325,7 @@ class Applicant {
   // Método para obtener los datos de las solicitudes de aplicación
   static async viewData() {
     try {
-      const response = await fetch("../../../api/get/applicant/viewData.php");
+      const response = await fetch("../../../public/api/get/applicant/viewData.php");
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -346,7 +346,7 @@ class Applicant {
     const user = payload.userAdmissionAdmin;
 
     try {
-      const response = await fetch(`../../../api/get/applicant/PendingCheckData.php?user=${user}`);
+      const response = await fetch(`../../../public/api/get/applicant/PendingCheckData.php?user=${user}`);
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -475,7 +475,7 @@ class Applicant {
     formData.append('id_applicant', id_applicant);
 
     try {
-        const response = await fetch("../../../api/post/applicant/getResults.php", {
+        const response = await fetch("../../../public/api/post/applicant/getResults.php", {
             method: "POST",
             body: formData,
         });
@@ -611,7 +611,7 @@ static async updateData(formData, form) {
   try {
     // Realizar la solicitud POST usando fetch
     const response = await fetch(
-      "../../../api/post/applicant/updateApplicant.php",
+      "../../../public/api/post/applicant/updateApplicant.php",
       {
         method: "POST",
         body: formData,
@@ -703,7 +703,7 @@ static  async getChecks() {
 
   try {
       // Enviar los datos al endpoint utilizando fetch
-      const response = await fetch("../../../../api/post/applicant/checkErrorProcess.php", {
+      const response = await fetch("../../../public/api/post/applicant/checkErrorProcess.php", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'

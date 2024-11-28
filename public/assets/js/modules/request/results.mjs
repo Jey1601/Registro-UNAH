@@ -65,7 +65,7 @@ class Results {
         try {
         
             const response = await fetch(
-              "../../../api/post/applicant/applicantAcceptance.php",
+              "../../../public/api/post/applicant/applicantAcceptance.php",
               {
                 method: "POST", 
                 body: formData,
@@ -77,7 +77,7 @@ class Results {
          
           } catch (error) {
          // Manejamos el error si ocurre
-            Alert.display(result.message, "danger");
+            Alert.display('error','Algo anda mal',result.message, "../../");
           }
     }
     
