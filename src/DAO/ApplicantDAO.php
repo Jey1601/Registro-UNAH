@@ -247,54 +247,70 @@ class ApplicantDAO
     public function authApplicant(string $username, string $password) {
         if (isset($username) && isset($password)) {
             //Busca al aspirante
-            $query = "SELECT id_user_applicant FROM UsersApplicants WHERE username_user_applicant = ? AND password_user_applicant = ?;";
+            $query = "SELECT id_user_applicant, password_user_applicant FROM UsersApplicants WHERE username_user_applicant = ?";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('si', $username, $password);
+            $stmt->bind_param('s', $username);
             $stmt->execute();
             $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
 
             if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
                 $row = $result->fetch_array();
                 $auxID = $row[0];
-                $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
-                $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
-                $accessArray = $resultAccessArray->fetch_array();
-                //Liberacion de resultados de la query:
-                $resultAccessArray->free_result();
-
-                while ($this->connection->more_results() && $this->connection->next_result()) {
-                    $extraResult = $this->connection->store_result();
-                    if ($extraResult) {
-                        $extraResult->free();
+                $hashPassword = $row[1];
+                $coincidence = Encryption::verifyPassword($password, $hashPassword);
+                if($coincidence) { //La contrasena ingresada coincide con el hash registrado
+                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
+                    $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
+                    
+                    $accessArray = [];
+                    while ($row = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $row['id_access_control'];
                     }
-                }
+                    //Liberacion de resultados de la query:
+                    $resultAccessArray->free();
 
-                //Definicion del payload con el username y los accesos que tiene
-                $payload = [
-                    'userApplicant' => $username,
-                    'accessArray' => $accessArray
-                ];
-                $newToken = JWT::generateToken($payload);
-                
-                $queryUpdate = "UPDATE `TokenUserApplicant` SET token = ? WHERE id_token_user_applicant = ?;";
-                $stmtUpdate = $this->connection->prepare($queryUpdate);
-                $stmtUpdate->bind_param('si', $newToken, $auxID);
-                $resultUpdate = $stmtUpdate->execute();
+                    while ($this->connection->more_results() && $this->connection->next_result()) {
+                        $extraResult = $this->connection->store_result();
+                        if ($extraResult) {
+                            $extraResult->free();
+                        }
+                    }
+    
+                    //Definicion del payload con el username y los accesos que tiene
+                    $payload = [
+                        'userApplicant' => $username,
+                        'accessArray' => $accessArray
+                    ];
+                    $newToken = JWT::generateToken($payload);
+                    
+                    $queryUpdate = "UPDATE `TokenUserApplicant` SET token = ? WHERE id_token_user_applicant = ?;";
+                    $stmtUpdate = $this->connection->prepare($queryUpdate);
+                    $stmtUpdate->bind_param('si', $newToken, $auxID);
+                    $resultUpdate = $stmtUpdate->execute();
+    
+                    if ($resultUpdate === false) { //Si la actualizacion falla
+                        return $response = [
+                            'success' => false,
+                            'message' => 'Token no actualizado.'
+                        ];
+                    }
+                    $stmtUpdate->close();
+    
+                    $response = [
+                        'success' => true,
+                        'message' => 'Validacion de credenciales exitosa.',
+                        'token' => $newToken,
+                        'typeUser' => 'applicant'
+                    ];
 
-                if ($resultUpdate === false) { //Si la actualizacion falla
+                } else { //Contrasena incorrecta
                     return $response = [
                         'success' => false,
-                        'message' => 'Token no actualizado.'
+                        'message' => 'Credenciales invalidas.',
+                        'token' => null
                     ];
                 }
-                $stmtUpdate->close();
 
-                $response = [
-                    'success' => true,
-                    'message' => 'Validacion de credenciales exitosa.',
-                    'token' => $newToken,
-                    'typeUser' => 'applicant'
-                ];
             } else {
                 $response = [
                     'success' => false,
@@ -823,6 +839,7 @@ class ApplicantDAO
                 // Commit explícito de la transacción actual
                 $this->connection->commit();
                 $stmt->close();
+                $this->createUserApplicant($id_applicant);
                 return true;
             } else {
                 // Si la ejecución falla, hacemos un rollback para evitar inconsistencias
