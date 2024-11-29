@@ -2,7 +2,7 @@
 
 header("Content-Type: application/json");
 
-include_once "../../../../src/DAO/DocumentValidationAdmissionProcessDAO.php";
+include_once "../../../../../src/DAO/DocumentValidationAdmissionProcessDAO.php";
 
 $daoDocumentValidationAdmissionProcess = new DocumentValidationAdmissionProcessDAO();
 

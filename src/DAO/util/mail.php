@@ -92,7 +92,33 @@ public function sendEmails( $type, $maxEmailsPerDay) {
     echo "Se enviaron $emailCount correos.<br>";
 }
 
-public function sendConfirmation($name,$id_application,$email){
+public function sendConfirmation($name,$id_application,$email,$password){
+    $mail = $this->PHPMailerConfig();
+
+
+        $placeholders = [
+            'full_name' => $name ?? '',
+            'id_application' =>$id_application ?? '',
+            'password' => $password ?? ''
+         ];
+
+        $message = getTemplate('confirmation', $placeholders);
+
+        try {
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = 'Admisiones UNAH';
+            $mail->Body = $message;
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Error al enviar correo a {$email}: {$mail->ErrorInfo}<br>";
+        }
+
+        $mail->clearAddresses();
+ 
+}
+
+public function sendVerificationConfirmation($name,$id_application,$email){
     $mail = $this->PHPMailerConfig();
 
 
@@ -116,8 +142,74 @@ public function sendConfirmation($name,$id_application,$email){
         $mail->clearAddresses();
  
 }
+public function sendStatusApplicationCorrect($email, $name){
+    // Configuración de PHPMailer
+    $mail = $this->PHPMailerConfig();
 
+    // Preparar los datos para la plantilla
+    $placeholders = [
+        'full_name' => $name ?? '', // Aquí deberías pasar el ID de la solicitud si está disponible
+    ];
 
+    // Obtener el mensaje de la plantilla
+    $message = getTemplate('confirmation_correct', $placeholders);
+
+    // Enviar el correo
+    try {
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Confirmación de solicitud - Admisiones UNAH';
+        $mail->Body = $message;
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Error al enviar correo a {$email}: {$mail->ErrorInfo}<br>";
+    }
+
+    // Limpiar direcciones para el siguiente envío
+    $mail->clearAddresses();
+}
+
+public function sendStatusApplicationVerify($email, $name, $incorrectFields, $description){
+    // Configuración de PHPMailer
+    $mail = $this->PHPMailerConfig();
+
+    // Preparar los datos para la plantilla
+    $placeholders = [
+        'full_name' => $name ?? '',
+        'id_application' => '123456', // Aquí deberías pasar el ID de la solicitud si está disponible
+        'campos_incorrectos' => $this->formatIncorrectFields($incorrectFields),
+        'descripcion' => $description ?? ''
+    ];
+
+    // Obtener el mensaje de la plantilla
+    $message = getTemplate('exam_results_warning', $placeholders);
+
+    // Enviar el correo
+    try {
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Advertencia sobre solicitud - Admisiones UNAH';
+        $mail->Body = $message;
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Error al enviar correo a {$email}: {$mail->ErrorInfo}<br>";
+    }
+
+    // Limpiar direcciones para el siguiente envío
+    $mail->clearAddresses();
+}
+
+private function formatIncorrectFields($incorrectFields) {
+    $formatted = '';
+    if (is_array($incorrectFields) && count($incorrectFields) > 0) {
+        $formatted = '<ul>';
+        foreach ($incorrectFields as $field) {
+            $formatted .= '<li>' . htmlspecialchars($field) . '</li>';
+        }
+        $formatted .= '</ul>';
+    }
+    return $formatted;
+}
 public function setConfirmationEmailApplicants($name, $email, $applicant_id_email_confirmation) {
    
     

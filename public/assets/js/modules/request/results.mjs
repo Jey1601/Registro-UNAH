@@ -42,14 +42,14 @@ class Results {
             if (success) {
                 submitBtn.remove();
 
-                Alert.display(success.message, "success"); 
+                Alert.display("success",'Felicidades',success.message,'../../' ); 
                 setTimeout(() => {
                     window.location.href = '../../index.html';
                 }, 2000);
             } else {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Enviar";
-                Alert.display(success.message, "danger");
+                Alert.display('error','Algo anda mal',success.message, "../../");
             }
 
 
@@ -65,7 +65,7 @@ class Results {
         try {
         
             const response = await fetch(
-              "../../../api/post/applicant/applicantAcceptance.php",
+              "../../../public/api/post/applicant/applicantAcceptance.php",
               {
                 method: "POST", 
                 body: formData,
@@ -77,7 +77,7 @@ class Results {
          
           } catch (error) {
          // Manejamos el error si ocurre
-            Alert.display(result.message, "danger");
+            Alert.display('error','Algo anda mal',result.message, "../../");
           }
     }
     

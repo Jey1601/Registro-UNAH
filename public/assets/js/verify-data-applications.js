@@ -9,21 +9,17 @@ window.addEventListener('load', function(){
     if (token) {
         const payload = Login.getPayloadFromToken(token);
         access = payload.accessArray;
-
-        if(!access.includes('lwx50K7f') || !access.includes('rllHaveq') || !access.includes('IeMfti20') ){
-            this.window.location.href = '../../index.html'
+        console.log(access);
+       if(access.includes('lwx50K7f') || access.includes('rllHaveq') || access.includes('IeMfti20') ){
+            Applicant.renderData(access);      
+      
         }else{
-            Applicant.renderData(access);
+            this.window.location.href = '../../index.html'
         }
- 
+
     } 
     
-
-    
-
- 
 });
-
 
 
 const logoutBtn = document.getElementById('logoutBtn');
@@ -41,7 +37,7 @@ dataApplication.addEventListener('change', function(event){
 
 dataApplication.addEventListener('submit', function(event){
     event.preventDefault();
-    console.log('se ha enviado el formulario')
+    Applicant.getChecks();
 
 })
 
@@ -49,5 +45,5 @@ dataApplication.addEventListener('submit', function(event){
 const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsCsv');
 downloadInscriptionsBtn.addEventListener('click', function() {
    // Redirige al usuario a la URL del endpoint que genera el CSV
-   window.location.href = "../../../api/get/applicant/applicantDownloadCSV.php";
+   window.location.href = "../../public/api/get/applicant/applicantDownloadCSV.php";
 });

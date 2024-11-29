@@ -7,7 +7,7 @@ window.addEventListener('load', function(){
 
     if (token) {
         const payload = Login.getPayloadFromToken(token);
-        const applicantID = payload.applicantID; 
+        const applicantID = payload.userApplicant; 
         Applicant.renderResults(applicantID);
 
     } 
@@ -15,15 +15,15 @@ window.addEventListener('load', function(){
 });
 
 
-window.addEventListener('load', function(){
+/*window.addEventListener('load', function(){
     
 
    
-        Applicant.renderResults('0801200119258');
+        Applicant.renderResults('1501200612432');
 
     
    
-});
+});*/
 
 const resultsForm = document.getElementById('resultsForm');
 resultsForm.addEventListener('submit',function(event){

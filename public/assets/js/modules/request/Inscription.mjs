@@ -1,5 +1,5 @@
 import { regular_expressions } from "../behavior/configuration.mjs";
-import { Alert } from "../behavior/support.mjs";
+import { Alert, Modal } from "../behavior/support.mjs";
 
 class Inscription {
   
@@ -100,7 +100,7 @@ class Inscription {
       try {
         // Realizar la solicitud POST usando fetch
         const response = await fetch(
-          "../../../api/post/applicant/verifyEmail.php",
+          "../../../public/api/post/applicant/verifyEmail.php",
           {
             method: "POST",
             body: formData,
@@ -123,11 +123,12 @@ class Inscription {
 
       // Método para confirmar el correo 
       static async getConfirmationEmailApplicants() {
-        const emailCodeVerification = document.getElementById('emailCodeVerification').value;
+        const emailCodeVerificationInput = document.getElementById('emailCodeVerification');
+        const emailCodeVerification = emailCodeVerificationInput.value;
         const applicantIdentification = document.getElementById('applicantIdentification').value;
-
+       
         try {
-          const response = await fetch(`../../../api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
+          const response = await fetch(`../../../public/api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
           
           if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);
@@ -137,6 +138,8 @@ class Inscription {
             if(result.status === 'success'){
 
               Alert.display(result.status, 'Gracias', result.message);
+              emailCodeVerificationInput.value='';
+              Modal.hideModal('modalEmailCodeVerification');
               this.getData();
             }else{
               Alert.display(result.status, 'Algo ha salido mal', result.message);
@@ -152,7 +155,7 @@ class Inscription {
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(
-        "../../../api/post/applicant/updateApplicant.php",
+        "../../../public/api/post/applicant/insertApplicant.php",
         {
           method: "POST",
           body: formData,
@@ -167,9 +170,10 @@ class Inscription {
         
         form.reset();
         
-        Array.from(form.elements).forEach(input => {
+         Array.from(form.elements).forEach(input => {
           input.classList.remove('right-input');
         });
+        Modal.hideModal('Inscription-form');
         Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ));
       }
      

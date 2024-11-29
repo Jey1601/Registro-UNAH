@@ -71,7 +71,8 @@ BEGIN
         RegionalCenters.name_regional_center,
         first.name_undergraduate as firstC,
         second.name_undergraduate as secondC,
-        Applications.secondary_certificate_applicant as certificate
+        Applications.secondary_certificate_applicant as certificate,
+        CheckApplicantApplications.id_check_applicant_applications
     FROM Applicants
     INNER JOIN Applications ON Applications.id_applicant = Applicants.id_applicant
     AND `Applications`.status_application=1
@@ -79,6 +80,7 @@ BEGIN
     INNER JOIN RegionalCenters ON Applications.idregional_center = RegionalCenters.id_regional_center
     INNER JOIN Undergraduates first ON Applications.intendedprimary_undergraduate_applicant = first.id_undergraduate
     INNER JOIN Undergraduates  second ON Applications.intendedsecondary_undergraduate_applicant = second.id_undergraduate
+    INNER JOIN `CheckApplicantApplications` ON `CheckApplicantApplications`.id_admission_application_number = `Applications`.id_admission_application_number
     WHERE Applicants.id_applicant = idApplicant
     ORDER BY Applications.id_admission_application_number;
 END$$

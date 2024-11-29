@@ -41,7 +41,7 @@ static async authApplicant() {
   }
 
   try{
-    fetch('../../../../api/post/applicant/authApplicant.php', {
+    fetch('../../../../public/api/post/applicant/authApplicant.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,9 +53,10 @@ static async authApplicant() {
       if (result.success) {
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('typeUser',result.typeUser);
+        const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
         window.location.href = '../../../../views/admissions/results.html';
       } else {
-        Alert.display("warning", "Error en la autenticacion", result.message);
+        Alert.display("warning", "Error en la autenticacion", result.message,'../../');
       }
     });
   } catch (error) {
@@ -73,7 +74,7 @@ static async authAdmisionAdmin() {
   }
 
   try {
-      fetch('../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+      fetch('../../../../public/api/post/admissionAdmin/authAdmissionAdmin.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'

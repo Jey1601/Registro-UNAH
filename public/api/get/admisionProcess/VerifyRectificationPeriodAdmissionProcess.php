@@ -2,7 +2,7 @@
 
 header("Content-Type: application/json");
 
-include_once "../../../../src/DAO/RectificationPeriodAdmissionProcessDAO.php";
+include_once "../../../../../src/DAO/RectificationPeriodAdmissionProcessDAO.php";
 
 $daoRectificationPeriodAdmissionProcess = new RectificationPeriodAdmissionProcessDAO();
 

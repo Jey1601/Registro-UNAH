@@ -1,6 +1,7 @@
 
 import { Modal, Form, Alert } from "./modules/behavior/support.mjs";
 import { Applicant } from "./modules/request/Applicant.mjs";
+import { Login } from "./modules/request/login.mjs";
 
 const dataEditionForm = document.getElementById('dataEditionForm');
 const inputsDataEditionForm= Array.from(dataEditionForm.elements);
@@ -23,9 +24,11 @@ inputsDataEditionForm.forEach((input) => {
 });
 
 window.addEventListener('load', function(){
-    
-   
-    Applicant.renderDataToEdit('0801200119258');
+      const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+      const payload = Login.getPayloadFromToken(token);
+      const applicantID = payload.userApplicant; 
+
+    Applicant.renderDataToEdit(applicantID);
 });
 
 

@@ -8,7 +8,8 @@
  * @property string $dbName Nombre de la base de datos
  * @property mysqli $connection Objeto de conexion con la base de datos
 */
-
+include_once "AdmissionProccessDAO.php";
+include_once "ApplicantDAO.php";
 include_once 'util/jwt.php';
 class AdmissionAdminDAO {
     private $host = 'localhost';
@@ -81,10 +82,26 @@ class AdmissionAdminDAO {
                 $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
 
                 //Insercion del token en la tabla relacional entre token y usuario administrador de admisiones
-                $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
-                $stmtUpdate = $this->connection->prepare($queryUpdate);
-                $stmtUpdate->bind_param('si', $newToken, $auxID);
-                $resultUpdate = $stmtUpdate->execute();
+                $queryCheck = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE id_user_admissions_administrator = ?;";
+                $stmtCheck = $this->connection->prepare($queryCheck);
+                $stmtCheck->bind_param('i', $auxID);
+                $stmtCheck->execute();
+                $stmtCheck->store_result();
+                
+                // Si ya existe el registro, se actualiza, si no, se inserta
+                if ($stmtCheck->num_rows > 0) {
+                    // Si existe, actualizamos el token
+                    $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
+                    $stmtUpdate = $this->connection->prepare($queryUpdate);
+                    $stmtUpdate->bind_param('si', $newToken, $auxID);
+                    $resultUpdate = $stmtUpdate->execute();
+                } else {
+                    // Si no existe, insertamos un nuevo registro
+                    $queryInsert = "INSERT INTO `TokenUserAdmissionAdmin` (id_user_admissions_administrator, token) VALUES (?, ?);";
+                    $stmtInsert = $this->connection->prepare($queryInsert);
+                    $stmtInsert->bind_param('is', $auxID, $newToken);
+                    $resultInsert = $stmtInsert->execute();
+                }
 
                 if ($resultUpdate === false) { //Si la actualizacion falla
                     return $response = [
@@ -116,6 +133,86 @@ class AdmissionAdminDAO {
         }
 
         return $response;
+    }
+
+    /**
+     * Obtener el Identificador de un Usuario Administrador basandose en su Nombre de usuario, 
+     * usando el procedimiento almacenado USER_ADMIN_BY_USERNAME(); Debe devolver un solo registro, que contenga el id del usuario administrador.
+     * 
+     * @param string $userNameAdmin Nombre del usuario administrador.
+     * @return array Resultado de la operación con un estado ('status') y un mensaje o datos asociados:
+     *               - 'success': Operación exitosa, incluye el identificador del administrador.
+     *               - 'not_found': No se encontró un único usuario con el nombre de usuario especificado.
+     *               - 'error': Error durante la ejecución del procedimiento o una excepción capturada.
+     */
+    public function getUserAdminId ($userNameAdmin){
+        try {
+            if (!is_string($userNameAdmin)) {
+                throw new InvalidArgumentException("No se ha ingresado el parámetro correcto, debe ser una cadena de texto (varchar).");
+            }            
+            $IdUserAdmin = $this->connection->execute_query("CALL USER_ADMIN_BY_USERNAME('$userNameAdmin')");
+
+            if ($IdUserAdmin) { 
+                if ( $IdUserAdmin->num_rows == 1) { 
+                    $IdUserAdmissionAdministrator=  $IdUserAdmin->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "IdUserAdmissionAdministrator" => $IdUserAdmissionAdministrator['id_user_admissions_administrator']
+                    ];
+                } else {
+                    return [
+                        "status" => "not_found",
+                        "message" => "Se encontraron mas de un usuario"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento USER_ADMIN_BY_USERNAME(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getUserAdminId() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+    public function getPendingCheckApplicant($userId){ 
+        try {
+            if (!is_int($userId)) {
+                throw new InvalidArgumentException("No se ha ingresado el parámetro correcto, debe ser un entero.");
+            }           
+            $applicantsCheckPending = $this->connection->execute_query("CALL CHECK_PENDING_BY_USER_ADMINISTRADOR($userId)");
+            if ($applicantsCheckPending) { 
+                if ( $applicantsCheckPending->num_rows > 0) {
+                    while ($applicant = $applicantsCheckPending->fetch_assoc()) {
+                        $dataApplicantsCheckPending[] = $applicant;
+                    }
+                    return [
+                        "status" => "success",
+                        "AllApplicantsCheckPending" => $dataApplicantsCheckPending
+                    ];
+                } else {
+                    return [
+                        "status" => "warring",
+                        "message" => "Se encontraron aspirantes pendientes de revision"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento CHECK_PENDING_BY_USER_ADMINISTRADOR(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getPendingCheckApplicant() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
     }
 
     /** 
@@ -456,6 +553,130 @@ class AdmissionAdminDAO {
     }
 
     return true;
+    }
+     public function createCheckApplicant($id_applicant, $id_admission_application_number, $IdAdmin){
+        try {
+            if (!is_string($id_applicant) && !is_int($id_admission_application_number) && !is_int($IdAdmin)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos para createCheckApplicant().");
+            } 
+            $currentDate = new DateTime();
+            $jsonDate = json_encode($currentDate);
+            $decodedDate = json_decode($jsonDate, true);
+            $dateOnly = (new DateTime($decodedDate['date']))->format('Y-m-d');           
+            $this->connection->execute_query("CALL INSERT_CHECK_APPLICANT_APPLICATIONS('$id_applicant', $id_admission_application_number,FALSE,'$dateOnly',FALSE,$IdAdmin)");
+            $this->connection->commit();
+            return [
+                "status" => "success",
+                "message" => "Registro CHECK insertado correctamente."
+            ];
+        } catch (Exception $exception) {
+            $this->connection->rollback();
+            return [
+                "status" => "error",
+                "message" => "Excepción en createCheckApplicant() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    public function getAdminUserByRol($RolUser){ 
+        try {
+            if (!is_int($RolUser)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos en createCheckApplicant()");
+            }            
+            $UsuariosAdministrador = $this->connection->execute_query(" CALL GetUsersAdmissionsAdministratorByRol($RolUser)");
+            if ($UsuariosAdministrador) { 
+                if ($UsuariosAdministrador->num_rows > 0) { 
+                    $AllUsersAdministrador=  $UsuariosAdministrador->fetch_assoc();
+                    return [
+                        "status" => "success",
+                        "UsuariosAdministrador" => $AllUsersAdministrador
+                    ];
+                } else {
+                    return [
+                        "status" => "warning",
+                        "message" => "Se logro encontrar usuarios administradores basados en el rol especificado"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento GetUsersAdmissionsAdministratorByRol(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en getAdminUserByRol() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
+
+    /**
+     * Distribuye a los solicitantes entre los administradores de usuarios de acuerdo con un proceso de admisión activo.
+     *
+     * La función calcula cuántos solicitantes debe manejar cada administrador y asigna los solicitantes a los usuarios 
+     * de acuerdo con su capacidad. Si hay solicitantes adicionales después de la distribución equitativa, 
+     * esos se asignan a los primeros administradores.
+      *
+     *   @return array 
+     */
+    public function DistributionApplicantsByUserAdministrator(){
+        $activeAdmissionProcess = new AdmissionProccessDAO();
+        $applicantDAO = new ApplicantDAO();
+        //$idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
+        $idAdmissionProcess=1;
+        $AllUsers = $this->getAdminUserByRol(2);
+        $AllApplicants =$applicantDAO-> getAllApplicationsByAdminProcess($idAdmissionProcess);
+        if ( $AllUsers['status'] == 'success' AND $AllApplicants['status'] == 'success') {
+            $dataAllUsers = $AllUsers['UsuariosAdministrador'];
+            $dataAllUsers = [$dataAllUsers];
+            $dataAllApplicants = $AllApplicants['AplicantesInscritos'];
+            $numeroUsers = 0; $numeroApplicants = 0;
+            foreach ($dataAllUsers as $user) {
+                $numeroUsers = $numeroUsers+1;
+            }
+            foreach ($dataAllApplicants as $applicant) {
+                $numeroApplicants = $numeroApplicants +1;
+            }
+            $applicantByUser = intdiv($numeroApplicants, $numeroUsers);
+            $extraApplicants = $numeroApplicants % $numeroUsers;
+            $valuesIdUsers = array_column($dataAllUsers, 'id_user_admissions_administrator');
+            $applicantsAsigned = array_map(function($user) use (&$extraApplicants, $applicantByUser) {
+                $assigned = $applicantByUser;
+                if ($extraApplicants > 0) {
+                    $assigned++;
+                    $extraApplicants--;
+                }
+                return ["iduser" => $user, "applicants" => $assigned];
+            }, $valuesIdUsers);
+            if (isset($applicantsAsigned['iduser'])) {
+                $applicantsAsigned = [$applicantsAsigned];
+            }
+            $posicion = 0;
+            $dataAllApplicantsArray = array_map('array_values', $dataAllApplicants);
+            foreach($applicantsAsigned as $user){
+                for($i = 1; $i <= $user['applicants']; $i++){
+                    $idUserAdmin =   $user['iduser'];
+                    $id_applicant = $dataAllApplicantsArray[$posicion][0];
+                    $id_admission_application_number = $dataAllApplicantsArray[$posicion][1];
+                    $resultCreateCheck = $this->createCheckApplicant($id_applicant, $id_admission_application_number, $user['iduser']);
+                    $posicion = $posicion +1; 
+                }
+            }
+            return [
+                "status" => "success",
+                "message" => "Se han distribuido correctamente los aplicantes a los solicitantes."
+            ];
+
+        }else{
+            return [
+                "status" => "error",
+                "message" => "No se  han distribuido correctamente los aplicantes a los solicitantes."
+            ];
+
+        }
     }
 }
 ?>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -150,7 +150,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewCertificateTitle">Certificado</h5>
+        <h5 class="modal-title" id="viewCertificateTitle"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div  class="modal-body">
@@ -215,58 +215,53 @@
                         <div class="row">
                           <div class="col-6">
                             <div class="form-check">
-                              <input class="form-check-input" name="name_applicant" type="checkbox" value="" id="defaultCheck1">
+                              <input class="form-check-input" name="invalid_name_applicant" type="checkbox" value="name_applicant" id="invalid_name_applicant">
                               <label class="form-check-label" for="defaultCheck1">
                                 Nombre
                               </label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" name="id_applicant" type="checkbox" value="id_applicant" id="id_applicant" >
+                              <input class="form-check-input" name="invalid_id_applicant" type="checkbox" value="id_applicant" id="invalid_id_applicant" >
                               <label class="form-check-label" for="id_applicant">
                                 Número de identidad
                               </label>
                             </div>
+    
                             <div class="form-check">
-                              <input class="form-check-input" name="email_applicant" type="checkbox" value="" id="email_applicant" >
-                              <label class="form-check-label" for="email_applicant">
-                                Correo electrónico
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" name="secondary_certificate_applicant" type="checkbox" value="" id="" >
+                              <input class="form-check-input" name="secondary_certificate_applicant" type="checkbox" value="secondary_certificate_applicant" id="" >
                               <label class="form-check-label" for="secondary_certificate_applicant">
                                 Certificado de secundaria
                               </label>
                             </div>
-                            
+                            <div class="form-check">
+                              <input class="form-check-input"  name="invalid_image_id_applicant"  type="checkbox" value="image_id_applicant" id="invalid_image_id_applicant" >
+                              <label class="form-check-label" for="image_id_applicant">
+                                Imagen de identificación / partida de nacimiento
+                              </label>
+                            </div>
                             
 
                           </div>
                           <div class="col-6">
                             <div class="form-check">
-                              <input class="form-check-input" name="invalidApplicantLastName" type="checkbox" value="" id="">
+                              <input class="form-check-input" name="invalid_lastname_applicant" type="checkbox" value="lastname_applicant" id="invalid_lastname_applicant">
                               <label class="form-check-label" for="">
                                 Apellido
                               </label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" name="phone_number_applicant"  type="checkbox" value="" id="" >
+                              <input class="form-check-input" name="invalid_phone_number_applicant"  type="checkbox" value="phone_number_applicant" id="invalid_phone_number_applicant" >
                               <label class="form-check-label" for="phone_number_applicant">
                                 Teléfono
                               </label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" name="address_applicant"  type="checkbox" value="" id="" >
+                              <input class="form-check-input" name="invalid_address_applicant"  type="checkbox" value="address_applicant" id="invalid_address_applicant" >
                               <label class="form-check-label" for="address_applicant">
                                 Dirección
                               </label>
                             </div>
-                            <div class="form-check">
-                              <input class="form-check-input"  name="image_id_applicant"  type="checkbox" value="" id="" >
-                              <label class="form-check-label" for="image_id_applicant">
-                                Imagen de identificación / partida de nacimiento
-                              </label>
-                            </div>
+                           
 
 
                           </div>
@@ -274,8 +269,9 @@
           
                     <div class="row">
                         <p>Ingrese una justificación de su dictamen</p>
-                        <textarea maxlength="600" style="width: 90%; margin: 0 0 10px 0;" name="checkJustification" id=""></textarea>
-              
+                        <textarea maxlength="600" style="width: 90%; margin: 0 0 10px 0;" name="checkJustification" id="checkJustification"></textarea>
+                        <input type="hidden" id="id_admission_application_number" name="id_admission_application_number">
+                        <input type="hidden" id="id_check_applicant_applications"  name="id_check_applicant_applications">
                     </div> 
                   </div>  <!--Fin de apartado de checks-->
                   </div>
