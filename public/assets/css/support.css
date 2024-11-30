@@ -143,3 +143,211 @@
     to{transform: translateX(0);}
     from { transform: translateX(10px);}
 }
+
+/*==============side bar====================*/
+:root{
+
+    /* ====== colors ===== */
+    --body-color:#f7f7ff;
+    --sidebar-color:#002c9e;
+    --primary-color:#002c9e;
+    --secondary-color:#ffb300;
+    --primary-color-light:#f7f7ff;
+    --toggle-color:#DDD;
+    --text-color:#707070;
+
+
+    
+    /* ====== transitions ===== */
+    --tran-02:all 0.2s ease;
+    --tran-03:all 0.3s ease;
+    --tran-04:all 0.4s ease;
+    --tran-05:all 0.5s ease;
+
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 15vw;
+    background: linear-gradient(to right, rgba(0, 44, 158, 0.7), rgba(0, 44, 158, 0.7));
+    border-radius: 10px;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease; /* Transición suave */
+    transform: translateX(100%) ;  /* Sidebar oculto por defecto */
+}
+
+/* Sidebar visible */
+.sidebar.show {
+    transform: translateX(0) ; /* El sidebar se coloca en su lugar original */
+}
+
+/* Sidebar oculto */
+.sidebar.hidden {
+    transform: translateX(100%) ; /* Sidebar oculto fuera de la pantalla */
+}
+
+.sidebar-header {
+    height: 10vh;
+    width: 90%;
+    border-bottom: 1px solid var(--body-color);
+}
+
+.sidebar-body{
+    height: 80vh;
+    width: 100%;
+    padding: 1vh 0;
+    display: flex;
+    align-items: start;
+    opacity: 0.9;
+}
+
+.sidebar-body ul{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-footer {
+    height: 10vh;
+    width: 90%;
+    border-top: 1px solid var(--body-color);
+}
+
+.slidebar-item{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 5vh;
+    width: 100%;
+    list-style-type: none;
+    padding: 20px;
+}
+
+.slidebar-item:hover{
+   
+    transform: scale(1.05); 
+    box-shadow: 0 4px 10px rgba(100, 128, 255, 0.7); 
+    transform-origin: center; 
+}
+
+.slidebar-item  a{
+    width: 15vw;
+    text-decoration: none;
+    color: var(--primary-color-light);
+
+}
+
+.slidebar-item  a:hover{
+    color: var(--primary-color-light);
+}.sidebar.hidden {
+    transform: translateX(100%); /* Mueve el sidebar fuera de la pantalla */
+    transition: transform 0.3s ease; /* Añade transición para un deslizamiento suave */
+}
+
+.sidebar.show {
+    transform: translateX(0); /* El sidebar se coloca en su lugar original */
+}
+
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding: 10px 10px;
+    background: linear-gradient(to right, rgba(0, 44, 158, 0.7), rgba(0, 44, 158, 0.7));
+    width: 15vw;
+    border-radius: 10px;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3)  ;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: show 0.3s ease 1 forwards;
+    transform: translateX(100%); /* Mueve el sidebar fuera de la pantalla */
+    transition: transform 0.3s ease; /* Transición suave */
+    
+}
+
+.sidebar-header {
+    height: 10vh;
+    width: 90%;
+    border-bottom: 1px solid var(--body-color);
+}
+
+.sidebar-body{
+    height: 80vh;
+    width: 100%;
+    padding: 1vh 0;
+    display: flex;
+    align-items: start;
+    opacity: 0.9;
+}
+
+.sidebar-body ul{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-footer {
+    height: 10vh;
+    width: 90%;
+    border-top: 1px solid var(--body-color);
+}
+
+.slidebar-item{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 5vh;
+    width: 100%;
+    list-style-type: none;
+    padding: 20px;
+}
+
+.slidebar-item:hover{
+   
+    transform: scale(1.05); 
+    box-shadow: 0 4px 10px rgba(100, 128, 255, 0.7); 
+    transform-origin: center; 
+}
+
+.slidebar-item  a{
+    width: 15vw;
+    text-decoration: none;
+    color: var(--primary-color-light);
+
+}
+
+.slidebar-item  a:hover{
+    color: var(--primary-color-light);
+}
+
+.sidebar-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-footer a{
+    text-decoration: none;
+    color: var(--primary-color-light);
+}
+
+.sidebar img{
+    padding: 0 0 0 10px;
+}

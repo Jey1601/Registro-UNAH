@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="author"
+      content=" aonolasco@unah.hn jeyson.espinal@unah.hn alejandro.moya@unah.hn kromeron@unah.hn"
+    />
+    <meta name="version" content="0.1.0" />
+    <meta name="since" content="2024/11/1" />
+    <meta name="date" content="2024/11/29" />
+    <meta
+      name="description"
+      content="Página principal del administrador de facultades"
+    />
+
+    <link
+      href="../../../../public/assets/css/bootstrap/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../../../public/assets/img/icons/UNAH-escudo.png"
+      sizes="16x16"
+    />
+    <link rel="stylesheet" href="../../../../public/assets/css/main.css" />
+    <link
+      rel="stylesheet"
+      href="../../../../public/assets/css/administration/main.css"
+    />
+    <link
+    rel="stylesheet"
+    href="../../../../public/assets/css/support.css"
+  />
+    <title>Administrador</title>
+    <script src="../../../../public/assets/js/tokenValidation.js"></script>
+  </head>
+
+  <body class="background-white animation">
+    <!--Header/navar==============================================================================-->
+    <nav class="my-nav navbar-expand-lg ">
+      <div class="nav-container dropdown">
+        <a class="" href="./admissions-admin.html">
+          <img
+            class="nav-logo"
+            src="../../../../public/assets/img/logos/UNAH-version-horizontal-white.png"
+          />
+        </a>
+
+        <button type="button" id="toggleSidebar" class="toggle-btn">
+          <img src="../../../../public/assets/img/icons/inactive-menu-icon.png" alt="">
+      </button>
+      </div>
+    </nav>
+    <!--Logout=================================================================================-->
+
+    <!--offcanvas main container start=================================================================================-->
+    <section class="sidebar hidden">
+       <div class="sidebar-header">
+
+       </div>
+       <div class="sidebar-body">
+          <ul >
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Incio</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Planificación Academica</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Evaluación Docente</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Calificaciones</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Estudiantes</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Administración Docente</a></li>
+            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Docencia</a></li>
+ 
+          </ul>
+       </div>
+       <div class="sidebar-footer">
+          <a href="">Cerrar sesión <img src="../../../../public/assets/img/icons/logout-icon.png" alt=""></a>
+       </div> 
+    </section>
+    <!--offcanvas main container end=================================================================================-->
+    <!--Menu=================================================================================-->
+    <section class="menu">
+      <div class="options-menu">
+        <div
+          role="button"
+          id="verifyInscriptionsBtn"
+          class="container-fluid option-card"
+        >
+          <div class="row">
+            <div class="col-8 option-text">
+              <p>Verificar Inscripciones</p>
+            </div>
+            <div class="col-4">
+              <div class="option-background">
+                <img
+                  class="option-icon"
+                  src="../../../../public/assets/img/icons/carpeta.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          role="button"
+          id="viewInscriptionsBtn"
+          class="container-fluid option-card"
+        >
+          <div class="row">
+            <div class="col-8 option-text">
+              <p>Ver Inscripciones</p>
+            </div>
+            <div class="col-4">
+              <div class="option-background">
+                <img
+                  class="option-icon"
+                  src="../../../../public/assets/img/icons/carpeta.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          role="button"
+          id="downloadInscriptionsBtn"
+          class="container-fluid option-card"
+        >
+          <div class="row">
+            <div class="col-8 option-text">
+              <p>Descargar Inscripciones</p>
+            </div>
+            <div class="col-4">
+              <div class="option-background">
+                <img
+                  class="option-icon"
+                  src="../../../../public/assets/img/icons/download-csv.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="../administration/upload-grades.html">
+          <div class="container-fluid option-card">
+            <div class="row">
+              <div class="col-8 option-text">
+                <p>Cargar Calificaciones</p>
+              </div>
+              <div class="col-4">
+                <div class="option-background">
+                  <img
+                    class="option-icon"
+                    src="../../../../public/assets/img/icons/load-grades-icon.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <div
+          role="button"
+          id="downloadApplicantAdmittedBtn"
+          class="container-fluid option-card"
+        >
+          <div class="row">
+            <div class="col-8 option-text">
+              <p>Descargar Dictamenes</p>
+            </div>
+            <div class="col-4">
+              <div class="option-background">
+                <img
+                  class="option-icon"
+                  src="../../../../public/assets/img/icons/download-grades-icon.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Footer=================================================================================-->
+
+    <footer class="footer">
+      <img
+        class="logo-footer"
+        src="../../../../public/assets/img/logos/UNAH-version-horizontal-white.png"
+      />
+
+      <ul class="social-icon">
+        <li class="footer-icon">
+          <a href="https://facebook.com/unahoficial">
+            <img
+              src="../../../../public/assets/img/icons/icon_facebook_white.png"
+              alt=""
+            />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://instagram.com/unahoficial">
+            <img
+              src="../../../../public/assets/img/icons/icon_insta_white.png"
+              alt=""
+            />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://www.unah.edu.hn/">
+            <img
+              src="../../../../public/assets/img/icons/icon_linkedin_white.png"
+              alt=""
+            />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://x.com/UNAHoficial">
+            <img
+              src="../../../../public/assets/img/icons/icon_x_white.png"
+              alt=""
+            />
+          </a>
+        </li>
+        <li class="footer-icon">
+          <a href="https://youtube.com/unahoficial">
+            <img
+              src="../../../../public/assets/img/icons/icon_youtube_white.png"
+              alt=""
+            />
+          </a>
+        </li>
+      </ul>
+
+      <ul class="footer-menu">
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Inicio</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Equipo</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Contacto</a>
+        </li>
+        <li class="footer-menu-item">
+          <a href="" class="footer-menu-icon">Sobre Nosotros</a>
+        </li>
+      </ul>
+      <p class="footer-text">@año | Todos los derechos reservados</p>
+    </footer>
+   
+    <script
+      src="../../../../public/assets/js/bootstrap/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+    </script>
+    <script
+      type="module"
+      src="../../../../public/assets/js/aspects.js"
+    ></script>
+
+  </body>
+</html>
