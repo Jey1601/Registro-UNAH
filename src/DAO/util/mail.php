@@ -7,28 +7,58 @@ require 'getApplicantsEmail.php';
 require 'email_templates.php';
 require 'Code.php';
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-class  mail{
+require './PHPMailer/Exception.php';
+require './PHPMailer/PHPMailer.php';
+require './PHPMailer/SMTP.php';
 
-    private $connection;
-    private $mail;
-    private $maxEmailsPerDay = 500;
-
-    private $host = 'localhost';
-    private $user = 'root';
-    private $password = '12345';
-    private $dbName = 'unah_registration';
-
-
-//Configuración de la base de datos
-public function __construct()
-{
-    $this->connection = null;
-    try {
-        $this->connection = new mysqli($this->host, $this->user, $this->password, $this->dbName);
-    } catch (Exception $error) {
-        printf("Failed connection: %s\n", $error->getMessage());
+//Conexión BD
+function DBConection($host, $user, $password, $database) {
+    $connection = new mysqli($host, $user, $password, $database);
+    if ($connection->connect_error) {
+        die("Conexión fallida: " . $connection->connect_error);
     }
+    return $connection;
+}
+
+
+/*
+  Consulta para obtener usuarios.
+  Se concatenan los nombres del aplicante bajo el alias "full_name",
+  posteriormente, "IFNULL" verifica si el campo es NULL y, en ese caso, 
+  lo reemplaza con una cadena vacía (''). Esto evita que aparezca NULL en el resultado concatenado.
+  También obtenemos el email de los aspirantes, su contraseña para acceder al sistema y elegir una carrera,
+  la nota que obtuvieron en el examen de admisión y un ID de la resolución de su examen, de esta manera podrémos
+  almacenar la información referente al envio de correo a cada aspiante más adelante.
+*/
+function getUsersWithResults($connection) {
+    $sql = "
+          SELECT 
+            Applicants.id_applicant,
+            CONCAT(
+                Applicants.first_name_applicant, ' ',
+                IFNULL(Applicants.second_name_applicant, ''), ' ',
+                IFNULL(Applicants.third_name_applicant, ''), ' ',
+                Applicants.first_lastname_applicant, ' ',
+                IFNULL(Applicants.second_lastname_applicant, '')
+            ) AS full_name,
+            Applicants.email_applicant,
+            UsersApplicants.password_user_applicant,
+            `TypesAdmissionTests`.name_type_admission_tests,
+            `RatingApplicantsTest`.rating_applicant
+        FROM 
+            Applicants
+        LEFT JOIN 
+            Applications ON Applicants.id_applicant = Applications.id_applicant
+        LEFT JOIN 
+            UsersApplicants ON Applications.id_admission_application_number = UsersApplicants.password_user_applicant
+        LEFT JOIN
+            RatingApplicantsTest ON Applications.id_admission_application_number = RatingApplicantsTest.id_admission_application_number
+        LEFT JOIN `TypesAdmissionTests` ON `RatingApplicantsTest`.id_type_admission_tests = `TypesAdmissionTests`.id_type_admission_tests   
+        WHERE 
+            Applicants.status_applicant = 1 AND status_rating_applicant_test =1;";
+    return $connection->query($sql);
 }
 
 //Configuración de PHPMailer
