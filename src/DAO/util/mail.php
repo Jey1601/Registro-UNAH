@@ -9,17 +9,27 @@ require 'Code.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require './PHPMailer/Exception.php';
-require './PHPMailer/PHPMailer.php';
-require './PHPMailer/SMTP.php';
+
+Class mail{
+    private $connection;
+    private $mail;
+    private $maxEmailsPerDay = 500;
+
+    private $host = 'localhost';
+    private $user = 'root';
+    private $password = '12345';
+    private $dbName = 'unah_registration';
 
 //Conexión BD
-function DBConection($host, $user, $password, $database) {
-    $connection = new mysqli($host, $user, $password, $database);
-    if ($connection->connect_error) {
-        die("Conexión fallida: " . $connection->connect_error);
+//Configuración de la base de datos
+public function __construct()
+{
+    $this->connection = null;
+    try {
+        $this->connection = new mysqli($this->host, $this->user, $this->password, $this->dbName);
+    } catch (Exception $error) {
+        printf("Failed connection: %s\n", $error->getMessage());
     }
-    return $connection;
 }
 
 
@@ -397,6 +407,6 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
 $connection = DBConection($host, $user, $password, $database);
 sendEmails($connection, 'confirmation', $maxEmailsPerDay);
 $connection->close();*/
-
 }
+
 ?>

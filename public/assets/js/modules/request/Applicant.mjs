@@ -2,6 +2,8 @@ import { Cell, Modal, Alert, Search, Entry } from "../behavior/support.mjs";
 import { Inscription } from "./Inscription.mjs";
 import { Login } from "./login.mjs";
 class Applicant {
+  path = '../../../../public/';
+
   static modalInstance = null;
 
   static async renderData(accessess) {
@@ -70,7 +72,7 @@ class Applicant {
 
         // Creamos la imagen y configuramos su fuente
         const viewIcon = document.createElement("img");
-        viewIcon.src = "../../../public/assets/img/icons/openfile.png";
+        viewIcon.src = path+"assets/img/icons/openfile.png";
         viewIcon.style = "width:30px; heigth:30px;";
 
         // Agregamos la imagen al botón
@@ -325,7 +327,7 @@ class Applicant {
   // Método para obtener los datos de las solicitudes de aplicación
   static async viewData() {
     try {
-      const response = await fetch("../../../public/api/get/applicant/viewData.php");
+      const response = await fetch(path+"api/get/applicant/viewData.php");
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -464,7 +466,7 @@ class Applicant {
 
     }else  if(results.view === 'data-edition'){
 
-      window.location.href = '../../../../public/views/admissions/data-edition.html'
+      window.location.href = path+'views/admissions/data-edition.html'
     }
 
     
@@ -475,7 +477,7 @@ class Applicant {
     formData.append('id_applicant', id_applicant);
 
     try {
-        const response = await fetch("../../../public/api/post/applicant/getResults.php", {
+        const response = await fetch(path+"api/post/applicant/getResults.php", {
             method: "POST",
             body: formData,
         });
@@ -611,7 +613,7 @@ static async updateData(formData, form) {
   try {
     // Realizar la solicitud POST usando fetch
     const response = await fetch(
-      "../../../public/api/post/applicant/updateApplicant.php",
+      path+"api/post/applicant/updateApplicant.php",
       {
         method: "POST",
         body: formData,
@@ -703,7 +705,7 @@ static  async getChecks() {
 
   try {
       // Enviar los datos al endpoint utilizando fetch
-      const response = await fetch("../../../public/api/post/applicant/checkErrorProcess.php", {
+      const response = await fetch(path+"api/post/applicant/checkErrorProcess.php", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
