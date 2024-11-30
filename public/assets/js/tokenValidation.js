@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
     const type_user = sessionStorage.getItem('typeUser');

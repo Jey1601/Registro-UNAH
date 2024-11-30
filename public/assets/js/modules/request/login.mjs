@@ -41,7 +41,7 @@ static async authApplicant() {
   }
 
   try{
-    fetch('../../../../api/post/applicant/authApplicant.php', {
+    fetch('../../../../public/api/post/applicant/authApplicant.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
