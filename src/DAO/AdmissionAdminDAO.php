@@ -45,78 +45,101 @@ class AdmissionAdminDAO {
     public function authAdmissionAdmin (string $user, string $password) {
         if (isset($user) && isset($password)) {
             //Busqueda del usuario en la base de datos
-            $query = "SELECT id_user_admissions_administrator FROM UsersAdmissionsAdministrator WHERE username_user_admissions_administrator=? AND password_user_admissions_administrator=?;";
+            $query = "SELECT id_user_admissions_administrator, password_user_admissions_administrator FROM UsersAdmissionsAdministrator WHERE username_user_admissions_administrator=?;";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('ss', $user, $password);
+            $stmt->bind_param('s', $user);
             $stmt->execute();
             $result = $stmt->get_result();
 
             if($result->num_rows > 0) { //Si es mayor que 0 es porque la consulta encontro un registro, o sea, ese usuario con esa contrasena existe.
                 //Para obtener un array con los IDs de los controles de accesos que tiene el usuario que se autentica 
-                $row = $result->fetch_array();
-                $auxID = $row[0];
-                $queryAccessArray = "SELECT  AccessControl.id_access_control FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersAdmissionsAdministrator ON AccessControlRoles.id_role = RolesUsersAdmissionsAdministrator.id_role_admissions_administrator INNER JOIN UsersAdmissionsAdministrator ON RolesUsersAdmissionsAdministrator.id_user_admissions_administrator = UsersAdmissionsAdministrator.id_user_admissions_administrator WHERE UsersAdmissionsAdministrator.id_user_admissions_administrator = ?;";
-                $stmtAccessArray = $this->connection->prepare($queryAccessArray);
-                $stmtAccessArray->bind_param('i', $auxID);
-                $stmtAccessArray->execute();
-                $resultAccessArray = $stmtAccessArray->get_result();
+                $row = $result->fetch_array(MYSQLI_ASSOC);
+                $auxID = intval($row['id_user_admissions_administrator']);
+                $hashPassword = $row['password_user_admissions_administrator'];
+                $coincidence = Encryption::verifyPassword($password, $hashPassword);
 
-                 $accessArray = [];
-                    while ($row = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
-                        $accessArray[] = $row['id_access_control'];
+                if($coincidence) {
+                    //Consulta para obtener los accesos del usuario administrador de admisiones
+                    $queryAccessArray = "SELECT  AccessControl.id_access_control FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersAdmissionsAdministrator ON AccessControlRoles.id_role = RolesUsersAdmissionsAdministrator.id_role_admissions_administrator INNER JOIN UsersAdmissionsAdministrator ON RolesUsersAdmissionsAdministrator.id_user_admissions_administrator = UsersAdmissionsAdministrator.id_user_admissions_administrator WHERE UsersAdmissionsAdministrator.id_user_admissions_administrator = ?;";
+                    $stmtAccessArray = $this->connection->prepare($queryAccessArray);
+                    $stmtAccessArray->bind_param('i', $auxID);
+                    $stmtAccessArray->execute();
+                    $resultAccessArray = $stmtAccessArray->get_result();
+    
+                    $accessArray = [];
+                        while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                            $accessArray[] = $rowAccess['id_access_control'];
+                        }
+                    $resultAccessArray->free();
+                    $stmtAccessArray->close(); 
+    
+                    //Liberacion del resultado de la consulta
+                    while ($this->connection->more_results() && $this->connection->next_result()) {
+                        $extraResult = $this->connection->store_result();
+                        if ($extraResult) {
+                            $extraResult->free();
+                        }
                     }
-                $resultAccessArray->free();
-                $stmtAccessArray->close(); 
 
-                while ($this->connection->more_results() && $this->connection->next_result()) {
-                    $extraResult = $this->connection->store_result();
-                    if ($extraResult) {
-                        $extraResult->free();
+                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
+                    $payload = [
+                        'userAdmissionAdmin' => $user,
+                        'accessArray' => $accessArray
+                    ];
+                    $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
+    
+                    //Insercion del token en la tabla relacional entre token y usuario administrador de admisiones
+                    $queryCheck = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE id_user_admissions_administrator = ?;";
+                    $stmtCheck = $this->connection->prepare($queryCheck);
+                    $stmtCheck->bind_param('i', $auxID);
+                    $stmtCheck->execute();
+                    $stmtCheck->store_result();
+                    
+                    // Si ya existe el registro, se actualiza, si no, se inserta
+                    if ($stmtCheck->num_rows > 0) {
+                        // Si existe, actualizamos el token
+                        $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
+                        $stmtUpdate = $this->connection->prepare($queryUpdate);
+                        $stmtUpdate->bind_param('si', $newToken, $auxID);
+                        $resultUpdate = $stmtUpdate->execute();
+                        
+                        if ($resultUpdate === false) { //Si la actualizacion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no actualizado.'
+                            ];
+                        }
+                        $stmtUpdate->close();
+                    } else {
+                        // Si no existe, insertamos un nuevo registro
+                        $queryInsert = "INSERT INTO `TokenUserAdmissionAdmin` (id_user_admissions_administrator, token) VALUES (?, ?);";
+                        $stmtInsert = $this->connection->prepare($queryInsert);
+                        $stmtInsert->bind_param('is', $auxID, $newToken);
+                        $resultInsert = $stmtInsert->execute();
+
+                        if ($resultInsert === false) { //Si la insercion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no insertado.'
+                            ];
+                        }
+                        $stmtInsert->close();
                     }
-                }
-                //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
-                $payload = [
-                    'userAdmissionAdmin' => $user,
-                    'accessArray' => $accessArray
-                ];
-                $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
-
-                //Insercion del token en la tabla relacional entre token y usuario administrador de admisiones
-                $queryCheck = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE id_user_admissions_administrator = ?;";
-                $stmtCheck = $this->connection->prepare($queryCheck);
-                $stmtCheck->bind_param('i', $auxID);
-                $stmtCheck->execute();
-                $stmtCheck->store_result();
-                
-                // Si ya existe el registro, se actualiza, si no, se inserta
-                if ($stmtCheck->num_rows > 0) {
-                    // Si existe, actualizamos el token
-                    $queryUpdate = "UPDATE `TokenUserAdmissionAdmin` SET token = ? WHERE id_user_admissions_administrator = ?;";
-                    $stmtUpdate = $this->connection->prepare($queryUpdate);
-                    $stmtUpdate->bind_param('si', $newToken, $auxID);
-                    $resultUpdate = $stmtUpdate->execute();
-                } else {
-                    // Si no existe, insertamos un nuevo registro
-                    $queryInsert = "INSERT INTO `TokenUserAdmissionAdmin` (id_user_admissions_administrator, token) VALUES (?, ?);";
-                    $stmtInsert = $this->connection->prepare($queryInsert);
-                    $stmtInsert->bind_param('is', $auxID, $newToken);
-                    $resultInsert = $stmtInsert->execute();
-                }
-
-                if ($resultUpdate === false) { //Si la actualizacion falla
+                    
+                    $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
+                        'success' => true,
+                        'message' => 'Validacion de credenciales exitosa.',
+                        'token' => $newToken,
+                        'typeUser' => 'admissionAdministrator'
+                    ];
+                } else { //Contrasena no coincide
                     return $response = [
                         'success' => false,
-                        'message' => 'Token no actualizado.'
+                        'message' => 'Credenciales invalidas.',
+                        'token' => null
                     ];
                 }
-                $stmtUpdate->close();
                 
-                $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
-                    'success' => true,
-                    'message' => 'Validacion de credenciales exitosa.',
-                    'token' => $newToken,
-                    'typeUser' => 'admissionAdministrator'
-                ];
             } else { //En caso de que no se encuentre el usuario con esa contrasena
                 $response = [
                     'success' => false,

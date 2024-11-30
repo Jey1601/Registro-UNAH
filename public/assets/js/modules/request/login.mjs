@@ -41,7 +41,7 @@ static async authApplicant() {
   }
 
   try{
-    fetch('../../../../public/api/post/applicant/authApplicant.php', {
+    fetch('../../../../api/post/applicant/authApplicant.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ static async authApplicant() {
       if (result.success) {
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('typeUser',result.typeUser);
-        const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+        //const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
         window.location.href = '../../../../views/admissions/results.html';
       } else {
         Alert.display("warning", "Error en la autenticacion", result.message,'../../');
@@ -74,7 +74,7 @@ static async authAdmisionAdmin() {
   }
 
   try {
-      fetch('../../../../public/api/post/admissionAdmin/authAdmissionAdmin.php', {
+      fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -88,18 +88,16 @@ static async authAdmisionAdmin() {
               sessionStorage.setItem('typeUser',result.typeUser);
 
               //Redirección de admisiones
-              const tokenSaved = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-
+              const tokenSaved = result.token;
+              const payloadDecoded = JWT.decodeToken(tokenSaved);
               let access = [];
 
-              if (tokenSaved) {
-                  const payload = this.getPayloadFromToken(tokenSaved);
-                  access = payload.accessArray;
+              if (!(JWT.payloadIsEmpty(payloadDecoded))) {
+                  //const payload = this.getPayloadFromToken(tokenSaved);
+                  access = payloadDecoded.accessArray;
 
                   access.forEach(element => {
-
                       switch (element) {
-
                         case 'Fz1YeRgv':
                           window.location.href = '../../../../views/administration/upload-grades.html';
                         break;  
@@ -119,12 +117,12 @@ static async authAdmisionAdmin() {
                         case 'pFw9dYOw':
                           window.location.href = '../../../../views/administration/download-admitted.html';
                         break; 
-
                       }
                   });
-              } 
-
-
+              } else {
+                console.log("El usuario no tiene permisos: ", payloadDecoded);
+                window.location.href = '../../../../index.html';
+              }
           } else {
             Alert.display("warning", "Error en la autenticacion", result.message);
           }
@@ -160,6 +158,31 @@ static logout(url){
   window.location.href = url;
 }
 
+}
+
+class JWT {
+  static base64UrlDecode(base64Url) {
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = atob(base64); // Decodifica la base64 string
+    return decodeURIComponent(
+        decoded
+            .split('')
+            .map(char => `%${('00' + char.charCodeAt(0).toString(16)).slice(-2)}`)
+            .join('')
+    );
+  }
+
+  static decodeToken (token) {
+    const [header, payload, signature] = token.split('.');
+    // Decodifica el payload
+    const decodedPayload = this.base64UrlDecode(payload);
+    // Convierte el payload a un objeto JSON
+    return JSON.parse(decodedPayload);
+  }
+
+  static payloadIsEmpty(payload) {
+    return (Object.keys(payload).length === 0);
+  }
 }
 
 export{Login};

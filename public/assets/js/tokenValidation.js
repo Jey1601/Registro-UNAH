@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
     const type_user = sessionStorage.getItem('typeUser');
-   
+    
     if(!token) {
         console.log("No se encontro token en el sessionStorage.");
         window.location.href = '../../../../index.html';

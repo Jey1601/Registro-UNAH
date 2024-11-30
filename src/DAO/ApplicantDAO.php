@@ -376,22 +376,22 @@ class ApplicantDAO
             $stmt->execute();
             $result = $stmt->get_result(); //Obtiene resultado de la consulta a la BD
 
-            if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el aspirante no está registrado
-                $row = $result->fetch_array();
-                $auxID = $row[0];
-                $hashPassword = $row[1];
+            if($result->num_rows > 0) { //Verifica que la consulta no esté vacía, si lo está es que el usuario no está registrado
+                $row = $result->fetch_array(MYSQLI_ASSOC);
+                $auxID = $row['id_user_applicant'];
+                $hashPassword = $row['password_user_applicant'];
                 $coincidence = Encryption::verifyPassword($password, $hashPassword);
                 if($coincidence) { //La contrasena ingresada coincide con el hash registrado
-                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos que tenga el usuario
+                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos de los usuarios aspirantes (rol aspirante=7)
                     $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
                     
                     $accessArray = [];
                     while ($row = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
                         $accessArray[] = $row['id_access_control'];
                     }
+
                     //Liberacion de resultados de la query:
                     $resultAccessArray->free();
-
                     while ($this->connection->more_results() && $this->connection->next_result()) {
                         $extraResult = $this->connection->store_result();
                         if ($extraResult) {
@@ -406,8 +406,6 @@ class ApplicantDAO
                     ];
                     $newToken = JWT::generateToken($payload);
 
-            
-
                     $queryCheck = "SELECT id_user_applicant FROM TokenUserApplicant WHERE id_user_applicant = ?;";
                     $stmtCheck = $this->connection->prepare($queryCheck);
                     $stmtCheck->bind_param('i', $auxID);
@@ -421,20 +419,28 @@ class ApplicantDAO
                         $stmtUpdate = $this->connection->prepare($queryUpdate);
                         $stmtUpdate->bind_param('si', $newToken, $auxID);
                         $resultUpdate = $stmtUpdate->execute();
+                        
+                        if ($resultUpdate === false) { //Si la actualizacion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no actualizado.'
+                            ];
+                        }
                     } else {
                         // Si no existe, insertamos un nuevo registro
                         $queryInsert = "INSERT INTO `TokenUserApplicant` (id_user_applicant, token) VALUES (?, ?);";
                         $stmtInsert = $this->connection->prepare($queryInsert);
                         $stmtInsert->bind_param('is', $auxID, $newToken);
                         $resultInsert = $stmtInsert->execute();
+
+                        if ($resultInsert === false) { //Si la insercion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no registrado.'
+                            ];
+                        }
                     }
     
-                    if ($resultUpdate === false) { //Si la actualizacion falla
-                        return $response = [
-                            'success' => false,
-                            'message' => 'Token no actualizado.'
-                        ];
-                    }
                     $stmtUpdate->close();
     
                     $response = [
@@ -447,12 +453,12 @@ class ApplicantDAO
                 } else { //Contrasena incorrecta
                     return $response = [
                         'success' => false,
-                        'message' => 'Credenciales invalidas.',
+                        'message' => 'Contrasena no coincide.',
                         'token' => null
                     ];
                 }
 
-            } else {
+            } else { //Usuario no registrado
                 $response = [
                     'success' => false,
                     'message' => 'Usuario y/o numero de solicitud no encontrados.',
@@ -460,7 +466,7 @@ class ApplicantDAO
                 ];
             }
 
-        } else {
+        } else { //Username y/o password nulos
             $response = [
                 'success' => false,
                 'message' => 'Credenciales invalidas.',
@@ -1095,6 +1101,7 @@ class ApplicantDAO
     {
       
         $status_user_applicant = 1;
+        $hashPassword = Encryption::hashPassword($password_user_applicant);
         // Consulta de inserción
         $query = "INSERT INTO UsersApplicants (username_user_applicant,password_user_applicant,status_user_applicant)  VALUES (?, ?, ?)";
 
@@ -1104,7 +1111,7 @@ class ApplicantDAO
             $stmt->bind_param(
                 "ssi",
                 $id_applicant,
-                $password_user_applicant,
+                $hashPassword,
                 $status_user_applicant
             );
 
@@ -1122,7 +1129,7 @@ class ApplicantDAO
         } else {
             // Registrar error en la preparación
 
-            $stmt->close();
+            //$stmt->close();
             return false;
         }
     }
