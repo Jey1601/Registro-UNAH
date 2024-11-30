@@ -14,7 +14,7 @@ window.addEventListener('load', function(){
             Applicant.renderData(access);      
       
         }else{
-            this.window.location.href = '../../index.html'
+            this.window.location.href = '../../../public/index.html'
         }
 
     } 

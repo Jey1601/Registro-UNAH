@@ -70,7 +70,7 @@ class Applicant {
 
         // Creamos la imagen y configuramos su fuente
         const viewIcon = document.createElement("img");
-        viewIcon.src = "../../../assets/img/icons/openfile.png";
+        viewIcon.src = "../../../public/assets/img/icons/openfile.png";
         viewIcon.style = "width:30px; heigth:30px;";
 
         // Agregamos la imagen al botón
@@ -464,7 +464,7 @@ class Applicant {
 
     }else  if(results.view === 'data-edition'){
 
-      window.location.href = '../../../views/admissions/data-edition.html'
+      window.location.href = '../../../../public/views/admissions/data-edition.html'
     }
 
     

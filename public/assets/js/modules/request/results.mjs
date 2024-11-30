@@ -44,7 +44,7 @@ class Results {
 
                 Alert.display("success",'Felicidades',success.message,'../../' ); 
                 setTimeout(() => {
-                    window.location.href = '../../index.html';
+                    window.location.href = '../../../../public/index.html';
                 }, 2000);
             } else {
                 submitBtn.disabled = false;

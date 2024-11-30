@@ -24,14 +24,14 @@ class AdmissionAdminDAO {
      * @return mysqli $connection Objeto mysqli que contiene la conexion con la base de datos, o valor null en caso de fallo.
      */
     public function __construct () {
-        $this->connection = null;
+       
         try {
             $this->connection = new mysqli($this->host, $this->user, $this->password, $this->dbName);
         } catch (Exception $error) {
             printf("Failed connection: %s\n", $error->getMessage());
         }
 
-        return $this->connection;
+        
     }
 
     /** 
