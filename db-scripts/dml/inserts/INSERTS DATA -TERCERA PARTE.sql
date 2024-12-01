@@ -7,7 +7,12 @@ VALUES
 	('Admissions Application Download Assistant', 'Descarga la información de las aplicaciones el proceso admisión.', TRUE),
 	('Admissions Grade Entry Assistant', 'Carga de las notas de los exámenes de admisión de los solicitantes.', TRUE),
 	('Admissions Admitted Applicants Download Assistant', 'Descarga la información de los aspirantes adminitos en el proceso admisión.', TRUE),
-	('Student Registration Administrator', 'Registrar los datos personales de los nuevos estudiantes; Crear cuentas de usuario en el sistema.', TRUE);
+	('Student Registration Administrator', 'Registrar los datos personales de los nuevos estudiantes y  Crear cuentas de usuario en el sistema.', TRUE),
+	('Faculty User Administrator', 'Crear y gestionar las cuentas de los nuevos docentes en el sistema.', TRUE),
+	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
+	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
+	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE);
+
 
 
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
