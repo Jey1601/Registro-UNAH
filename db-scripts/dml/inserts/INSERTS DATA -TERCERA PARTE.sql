@@ -11,7 +11,8 @@ VALUES
 	('Faculty User Administrator', 'Crear y gestionar las cuentas de los nuevos docentes en el sistema.', TRUE),
 	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
 	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
-	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE);
+	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
+	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE);
 
 
 
