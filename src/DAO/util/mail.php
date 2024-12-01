@@ -41,7 +41,7 @@ public function __construct()
   También obtenemos el email de los aspirantes, su contraseña para acceder al sistema y elegir una carrera,
   la nota que obtuvieron en el examen de admisión y un ID de la resolución de su examen, de esta manera podrémos
   almacenar la información referente al envio de correo a cada aspiante más adelante.
-*/
+
 function getUsersWithResults($connection) {
     $sql = "
           SELECT 
@@ -69,7 +69,7 @@ function getUsersWithResults($connection) {
         WHERE 
             Applicants.status_applicant = 1 AND status_rating_applicant_test =1;";
     return $connection->query($sql);
-}
+}*/
 
 //Configuración de PHPMailer
 private function PHPMailerConfig() {
@@ -86,7 +86,7 @@ private function PHPMailerConfig() {
 }
 
 //Enviar correos electrónicos
-public function sendEmails( $type, $maxEmailsPerDay) {
+/*public function sendEmails( $type, $maxEmailsPerDay) {
     $mail = $this->PHPMailerConfig();
 
     //Obtener los usuarios según el tipo de mensaje
@@ -130,7 +130,7 @@ public function sendEmails( $type, $maxEmailsPerDay) {
     }
 
     echo "Se enviaron $emailCount correos.<br>";
-}
+}*/
 
 public function sendConfirmation($name,$id_application,$email,$password){
     $mail = $this->PHPMailerConfig();
@@ -398,6 +398,87 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
     }
 
     $stmt->close();
+}
+
+//Enviar resultados de los diferentes tipos de exámenes realizados
+function sendRatings($connection, $type, $maxEmailsPerDay) {
+    $mail = PHPMailerConfig();
+
+    // Obtener los usuarios según el tipo de mensaje
+    $result = match ($type) {
+        'exam_results' => getGroupedResultsPerApplicants($connection),
+        default => null
+    };
+
+    if (!$result || empty($result)) {
+        echo "No se encontraron usuarios para enviar correos.<br>";
+        return;
+    }
+
+    $emailCount = 0;
+
+    foreach ($result as $applicant) {
+        if ($emailCount >= $maxEmailsPerDay) break;
+
+        //Configurar el cuerpo del mensaje dependiendo del tipo
+        $placeholders = [
+            'full_name' => $applicant['full_name'],
+            'password_user_applicant' => $applicant['password']
+        ];
+
+        if ($type === 'exam_results') {
+            $placeholders['exams_details'] = generateExamDetails($applicant['exams']);
+        }
+
+        $message = getTemplate($type, $placeholders);
+
+        try {
+            $mail->addAddress($applicant['email']);
+            $mail->isHTML(true);
+            $mail->Subject = 'Admisiones UNAH';
+            $mail->Body = $message;
+            $mail->send();
+            echo "Correo enviado a {$applicant['full_name']}<br>";
+            $emailCount++;
+        } catch (Exception $e) {
+            echo "Error al enviar correo a {$applicant['email']}: {$mail->ErrorInfo}<br>";
+        }
+
+        //Limpiar las direcciones para evitar conflictos en futuros envíos
+        $mail->clearAddresses();
+    }
+    
+    echo "Se enviaron $emailCount correos.<br>";
+}
+
+//Enviar confirmación se aceptación en carrera
+function sendCareerAcceptanceNotification($email, $name, $career) {
+    $mail = PHPMailerConfig(); 
+
+    //Preparar los datos para la plantilla
+    $placeholders = [
+        'full_name' => $name,
+        'career_name' => $career,
+    ];
+
+    //Obtener el mensaje de la plantilla
+    $message = getTemplate('career_acceptance', $placeholders);
+
+    //Enviar el correo
+    try {
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = '¡Felicidades! Has sido aceptado en tu carrera - UNAH';
+        $mail->Body = $message;
+
+        $mail->send();
+        echo "Correo de aceptación enviado a {$name} ({$email}).<br>";
+    } catch (Exception $e) {
+        echo "Error al enviar correo a {$email}: {$mail->ErrorInfo}<br>";
+    }
+
+    //Limpiar las direcciones para evitar conflictos en futuros envíos
+    $mail->clearAddresses();
 }
 
 //Configuración
