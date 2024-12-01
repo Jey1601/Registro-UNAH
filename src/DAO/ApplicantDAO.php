@@ -269,7 +269,7 @@ class ApplicantDAO
     {   
         //Configuramos la nueva contraseña:
         $generated_password = Password::generatePassword();
-        $password_user_applicant = Encryption::hashPassword($generated_password);
+    //    $password_user_applicant = Encryption::hashPassword($generated_password);
 
         $mail = new mail();
         // Iniciar una transacción
@@ -290,7 +290,7 @@ class ApplicantDAO
 
                     }
                     // Creamos la nueva solicitud
-                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
                         $this->connection->rollback();
                         echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
@@ -312,7 +312,7 @@ class ApplicantDAO
                 }
 
                 // Creamos la nueva solicitud
-                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
 
                     $this->connection->rollback();
                     echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
@@ -1138,7 +1138,7 @@ class ApplicantDAO
      * 
      *  @return boolean false si no tiene ninguna información en la base de datos
      */
-    private function getAdmissionProcess()
+   /* private function getAdmissionProcess()
     {
         $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
 
@@ -1161,7 +1161,7 @@ class ApplicantDAO
 
             return null;
         }
-    }
+    }*/
 
     /**
      * Esta función verifica si un aspirante ya cuenta con información en la

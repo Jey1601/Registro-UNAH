@@ -1,7 +1,7 @@
 import { Alert } from "../behavior/support.mjs";
 
 class Login {
-  
+  static path = '../../../../';
   static getDataApplicant(){
       
 
@@ -41,7 +41,7 @@ static async authApplicant() {
   }
 
   try{
-    fetch('../../../../public/api/post/applicant/authApplicant.php', {
+    fetch(this.path+'api/post/applicant/authApplicant.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ static async authApplicant() {
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('typeUser',result.typeUser);
         const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-        window.location.href = '../../../../public/views/admissions/results.html';
+        window.location.href = this.path+'/views/admissions/results.html';
       } else {
         Alert.display("warning", "Error en la autenticacion", result.message,'../../');
       }
@@ -74,7 +74,7 @@ static async authAdmisionAdmin() {
   }
 
   try {
-      fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+      fetch(this.path+'api/post/admissionAdmin/authAdmissionAdmin.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -99,23 +99,23 @@ static async authAdmisionAdmin() {
                   access.forEach(element => {
                       switch (element) {
                         case 'Fz1YeRgv':
-                          window.location.href = '../../../../public/views/administration/upload-grades.html';
+                          window.location.href = this.path+'views/administration/upload-grades.html';
                         break;  
 
                         case 'lwx50K7f':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                          window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
 
                         case 'IeMfti20':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                          window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
 
                         case 'rllHaveq':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                          window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
 
                         case 'pFw9dYOw':
-                          window.location.href = '../../../../public/views/administration/download-admitted.html';
+                          window.location.href = this.path+'views/administration/download-admitted.html';
                         break; 
                       }
                   });

@@ -4,7 +4,10 @@
  * 
 */
 
-include_once '../../../../../../src/DAO/AdmissionAdminDAO.php';
+$path = '../../../../';
+
+include_once $path.'src/DAO/AdmissionAdminDAO.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
