@@ -442,3 +442,26 @@ CREATE TABLE TokenUserStudent (
     FOREIGN KEY (id_user_student) REFERENCES Students(id_student)
 );
 
+CREATE TABLE UsersProfessors (
+    id_user_professor INT PRIMARY KEY AUTO_INCREMENT,
+    username_user_professor INT UNIQUE NOT NULL,
+    password_user_professor VARCHAR(100) NOT NULL,
+    status_user_professor BOOLEAN NOT NULL,
+    FOREIGN KEY (username_user_professor) REFERENCES Professors(id_professor)
+);
+
+CREATE TABLE RolesUsersProfessor (
+    id_user_professor INT NOT NULL,
+    id_role_professor INT NOT NULL,
+    status_role_professor BOOLEAN NOT NULL,
+    CONSTRAINT id_role_user_professor PRIMARY KEY (id_user_professor, id_role_professor),
+    FOREIGN KEY (id_user_professor) REFERENCES UsersProfessors(id_user_professor),
+    FOREIGN KEY (id_role_professor) REFERENCES Roles(id_role)
+);
+
+CREATE TABLE TokenUserProfessor (
+    id_token_user_professor INT PRIMARY KEY AUTO_INCREMENT,
+    token_professor VARCHAR(512) UNIQUE,
+    id_user_professor INT UNIQUE NOT NULL,
+    FOREIGN KEY (id_user_professor) REFERENCES Professors(id_professor)
+);
