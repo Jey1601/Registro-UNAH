@@ -1,12 +1,13 @@
 
 INSERT INTO Roles (role, description_role, status_role) 
 VALUES 
-    ('Strategic Manager Admissions Process', 'Visualizar estadísticas del proceso de admisión.', TRUE),
-    ('Admissions Application Verification Assistant', 'Verificar la información personal y de solicitud de los aspirantes.', TRUE),
-    ('Applicant Support Assistant', 'Visualiza, busca y edita la información de los aspirantes.', TRUE),
-    ('Admissions Application Download Assistant', 'Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
-    ('Admissions Grade Entry Assistant', 'Carga de las notas de los exámenes de admisión de los solicitantes.', TRUE),
-    ('Admissions Admitted Applicants Download Assistant', 'Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE);
+	('Strategic Manager Admissions Process', 'Visualizar estadisticas del proceso de admisión.', TRUE),
+	('Admissions Application Verification Assistant', 'Verificar la información personal y de solicitud de los aspirantes.', TRUE),
+	('Applicant Support Assistant', 'Visualiza, busca y edita la información de los aspirantes.', TRUE),
+	('Admissions Application Download Assistant', 'Descarga la información de las aplicaciones el proceso admisión.', TRUE),
+	('Admissions Grade Entry Assistant', 'Carga de las notas de los exámenes de admisión de los solicitantes.', TRUE),
+	('Admissions Admitted Applicants Download Assistant', 'Descarga la información de los aspirantes adminitos en el proceso admisión.', TRUE),
+	('Student Registration Administrator', 'Registrar los datos personales de los nuevos estudiantes; Crear cuentas de usuario en el sistema.', TRUE);
 
 
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
