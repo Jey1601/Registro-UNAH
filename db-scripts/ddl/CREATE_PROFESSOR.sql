@@ -376,3 +376,69 @@ CREATE TABLE TokenUserRegistryAdministrator (
     FOREIGN KEY (id_user_registry_administrator) REFERENCES UsersRegistryAdministrator(id_user_registry_administrator)
 );
 
+CREATE TABLE Students (
+    id_student INT PRIMARY KEY,
+    institutional_email_student VARCHAR(100) UNIQUE NOT NULL,
+    id_card_student VARCHAR(50) UNIQUE NOT NULL,
+    first_name_student VARCHAR(50) NOT NULL,
+    second_name_student VARCHAR(50),
+    third_name_student VARCHAR(50),
+    first_lastname_student VARCHAR(50) NOT NULL,
+    second_lastname_student VARCHAR(50),
+    address_student VARCHAR(255) NOT NULL,
+    email_student VARCHAR(100) NOT NULL,
+    phone_number_student VARCHAR(20) NOT NULL,
+    status_student BOOLEAN NOT NULL
+);
+
+CREATE TABLE StudentsRegionalCenters (
+    id_regional_center_student INT AUTO_INCREMENT PRIMARY KEY,
+    id_student INT NOT NULL,
+    id_regional_center INT NOT NULL,
+    status_regional_center_student BOOLEAN NOT NULL,
+    FOREIGN KEY (id_student) REFERENCES Students(id_student),
+    FOREIGN KEY (id_regional_center) REFERENCES RegionalCenters(id_regional_center)
+);
+
+CREATE TABLE StudentsUndergraduates (
+    id_student_undergraduate INT AUTO_INCREMENT PRIMARY KEY,
+    id_student INT NOT NULL,
+    id_undergraduate INT NOT NULL,
+    status_student_undergraduate BOOLEAN NOT NULL,
+    FOREIGN KEY (id_student) REFERENCES Students(id_student),
+    FOREIGN KEY (id_undergraduate) REFERENCES Undergraduates(id_undergraduate)
+);
+
+CREATE TABLE StudentClassStatus (
+    id_student_class_status INT AUTO_INCREMENT PRIMARY KEY,
+    id_student INT NOT NULL,
+    id_class INT NOT NULL,
+    class_status BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (id_student) REFERENCES Students(id_student),
+    FOREIGN KEY (id_class) REFERENCES classes(id_class)
+);
+
+CREATE TABLE UsersStudents (
+    id_user_student INT PRIMARY KEY AUTO_INCREMENT,
+    username_user_student INT UNIQUE NOT NULL,
+    password_user_student VARCHAR(100) NOT NULL,
+    status_user_student BOOLEAN NOT NULL,
+    FOREIGN KEY (username_user_student) REFERENCES Students(id_student)
+);
+
+CREATE TABLE RolesUsersStudent (
+    id_user_student INT NOT NULL,
+    id_role_student INT NOT NULL,
+    status_role_student BOOLEAN NOT NULL,
+    CONSTRAINT id_role_user_student PRIMARY KEY (id_user_student, id_role_student),
+    FOREIGN KEY (id_user_student) REFERENCES UsersStudents(id_user_student),
+    FOREIGN KEY (id_role_student) REFERENCES Roles(id_role)
+);
+
+CREATE TABLE TokenUserStudent (
+    id_token_user_student INT PRIMARY KEY AUTO_INCREMENT,
+    token_student VARCHAR(512) UNIQUE,
+    id_user_student INT UNIQUE NOT NULL,
+    FOREIGN KEY (id_user_student) REFERENCES Students(id_student)
+);
+
