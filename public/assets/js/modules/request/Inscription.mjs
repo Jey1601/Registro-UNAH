@@ -139,9 +139,11 @@ class Inscription {
 
               Alert.display(result.status, 'Gracias', result.message, '../../../');
               emailCodeVerificationInput.value='';
+              
               Modal.hideModal('modalEmailCodeVerification');
               this.getData();
             }else{
+              Modal.hideModal('modalEmailCodeVerification');
               Alert.display(result.status, 'Algo ha salido mal', result.message);
             }
         } catch (error) {

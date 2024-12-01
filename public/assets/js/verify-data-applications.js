@@ -45,5 +45,5 @@ dataApplication.addEventListener('submit', function(event){
 const downloadInscriptionsBtn = document.getElementById('downloadInscriptionsCsv');
 downloadInscriptionsBtn.addEventListener('click', function() {
    // Redirige al usuario a la URL del endpoint que genera el CSV
-   window.location.href = "../../public/api/get/applicant/applicantDownloadCSV.php";
+   window.location.href = "../../api/get/applicant/applicantDownloadCSV.php";
 });

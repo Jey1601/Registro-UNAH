@@ -3,7 +3,9 @@
  * Endpoint para la descarga de un archivo CSV con información de interés de los aspirantes. Información antes de la evaluación de los exámenes.
  */
 
-include_once "../../../../../src/DAO/ApplicantDAO.php";
+ $path = '../../../../';
+
+ include_once $path."src/DAO/ApplicantDAO.php";
 
 //Establecer cabeceras para que el navegador entienda que es un archivo descargable
 header('Content-Type: text/csv');

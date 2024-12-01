@@ -3,7 +3,8 @@
  * Endpoint para la autenticación de usuarios de aspirantes.
  */
 
-include_once '../../../../../src/DAO/ApplicantDAO.php';
+ $path = '../../../../';
+ include_once $path."src/DAO/ApplicantDAO.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

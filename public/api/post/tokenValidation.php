@@ -2,7 +2,9 @@
 /**
  * Endpoint para la validación del token de la sesión. Precarga a páginas HTML.
  */
-include_once '../../../../../src/DAO/util/tokenVerification.php';
+
+ $path = '../../../';
+include_once $path.'src/DAO/util/tokenVerification.php';
 
 header("Content-Type: application/json");
 

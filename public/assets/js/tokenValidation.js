@@ -1,12 +1,11 @@
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
     const type_user = sessionStorage.getItem('typeUser');
     
     if(!token) {
         console.log("No se encontro token en el sessionStorage.");
-        window.location.href = '../../../../../public/index.html';
+        window.location.href = '../../index.html';
         return;
     }
 
@@ -21,10 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }).then(response => response.json()).then(data => {
         if (data.success === false) {
-            window.location.href = '../../Registro-UNAH/public/index.html';
+            window.location.href = '../../index.html';
         }
     }).catch (error => {
+        console.log(error);
         console.error("Error en la validacion del token: ", error);
-        window.location.href = '../../../../../public/index.html';
+        window.location.href = '../../index.html';
     });
-});*/
+});

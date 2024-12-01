@@ -2,8 +2,9 @@
 
 header("Content-Type: application/json"); 
 
+$path = '../../../../';
 
-include_once "../../../../../src/DAO/ApplicantDAO.php";
+include_once $path."src/DAO/ApplicantDAO.php";
 
 
 if (isset($_GET['user'])) {

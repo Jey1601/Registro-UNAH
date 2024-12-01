@@ -54,7 +54,7 @@ static async authApplicant() {
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('typeUser',result.typeUser);
         const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-        window.location.href = this.path+'/views/admissions/results.html';
+        window.location.href = this.path+'/views/admissions/data-edition.html';
       } else {
         Alert.display("warning", "Error en la autenticacion", result.message,'../../');
       }

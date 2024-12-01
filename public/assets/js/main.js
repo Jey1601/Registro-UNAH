@@ -19,6 +19,7 @@ inscriptionForm.addEventListener('submit',function(event){
     event.preventDefault();
 
     Modal.showModal('modalEmailCodeVerification');
+    verifyEmailBtn.disabled = true;
     Inscription.setConfirmationEmailApplicants();
    /* submitButton.classList.remove('wrong-form');
     submitButton.innerText = "Enviar";
@@ -50,10 +51,16 @@ loginAdmissions.addEventListener('submit', function(event){
     Login.authAdmisionAdmin();
 })
 
-
+const emailCodeVerification = document.getElementById('emailCodeVerification');
+emailCodeVerification.addEventListener('keyup',function(){
+  if(emailCodeVerification.value.length == 5){
+    verifyEmailBtn.disabled = false;
+  }
+})
 const verifyEmailBtn = document.getElementById('verifyEmailBtn');
 verifyEmailBtn.addEventListener('click', function(event){
   event.preventDefault();
+  verifyEmailBtn.disabled = true;
   Inscription.getConfirmationEmailApplicants();
 
 }) 

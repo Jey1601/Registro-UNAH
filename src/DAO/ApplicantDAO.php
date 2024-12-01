@@ -426,6 +426,7 @@ class ApplicantDAO
                                 'message' => 'Token no actualizado.'
                             ];
                         }
+                        $stmtUpdate->close();
                     } else {
                         // Si no existe, insertamos un nuevo registro
                         $queryInsert = "INSERT INTO `TokenUserApplicant` (id_user_applicant, token) VALUES (?, ?);";
@@ -441,7 +442,7 @@ class ApplicantDAO
                         }
                     }
     
-                    $stmtUpdate->close();
+                  
     
                     $response = [
                         'success' => true,
@@ -678,7 +679,7 @@ class ApplicantDAO
             return;
         }
 
-        // Primera consulta: Obtener las resoluciones de aspirante
+        // Primera consulta: Obtener los datos del aspirante de aspirante
         $queryData = "
             SELECT 
                 Applications.id_admission_application_number,
@@ -744,7 +745,7 @@ class ApplicantDAO
                 "id_check_applicant_applications" => $row['id_check_applicant_applications']
             ];
         } else {
-            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante.']);
+            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante. No tiene acciones por hacer actualmente.', 'view' =>'data-edition']);
             return;
         }
 

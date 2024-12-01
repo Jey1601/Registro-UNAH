@@ -327,18 +327,18 @@ class Form{
 
 
 class File {
-  static validateFile(file,input) {
+  static validateFile(file,input, path) {
     const maxSize = 5 * 1024 * 1024;  // 5 MB en bytes (tamaño máximo)
     const minSize = 100 * 1024;  // 100 KB en bytes (tamaño mínimo)
 
     // Verificar el tamaño del archivo
     if (file.size > maxSize) {
       input.value = "";
-      Alert.display('error','Archivo incorrecto','El archivo es más grande de lo esperado.');
+      Alert.display('error','Archivo incorrecto','El archivo es más grande de lo esperado.', path);
       return Promise.resolve(false);  // Si es demasiado grande, retornamos false
     } else if (file.size < minSize) {
       input.value = "";
-      Alert.display('error','Archivo incorrecto','El archivo es más pequeño de lo esperado.');
+      Alert.display('error','Archivo incorrecto','El archivo es más pequeño de lo esperado.', path);
       return Promise.resolve(false);  // Si es demasiado pequeño, retornamos false
     }
 
@@ -348,7 +348,7 @@ class File {
 
     if (!validImageTypes.includes(file.type) && !validPdfTypes.includes(file.type)) {
         input.value = "";
-        Alert.display('error','Archivo incorrecto','Sube un archivo con el formato requerido');
+        Alert.display('error','Archivo incorrecto','Sube un archivo con el formato requerido', path);
        return Promise.resolve(false);  // Si el tipo de archivo no es válido, retornamos false
     }
 
@@ -375,7 +375,7 @@ class File {
                    Alert.display('error','Archivo incorrecto','La imagen no tiene la resolución requerida');
                    resolve(false);  // Si la imagen es demasiado pequeña, retornamos false
                 } else {
-                   esolve(true);  // Si la imagen cumple con los requisitos, retornamos true
+                   resolve(true);  // Si la imagen cumple con los requisitos, retornamos true
                 }
             };
 

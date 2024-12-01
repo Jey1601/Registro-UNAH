@@ -1,17 +1,21 @@
-import { Cell, Modal, Alert, Search, Entry } from "../behavior/support.mjs";
+import { Cell, Modal, Alert, Search, Entry, File } from "../behavior/support.mjs";
 import { Inscription } from "./Inscription.mjs";
 import { Login } from "./login.mjs";
 class Applicant {
-  path = '../../../../public/';
+  static path = '../../../';
 
   static modalInstance = null;
 
   static async renderData(accessess) {
     let  applications = [];
     if(accessess.includes('rllHaveq') || accessess.includes('IeMfti20') ){
+
        applications = await this.viewData();
     }else{
+      console.log('vamos por aquí');
+ 
        applications = await this.viewPendingCheckData();
+       console.log(applications);
     }
    
 
@@ -72,7 +76,7 @@ class Applicant {
 
         // Creamos la imagen y configuramos su fuente
         const viewIcon = document.createElement("img");
-        viewIcon.src = path+"assets/img/icons/openfile.png";
+        viewIcon.src = this.path+"assets/img/icons/openfile.png";
         viewIcon.style = "width:30px; heigth:30px;";
 
         // Agregamos la imagen al botón
@@ -243,7 +247,7 @@ class Applicant {
 
     const result = await this.getResults(id_applicant);
     const data = result.data;
-    if(result.status == 'success'){
+    if(result.status == 'success' && result.view =='data-edtion'){
       const info = document.getElementById('info');
       const note = document.createElement('h5');
       note.textContent = 'Número de solicitud '.concat(data.id_admission_application_number.value);
@@ -318,16 +322,27 @@ class Applicant {
               applicantStudyCenter.readOnly = true;
               applicantFirstChoice.readOnly = true;
               applicantSecondChoice.readOnly = true;
-      }else{
+      }else if(result.view == 'results'){
+         window.location.href = this.path+'views/admissions/results.html'
+      }
+      else{
+        const dataEditionForm = document.getElementById('dataEditionForm');
+        var elements = dataEditionForm.elements;
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].disabled = true;
+        }
         Alert.display(result.status, 'Aviso', result.message, '../../');
-        window.location.href = './login.html';
+        setTimeout(function() {
+          window.location.href = './login.html';
+      }, 8000);
+        
       } 
     }
    
   // Método para obtener los datos de las solicitudes de aplicación
   static async viewData() {
     try {
-      const response = await fetch(path+"api/get/applicant/viewData.php");
+      const response = await fetch(this.path+"api/get/applicant/viewData.php");
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -348,7 +363,7 @@ class Applicant {
     const user = payload.userAdmissionAdmin;
 
     try {
-      const response = await fetch(`../../../public/api/get/applicant/PendingCheckData.php?user=${user}`);
+      const response = await fetch(this.path+`/api/get/applicant/PendingCheckData.php?user=${user}`);
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -466,7 +481,7 @@ class Applicant {
 
     }else  if(results.view === 'data-edition'){
 
-      window.location.href = path+'views/admissions/data-edition.html'
+      window.location.href = this.path+'views/admissions/data-edition.html'
     }
 
     
@@ -477,7 +492,7 @@ class Applicant {
     formData.append('id_applicant', id_applicant);
 
     try {
-        const response = await fetch(path+"api/post/applicant/getResults.php", {
+        const response = await fetch(this.path+"api/post/applicant/getResults.php", {
             method: "POST",
             body: formData,
         });
@@ -535,7 +550,7 @@ static async getData() {
         formData.set("applicantCertificate", myBlob, certificateFile.name);
       }
 
-      const isCertificateValid = await Inscription.validateFile(certificateFile);
+      const isCertificateValid = await File.validateFile(certificateFile);
 
               
         if(!isCertificateValid){
@@ -556,7 +571,7 @@ static async getData() {
         formData.set("applicantIdDocument", myBlob, idFile.name);
       }
 
-      const isIdValid = await Inscription.validateFile(idFile); 
+      const isIdValid = await File.validateFile(idFile); 
 
       if(!isIdValid){
         document.getElementById('applicantIdDocument').value='';
@@ -588,8 +603,8 @@ static async getData() {
     } */
 
       if(idImage.type === 'file' && certificateImage.type === 'file'){
-        const isCertificateValid = await Inscription.validateFile(certificateFile);
-        const isIdValid = await Inscription.validateFile(idFile); 
+        const isCertificateValid = await File.validateFile(certificateFile);
+        const isIdValid = await File.validateFile(idFile); 
         
           if (isCertificateValid && isIdValid) {
             
@@ -613,7 +628,7 @@ static async updateData(formData, form) {
   try {
     // Realizar la solicitud POST usando fetch
     const response = await fetch(
-      path+"api/post/applicant/updateApplicant.php",
+      this.path+"api/post/applicant/updateApplicant.php",
       {
         method: "POST",
         body: formData,
@@ -630,8 +645,9 @@ static async updateData(formData, form) {
       Array.from(form.elements).forEach(input => {
         input.classList.remove('right-input');
       });
-
-      window.location.href = './login.html'
+      setTimeout(function() {
+        window.location.href = './login.html'; // Redirige a login.html después del retraso
+    }, 7000); 
     }
    
   } catch (error) {
@@ -688,7 +704,9 @@ static  async getChecks() {
   checkJustification.value = '';
 
   Modal.hideModal('viewCertificate');
-  window.location.reload() // Mensaje de éxito
+  setTimeout(() => {
+    window.location.reload();
+}, 2000); 
   
 }
 
@@ -705,7 +723,7 @@ static  async getChecks() {
 
   try {
       // Enviar los datos al endpoint utilizando fetch
-      const response = await fetch(path+"api/post/applicant/checkErrorProcess.php", {
+      const response = await fetch(this.path+"api/post/applicant/checkErrorProcess.php", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
