@@ -2,8 +2,8 @@
 
 header("Content-Type: application/json"); 
 
-
-include_once "../../../../../src/DAO/RegionalCenterDAO.php";
+$path ='../../../../';
+include_once  $path."src/DAO/RegionalCenterDAO.php";
 
 
 $dao = new RegionalCenterDAO();

@@ -1,12 +1,12 @@
 class Career {
 
 
-
+        static path = '../../../../'
 
     // Método para obtener los centros regionales de la API
     static async getCareersByCenter(id_center) {
         try {
-            const response = await fetch(`../../../public/api/get/career/careersByCenter.php?id_center=${id_center}`);
+            const response = await fetch(this.path+`/api/get/career/careersByCenter.php?id_center=${id_center}`);
 
             if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);
