@@ -342,3 +342,37 @@ CREATE TABLE RolesUsersFacultiesAdministrator (
     FOREIGN KEY (id_user_faculties_administrator) REFERENCES UsersFacultiesAdministrator(id_user_faculties_administrator),
     FOREIGN KEY (id_role_faculties_administrator) REFERENCES Roles(id_role)
 );
+
+CREATE TABLE UsersRegistryAdministrator (
+    id_user_registry_administrator INT PRIMARY KEY AUTO_INCREMENT,
+    username_user_registry_administrator VARCHAR(50) UNIQUE NOT NULL,
+    password_user_registry_administrator VARCHAR(100) NOT NULL,
+    status_user_registry_administrator BOOLEAN NOT NULL
+);
+
+CREATE TABLE RolesUsersRegistryAdministrator (
+    id_user_registry_administrator INT NOT NULL,
+    id_role_registry_administrator INT NOT NULL,
+    status_role_registry_administrator BOOLEAN NOT NULL,
+    id_regional_center INT NOT NULL,
+    CONSTRAINT id_role_user_registry_administrator PRIMARY KEY (id_user_registry_administrator, id_role_registry_administrator),
+    FOREIGN KEY (id_user_registry_administrator) REFERENCES UsersRegistryAdministrator(id_user_registry_administrator),
+    FOREIGN KEY (id_role_registry_administrator) REFERENCES Roles(id_role),
+    FOREIGN KEY (id_regional_center) REFERENCES RegionalCenters(id_regional_center)
+);
+
+CREATE TABLE TokenUserFacultiesAdministrator (
+    id_token_user_faculties_administrator INT PRIMARY KEY AUTO_INCREMENT,
+    token_faculties_administrator VARCHAR(512) UNIQUE,
+    id_user_faculties_administrator INT UNIQUE NOT NULL,
+    FOREIGN KEY (id_user_faculties_administrator) REFERENCES UsersFacultiesAdministrator(id_user_faculties_administrator)
+);
+
+
+CREATE TABLE TokenUserRegistryAdministrator (
+    id_token_user_registry_administrator INT PRIMARY KEY AUTO_INCREMENT,
+    token_registry_administrator VARCHAR(512) UNIQUE,
+    id_user_registry_administrator INT UNIQUE NOT NULL,
+    FOREIGN KEY (id_user_registry_administrator) REFERENCES UsersRegistryAdministrator(id_user_registry_administrator)
+);
+
