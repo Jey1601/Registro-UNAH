@@ -18,8 +18,8 @@ function getTemplate($type, $placeholders = []) {
             </html>",
         'exam_results' => "
             <html>
-            <body>
-                <h2>Hola, {{full_name}}</h2>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                <h2 style='color: #0056b3;'>Hola, {{full_name}}</h2>
                 <p>Te informamos que obtuviste los siguientes resultados en tu examen de admisión para 
                 la máxima casa de estudios:</p>
                 {{exams_details}}
@@ -28,14 +28,18 @@ function getTemplate($type, $placeholders = []) {
                 contraseña para ingresar al sitio.</p>
                 <p>Contraseña: {{password_user_applicant}}</p>
                 <a href='https://www.facebook.com'>Elige tu carrera aquí</a>
-                <p>Saludos,<br>El equipo de Admisiones</p>
+                <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
+                <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
             </body>
             </html>",
-        'acceptance' => "
+        'career_acceptance' => "
             <html>
-            <body>
-                <h2>Hola, {{full_name}}</h2>
-                <p>Fuiste aceptado en {{career_name}}. ¡Bienvenido Pumita!</p>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                <h2 style='color: #0056b3;'>Hola, {{full_name}}</h2>
+                <p>¡Felicidades! Nos complace informarte que has sido aceptado/a en la carrera de {{career_name}}.</p>
+                <p>¡Bienvenido Pumita!</p>
+                <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
+                <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
             </body>
             </html>",
             'verification_email' => "
