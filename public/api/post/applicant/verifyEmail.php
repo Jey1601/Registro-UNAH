@@ -1,8 +1,8 @@
 <?php
 
+$path = '../../../../';
 
-
-include_once "../../../../../src/DAO/util/mail.php";
+include_once $path."src/DAO/util/mail.php";
 
 
 $mail = new mail();

@@ -3,7 +3,9 @@
 header("Content-Type: application/json"); 
 
 
-include_once "../../../../../src/DAO/util/mail.php";
+$path = '../../../../';
+
+include_once $path."src/DAO/util/mail.php";
 
 
 $mail = new mail();

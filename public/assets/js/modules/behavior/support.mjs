@@ -200,7 +200,7 @@ class Form{
   static  validateField(expression, input) {
 
     const errorElement = input.nextElementSibling; // Obtén el <p> inmediatamente después del input
-
+   
     if(expression.test(input.value)){
      input.classList.add('right-input');
      input.classList.remove('wrong-input');
@@ -211,6 +211,32 @@ class Form{
      input.classList.remove('right-input');
      errorElement.classList.add('input-error-active');
      
+    }
+
+    if(input.name == 'applicantIdentification' ){
+      // Obtener el año actual
+      const currentYear = new Date().getFullYear();
+
+      // Calcular el año mínimo y máximo de nacimiento
+      const minYear = currentYear - 90; // 90 años atrás
+      const maxYear = currentYear - 10; // 10 años atrás
+
+      let cadena = input.value;
+      let subcadena = cadena.slice(4, 8); // Extrae del 5º al 8º dígito (índices 4 a 7)
+      let year = parseInt(subcadena); // Convierte la subcadena a entero
+
+      if(year>=minYear && year<=maxYear){
+     
+        input.classList.add('right-input');
+        input.classList.remove('wrong-input');
+        errorElement.classList.remove('input-error-active');
+      }else{
+        input.classList.add('wrong-input');
+        input.classList.remove('right-input');
+        errorElement.classList.add('input-error-active');
+      
+      }
+   
     }
 
   }
@@ -300,5 +326,69 @@ class Form{
 }
 
 
+class File {
+  static validateFile(file,input) {
+    const maxSize = 5 * 1024 * 1024;  // 5 MB en bytes (tamaño máximo)
+    const minSize = 100 * 1024;  // 100 KB en bytes (tamaño mínimo)
 
-export{Alert, Modal,Cell , Search, Entry, Form};
+    // Verificar el tamaño del archivo
+    if (file.size > maxSize) {
+      input.value = "";
+      Alert.display('error','Archivo incorrecto','El archivo es más grande de lo esperado.');
+      return Promise.resolve(false);  // Si es demasiado grande, retornamos false
+    } else if (file.size < minSize) {
+      input.value = "";
+      Alert.display('error','Archivo incorrecto','El archivo es más pequeño de lo esperado.');
+      return Promise.resolve(false);  // Si es demasiado pequeño, retornamos false
+    }
+
+    // Verificar tipo de archivo
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const validPdfTypes = ['application/pdf'];
+
+    if (!validImageTypes.includes(file.type) && !validPdfTypes.includes(file.type)) {
+        input.value = "";
+        Alert.display('error','Archivo incorrecto','Sube un archivo con el formato requerido');
+       return Promise.resolve(false);  // Si el tipo de archivo no es válido, retornamos false
+    }
+
+    // Si es PDF, no es necesario verificar dimensiones
+    if (validPdfTypes.includes(file.type)) {
+
+       return Promise.resolve(true);
+    } 
+
+    // Verificar las dimensiones del archivo si es una imagen
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+        reader.onload = function(event) {
+            const img = new Image();
+
+            img.onload = function() {
+                const width = img.width;
+                const height = img.height;
+
+                // Verificar las dimensiones mínimas de la imagen
+                if (width < 800 || height < 1200) {
+                   input.value = "";
+                   Alert.display('error','Archivo incorrecto','La imagen no tiene la resolución requerida');
+                   resolve(false);  // Si la imagen es demasiado pequeña, retornamos false
+                } else {
+                   esolve(true);  // Si la imagen cumple con los requisitos, retornamos true
+                }
+            };
+
+            img.src = event.target.result;  // Cargar la imagen en el objeto Image
+        };
+
+        // Leer el archivo como URL de datos (esto activa el evento onload)
+        reader.readAsDataURL(file);
+    });
+}
+
+}
+
+
+
+export{Alert, Modal,Cell , Search, Entry, Form, File};

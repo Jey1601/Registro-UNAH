@@ -14,6 +14,10 @@ body{
     font-weight: normal;
 }
 
+#Inscription-form a{
+ color:#4D5057 ;
+}
+
 /*  <!--Header/navar==============================================================================--> */
 .header{
     padding: 0;  
@@ -1740,3 +1744,6 @@ footer p{
         margin: 2vh;
     }
 }    
+
+
+
