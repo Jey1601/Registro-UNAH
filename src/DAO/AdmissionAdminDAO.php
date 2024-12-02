@@ -618,7 +618,7 @@ class AdmissionAdminDAO {
         }
     }
 
-    public function getAdminUserByRol($RolUser){ 
+   public function getAdminUserByRol($RolUser){ 
         try {
             if (!is_int($RolUser)) {
                 throw new InvalidArgumentException("No se han ingresado los parámetros correctos en createCheckApplicant()");
@@ -626,10 +626,10 @@ class AdmissionAdminDAO {
             $UsuariosAdministrador = $this->connection->execute_query(" CALL GetUsersAdmissionsAdministratorByRol($RolUser)");
             if ($UsuariosAdministrador) { 
                 if ($UsuariosAdministrador->num_rows > 0) { 
-                    while ($user = $UsuariosAdministrador->fetch_assoc()) {
-                        
-                        $AllUsersAdministrador[] = $user;
+                    while ($oneUserAdmin = $UsuariosAdministrador->fetch_assoc()) {
+                        $AllUsersAdministrador[] = $oneUserAdmin;
                     }
+                    //$AllUsersAdministrador=  $UsuariosAdministrador->fetch_assoc();
                     return [
                         "status" => "success",
                         "UsuariosAdministrador" => $AllUsersAdministrador
@@ -664,7 +664,7 @@ class AdmissionAdminDAO {
       *
      *   @return array 
      */
-    public function DistributionApplicantsByUserAdministrator(){
+     public function DistributionApplicantsByUserAdministrator(){
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $applicantDAO = new ApplicantDAO();
         //$idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
@@ -672,8 +672,11 @@ class AdmissionAdminDAO {
         $AllUsers = $this->getAdminUserByRol(2);
         $AllApplicants =$applicantDAO-> getAllApplicationsByAdminProcess($idAdmissionProcess);
         if ( $AllUsers['status'] == 'success' AND $AllApplicants['status'] == 'success') {
-            $dataAllUsers = $AllUsers['UsuariosAdministrador'];
-            $dataAllUsers = [$dataAllUsers];
+            $dataAllUsersJ = $AllUsers['UsuariosAdministrador'];
+            foreach ($dataAllUsersJ as $user) {
+                $dataAllUsers[] = [$user];
+            }
+            echo json_encode($dataAllUsers);
             $dataAllApplicants = $AllApplicants['AplicantesInscritos'];
             $numeroUsers = 0; $numeroApplicants = 0;
             foreach ($dataAllUsers as $user) {
@@ -684,7 +687,9 @@ class AdmissionAdminDAO {
             }
             $applicantByUser = intdiv($numeroApplicants, $numeroUsers);
             $extraApplicants = $numeroApplicants % $numeroUsers;
-            $valuesIdUsers = array_column($dataAllUsers, 'id_user_admissions_administrator');
+            $valuesIdUsers = array_map(function($user) {
+                return $user[0]['id_user_admissions_administrator'];
+            }, $dataAllUsers);            
             $applicantsAsigned = array_map(function($user) use (&$extraApplicants, $applicantByUser) {
                 $assigned = $applicantByUser;
                 if ($extraApplicants > 0) {
