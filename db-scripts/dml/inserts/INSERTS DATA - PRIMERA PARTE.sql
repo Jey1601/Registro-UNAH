@@ -12,6 +12,10 @@ VALUES
 	('admin15031989071', 'Star5*Moon', TRUE),
 	('admin_user', 'BienHecho2-*', TRUE);
 
+INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
+VALUES
+    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
+
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('Rutilia Calderón Padilla', TRUE);
 

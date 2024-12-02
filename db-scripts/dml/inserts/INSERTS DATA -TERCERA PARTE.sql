@@ -12,8 +12,7 @@ VALUES
 	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
 	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
 	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
-	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
-    ('Applicant', 'Visualizar resultados de examen de admision y seleccion de carrera.', TRUE);
+	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE);
 
 
 
@@ -51,3 +50,6 @@ VALUES
     (6, 6, TRUE, 1);
 
 
+INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
+VALUES
+    (1, 8, TRUE)

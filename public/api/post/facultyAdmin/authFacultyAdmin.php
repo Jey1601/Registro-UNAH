@@ -13,10 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$inputBudy = json_decode(file_get_contents('php://input', true));
+$inputBody = json_decode(file_get_contents('php://input'), true);
 
-$userFacultyAdmin = trim($inputBudy['userFacultyAdmin']);
-$passwordFacultyAdmin = trim($inputBudy['passwordFacultyAdmin']);
+$userFacultyAdmin = trim($inputBody['userFacultyAdmin']);
+$passwordFacultyAdmin = trim($inputBody['passwordFacultyAdmin']);
 
 $regexPasswordValidation = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+*\-_])[A-Za-z\d+*\-_]{8,}$/';
 $validation = preg_match($regexPasswordValidation, $passwordFacultyAdmin);

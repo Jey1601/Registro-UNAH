@@ -161,8 +161,8 @@ class Login {
             
             access.forEach(element => {
               switch (element) {
-                case value:
-                  
+                case 'V3yWAxgH':
+                    window.location.href = this.pathViews+'/administration/Faculties/admin.html';
                   break;
               
                 default:

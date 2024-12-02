@@ -1,5 +1,6 @@
 <?php
 include_once 'util/jwt.php';
+include_once 'util/encryption.php';
 
 /**
  * Clase FacultyAdminDAO es un controlador y objeto de acceso a datos de los administradores de facultad.
@@ -43,7 +44,7 @@ class FacultyAdminDAO {
             //Busqueda del usuario en la base de datos
             $query = "SELECT id_user_faculties_administrator, password_user_faculties_administrator FROM UsersFacultiesAdministrator WHERE username_user_faculties_administrator=?;";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('s', $user);
+            $stmt->bind_param('s', $username);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -55,7 +56,7 @@ class FacultyAdminDAO {
 
                 if ($coincidence) { //Si la contrasena ingresada coincide con la de la BD
                     //Consulta para obtener los accesos del usuario
-                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `AccessControlRoles`.id_role = `Roles`.id_role WHERE `Roles`.id_role = 8;";
+                    $queryAccessArray = "SELECT  AccessControl.id_access_control FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersFacultiesAdministrator ON AccessControlRoles.id_role = RolesUsersFacultiesAdministrator.id_role_faculties_administrator INNER JOIN UsersFacultiesAdministrator ON RolesUsersFacultiesAdministrator.id_user_faculties_administrator = UsersFacultiesAdministrator.id_user_faculties_administrator WHERE UsersFacultiesAdministrator.id_user_faculties_administrator = ?;";
                     $stmtAccessArray = $this->connection->prepare($queryAccessArray);
                     $stmtAccessArray->bind_param('i', $auxID);
                     $stmtAccessArray->execute();
@@ -78,7 +79,7 @@ class FacultyAdminDAO {
 
                     //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
                     $payload = [
-                        'userAdmissionAdmin' => $user,
+                        'userAdmissionAdmin' => $username,
                         'accessArray' => $accessArray
                     ];
                     $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
@@ -88,7 +89,7 @@ class FacultyAdminDAO {
                     $stmtCheck = $this->connection->prepare($queryCheck);
                     $stmtCheck->bind_param('i', $auxID);
                     $stmtCheck->execute();
-                    $resultCheck = $stmtAccessArray->get_result();
+                    $resultCheck = $stmtCheck->get_result();
 
                     if ($resultCheck->num_rows > 0) { //El usuario existe, se actualiza el token
                         $queryUpdate = "UPDATE `TokenUserFacultiesAdministrator` SET token_faculties_administrator = ? WHERE id_user_faculties_administrator = ?;";
@@ -137,7 +138,7 @@ class FacultyAdminDAO {
             } else { //No existe usuario con el username ingresado
                 return $response = [
                     'success' => false,
-                    'message' => 'Usuario y/o contrasena incorrectos.',
+                    'message' => 'Usuario  incorrectos.',
                     'token' => null
                 ];
             }
