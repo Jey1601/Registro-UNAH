@@ -676,7 +676,6 @@ class AdmissionAdminDAO {
             foreach ($dataAllUsersJ as $user) {
                 $dataAllUsers[] = [$user];
             }
-            echo json_encode($dataAllUsers);
             $dataAllApplicants = $AllApplicants['AplicantesInscritos'];
             $numeroUsers = 0; $numeroApplicants = 0;
             foreach ($dataAllUsers as $user) {
