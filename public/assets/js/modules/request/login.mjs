@@ -1,6 +1,8 @@
 import { Alert } from "../behavior/support.mjs";
 
 class Login {
+  static pathViews = '../../../../views';
+  static pathEndpoints = '../../../../api';
   
   static getDataApplicant(){
       
@@ -31,106 +33,155 @@ class Login {
 
 }
 
-static async authApplicant() {
-  const username = document.getElementById('id_applicant').value;
-  const password = document.getElementById('id_application').value;
+  static async authApplicant() {
+    const username = document.getElementById('id_applicant').value;
+    const password = document.getElementById('id_application').value;
 
-  const credentials = {
-    "username": username,
-    "password": password
-  }
+    const credentials = {
+      "username": username,
+      "password": password
+    }
 
-  try{
-    fetch('../../../../public/api/post/applicant/authApplicant.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(credentials)
-    }).then(response => response.json()).then(result => {
-      console.log(result);
-
-      if (result.success) {
-        sessionStorage.setItem('token', result.token);
-        sessionStorage.setItem('typeUser',result.typeUser);
-        const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-        window.location.href = '../../../../public/views/admissions/results.html';
-      } else {
-        Alert.display("warning", "Error en la autenticacion", result.message,'../../');
-      }
-    });
-  } catch (error) {
-    console.log('Error al mandar la peticion: ',error);
-  }
-}
-
-static async authAdmisionAdmin() {
-  const username = document.getElementById('admissionsUser').value;
-  const password = document.getElementById('admissionsPassword').value;
-
-  const credentials = {
-      "userAdmissionAdmin": username,
-      "passwordAdmissionAdmin": password
-  }
-
-  try {
-      fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(credentials)
+    try{
+      fetch('../../../../public/api/post/applicant/authApplicant.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
       }).then(response => response.json()).then(result => {
-          console.log(result);
-          
-          if (result.success) {
-              sessionStorage.setItem('token', result.token);
-              sessionStorage.setItem('typeUser',result.typeUser);
+        console.log(result);
 
-              //Redirección de admisiones
-              const tokenSaved = result.token;
-              const payloadDecoded = JWT.decodeToken(tokenSaved);
-              let access = [];
-
-              if (!(JWT.payloadIsEmpty(payloadDecoded))) {
-                  //const payload = this.getPayloadFromToken(tokenSaved);
-                  access = payloadDecoded.accessArray;
-
-                  access.forEach(element => {
-                      switch (element) {
-                        case 'Fz1YeRgv':
-                          window.location.href = '../../../../public/views/administration/upload-grades.html';
-                        break;  
-
-                        case 'lwx50K7f':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
-                        break; 
-
-                        case 'IeMfti20':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
-                        break; 
-
-                        case 'rllHaveq':
-                          window.location.href = '../../../../public/views/administration/verify-data-applications.html';
-                        break; 
-
-                        case 'pFw9dYOw':
-                          window.location.href = '../../../../public/views/administration/download-admitted.html';
-                        break; 
-                      }
-                  });
-              } else {
-                console.log("El usuario no tiene permisos: ", payloadDecoded);
-                window.location.href = '../../../../index.html';
-              }
-          } else {
-            Alert.display("warning", "Error en la autenticacion", result.message);
-          }
-      })
-  } catch (error) {
+        if (result.success) {
+          sessionStorage.setItem('token', result.token);
+          sessionStorage.setItem('typeUser',result.typeUser);
+          const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+          window.location.href = '../../../../public/views/admissions/results.html';
+        } else {
+          Alert.display("warning", "Error en la autenticacion", result.message,'../../');
+        }
+      });
+    } catch (error) {
       console.log('Error al mandar la peticion: ',error);
+    }
   }
-}
+
+  static async authAdmisionAdmin() {
+    const username = document.getElementById('admissionsUser').value;
+    const password = document.getElementById('admissionsPassword').value;
+
+    const credentials = {
+        "userAdmissionAdmin": username,
+        "passwordAdmissionAdmin": password
+    }
+
+    try {
+        fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        }).then(response => response.json()).then(result => {
+            if (result.success) {
+                sessionStorage.setItem('token', result.token);
+
+                //Redirección de admisiones
+                const token_saved = result.token;
+                const payload_decoded = JWT.decodeToken(token_saved);
+                let access = [];
+
+                if (!(JWT.payloadIsEmpty(payload_decoded))) {
+                    //const payload = this.getPayloadFromToken(token_saved);
+                    access = payload_decoded.accessArray;
+
+                    access.forEach(element => {
+                        switch (element) {
+                          case 'Fz1YeRgv':
+                            window.location.href = this.pathViews+'/administration/upload-grades.html';
+                          break;  
+
+                          case 'lwx50K7f':
+                            window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                          break; 
+
+                          case 'IeMfti20':
+                            window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                          break; 
+
+                          case 'rllHaveq':
+                            window.location.href = this.pathViews+'/administration/verify-data-applications.html';
+                          break; 
+
+                          case 'pFw9dYOw':
+                            window.location.href = '../../../../public/views/administration/download-admitted.html';
+                          break; 
+                        }
+                    });
+                } else {
+                  console.log("El usuario no tiene permisos: ", payload_decoded);
+                  window.location.href = '../../../../index.html';
+                }
+            } else {
+              Alert.display("warning", "Error en la autenticacion", result.message);
+            }
+        })
+    } catch (error) {
+      console.log('Error al mandar la peticion: ',error);
+    }
+  }
+
+  static authFacultyAdmin() {
+    const username = document.getElementById().value;
+    const password = document.getElementById().value;
+
+    const credentials = {
+      "userFacultyAdmin": username,
+      "passwordFacultyAdmin": password
+    }
+
+    try {
+      fetch(this.pathEndpoints+'/post/facutlyAdmin/authFacultyAdmin.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+      }).then(response => response.json()).then(result => {
+        if (result.success) {
+          sessionStorage.setItem('token', result.token);
+
+          //Obtencion de accesos
+          const token_saved = result.token;
+          const payload_decoded = JWT.decodeToken(token_saved);
+          let access = [];
+
+          if(!(JWT.payloadIsEmpty(payload_decoded))) {
+            access = payload_decoded.accessArray;
+            
+            access.forEach(element => {
+              switch (element) {
+                case value:
+                  
+                  break;
+              
+                default:
+                  break;
+              }
+            });
+          } else {
+            console.log("El usuario no tiene permisos: ", payload_decoded);
+            window.location.href = '../../../../index.html';
+          }
+          
+        } else {
+          Alert.display("warning", "Error en la autenticacion", result.message);
+        }
+      })
+    } catch (error) {
+      console.log('Error al mandar la peticion: ',error);
+    }
+  }
 
   static regexValidation(credentials){
     if (
