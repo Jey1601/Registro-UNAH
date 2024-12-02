@@ -1,5 +1,5 @@
 
-import { Modal, Form, Alert } from "./modules/behavior/support.mjs";
+import { Modal, Form, Alert , File} from "./modules/behavior/support.mjs";
 import { Applicant } from "./modules/request/Applicant.mjs";
 import { Login } from "./modules/request/login.mjs";
 
@@ -37,7 +37,25 @@ window.addEventListener('load', function(){
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
-    Login.logout('../../../public/index.html')
+    Login.logout('../../index.html')
 });  
 
 
+
+/* ========== Validando el formato de los input ============*/
+
+document.getElementById('applicantCertificate').addEventListener('change', function(event) {
+  const fileInput = event.target;  // Referencia al input
+  const file = fileInput.files[0]; // Obtener el archivo seleccionado
+  
+  File.validateFile(file, fileInput);
+
+});
+
+document.getElementById('applicantIdDocument').addEventListener('change', function(event) {
+  const fileInput = event.target;  // Referencia al input
+  const file = fileInput.files[0]; // Obtener el archivo seleccionado
+  
+  File.validateFile(file, fileInput, '../../');
+
+});

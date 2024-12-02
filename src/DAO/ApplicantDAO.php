@@ -269,7 +269,7 @@ class ApplicantDAO
     {   
         //Configuramos la nueva contraseña:
         $generated_password = Password::generatePassword();
-        $password_user_applicant = Encryption::hashPassword($generated_password);
+    //    $password_user_applicant = Encryption::hashPassword($generated_password);
 
         $mail = new mail();
         // Iniciar una transacción
@@ -290,7 +290,7 @@ class ApplicantDAO
 
                     }
                     // Creamos la nueva solicitud
-                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
                         $this->connection->rollback();
                         echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
@@ -312,7 +312,7 @@ class ApplicantDAO
                 }
 
                 // Creamos la nueva solicitud
-                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
 
                     $this->connection->rollback();
                     echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
@@ -426,6 +426,7 @@ class ApplicantDAO
                                 'message' => 'Token no actualizado.'
                             ];
                         }
+                        $stmtUpdate->close();
                     } else {
                         // Si no existe, insertamos un nuevo registro
                         $queryInsert = "INSERT INTO `TokenUserApplicant` (id_user_applicant, token) VALUES (?, ?);";
@@ -441,7 +442,7 @@ class ApplicantDAO
                         }
                     }
     
-                    $stmtUpdate->close();
+                  
     
                     $response = [
                         'success' => true,
@@ -678,7 +679,7 @@ class ApplicantDAO
             return;
         }
 
-        // Primera consulta: Obtener las resoluciones de aspirante
+        // Primera consulta: Obtener los datos del aspirante de aspirante
         $queryData = "
             SELECT 
                 Applications.id_admission_application_number,
@@ -744,7 +745,7 @@ class ApplicantDAO
                 "id_check_applicant_applications" => $row['id_check_applicant_applications']
             ];
         } else {
-            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante.']);
+            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante. No tiene acciones por hacer actualmente.', 'view' =>'data-edition']);
             return;
         }
 
@@ -1138,7 +1139,7 @@ class ApplicantDAO
      * 
      *  @return boolean false si no tiene ninguna información en la base de datos
      */
-    private function getAdmissionProcess()
+   /* private function getAdmissionProcess()
     {
         $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
 
@@ -1161,7 +1162,7 @@ class ApplicantDAO
 
             return null;
         }
-    }
+    }*/
 
     /**
      * Esta función verifica si un aspirante ya cuenta con información en la

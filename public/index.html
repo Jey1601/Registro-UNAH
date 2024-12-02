@@ -56,7 +56,7 @@
                 <ul class="dropdown-menu" >
                   <li><button class="dropdown-item" >Gestión estratégica</Button></li>
                   <li><button  class="dropdown-item" >Facultades</Button></li>
-                  <li ><button   id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
+                  <li ><button   id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal">Admisiones</Button></li>
                   <li><button class="dropdown-item" >DIPP</Button></li>
                 </ul>
               </div>
@@ -301,7 +301,7 @@
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Registro De Inscripción</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Formulario De Inscripción</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -312,39 +312,106 @@
                   <h5>Información personal</h5>
                   
                     <div class="mb-3">
-                      <label for="applicantName" class="form-label">Nombre</label>
-                      <input type="text" class="form-control input-entry" title="olo letras y tildes, y puede tener entre 1 y 3 palabras separadas por espacios (Ej. Juan, Juan José, Juan José María)." name="applicantName"  placeholder="Ejemplo:Juan José María" required>
+                      <label for="applicantName"  class="form-label">Nombre</label>
+                      <input type="text" style="text-transform: uppercase;" class="form-control input-entry" title="olo letras y tildes, y puede tener entre 1 y 3 palabras separadas por espacios (Ej. Juan, Juan José, Juan José María)." name="applicantName"  placeholder="Ejemplo:Juan José María" required>
                       <p class="input-error"> Solo letras y tildes, y puede tener entre 1 y 3 palabras separadas por espacios (Ej. Juan, Juan José, Juan José María).</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoName" role="button" aria-expanded="false" aria-controls="infoName">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoName">
+                        <div class="card card-body">
+                          Debe contener solo letras (incluyendo tildes) y puede tener de 1 a 3 palabras separadas por espacios.
+                          <br>Ejemplo: Juan, María José, Luis Alberto Pérez.
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3">
-                      <label for="applicantLastName" class="form-label">Apellidos</label>
-                      <input type="text" class="form-control input-entry" name="applicantLastName" title="Solo letras y tildes, y puede ser un apellido o dos, separados por un espacio (Ej. López, López Pérez)." placeholder="Ejemplo: Lopez Perez " required >
+                      <label for="applicantLastName"  class="form-label">Apellidos</label>
+                      <input type="text"  style="text-transform: uppercase;" class="form-control input-entry" name="applicantLastName" title="Solo letras y tildes, y puede ser un apellido o dos, separados por un espacio (Ej. López, López Pérez)." placeholder="Ejemplo: Lopez Perez " required >
                       <p class="input-error"> Solo letras y tildes, y puede ser un apellido o dos, separados por un espacio (Ej. López, López Pérez).</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoLastName" role="button" aria-expanded="false" aria-controls="infoLastName">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoLastName">
+                        <div class="card card-body">
+                          Debe contener solo letras (incluyendo tildes) y puede tener uno o dos apellidos separados por un espacio.
+                          <br>Ejemplo: López, Pérez García.
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="applicantIdentification" class="form-label">Número de identidad</label>
                       <input type="text" class="form-control input-entry" title=" Número de identidad con 13 dígitos, no introducir guiones ni espacios en blanco (Ej. 0701200119258)" id="applicantIdentification" name="applicantIdentification" placeholder="Ejemplo: 0701200119258" required>
                       <p class="input-error"> Número de identidad con 13 dígitos, no introducir guiones ni espacios en blanco (Ej. 0701200119258)</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoId" role="button" aria-expanded="false" aria-controls="infoId">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoId">
+                        <div class="card card-body">
+                          Debe tener exactamente 13 dígitos, sin guiones ni espacios.
+                          <br>Ejemplo: 0701200119258.
+                          <br>El mínimo de edad requerido son 10 años.
+                          <br>El máximo de edad son 90 años.
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="applicantPhoneNumber" class="form-label">Teléfono</label>
                       <input type="text" class="form-control input-entry" title="Número de teléfono que comienza con 9, 8, 7 o 3, seguido de 7 dígitos (Ej. 912345678)." name="applicantPhoneNumber" placeholder="Ejemplo: 89673456" title=" Número de teléfono que comienza con 9, 8, 7 o 3, seguido de 7 dígitos (Ej. 912345678)." required >
                       <p class="input-error"> Número de teléfono que comienza con 9, 8, 7 o 3, seguido de 7 dígitos (Ej. 912345678).</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoPhone" role="button" aria-expanded="false" aria-controls="infoPhone">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoPhone">
+                        <div class="card card-body">
+                          El número debe comenzar con 9, 8, 7 o 3 y tener exactamente 8 dígitos.
+      <br>Ejemplo: 98765432, 39876543.
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="applicantEmail" class="form-label">Correo electrónico</label>
                       <input type="email" title=" Dirección de correo electrónico válida (Ej. ejemplo@dominio.com)." class="form-control input-entry" name="applicantEmail" placeholder="Ejemplo: usuario.ejemplo@dominio.com" required>
                       <p class="input-error"> Dirección de correo electrónico válida (Ej. ejemplo@dominio.com).</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoEmail" role="button" aria-expanded="false" aria-controls="infoEmail">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoEmail">
+                        <div class="card card-body">
+                          Debe ser una dirección de correo válida, con un usuario, el símbolo **@**, un dominio y una extensión.
+                          <br>Ejemplo: usuario@ejemplo.com.
+                        </div>
+                      </div>
                     </div>
                    <div class="mb-3">
-                      <label for="applicantDirection" class="form-label">Dirección</label>
-                      <textarea class="form-control" title="irección con letras, números, espacios, comas, puntos y guiones (Ej. Calle 123, Ciudad, País).No debe iniciar con espacio en blanco" name="applicantDirection" rows="4" placeholder="Ejemplo: Calle Ejemplo 123, Colonia Central, Ciudad Genérica, País" required></textarea>
+                      <label for="applicantDirection"  class="form-label">Dirección</label>
+                      <textarea class="form-control" style="text-transform: uppercase;" title="irección con letras, números, espacios, comas, puntos y guiones (Ej. Calle 123, Ciudad, País).No debe iniciar con espacio en blanco" name="applicantDirection" rows="4" placeholder="Ejemplo: Calle Ejemplo 123, Colonia Central, Ciudad Genérica, País" required></textarea>
                       <p class="input-error"> Dirección con letras, números, espacios, comas, puntos y guiones (Ej. Calle 123, Ciudad, País).No debe iniciar con espacio en blanco</p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoAddress" role="button" aria-expanded="false" aria-controls="infoAddress">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoAddress">
+                        <div class="card card-body">
+                          Puede contener letras, números, espacios, comas, puntos y guiones, pero no debe comenzar con un espacio.
+                          <br>Ejemplo: Calle Ejemplo 123, Colonia Central, Ciudad Genérica, País.
+              
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3">
                       <label for="applicantIdDocument" class="form-label">Documento de identificación nacional o Partida de nacimiento</label>
                       <input id='applicantIdDocument' class="form-control" type="file" name="applicantIdDocument" accept=".jpg, .png, .jpeg, .pdf" title="La imagen debe tener al menos 150 ppi y un tamaño mínimo de 1200 x 1600 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG."  required>
-                      <p class="input-error">La imagen debe tener al menos 150 ppi y un tamaño mínimo de 1200 x 1600 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG, PDF. </p>
+                      <p class="input-error">La imagen debe tener al menos un tamaño mínimo de 800 x 1200 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG, PDF. </p>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoIdImg" role="button" aria-expanded="false" aria-controls="infoIdImg">
+                        Formato requerido
+                      </a></small>
+                      <div class="collapse" id="infoIdImg">
+                        <div class="card card-body">
+                          El archivo debe estar en formato <strong>JPG, PNG, JPEG o PDF.</strong>
+                          <br>La imagen debe tener al menos un tamaño mínimo de 800 x 1200 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG, PDF.
+                          <br>Tamaño mínimo: 100 KB, máximo: 5 MB.
+                        </div>
+                      </div>
                     </div>
                     
                   
@@ -355,6 +422,16 @@
                         <label class="form-label" for="applicantCertificate" >Certificado de secundaria</label>
                         <input id='applicantCertificate' class="form-control" type="file" name="applicantCertificate" accept=".jpg, .png , .jpeg, .pdf"  title="La imagen debe tener al menos 150 ppi y un tamaño mínimo de 1200 x 1600 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG." required>
                         <p class="input-error">La imagen debe tener al menos 150 ppi y un tamaño mínimo de 1200 x 1600 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG, PDF.</p>
+                        <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoCertificate" role="button" aria-expanded="false" aria-controls="infoCertificate">
+                          Formato requerido
+                        </a></small>
+                        <div class="collapse" id="infoCertificate">
+                          <div class="card card-body">
+                            El archivo debe estar en formato <strong>JPG, PNG, JPEG o PDF.</strong> 
+                            <br>La imagen debe tener al menos un tamaño mínimo de 800 x 1200 píxeles para garantizar la legibilidad del texto y gráficos. Formatos aceptados: PNG, JPG, JPEG, PDF.
+                            <br>Tamaño mínimo: 100 KB, máximo: 5 MB.
+                          </div>
+                        </div>
                       </div>
                    
                     <div>
@@ -363,6 +440,14 @@
                         <option  value="" disabled selected> </option>
                       
                       </select>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoCenter" role="button" aria-expanded="false" aria-controls="infoCenter">
+                        Info
+                      </a></small>
+                      <div class="collapse" id="infoCenter">
+                        <div class="card card-body">
+                         Este será el centro regional donde se realizará su examenen de admisión y donde se realizará su inscripción en caso de aprobar.
+                        </div>
+                      </div>
                    </div>
                     <div>
                       <label class="form-label" for="applicantFirstChoice">Carrera Principal</label>
@@ -370,6 +455,14 @@
                         <option value="" disabled selected></option>
                      
                       </select>
+                      <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoFirstChoice" role="button" aria-expanded="false" aria-controls="infoFirstChoice">
+                        Info
+                      </a></small>
+                      <div class="collapse" id="infoFirstChoice">
+                        <div class="card card-body">
+                           Primera opción de carrera a optar, esta restringido por el centro regional donde desee registrarse.
+                        </div>
+                      </div>
                    </div>
                    <div>
                     <label  class="form-label"for="applicantSecondChoice">Carrera Secundaria</label>
@@ -377,10 +470,17 @@
                       <option  value="" disabled selected></option>
                  
                     </select>
+                    <small><a style="text-decoration: none;" class="inscription-help" data-bs-toggle="collapse" href="#infoSecondChoice" role="button" aria-expanded="false" aria-controls="infoSecondChoice">
+                     Info
+                    </a></small>
+                    <div class="collapse" id="infoSecondChoice">
+                      <div class="card card-body">
+                        Segunda opción de carrera a optar, esta restringido por el centro regional donde desee registrarse, esta es obligatoriamente diferente a su primera opción de carrera.
+                      </div>
+                    </div>
                  </div>
                     <br>
                   
-                
               </div>
             </div>
 
@@ -395,6 +495,7 @@
     </div>
   </div>
 </div>
+<!--================================Modal tiempo de proceso================================================-->
 
  <!--================================Modal de verificación de correo================================================-->
  <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalEmailCodeVerification" aria-hidden="true"  tabindex="-1">
@@ -502,10 +603,29 @@
 
 
 
-  <script src="assets/js/bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<!-- Modal de avisos -->
+<div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+ 
   <script type="module" src="assets/js/aspects.js"></script>
   <script type="module" src="assets/js/main.js"></script>
-
+  <script src="./assets/js/bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

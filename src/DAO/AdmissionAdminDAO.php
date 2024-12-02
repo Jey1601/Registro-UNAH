@@ -324,16 +324,32 @@ class AdmissionAdminDAO {
      */
     private function makeResolutions()
     {
-        // Extrae la solicitudes activas  de los aspirantes y las carreras a las que optó.
-        $queryApplications = "SELECT A.id_admission_application_number, A.intendedprimary_undergraduate_applicant as id_undergraduate, A.id_admission_process, A.id_applicant
-                            FROM `Applications` A
-                            WHERE
-                                A.status_application = 1
-                            UNION
-                            SELECT A.id_admission_application_number, A.intendedsecondary_undergraduate_applicant as id_undergraduate, A.id_admission_process,  A.id_applicant
-                            FROM `Applications` A
-                            WHERE
-                                A.status_application = 1";
+        // Extrae la solicitudes activas qué aun no tiene resolución de los aspirantes y las carreras a las que optó.
+        $queryApplications = "SELECT A.id_admission_application_number, 
+                                    A.intendedprimary_undergraduate_applicant AS id_undergraduate, 
+                                    A.id_admission_process, 
+                                    A.id_applicant
+                                FROM `Applications` A
+                                WHERE A.status_application = 1
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM `ResolutionIntendedUndergraduateApplicant` B
+                                    WHERE B.id_admission_application_number = A.id_admission_application_number
+                                        AND B.intended_undergraduate_applicant = A.intendedprimary_undergraduate_applicant
+                                )
+                                UNION
+                                SELECT A.id_admission_application_number, 
+                                    A.intendedsecondary_undergraduate_applicant AS id_undergraduate, 
+                                    A.id_admission_process, 
+                                    A.id_applicant
+                                FROM `Applications` A
+                                WHERE A.status_application = 1
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM `ResolutionIntendedUndergraduateApplicant` B
+                                    WHERE B.id_admission_application_number = A.id_admission_application_number
+                                        AND B.intended_undergraduate_applicant = A.intendedsecondary_undergraduate_applicant
+                                )";
 
         // Preparar la consulta
         $stmt = $this->connection->prepare($queryApplications);

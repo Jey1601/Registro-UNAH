@@ -2,7 +2,8 @@
 
 header("Content-Type: application/json");
 
-include_once "../../../../../src/DAO/RegistrationRatingAdmissionProcessDAO.php";
+$path = '../../../../';
+include_once $path."src/DAO/RegistrationRatingAdmissionProcessDAO.php";
 
 $daoRegistrationRatingAdmissionProcess = new RegistrationRatingAdmissionProcessDAO();
 

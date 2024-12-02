@@ -2,7 +2,7 @@ import { Career } from "./Career.mjs";
 
 class RegionalCenter {
 
-
+    static path = '../../../../'
     static async renderSelectRegionalCenters() {
         const applicantStudyCenter = document.getElementById('applicantStudyCenter');
         applicantStudyCenter.innerHTML= '';
@@ -46,7 +46,7 @@ class RegionalCenter {
     // Método para obtener los centros regionales de la API
     static async getRegionalCenters() {
         try {
-            const response = await fetch("../../../public/api/get/regionalCenter/regionalCenters.php");
+            const response = await fetch(this.path+"api/get/regionalCenter/regionalCenters.php");
 
             if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);

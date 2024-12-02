@@ -1,8 +1,7 @@
 <?php
 
-
-
-include_once "../../../../../src/DAO/ApplicantDAO.php";
+$path = '../../../../';
+include_once $path."src/DAO/ApplicantDAO.php";
 
 $dao = new ApplicantDAO();
 
