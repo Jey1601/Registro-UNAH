@@ -67,9 +67,9 @@ class AdmissionAdminDAO {
                     $resultAccessArray = $stmtAccessArray->get_result();
     
                     $accessArray = [];
-                        while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
-                            $accessArray[] = $rowAccess['id_access_control'];
-                        }
+                    while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $rowAccess['id_access_control'];
+                    }
                     $resultAccessArray->free();
                     $stmtAccessArray->close(); 
     
@@ -129,8 +129,7 @@ class AdmissionAdminDAO {
                     $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
-                        'token' => $newToken,
-                        'typeUser' => 'admissionAdministrator'
+                        'token' => $newToken
                     ];
                 } else { //Contrasena no coincide
                     return $response = [

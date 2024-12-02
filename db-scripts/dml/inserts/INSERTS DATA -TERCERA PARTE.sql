@@ -11,7 +11,8 @@ VALUES
 	('Faculty User Administrator', 'Crear y gestionar las cuentas de los nuevos docentes en el sistema.', TRUE),
 	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
 	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
-	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE);
+	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
+    ('Applicant', 'Visualizar resultados de examen de admision y seleccion de carrera.', TRUE);
 
 
 
@@ -23,7 +24,10 @@ VALUES
     ('lwx50K7f', 'Administrador Admisiones Verificar la información personal y de solicitud de los aspirantes.', TRUE),
     ('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
     ('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
-    ('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE);
+    ('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
+    ('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
+    ('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
+    ('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación admin.html', TRUE);
 
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
@@ -31,7 +35,10 @@ VALUES
     (3, 'IeMfti20', TRUE),
     (4, 'rllHaveq', TRUE),
     (5, 'Fz1YeRgv', TRUE),
-    (6, 'pFw9dYOw', TRUE);
+    (6, 'pFw9dYOw', TRUE),
+    (12, '78mD0SYa', TRUE),
+    (12, 'dJPR7ohs', TRUE),
+    (8, 'V3yWAxgH', TRUE);
 
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)

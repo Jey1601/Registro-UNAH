@@ -382,7 +382,7 @@ class ApplicantDAO
                 $hashPassword = $row['password_user_applicant'];
                 $coincidence = Encryption::verifyPassword($password, $hashPassword);
                 if($coincidence) { //La contrasena ingresada coincide con el hash registrado
-                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 7;"; //Se buscan los accesos de los usuarios aspirantes (rol aspirante=7)
+                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl` INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control INNER JOIN `Roles` ON `Roles`.id_role = `AccessControlRoles`.id_role WHERE `Roles`.id_role = 12;";
                     $resultAccessArray = $this->connection->query($queryAccessArray, MYSQLI_USE_RESULT);
                     
                     $accessArray = [];
@@ -497,7 +497,9 @@ class ApplicantDAO
 
         //Llenado de datos del CSV
         foreach ($applicants as $applicant) {
-            fputcsv($csvFile, $applicant);
+            if (!empty(array_filter($applicant))) { // Verifica que la línea no esté vacía
+                fputcsv($csvFile, $applicant);
+            }
         }
 
         //Volver al inicio del archivo para que pueda ser enviado

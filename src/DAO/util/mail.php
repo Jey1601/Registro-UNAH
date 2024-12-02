@@ -402,7 +402,7 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
 
 //Enviar resultados de los diferentes tipos de exámenes realizados
 function sendRatings($connection, $type, $maxEmailsPerDay) {
-    $mail = PHPMailerConfig();
+    $mail = $this->PHPMailerConfig();
 
     // Obtener los usuarios según el tipo de mensaje
     $result = match ($type) {
