@@ -12,6 +12,7 @@ VALUES
 	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
 	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
 	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
+	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
     ('Applicant', 'Visualizar resultados de examen de admision y seleccion de carrera.', TRUE);
 
 
