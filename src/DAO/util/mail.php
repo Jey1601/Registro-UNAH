@@ -401,12 +401,13 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
 }
 
 //Enviar resultados de los diferentes tipos de exámenes realizados
-function sendRatings($connection, $type, $maxEmailsPerDay) {
-    $mail = PHPMailerConfig();
-
+function sendRatings(/*$connection, $type, $maxEmailsPerDay*/) {
+    $mail = $this->PHPMailerConfig();
+    $type = 'exam_results';
+    $maxEmailsPerDay = 500;
     // Obtener los usuarios según el tipo de mensaje
     $result = match ($type) {
-        'exam_results' => getGroupedResultsPerApplicants($connection),
+        'exam_results' => getGroupedResultsPerApplicants($this->connection),
         default => null
     };
 
@@ -453,7 +454,7 @@ function sendRatings($connection, $type, $maxEmailsPerDay) {
 
 //Enviar confirmación se aceptación en carrera
 function sendCareerAcceptanceNotification($email, $name, $career) {
-    $mail = PHPMailerConfig(); 
+   $mail = $this->PHPMailerConfig(); 
 
     //Preparar los datos para la plantilla
     $placeholders = [

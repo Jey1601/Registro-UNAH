@@ -283,11 +283,11 @@ class AdmissionAdminDAO {
                 $idAdmissionNumber = intval($idAdmissionApplicationNumber);
                 $idAdmissionTest = intval($idTypeAdmissionTest);
                 $rating = floatval($ratingApplicant);
-
+                $status_rating_applicant_test = 1;
                 //Actualizar datos la linea
-                $queryInsert = "UPDATE RatingApplicantsTest SET rating_applicant = ? WHERE id_admission_application_number = ? AND id_type_admission_tests=?";
+                $queryInsert = "UPDATE RatingApplicantsTest SET rating_applicant = ?,status_rating_applicant_test = ?  WHERE id_admission_application_number = ? AND id_type_admission_tests=?";
                 $insertStmt = $this->connection->prepare($queryInsert);
-                $insertStmt->bind_param('dii', $rating, $idAdmissionNumber, $idAdmissionTest);
+                $insertStmt->bind_param('diii', $rating,$status_rating_applicant_test, $idAdmissionNumber, $idAdmissionTest);
                 $result = $insertStmt->execute();
                 if ($result) {
                     $rowsInserted++;
@@ -626,7 +626,10 @@ class AdmissionAdminDAO {
             $UsuariosAdministrador = $this->connection->execute_query(" CALL GetUsersAdmissionsAdministratorByRol($RolUser)");
             if ($UsuariosAdministrador) { 
                 if ($UsuariosAdministrador->num_rows > 0) { 
-                    $AllUsersAdministrador=  $UsuariosAdministrador->fetch_assoc();
+                    while ($user = $UsuariosAdministrador->fetch_assoc()) {
+                        
+                        $AllUsersAdministrador[] = $user;
+                    }
                     return [
                         "status" => "success",
                         "UsuariosAdministrador" => $AllUsersAdministrador
