@@ -7,5 +7,5 @@ downloadApplicantAdmittedBtn.addEventListener('click', function() {
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
-    Login.logout('../../../public/index.html')
+    Login.logout('../../index.html')
 });  

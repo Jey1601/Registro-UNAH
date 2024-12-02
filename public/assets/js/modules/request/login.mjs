@@ -1,5 +1,5 @@
 import { Alert } from "../behavior/support.mjs";
-
+import { AdmissionProccess } from "./AdmissionProcces.mjs";
 class Login {
   static path = '../../../../';
   static getDataApplicant(){
@@ -98,24 +98,30 @@ static async authAdmisionAdmin() {
 
                   access.forEach(element => {
                       switch (element) {
+                        //Carga de las notas de los exámenes de admisión de los solicitantes.
                         case 'Fz1YeRgv':
-                          window.location.href = this.path+'views/administration/upload-grades.html';
+                          AdmissionProccess.verifyRegistrationRatingAdmissionProcess();
+                          //window.location.href = this.path+'views/administration/upload-grades.html';
                         break;  
-
+                        //Verificar la información personal y de solicitud de los aspirantes.
                         case 'lwx50K7f':
-                          window.location.href = this.path+'views/administration/verify-data-applications.html';
+                          AdmissionProccess.verifyDocumentValidationAdmissionProcess();
+                          //window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
-
+                        //Visualiza, busca y edita la información de los aspirantes.
                         case 'IeMfti20':
-                          window.location.href = this.path+'views/administration/verify-data-applications.html';
+                         window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
 
+                        //Descarga la información de las aplicaciones el proceso admisión
                         case 'rllHaveq':
-                          window.location.href = this.path+'views/administration/verify-data-applications.html';
+                          AdmissionProccess.verifyDocumentValidationAdmissionProcess(); 
+                        //window.location.href = this.path+'views/administration/verify-data-applications.html';
                         break; 
-
+                        //Descarga la información de los aspirantes adminitos en el proceso admisión
                         case 'pFw9dYOw':
-                          window.location.href = this.path+'views/administration/download-admitted.html';
+                          AdmissionProccess.verifyDownloadApplicantAdmittedInformationAdmissionProcess()  
+                        //window.location.href = this.path+'views/administration/download-admitted.html';
                         break; 
                       }
                   });

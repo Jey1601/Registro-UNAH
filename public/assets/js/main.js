@@ -42,13 +42,23 @@ inputsInscriptionForm.forEach((input) => {
   
 });
 
+const loginAdmissionsButton = document.getElementById('loginAdmissionsButton');
+
+loginAdmissionsButton.addEventListener('click', () => {
+  Modal.showModal('loginModalAdmissions');
+});
 
 
 
 const loginAdmissions= document.getElementById('loginAdmissions');
+const btnLogin = document.getElementById('btnLogin');
 loginAdmissions.addEventListener('submit', function(event){
     event.preventDefault();
+    btnLogin.disabled = true;
+    Modal.hideModal('loginModalAdmissions');
     Login.authAdmisionAdmin();
+    
+   
 })
 
 const emailCodeVerification = document.getElementById('emailCodeVerification');
