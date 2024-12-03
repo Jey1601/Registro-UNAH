@@ -116,19 +116,6 @@ INSERT INTO ApplicantType (name_aplicant_type, admission_test_aplicant, status_a
 VALUES ('PRIMER INGRESO', TRUE , TRUE);
 
 
-INSERT INTO Applicants (id_applicant, first_name_applicant, second_name_applicant, third_name_applicant, first_lastname_applicant, second_lastname_applicant, email_applicant, phone_number_applicant, address_applicant, image_id_applicant, status_applicant)
-VALUES
-    ('0801200001345', 'Juan', 'Carlos', NULL, 'Pérez', 'González', 'juan.perez@gmail.com', '9878-1234', 'Tegucigalpa, Francisco Morazan, Colonia el Infiernito', UNHEX('48656C6C6F20576F726C64'), TRUE),
-    ('1015200109876', 'María', NULL, NULL, 'Lopez', 'Ramírez', 'maria.lopez@gmail.com', '9629-5678', 'La Esperanza, Intibuca, aldea el Ojolote', UNHEX('48656C6C6F20576F726C64'), TRUE),
-    ('0101199923846', 'Luis', 'Alberto', 'José', 'Hernández', NULL, 'luis.hernandez@gmail.com', '8956-9101', 'Atlandida, caserio los naranjos', UNHEX('48656C6C6F20576F726C64'), TRUE),
-    ('1501200309444', 'Josue', 'Ramon', 'Antonio', 'Salgado', 'Nuñes', 'josueramonantoniosalgadonunes@gmail.com', '9615-0101', 'Juticalpa, barrio concepción', UNHEX('48656C6C6F20576F726C64'), TRUE);
-
-INSERT INTO Applications ( id_admission_process, id_applicant, id_aplicant_type, secondary_certificate_applicant, idregional_center, regionalcenter_admissiontest_applicant, intendedprimary_undergraduate_applicant, intendedsecondary_undergraduate_applicant, status_application)
-VALUES
-    (1, '0801200001345', 1, UNHEX('48656C6C6F20576F726C64'), 1, 1, 3, 1, TRUE),
-    (1, '1015200109876', 1, UNHEX('48656C6C6F20576F726C64'), 2, 2, 2, 4, TRUE),
-    (1, '0101199923846', 1, UNHEX('48656C6C6F20576F726C64'), 1, 1, 2, 4, FALSE),
-    (1, '1501200309444', 1, UNHEX('48656C6C6F20576F726C64'), 1, 1, 2, 3, TRUE);
 
 INSERT INTO TypesAdmissionTests (name_type_admission_tests, status_type_admission_tests) 
 VALUES 
@@ -144,12 +131,7 @@ VALUES
 	(2, 3, 700, TRUE),
 	(2, 4, 700, TRUE);
 
-INSERT INTO RatingApplicantsTest ( id_admission_application_number,  id_type_admission_tests,  rating_applicant,  status_rating_applicant_test) 
-VALUES 
-	(1001, 1, 0, FALSE), (1001, 2, 0, FALSE), 
-	(1002, 2, 0, FALSE), 
-	(1003, 2, 0, FALSE), 
-	(1004, 2, 0, FALSE); 
+
 
 
 

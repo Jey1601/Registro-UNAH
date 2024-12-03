@@ -282,11 +282,11 @@ class AdmissionAdminDAO {
                 $idAdmissionNumber = intval($idAdmissionApplicationNumber);
                 $idAdmissionTest = intval($idTypeAdmissionTest);
                 $rating = floatval($ratingApplicant);
-
+                $status_rating_applicant_test = 1;
                 //Actualizar datos la linea
-                $queryInsert = "UPDATE RatingApplicantsTest SET rating_applicant = ? WHERE id_admission_application_number = ? AND id_type_admission_tests=?";
+                $queryInsert = "UPDATE RatingApplicantsTest SET rating_applicant = ?,status_rating_applicant_test = ?  WHERE id_admission_application_number = ? AND id_type_admission_tests=?";
                 $insertStmt = $this->connection->prepare($queryInsert);
-                $insertStmt->bind_param('dii', $rating, $idAdmissionNumber, $idAdmissionTest);
+                $insertStmt->bind_param('diii', $rating,$status_rating_applicant_test, $idAdmissionNumber, $idAdmissionTest);
                 $result = $insertStmt->execute();
                 if ($result) {
                     $rowsInserted++;
@@ -323,16 +323,32 @@ class AdmissionAdminDAO {
      */
     private function makeResolutions()
     {
-        // Extrae la solicitudes activas  de los aspirantes y las carreras a las que optó.
-        $queryApplications = "SELECT A.id_admission_application_number, A.intendedprimary_undergraduate_applicant as id_undergraduate, A.id_admission_process, A.id_applicant
-                            FROM `Applications` A
-                            WHERE
-                                A.status_application = 1
-                            UNION
-                            SELECT A.id_admission_application_number, A.intendedsecondary_undergraduate_applicant as id_undergraduate, A.id_admission_process,  A.id_applicant
-                            FROM `Applications` A
-                            WHERE
-                                A.status_application = 1";
+        // Extrae la solicitudes activas qué aun no tiene resolución de los aspirantes y las carreras a las que optó.
+        $queryApplications = "SELECT A.id_admission_application_number, 
+                                    A.intendedprimary_undergraduate_applicant AS id_undergraduate, 
+                                    A.id_admission_process, 
+                                    A.id_applicant
+                                FROM `Applications` A
+                                WHERE A.status_application = 1
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM `ResolutionIntendedUndergraduateApplicant` B
+                                    WHERE B.id_admission_application_number = A.id_admission_application_number
+                                        AND B.intended_undergraduate_applicant = A.intendedprimary_undergraduate_applicant
+                                )
+                                UNION
+                                SELECT A.id_admission_application_number, 
+                                    A.intendedsecondary_undergraduate_applicant AS id_undergraduate, 
+                                    A.id_admission_process, 
+                                    A.id_applicant
+                                FROM `Applications` A
+                                WHERE A.status_application = 1
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM `ResolutionIntendedUndergraduateApplicant` B
+                                    WHERE B.id_admission_application_number = A.id_admission_application_number
+                                        AND B.intended_undergraduate_applicant = A.intendedsecondary_undergraduate_applicant
+                                )";
 
         // Preparar la consulta
         $stmt = $this->connection->prepare($queryApplications);
@@ -601,7 +617,7 @@ class AdmissionAdminDAO {
         }
     }
 
-    public function getAdminUserByRol($RolUser){ 
+   public function getAdminUserByRol($RolUser){ 
         try {
             if (!is_int($RolUser)) {
                 throw new InvalidArgumentException("No se han ingresado los parámetros correctos en createCheckApplicant()");
@@ -609,7 +625,10 @@ class AdmissionAdminDAO {
             $UsuariosAdministrador = $this->connection->execute_query(" CALL GetUsersAdmissionsAdministratorByRol($RolUser)");
             if ($UsuariosAdministrador) { 
                 if ($UsuariosAdministrador->num_rows > 0) { 
-                    $AllUsersAdministrador=  $UsuariosAdministrador->fetch_assoc();
+                    while ($oneUserAdmin = $UsuariosAdministrador->fetch_assoc()) {
+                        $AllUsersAdministrador[] = $oneUserAdmin;
+                    }
+                    //$AllUsersAdministrador=  $UsuariosAdministrador->fetch_assoc();
                     return [
                         "status" => "success",
                         "UsuariosAdministrador" => $AllUsersAdministrador
@@ -644,7 +663,7 @@ class AdmissionAdminDAO {
       *
      *   @return array 
      */
-    public function DistributionApplicantsByUserAdministrator(){
+     public function DistributionApplicantsByUserAdministrator(){
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $applicantDAO = new ApplicantDAO();
         //$idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
@@ -652,8 +671,10 @@ class AdmissionAdminDAO {
         $AllUsers = $this->getAdminUserByRol(2);
         $AllApplicants =$applicantDAO-> getAllApplicationsByAdminProcess($idAdmissionProcess);
         if ( $AllUsers['status'] == 'success' AND $AllApplicants['status'] == 'success') {
-            $dataAllUsers = $AllUsers['UsuariosAdministrador'];
-            $dataAllUsers = [$dataAllUsers];
+            $dataAllUsersJ = $AllUsers['UsuariosAdministrador'];
+            foreach ($dataAllUsersJ as $user) {
+                $dataAllUsers[] = [$user];
+            }
             $dataAllApplicants = $AllApplicants['AplicantesInscritos'];
             $numeroUsers = 0; $numeroApplicants = 0;
             foreach ($dataAllUsers as $user) {
@@ -664,7 +685,9 @@ class AdmissionAdminDAO {
             }
             $applicantByUser = intdiv($numeroApplicants, $numeroUsers);
             $extraApplicants = $numeroApplicants % $numeroUsers;
-            $valuesIdUsers = array_column($dataAllUsers, 'id_user_admissions_administrator');
+            $valuesIdUsers = array_map(function($user) {
+                return $user[0]['id_user_admissions_administrator'];
+            }, $dataAllUsers);            
             $applicantsAsigned = array_map(function($user) use (&$extraApplicants, $applicantByUser) {
                 $assigned = $applicantByUser;
                 if ($extraApplicants > 0) {

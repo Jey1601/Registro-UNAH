@@ -44,10 +44,19 @@ VALUES
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
     (2, 2, TRUE, 1),
+    (7, 2, TRUE, 1),
+    (8, 2, TRUE, 1),
     (3, 3, TRUE, 1),
     (4, 4, TRUE, 1),
     (5, 5, TRUE, 1),
     (6, 6, TRUE, 1);
+
+
+
+
+
+    
+    
 
 
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)

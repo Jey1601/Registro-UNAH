@@ -2,7 +2,7 @@
 // Regular expressions to validate the fields
 const regular_expressions = {
     // Name can contain only alphabetic characters or letters with accents, allowing 1 or 3 words
-    name: /^[A-Za-záéíóúÁÉÍÓÚ]+(?: [A-Za-záéíóúÁÉÍÓÚ]+){0,2}$/, 
+    name: /^[A-Za-záéíóúÁÉÍÓÚñÑ]+(?: [A-Za-záéíóúÁÉÍÓÚñÑ]+){0,2}$/, 
     // Last name follows the same pattern as the name (alphabetic characters and accents)
     LastName: /^[A-Za-záéíóúÁÉÍÓÚ]+(?: [A-Za-záéíóúÁÉÍÓÚ]+)?$/, 
     // ID number pattern (for example, specific to some country ID formats)

@@ -1,8 +1,7 @@
 import { Alert } from "../behavior/support.mjs";
-
+import { AdmissionProccess } from "./AdmissionProcces.mjs";
 class Login {
-  static pathViews = '../../../../views';
-  static pathEndpoints = '../../../../api';
+  static path = '../../../../';
   
   static getDataApplicant(){
       
@@ -11,27 +10,18 @@ class Login {
     const applicant_identification = document.getElementById('applicantId').value;
     const applicant_application_number = document.getElementById('applicationNumber').value;
 
+    const credentials = {
+      applicant_identification,
+      applicant_application_number
+    };
 
-   
-   const credentials = {
-     applicant_identification,
-     applicant_application_number
-   };
-
-
-   
-   if(this.regexValidation(credentials)){
-     alert("Estamos cargando su información");
-     //Call the php method to insert in the database
-   }else{
-     alert("Uno o más datos no están correctos");
-   }
-   
-   
-   console.log(credentials);
-           
-
-}
+    if(this.regexValidation(credentials)){
+      alert("Estamos cargando su información");
+    }else{
+      alert("Uno o más datos no están correctos");
+    }
+    console.log(credentials);
+  }
 
   static async authApplicant() {
     const username = document.getElementById('id_applicant').value;
@@ -43,7 +33,7 @@ class Login {
     }
 
     try{
-      fetch('../../../../public/api/post/applicant/authApplicant.php', {
+      fetch(this.path+'api/post/applicant/authApplicant.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,7 +45,7 @@ class Login {
         if (result.success) {
           sessionStorage.setItem('token', result.token);
           sessionStorage.setItem('typeUser',result.typeUser);
-          const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+          //const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
           window.location.href = '../../../../public/views/admissions/results.html';
         } else {
           Alert.display("warning", "Error en la autenticacion", result.message,'../../');
@@ -76,7 +66,7 @@ class Login {
     }
 
     try {
-        fetch('../../../../api/post/admissionAdmin/authAdmissionAdmin.php', {
+        fetch(this.path+'api/post/admissionAdmin/authAdmissionAdmin.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -92,91 +82,47 @@ class Login {
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
-                    //const payload = this.getPayloadFromToken(token_saved);
                     access = payload_decoded.accessArray;
 
-                    access.forEach(element => {
-                        switch (element) {
-                          case 'Fz1YeRgv':
-                            window.location.href = this.pathViews+'/administration/upload-grades.html';
+                  access.forEach(element => {
+                      switch (element) {
+                        //Carga de las notas de los exámenes de admisión de los solicitantes.
+                        case 'Fz1YeRgv':
+                          AdmissionProccess.verifyRegistrationRatingAdmissionProcess();
+                        
                           break;  
-
-                          case 'lwx50K7f':
-                            window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                        
+                        case 'lwx50K7f':
+                          //Visualiza, busca y edita la información de los aspirantes.
+                          AdmissionProccess.verifyDocumentValidationAdmissionProcess();
+                          
                           break; 
 
-                          case 'IeMfti20':
-                            window.location.href = '../../../../public/views/administration/verify-data-applications.html';
+                        case 'IeMfti20':
+                          //Descarga la información de las aplicaciones el proceso admisión
+                          window.location.href = this.path+'views/administration/verify-data-applications.html';
+                          
                           break; 
 
-                          case 'rllHaveq':
-                            window.location.href = this.pathViews+'/administration/verify-data-applications.html';
+                        case 'rllHaveq':
+                          //Descarga la información de los aspirantes adminitos en el proceso admisión
+                          AdmissionProccess.verifyDocumentValidationAdmissionProcess(); 
+                        
+                          break;
+                        
+                        case 'pFw9dYOw':
+                          AdmissionProccess.verifyDownloadApplicantAdmittedInformationAdmissionProcess()  
+                        
                           break; 
-
-                          case 'pFw9dYOw':
-                            window.location.href = '../../../../public/views/administration/download-admitted.html';
-                          break; 
-                        }
-                    });
-                } else {
-                  console.log("El usuario no tiene permisos: ", payload_decoded);
-                  window.location.href = '../../../../index.html';
-                }
-            } else {
-              Alert.display("warning", "Error en la autenticacion", result.message);
-            }
-        })
-    } catch (error) {
-      console.log('Error al mandar la peticion: ',error);
-    }
-  }
-
-  static authFacultyAdmin() {
-    const username = document.getElementById().value;
-    const password = document.getElementById().value;
-
-    const credentials = {
-      "userFacultyAdmin": username,
-      "passwordFacultyAdmin": password
-    }
-
-    try {
-      fetch(this.pathEndpoints+'/post/facutlyAdmin/authFacultyAdmin.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-      }).then(response => response.json()).then(result => {
-        if (result.success) {
-          sessionStorage.setItem('token', result.token);
-
-          //Obtencion de accesos
-          const token_saved = result.token;
-          const payload_decoded = JWT.decodeToken(token_saved);
-          let access = [];
-
-          if(!(JWT.payloadIsEmpty(payload_decoded))) {
-            access = payload_decoded.accessArray;
-            
-            access.forEach(element => {
-              switch (element) {
-                case 'V3yWAxgH':
-                    window.location.href = this.pathViews+'/administration/Faculties/admin.html';
-                  break;
-              
-                default:
-                  break;
+                      }
+                  });
+              } else {
+                console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
+                window.location.href = '../../../../index.html';
               }
-            });
           } else {
-            console.log("El usuario no tiene permisos: ", payload_decoded);
-            window.location.href = '../../../../index.html';
+            Alert.display("warning", "Error en la autenticacion", result.message);
           }
-          
-        } else {
-          Alert.display("warning", "Error en la autenticacion", result.message);
-        }
       })
     } catch (error) {
       console.log('Error al mandar la peticion: ',error);
@@ -185,29 +131,26 @@ class Login {
 
   static regexValidation(credentials){
     if (
-      
-      regular_expressions.idNum.test(credentials.applicant_identification) &&             // Validate ID number
+      regular_expressions.idNum.test(credentials.applicant_identification) && // Validate ID number
       credentials.applicant_application_number != " "      
-  ) {
-      return true;  // If all validations pass, return true
-  } else {
+    ) {
+        return true;  // If all validations pass, return true
+    } else {
+      return false; // If any validation fails, return false
+    }
 
-    return false; // If any validation fails, return false
   }
 
-}
+  static getPayloadFromToken(token) {
+    const payloadBase64 = token.split('.')[1]; // Obtén el payload
+    const payload = atob(payloadBase64); // Decodifica de Base64
+    return JSON.parse(payload); // Convierte el JSON a un objeto
+  }
 
-static getPayloadFromToken(token) {
-  const payloadBase64 = token.split('.')[1]; // Obtén el payload
-  const payload = atob(payloadBase64); // Decodifica de Base64
-  return JSON.parse(payload); // Convierte el JSON a un objeto
-}
-
-
-static logout(url){
-  sessionStorage.setItem('token','');
-  window.location.href = url;
-}
+  static logout(url){
+    sessionStorage.setItem('token','');
+    window.location.href = url;
+  }
 
 }
 

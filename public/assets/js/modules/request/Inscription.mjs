@@ -1,18 +1,28 @@
 import { regular_expressions } from "../behavior/configuration.mjs";
-import { Alert, Modal } from "../behavior/support.mjs";
+import { Alert, Modal, File } from "../behavior/support.mjs";
 
 class Inscription {
-  
+  static path = '../../../../'
 
   static async getData() {
     const inscriptionForm = document.getElementById("inscriptionForm");
     // Crear un nuevo objeto FormData
     const formData = new FormData(inscriptionForm);
 
+    const mayusName = formData.get("applicantName");
+    const mayusLastName = formData.get("applicantLastName");
+    const mayusAddres = formData.get("applicantDirection");
+    
+    // Convertir a mayúsculas y luego establecer el valor en formData
+    formData.set("applicantName", mayusName.toUpperCase());
+    formData.set("applicantLastName", mayusLastName.toUpperCase());
+    formData.set("applicantDirection", mayusAddres.toUpperCase());
+
     // Obtener los valores de los campos del formulario
     const applicant_name = formData.get("applicantName");
     const applicant_last_name = formData.get("applicantLastName");
 
+    
     const certificateFile = formData.get("applicantCertificate");
     const idFile = formData.get('applicantIdDocument');
 
@@ -48,8 +58,9 @@ class Inscription {
     /*for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
       } */
-    const isCertificateValid = await this.validateFile(certificateFile);
-    const isIdValid = await this.validateFile(idFile); 
+    const isCertificateValid = await File.validateFile(certificateFile);
+    const isIdValid = await File.validateFile(idFile); 
+
     if (isCertificateValid && isIdValid) {
       
         Alert.display('warning','Espere','Estamos cargando su información');
@@ -57,17 +68,6 @@ class Inscription {
       
     }
     
-    if(!isCertificateValid){
-      document.getElementById('applicantCertificate').value='';
-      Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de certificado");
-    }
-    
-    if(!isIdValid){
-      document.getElementById('applicantIdDocument').value='';
-      Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de identificación");
-    }
-
-
     //Limpiamos el formulario
     //inscriptionForm.reset();
   }
@@ -100,7 +100,7 @@ class Inscription {
       try {
         // Realizar la solicitud POST usando fetch
         const response = await fetch(
-          "../../../public/api/post/applicant/verifyEmail.php",
+           this.path+"/api/post/applicant/verifyEmail.php",
           {
             method: "POST",
             body: formData,
@@ -128,7 +128,7 @@ class Inscription {
         const applicantIdentification = document.getElementById('applicantIdentification').value;
        
         try {
-          const response = await fetch(`../../../public/api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
+          const response = await fetch(this.path+`/api/get/applicant/verifyEmail.php?applicantIdentification=${encodeURIComponent(applicantIdentification)}&emailCodeVerification=${encodeURIComponent(emailCodeVerification)}`);
           
           if (!response.ok) {
                 throw new Error("Error en la solicitud: " + response.status);
@@ -137,11 +137,13 @@ class Inscription {
     
             if(result.status === 'success'){
 
-              Alert.display(result.status, 'Gracias', result.message);
+              Alert.display(result.status, 'Gracias', result.message, '../../../');
               emailCodeVerificationInput.value='';
+              
               Modal.hideModal('modalEmailCodeVerification');
               this.getData();
             }else{
+              Modal.hideModal('modalEmailCodeVerification');
               Alert.display(result.status, 'Algo ha salido mal', result.message);
             }
         } catch (error) {
@@ -155,7 +157,7 @@ class Inscription {
     try {
       // Realizar la solicitud POST usando fetch
       const response = await fetch(
-        "../../../public/api/post/applicant/insertApplicant.php",
+        this.path+"/api/post/applicant/insertApplicant.php",
         {
           method: "POST",
           body: formData,
@@ -183,47 +185,6 @@ class Inscription {
     }
   }
 
-  static validateFile(file) {
-   
-    const maxSize = 16 * 1024 * 1024;  // 16 MB en bytes
-
-    // Verificar el tamaño del archivo
-    if (file.size > maxSize) {
-        return Promise.resolve(false);  // Si es demasiado grande, retornamos false inmediatamente
-    }else if(file.type != 'application/pdf'){
-      // Crear un FileReader para leer la imagen
-    const reader = new FileReader();
-
-    // Retornamos una promesa que se resolverá después de la lectura
-    return new Promise((resolve) => {
-        reader.onload = function(event) {
-            const img = new Image();
-
-            img.onload = function() {
-                const width = img.width;
-                const height = img.height;
-
-                // Verificar las dimensiones de la imagen
-                if (width < 600 || height < 800) {
-          
-                    resolve(false);  // Resolvemos la promesa con false
-                } else {
-                   
-                    resolve(true);  // Resolvemos la promesa con true
-                }
-            };
-
-            img.src = event.target.result;  // Cargar la imagen en el objeto Image
-        };
-
-        // Leer el archivo como URL de datos (esto activa el evento onload)
-        reader.readAsDataURL(file);
-    });
-    }else{
-      return true;
-    }
-    
-}
 
 
 

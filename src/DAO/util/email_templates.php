@@ -27,7 +27,7 @@ function getTemplate($type, $placeholders = []) {
                 te gustaría inscribirte. Usa tu número de identidad como usuario y la siguiente
                 contraseña para ingresar al sitio.</p>
                 <p>Contraseña: {{password_user_applicant}}</p>
-                <a href='https://www.facebook.com'>Elige tu carrera aquí</a>
+                <a href='http://localhost:8000/views/admissions/login.html'>Elige tu carrera aquí</a>
                 <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
                 <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
             </body>

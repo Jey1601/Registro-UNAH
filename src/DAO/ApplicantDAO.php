@@ -264,12 +264,68 @@ class ApplicantDAO
     }
 
 
-
+       /**
+     * Verifica si un solicitante ha excedido el número permitido de aplicaciones.
+     *
+     * Este método realiza una llamada a un procedimiento almacenado que devuelve 
+     * el número de aplicaciones de un solicitante con múltiples calificaciones. 
+     * Si el número excede 3, devuelve un mensaje de error. De lo contrario, 
+     * devuelve un estado de éxito.
+     *
+     *  @param string $id_applicant El identificador único del solicitante. Debe ser una cadena.
+     * 
+     * @return array Retorna un arreglo asociativo con los siguientes valores:
+     *               - `status` (string): "success" o "error".
+     *               - `message` (string, opcional): Mensaje de error si ocurre un problema.
+     *               - `code` (int, opcional): Código de error si ocurre una excepción.
+     *
+     * @throws InvalidArgumentException Si el parámetro `$id_applicant` no es una cadena.
+     */
+    public function limitOfApplications($id_applicant){
+        try {
+            if (!is_string($id_applicant)) {
+                throw new InvalidArgumentException("No se han ingresado los parámetros correctos en limitOfApplications().");
+            }            
+            $this->connection->execute_query("CALL GET_APPLICATIONS_WITH_MULTIPLE_RATINGS('$id_applicant', @result);");
+            $numerApplications = $this->connection->execute_query("SELECT @result AS total_applications;");
+            $numerApplications =  $numerApplications->fetch_assoc();
+            if ($numerApplications) { 
+                $totalApplications = $numerApplications['total_applications'] ?? null;
+                if ($totalApplications === null) {
+                    return [
+                        "status" => "error",
+                        "message" => "No se pudo obtener el número de aplicaciones."
+                    ];
+                }
+                if ( $totalApplications > 3) { 
+                    return [
+                        "status" => "error",
+                        "message" => "Ha sobrepasado el numero de aplicaciones permitidas."
+                    ];
+                } else {
+                    return [
+                        "status" => "success"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error en el procedimiento GET_APPLICATIONS_WITH_MULTIPLE_RATINGS(): " . $this->connection->error
+                ];
+            }
+        } catch (Exception $exception) {
+            return [
+                "status" => "error",
+                "message" => "Excepción en limitOfApplications() capturada: " . $exception->getMessage(),
+                "code" => $exception->getCode()
+            ];
+        }
+    }
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {   
         //Configuramos la nueva contraseña:
         $generated_password = Password::generatePassword();
-        $password_user_applicant = Encryption::hashPassword($generated_password);
+    //    $password_user_applicant = Encryption::hashPassword($generated_password);
 
         $mail = new mail();
         // Iniciar una transacción
@@ -290,7 +346,7 @@ class ApplicantDAO
 
                     }
                     // Creamos la nueva solicitud
-                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                    if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
                         $this->connection->rollback();
                         echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
                     } else {
@@ -312,7 +368,7 @@ class ApplicantDAO
                 }
 
                 // Creamos la nueva solicitud
-                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )) {
+                if (!$this->createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $generated_password )) {
 
                     $this->connection->rollback();
                     echo json_encode(["status" => "error", "message" => "Ha ocurrido un error al crear la solicitud"]);
@@ -426,6 +482,7 @@ class ApplicantDAO
                                 'message' => 'Token no actualizado.'
                             ];
                         }
+                        $stmtUpdate->close();
                     } else {
                         // Si no existe, insertamos un nuevo registro
                         $queryInsert = "INSERT INTO `TokenUserApplicant` (id_user_applicant, token) VALUES (?, ?);";
@@ -441,7 +498,7 @@ class ApplicantDAO
                         }
                     }
     
-                    $stmtUpdate->close();
+                  
     
                     $response = [
                         'success' => true,
@@ -680,7 +737,7 @@ class ApplicantDAO
             return;
         }
 
-        // Primera consulta: Obtener las resoluciones de aspirante
+        // Primera consulta: Obtener los datos del aspirante de aspirante
         $queryData = "
             SELECT 
                 Applications.id_admission_application_number,
@@ -746,7 +803,7 @@ class ApplicantDAO
                 "id_check_applicant_applications" => $row['id_check_applicant_applications']
             ];
         } else {
-            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante.']);
+            echo json_encode(['status' => 'warning', 'message' => 'No se encontraron datos para el solicitante. No tiene acciones por hacer actualmente.', 'view' =>'data-edition']);
             return;
         }
 
@@ -1140,7 +1197,7 @@ class ApplicantDAO
      * 
      *  @return boolean false si no tiene ninguna información en la base de datos
      */
-    private function getAdmissionProcess()
+   /* private function getAdmissionProcess()
     {
         $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
 
@@ -1163,7 +1220,7 @@ class ApplicantDAO
 
             return null;
         }
-    }
+    }*/
 
     /**
      * Esta función verifica si un aspirante ya cuenta con información en la

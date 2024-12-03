@@ -3,6 +3,7 @@ import { Modal, Alert } from "../behavior/support.mjs";
 
 
 class Results {
+    static path = '../../../../';
     static modalInstance = null;
 
     static verify() {
@@ -44,7 +45,7 @@ class Results {
 
                 Alert.display("success",'Felicidades',success.message,'../../' ); 
                 setTimeout(() => {
-                    window.location.href = '../../../../public/index.html';
+                    window.location.href = this.path+'/index.html';
                 }, 2000);
             } else {
                 submitBtn.disabled = false;
@@ -65,7 +66,7 @@ class Results {
         try {
         
             const response = await fetch(
-              "../../../public/api/post/applicant/applicantAcceptance.php",
+              this.path+"/api/post/applicant/applicantAcceptance.php",
               {
                 method: "POST", 
                 body: formData,
@@ -77,7 +78,7 @@ class Results {
          
           } catch (error) {
          // Manejamos el error si ocurre
-            Alert.display('error','Algo anda mal',result.message, "../../");
+            Alert.display('error','Algo anda mal',error, "../../");
           }
     }
     

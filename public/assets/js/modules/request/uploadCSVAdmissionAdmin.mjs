@@ -1,6 +1,6 @@
 import { Alert } from "../behavior/support.mjs"; 
 import { Login } from "./login.mjs";
-
+ const path = '../../../../';
 async function submitCSVFile() {
     
     const formInscriptionGrades=document.getElementById('formInscriptionGrades');
@@ -15,7 +15,7 @@ async function submitCSVFile() {
             form_data.append('csvFile', file_input.files[0]);
             
             try {
-                const response = await fetch ('../../../public/api/post/admissionAdmin/uploadRatingsCSV.php', {
+                const response = await fetch (path+'api/post/admissionAdmin/uploadRatingsCSV.php', {
                     method: 'POST',
                     body: form_data
                 });
@@ -49,7 +49,7 @@ distributionBtn.addEventListener('click', fetchDistributionData);
 async function fetchDistributionData() {
     try {
         // Realiza la solicitud al endpoint
-        const response = await fetch('../../../public/api/get/admisionProcess/DistributionApplicantsByUserAdministrator.php', {
+        const response = await fetch(path+'api/get/admisionProcess/DistributionApplicantsByUserAdministrator.php', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
