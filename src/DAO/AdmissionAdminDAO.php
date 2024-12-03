@@ -129,7 +129,8 @@ class AdmissionAdminDAO {
                     $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
-                        'token' => $newToken
+                        'token' => $newToken,
+                        'typeUser' => 'admissionAdmin'
                     ];
                 } else { //Contrasena no coincide
                     return $response = [

@@ -1,6 +1,7 @@
 <?php
 include_once 'util/jwt.php';
 include_once 'util/encryption.php';
+include_once 'util/Code.php';
 
 /**
  * Clase FacultyAdminDAO es un controlador y objeto de acceso a datos de los administradores de facultad.
@@ -124,7 +125,8 @@ class FacultyAdminDAO {
                     return $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
-                        'token' => $newToken
+                        'token' => $newToken,
+                        'typeUser' => 'facultyAdmin'
                     ];
 
                 } else { //La contrasena no coincide
@@ -153,5 +155,132 @@ class FacultyAdminDAO {
         }
     }
 
+    public function createProfessor (
+        string $firstName, string $secondName, string $thirdName, string $firstLastname, string $secondLastname,
+        string $image, int $idProfessorObligation, string $nameRegionalCenter, string $roleUserProfessor
+    ) {
+        if (!(
+            isset($firstName) && isset($secondName) && isset($thirdName) && isset($firstLastname) && isset($secondLastname)
+            && isset($image) && isset($idProfessorObligation) && isset($nameRegionalCenter)
+        )) { //Hay un parametro nulo
+            return $response = [
+                'success' => false,
+                'message' => 'Hay al menos un dato nulo.'
+            ];
+        }
+
+        $idRegionalCenter = $this->getIdRegionalCenterByName($nameRegionalCenter);
+
+        if(!($idRegionalCenter)) {
+            return $response = [
+                'success' => false,
+                'message' => 'Centro regional no encontrado.'
+            ];
+        }
+
+        $queryInsertProfessor = "INSERT INTO `Professors` (first_name_professor, second_name_professor, third_name_professor, first_lastname_professor, second_lastname_professor, picture_professor, id_professors_obligations, id_regional_center, status_professor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1);";
+        $stmtInsertProfessor = $this->connection->prepare($queryInsertProfessor);
+        $stmtInsertProfessor->bind_param('ssssssii', $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $image, $idProfessorObligation, $idRegionalCenter);
+
+        if (!($stmtInsertProfessor->execute())) { //La insercion falla
+            $this->connection->rollback();
+            $stmtInsertProfessor->close();
+
+            return $response = [
+                'success' => false,
+                'message' => 'Profesor no insertado.'
+            ];
+        }
+
+        $queryIDProfessor = "SELECT LAST_INSERT_ID();";
+        $resultIDProfessor = $this->connection->execute_query($queryIDProfessor);
+        foreach ($resultIDProfessor as $rowIDProfessor) {
+            $idProfessor = intval($rowIDProfessor[0]);
+            break;
+        }
+
+        $passwordUser = Password::generatePassword();
+        $userProfessor = $this->insertUserProfessor($idProfessor, $passwordUser);
+
+        $querySelectIdRole = "SELECT id_role FROM Roles WHERE role = ?";
+        $stmtSelectIdRole = $this->connection->prepare($querySelectIdRole);
+        $stmtSelectIdRole->bind_param('s', $roleUserProfessor);
+        $stmtSelectIdRole->execute();
+        $resultSelectIdRole = $stmtSelectIdRole->get_result();
+
+        if(!($resultSelectIdRole->num_rows > 0)) {
+            $this->connection->rollback();
+            $stmtSelectIdRole->close();
+
+            return $response = [
+                'success' => false,
+                'message' => 'Rol no encontrado'
+            ];
+        }
+        
+        $rowSelectIdRole = $resultSelectIdRole->fetch_array(MYSQLI_ASSOC);
+        $idUserRole = $rowSelectIdRole['id_role'];
+        
+        $queryInsertRoleUserProfessor = "INSERT INTO `RolesUsersProfessor` (id_role_professor, id_user_professor, status_role_professor) VALUES (?, ?, TRUE);";
+        $stmtInsertRoleUserProfessor = $this->connection->prepare($queryInsertRoleUserProfessor);
+        
+        if(!($stmtInsertRoleUserProfessor->execute())) {
+            $this->connection->rollback();
+            $stmtInsertRoleUserProfessor->close();
+
+            return $response = [
+                'success' => false,
+                'message' => 'Fallo en insercion de Rol-Usuario.'
+            ];
+        }
+
+
+
+    }
+    
+    public function insertUserProfessor(int $idProfessor, string $password) {
+        $hashPassword = Encryption::hashPassword($password);
+
+        $queryInsertUserProfessor = "INSERT INTO `UsersProfessors` (username_user_professor, password_user_professor, status_user_professor) VALUES (?, ?, TRUE);";
+        $stmtInsertUserProfessor = $this->connection->prepare($queryInsertUserProfessor);
+        $stmtInsertUserProfessor->bind_param('is', $idProfessor, $hashPassword);
+
+        if(!($stmtInsertUserProfessor->execute())) { //Fallo en la insercion del usuario
+            return [
+                'success' => false,
+                'message' => 'Fallo en la insercion del usuario'
+            ];
+        }
+
+        $queryIdUserProfessor = "SELECT LAST_INSERT_ID();";
+        $resultIdUserProfessor = $this->connection->execute_query($queryIdUserProfessor);
+        foreach ($resultIdUserProfessor as $rowIdUserProfessor) {
+            $idUserProfessor = intval($rowIdUserProfessor[0]);
+            break;
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Usuario creado exitosamente.',
+            'idUser' => $idUserProfessor
+        ];
+    }
+
+    public function getIdRegionalCenterByName (string $nameRegionalCenter) {
+        $querySearchRegionalCenter = "SELECT id_regional_center FROM `RegionalCenters` WHERE name_regional_center = ?";
+        $stmtSearchRegionalCenter = $this->connection->prepare($querySearchRegionalCenter);
+        $stmtSearchRegionalCenter->bind_param('s', $nameRegionalCenter);
+        $stmtSearchRegionalCenter->execute();
+        $resultSearchRegionalCenter = $stmtSearchRegionalCenter->get_result();
+
+        if(!($resultSearchRegionalCenter->num_rows > 0)) { //Centro regional no encontrado
+            return false;
+        }
+
+        $rowSearchRegionalCenter = $resultSearchRegionalCenter->fetch_array(MYSQLI_ASSOC);
+        $idRegionalCenter = $rowSearchRegionalCenter['id_regional_center'];
+
+        return $idRegionalCenter;
+    }
 }
 ?>

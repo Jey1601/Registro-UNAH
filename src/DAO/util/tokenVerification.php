@@ -47,7 +47,7 @@ class TokenVerification {
             $validToken = JWT::validateToken($token); 
             if ($validToken !== false) { //Verificando que la estructura del token sea valida 
                 switch ($typeUser) {
-                    case 'admissionAdministrator':
+                    case 'admissionAdmin':
                         $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
                         break;
                     case 'applicant':
