@@ -20,7 +20,19 @@ Class CareerDAO{
        
     }
 
-     // Método para obtener las carreras por  centros regionales
+    /**
+     * Obtiene las carreras asociadas a un centro regional específico.
+     *
+     * Este método realiza una consulta a la base de datos para obtener todas las carreras 
+     * que están asociadas a un centro regional determinado, basándose en el ID del centro regional proporcionado.
+     * 
+     * @param int $id_regionalCenter El ID del centro regional para el cual se buscan las carreras asociadas.
+     *
+     * @return array Un array de carreras asociadas al centro regional. Cada elemento del array contiene el 
+     *               ID y el nombre de la carrera.
+     *
+     * @throws Exception Si ocurre un error durante la ejecución de la consulta o preparación.
+     */
      public function getCareersBy($id_regionalCenter) {
         $careers = [];
 
@@ -58,7 +70,7 @@ Class CareerDAO{
         return $careers;
     }
 
-    // Método para cerrar la conexión (opcional)
+   
     public function closeConnection() {
         if ($this->connection) {
             $this->connection->close();

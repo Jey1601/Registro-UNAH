@@ -36,27 +36,7 @@ class ApplicantDAO
         }
     }
 
-    // Método para obtener los aspirantes
-    public function getApplicants(){
-        $applicants = [];
-
-        // Ejecutamos la consulta
-        $result = $this->connection->query("SELECT * FROM Applicants;");
-
-        // Verificamos si la consulta fue exitosa
-        if ($result) {
-            // Recorremos los resultados y los agregamos al array $regionalCenters
-            while ($row = $result->fetch_assoc()) {
-                // Añadimos cada fila al array
-                $applicants[] = $row;
-            }
-        } else {
-            // Si hubo un error con la consulta
-            printf("Error in query: %s\n", $this->connection->error);
-        }
-
-        return $applicants;
-    }
+    
 
     public function getDataApplicant ($idApplicant){
         try {
@@ -177,6 +157,18 @@ class ApplicantDAO
         }
     }
 
+    /**
+     * Obtiene la información de las solicitudes activas junto con la información del aplicante. 
+     * No disierne entre los usuarios con rol de verificación de documentos, es decir, muestra 
+     * todas las solitiudes.
+     * 
+     * Este método llama a un procedimiento almacenado que devuelve la lista  de todas las solicitudes
+     * activas juntos con la información del aplicante, recorre los resultados y convierte los archivos
+     * de imagen en codigo html para su inserción directa en el frontend. Convierte las imágenes o PDFs 
+     * en datos base64 para ser presentados en HTML.
+     * 
+     * @return void  Devuelve los datos procesados de los aspirantes en formato JSON.
+     */
     public function viewData(){
         $applicationsData = [];
 
@@ -321,6 +313,39 @@ class ApplicantDAO
             ];
         }
     }
+
+    /**
+     * Crea una nueva inscripción para un aspirante.
+     * 
+     * Este método realiza la inscripción de un aspirante en el sistema. Incluye la verificación
+     * de si el aspirante ya existe, la actualización de información en caso necesario, y la 
+     * creación de una nueva solicitud. Además, envía un correo de confirmación al aspirante.
+     * 
+     * Se utiliza una transacción para garantizar la integridad de los datos en caso de fallos.
+     * 
+     * @param string $id_applicant ID único del aspirante.
+     * @param string $first_name Primer nombre del aspirante.
+     * @param string|null $second_name Segundo nombre del aspirante 
+     * @param string|null $third_name Tercer nombre del aspirante 
+     * @param string $first_lastname Primer apellido del aspirante.
+     * @param string|null $second_lastname Segundo apellido del aspirante 
+     * @param string $email Dirección de correo electrónico del aspirante.
+     * @param string $phone_number Número de teléfono del aspirante.
+     * @param string $address Dirección física del aspirante.
+     * @param string $status Estado actual del aspirante 
+     * @param int $id_aplicant_type Tipo de aspirante (por ejemplo, primer ingreso).
+     * @param string $image_id_applicant Imagen de identificación del aspirante (en binario).
+     * @param string $secondary_certificate_applicant Certificado de estudios secundarios del aspirante (en binario).
+     * @param int $id_regional_center ID del centro regional al que aplica el aspirante.
+     * @param string $regionalcenter_admissiontest_applicant Detalles del centro regional para el examen de admisión.
+     * @param string $intendedprimary_undergraduate_applicant Carrera principal deseada por el aspirante.
+     * @param string|null $intendedsecondary_undergraduate_applicant Carrera secundaria deseada 
+     * 
+     * @return void Retorna los resultados en formato JSON.
+     * - `status`: Indica el estado de la operación (`success`, `warning`, `error`).
+     * - `message`: Proporciona información sobre el resultado.
+     * - `id_application`: ID de la solicitud creada (en caso de éxito).
+     */
     public function createInscription($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $status, $id_aplicant_type, $image_id_applicant, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant)
     {   
         //Configuramos la nueva contraseña:
@@ -607,6 +632,36 @@ class ApplicantDAO
         return $applicantsAdmitted;
     }
 
+    /**
+     * Obtiene los resultados de resoluciones y calificaciones de exámenes para un aspirante.
+     * 
+     * Este método consulta la base de datos para obtener:
+     * - Resoluciones asociadas a un aspirante, incluyendo detalles de la carrera y centro regional.
+     * - Resultados de los exámenes de admisión, junto con la información del aspirante.
+     * 
+     * Combina los datos obtenidos en una estructura JSON para devolverlos como respuesta.
+     * 
+     * @param string $id_applicant El ID único del aspirante cuyos resultados se desean obtener.
+     * 
+     * @return void Retorna un JSON con la estructura:
+     * - `view`: Indica la vista asociada, en este caso `"results"`.
+     * - `resolutions`: Array con los datos de resoluciones del aspirante:
+     *   - `id_resolution_intended_undergraduate_applicant`: ID de la resolución.
+     *   - `id_notification_application_resolution`: ID de la notificación de resolución.
+     *   - `id_applicant`: ID del aspirante.
+     *   - `id_undergraduate`: ID de la carrera asociada.
+     *   - `name_undergraduate`: Nombre de la carrera asociada.
+     *   - `resolution_intended`: Detalles de la resolución.
+     *   - `name_regional_center`: Nombre del centro regional.
+     *   - `resultsTest`: Array con los datos de calificaciones de exámenes del aspirante:
+     *   - `id_applicant`: ID del aspirante.
+     *   - `name`: Nombre completo del aspirante.
+     *   - `id_admission_application_number`: Número de solicitud de admisión.
+     *   - `name_type_admission_tests`: Nombre del tipo de examen.
+     *   - `rating_applicant`: Calificación obtenida.
+     * 
+     * @throws Exception Si ocurre un error en las consultas o al preparar los resultados.
+     */
     private function getResults($id_applicant)
     {
         // Asegurarse de que la conexión esté activa
@@ -727,8 +782,26 @@ class ApplicantDAO
         echo json_encode($response);
     }
 
-
-
+    /**
+     * Obtiene los datos del aspirante y los errores de validación detectados en su aplicación.
+     * 
+     * Este método realiza dos consultas:
+     * 1. Recupera la información del aspirante junto con detalles de su solicitud de admisión.
+     * 2. Obtiene los errores identificados durante la revisión de la aplicación del aspirante.
+     * 
+     * Combina estos datos en un objeto JSON para devolverlos como respuesta, con atributos marcados como editables si presentan errores.
+     * 
+     * @param string $id_applicant El ID único del aspirante cuyos datos y errores se desean recuperar.
+     * 
+     * @return void Retorna un JSON con la estructura:
+     * - `status`: Indica el estado del proceso (`success`, `warning` o `error`).
+     * - `view`: Nombre de la vista asociada, en este caso `"data-edition"`.
+     * - `data`: Datos del aspirante en formato clave-valor, con información sobre si cada campo es editable.
+     * - `value`: Valor del dato.
+     * - `readOnly`: `true` si el dato es de solo lectura, `false` si puede ser editado debido a un error asociado.
+     * 
+     * @throws Exception Si ocurre un error en las consultas o al procesar los datos.
+     */
     private function getCheckErrors($id_applicant)
     {
         // Asegurarse de que la conexión esté activa
@@ -864,6 +937,37 @@ class ApplicantDAO
 
         echo json_encode($response);
     }
+
+    /**
+     * Redirige al aspirante al proceso correspondiente basado en el estado actual de su solicitud.
+     * 
+     * Este método determina el flujo de trabajo del aspirante verificando si:
+     * 1. Puede editar su información debido a errores detectados en la validación de documentos.
+     * 2. Puede aceptar o revisar los resultados de su proceso de admisión.
+     * 
+     * Según el estado:
+     * - Llama al método `getCheckErrors` si el aspirante debe corregir datos.
+     * - Llama al método `getResults` si el aspirante puede visualizar resultados.
+     * - Retorna un mensaje de advertencia si no hay procesos activos.
+     * 
+     * @param string $id_applicant El ID único del aspirante cuyo flujo de trabajo se debe determinar.
+     * 
+     * @return void Retorna un JSON con la estructura:
+     * - Si el aspirante debe corregir datos:
+     *  - Llama a `getCheckErrors`, que genera una respuesta JSON con los datos y errores editables.
+     * - Si el aspirante puede aceptar resultados:
+     *  - Llama a `getResults`, que genera una respuesta JSON con los resultados del proceso.
+     * - Si no hay procesos activos:
+     *  - `page`: Indica la página a la que se debe redirigir (`index.html`).
+     *  - `status`: `warning`.
+     *  - `message`: Mensaje explicativo.
+     * -  Si ocurre un error:
+     *  - `status`: `error`.
+     *  - `message`: Detalle del error ocurrido.
+     * 
+     * @throws Exception Captura cualquier excepción generada durante el flujo y la incluye en la respuesta JSON.
+     */
+
     public function redirect($id_applicant)
     {
 
@@ -896,6 +1000,29 @@ class ApplicantDAO
             ]);
         }
     }
+    /**
+     * Registra la aceptación de una resolución de aspirante y actualiza los estados correspondientes.
+     * 
+     * Este método realiza las siguientes acciones:
+     * 1. Registra la decisión del aspirante en la tabla `ApplicantAcceptance`.
+     * 2. Actualiza el estado de las resoluciones relacionadas en la tabla `ResolutionIntendedUndergraduateApplicant` para desactivarlas.
+     * 
+     * @param int $id_applicant_acceptance ID único de la aceptación del aspirante que se actualiza.
+     * @param int $primaryResolution ID de la resolución primaria que se debe desactivar.
+     * @param int $secondaryResolution ID de la resolución secundaria que se debe desactivar.
+     * 
+     * @return void Devuelve un JSON con la estructura:
+     * - Si todo es exitoso:
+     *   - `status`: `success`.
+     *   - `message`: "Su decisión ha sido guardada correctamente".
+     * - Si ocurre un error al guardar la aceptación:
+     *   - `message`: "Ha ocurrido un error guardando la decisión".
+     * - Si ocurre un error al actualizar las resoluciones:
+     *   - `status`: `error`.
+     *   - `message`: "Ha ocurrido un error guardando la decisión".
+     * 
+     * @throws Exception Este método no captura explícitamente excepciones, pero errores de conexión o ejecución del statement pueden lanzarlas.
+     */
 
     public function registerAcceptance($id_applicant_acceptance, $primaryResolution, $secondaryResolution)
     {
@@ -931,7 +1058,41 @@ class ApplicantDAO
 
         echo json_encode(["status" => "success", "message" => "Su decisión ha sido guardada correctamente"]);
     }
-
+    /**
+     * Actualiza los datos de un aspirante en las tablas `Applicants`, `Applications` y `CheckApplicantApplications`.
+     * 
+     * Es utizado durante el proceso de correción de datos, se actualiza información de la aplicación también.
+     * 
+     * Este método realiza las siguientes acciones:
+     * 1. Actualiza los datos personales del aspirante en la tabla `Applicants`.
+     * 2. Actualiza el certificado secundario del aspirante en la tabla `Applications`.
+     * 3. Cambia el estado de revisión en la tabla `CheckApplicantApplications`.
+     * 4. Utiliza una transacción para garantizar la integridad de los datos.
+     * 
+     * @param string $id_applicant ID único del aspirante que será actualizado.
+     * @param string $first_name Primer nombre del aspirante.
+     * @param string $second_name Segundo nombre del aspirante.
+     * @param string $third_name Tercer nombre del aspirante.
+     * @param string $first_lastname Primer apellido del aspirante.
+     * @param string $second_lastname Segundo apellido del aspirante.
+     * @param string $email Correo electrónico del aspirante.
+     * @param string $phone_number Número de teléfono del aspirante.
+     * @param string $address Dirección del aspirante.
+     * @param string $image_id_applicant Imagen del documento de identificación del aspirante (binario).
+     * @param string $secondary_certificate_applicant Certificado secundario del aspirante (binario).
+     * @param int $id_admission_application_number Número de solicitud de admisión asociado.
+     * @param int $id_check_applicant_applications ID único de la revisión del aspirante.
+     * 
+     * @return void Devuelve un JSON con la estructura:
+     * - Si todo es exitoso:
+     *   - `status`: `success`.
+     *   - `message`: "Su información ha sido actualizada".
+     * - Si ocurre un error durante la transacción:
+     *   - `status`: `error`.
+     *   - `message`: "Ha ocurrido un error actualizando su información".
+     * 
+     * @throws Exception Este método utiliza transacciones y captura errores para deshacer los cambios en caso de falla.
+     */
     public function updateDataApplicant(
         $id_applicant,
         $first_name,
@@ -1027,7 +1188,26 @@ class ApplicantDAO
         }
     }
 
-    // Método para insertar un nuevo aspirante
+    /**
+     * Inserta un nuevo registro de aspirante en la tabla `Applicants`.
+     * 
+     * 
+     * @param string $id_applicant ID único del aspirante.
+     * @param string $first_name Primer nombre del aspirante.
+     * @param string|null $second_name Segundo nombre del aspirante 
+     * @param string|null $third_name Tercer nombre del aspirante 
+     * @param string $first_lastname Primer apellido del aspirante.
+     * @param string|null $second_lastname Segundo apellido del aspirante 
+     * @param string $email Correo electrónico del aspirante.
+     * @param string $phone_number Número de teléfono del aspirante.
+     * @param string $address Dirección del aspirante.
+     * @param string|null $image_id_applicant Imagen de la identificación del aspirante (binario)
+     * @param int $status Estado del aspirante (por ejemplo, 1 para activo, 0 para inactivo).
+     * 
+     * @return bool Retorna `true` si la inserción es exitosa; de lo contrario, retorna `false`.
+     * 
+     * @throws Exception Este método maneja transacciones y puede lanzar excepciones en caso de errores no controlados.
+     */
     private function insertApplicant($id_applicant, $first_name, $second_name, $third_name, $first_lastname, $second_lastname, $email, $phone_number, $address, $image_id_applicant, $status)
     {
 
@@ -1059,6 +1239,22 @@ class ApplicantDAO
         }
     }
 
+    /**
+     * Actualiza los datos básicos de un aspirante en la tabla `Applicants`.
+     * 
+     * Es utilizado durante el proceso de inscripción.
+     * 
+     * @param string $id_applicant ID único del aspirante que se va a actualizar.
+     * @param string $email Nuevo correo electrónico del aspirante.
+     * @param string $phone_number Nuevo número de teléfono del aspirante.
+     * @param string $address Nueva dirección del aspirante.
+     * @param int $status Nuevo estado del aspirante (1 para activo, 0 para inactivo, etc.).
+     * 
+     * @return bool Retorna `true` si la actualización es exitosa; de lo contrario, retorna `false`.
+     * 
+     * @throws Exception Este método maneja errores relacionados con la preparación y ejecución de la consulta.
+     */
+
     private function updateApplicant($id_applicant, $email, $phone_number, $address, $status){
         // Preparar la consulta SQL de  Actualización, solo actualizamos campos email, phone, y address 
         $query = "UPDATE Applicants 
@@ -1086,10 +1282,30 @@ class ApplicantDAO
 
         } else {
             echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta updateApplicant: " . $this->connection->error]);
+            return false;
         }
 
     }
 
+    /**
+     * Crea una nueva solicitud de admisión para un aspirante.
+     *
+     * Este método inserta una nueva solicitud de admisión en la base de datos, asociada a un proceso de admisión activo, y
+     * crea un usuario para el aspirante. Además, se encargará de gestionar el tipo de aspirante y los datos relacionados.
+     *
+     * @param string $id_applicant El ID del aspirante.
+     * @param int $id_aplicant_type El tipo de aspirante 
+     * @param string $secondary_certificate_applicant El certificado de secundaria del aspirante.
+     * @param int $id_regional_center El ID del centro regional del aspirante.
+     * @param int $regionalcenter_admissiontest_applicant El ID del centro regional donde el aspirante realizará el examen.
+     * @param int $intendedprimary_undergraduate_applicant La carrera de pregrado primaria deseada por el aspirante.
+     * @param int $intendedsecondary_undergraduate_applicant La carrera de pregrado secundaria deseada por el aspirante.
+     * @param string $password_user_applicant La contraseña para la creación del usuario del aspirante.
+     *
+     * @return bool Devuelve true si la solicitud se crea correctamente, false si ocurre un error.
+     *
+     * @throws Exception Si no hay un proceso de admisión activo o si ocurre algún error en la creación de la solicitud.
+     */
     private function createApplication($id_applicant, $id_aplicant_type, $secondary_certificate_applicant, $id_regional_center, $regionalcenter_admissiontest_applicant, $intendedprimary_undergraduate_applicant, $intendedsecondary_undergraduate_applicant,  $password_user_applicant )
     {   //Nueva instancia de admision proccess
         $AdmissionProccessDAO = new AdmissionProccessDAO();
@@ -1137,6 +1353,7 @@ class ApplicantDAO
                     return true; // Éxito
                 } else {
                     echo json_encode(["status" => "error", "message" => "Error en la creación de la solicitud: " . $stmt->error]);
+                    return false;
                 }
                 ;
 
@@ -1156,6 +1373,20 @@ class ApplicantDAO
         }
     }
 
+     /**
+     * Crea un usuario para el aspirante en el sistema.
+     *
+     * Este método inserta un nuevo usuario en la tabla `UsersApplicants`, asociando al aspirante un nombre de usuario, 
+     * una contraseña cifrada, y un estado de usuario activo.
+     *
+     * @param string $id_applicant El ID del aspirante
+     * @param string $password_user_applicant La contraseña del aspirante que será cifrada antes de ser almacenada.
+     *
+     * @return bool Devuelve true si el usuario se crea correctamente, false si ocurre un error.
+     *
+     * @throws Exception Si ocurre un error durante la preparación o ejecución de la consulta SQL.
+     */
+    
     private function createUserApplicant($id_applicant, $password_user_applicant)
     {
       
@@ -1192,36 +1423,7 @@ class ApplicantDAO
             return false;
         }
     }
-    /**
-     * Esta función verifica otbtiene el proceso de admisión activo
-     * 
-     *  @return boolean false si no tiene ninguna información en la base de datos
-     */
-   /* private function getAdmissionProcess()
-    {
-        $query = "SELECT id_admission_process FROM AdmissionProcess WHERE current_status_admission_process = 1";
-
-        // Ejecutar la consulta
-        $result = $this->connection->query($query);
-
-        if ($result) {
-            // Verificar si hay resultados
-            if ($result->num_rows > 0) {
-                //Se devuelve el primer resultado
-                $row = $result->fetch_assoc();
-                return $row['id_admission_process'];
-            } else {
-                // No se encontraron procesos de admisión activos
-                return null;
-            }
-        } else {
-            // Registrar error y devolver null
-            echo json_encode(["error" => "Error en la consulta getAdmissionProcess: " . $this->connection->error]);
-
-            return null;
-        }
-    }*/
-
+    
     /**
      * Esta función verifica si un aspirante ya cuenta con información en la
      * base de datos, es decir que ya tiene un perfil creado. 

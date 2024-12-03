@@ -19,7 +19,18 @@ Class RegionalCenterDAO{
       
     }
 
-     // Método para obtener los centros regionales
+    /**
+     * Obtiene todos los centros regionales desde la base de datos.
+     *
+     * Este método ejecuta una consulta a la base de datos para obtener todos los centros regionales 
+     * registrados en la tabla `RegionalCenters` y los devuelve como un array de resultados.
+     *
+     * @return array Un array de centros regionales, donde cada elemento del array contiene los datos 
+     *               de un centro regional.
+     *
+     * @throws Exception Si ocurre un error durante la ejecución de la consulta.
+     */
+    
      public function getRegionalCenters() {
         $regionalCenters = [];
     
@@ -42,7 +53,7 @@ Class RegionalCenterDAO{
         return $regionalCenters;
     }
 
-    // Método para cerrar la conexión (opcional)
+    
     public function closeConnection() {
         if ($this->connection) {
             $this->connection->close();
