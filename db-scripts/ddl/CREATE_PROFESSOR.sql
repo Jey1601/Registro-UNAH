@@ -417,6 +417,17 @@ CREATE TABLE StudentClassStatus (
     FOREIGN KEY (id_class) REFERENCES classes(id_class)
 );
 
+CREATE TABLE StudentProfile (
+    id_student_profile INT AUTO_INCREMENT PRIMARY KEY,
+    id_student VARCHAR(13) NOT NULL,
+    first_student_profile_picture MEDIUMBLOB,
+    second_student_profile_picture MEDIUMBLOB,
+    third_student_profile_picture MEDIUMBLOB,
+    student_personal_description TEXT,
+    status_student_profile BOOLEAN NOT NULL,
+    FOREIGN KEY (id_student) REFERENCES Students(id_student)
+);
+
 CREATE TABLE UsersStudents (
     id_user_student INT PRIMARY KEY AUTO_INCREMENT,
     username_user_student VARCHAR(13) UNIQUE NOT NULL,
