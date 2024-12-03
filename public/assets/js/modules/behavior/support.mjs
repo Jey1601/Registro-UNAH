@@ -408,5 +408,31 @@ class File {
 }
 
 
+class Sidebar{
 
-export{Alert, Modal,Cell , Search, Entry, Form, File};
+  // Función para alternar la visibilidad del sidebar
+    static toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      const toggleSidebarButton = document.getElementById("toggleSidebar");
+    
+      if (sidebar.classList.contains("hidden")) {
+          sidebar.classList.remove("hidden");
+          sidebar.classList.add("show");
+          // Ocultar el botón de abrir el sidebar
+          toggleSidebarButton.style.display = 'none';
+      } else {
+          sidebar.classList.remove("show");
+          sidebar.classList.add("hidden");
+          // Mostrar el botón de abrir el sidebar
+          toggleSidebarButton.style.display = 'block';
+      }
+    }
+
+  //Se debe agregar una función que cargue las opciones en base a permisos
+
+}
+
+
+
+
+export{Alert, Modal,Cell , Search, Entry, Form, File, Sidebar};
