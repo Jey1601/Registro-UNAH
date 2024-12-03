@@ -561,6 +561,44 @@
   </div>
   </div>
 
+  <!-- Login Administración -->
+ <div class="modal fade " id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      <div class="modal-header" style="border-bottom: none;">
+          <div style="width: 100%; display: flex; justify-content: center;">
+          <h1 class="modal-title fs-5" style="color: #4D5057; " >Inicio de sesión</h1>
+          </div>
+      
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:  20px;">
+        <div id="alertPlaceholder"></div>
+          <form id="loginForm">
+            <input type="hidden" id="userType" name="userType">
+          <div class="mb-3">
+          
+              <input type="text" class="form-control" name="username" id="username"  placeholder="Usuario..." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);">
+              
+          </div>
+          <div class="mb-3">
+          
+              <input type="password" class="form-control"  id="password"  name="password" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+          </div>
+          
+          <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
+              <button  type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" id="btnLoginAdministration">Iniciar Sesión</button>
+          </div>
+          
+          
+          </form>
+
+      </div>
+      
+      </div>
+  </div>
+  </div>
+
   <!-- Login Students -->
   <div class="modal fade " id="loginModalStudents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">

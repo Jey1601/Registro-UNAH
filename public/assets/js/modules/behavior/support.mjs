@@ -76,22 +76,40 @@ class Alert{
 }
 
 
-class Modal{
+class Modal {
+  static modalInstance = null;
 
-    static modalInstance = null;
+  static showModal(id) {
+    const modalElement = document.getElementById(id);
 
-    static showModal(id) {
-        const modalElement = document.getElementById(id);
-        this.modalInstance = new bootstrap.Modal(modalElement);
-        this.modalInstance.show();
+    // Escuchar el evento de cierre para limpiar el estado (sin eliminar placeholders)
+    modalElement.addEventListener('hidden.bs.modal', () => {
+        Modal.cleanupModal(modalElement);
+    });
+
+    this.modalInstance = new bootstrap.Modal(modalElement);
+    this.modalInstance.show();
+    }
+
+    static hideModal() {
+      if (this.modalInstance) {
+          this.modalInstance.hide();
+          this.modalInstance = null; 
       }
+    }
 
-      static hideModal() {
-        if (this.modalInstance) {
-            this.modalInstance.hide();
-            this.modalInstance = null; 
-        }
-      }
+    static cleanupModal(modalElement) {
+      // Reinicia valores de inputs, pero conserva los placeholders
+      const inputs = modalElement.querySelectorAll('input');
+      inputs.forEach(input => {
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+              input.value = ''; // Limpia el valor pero no el placeholder
+          } else {
+              input.checked = false; // Desmarcar checkboxes y radios
+          }
+      });
+
+  }
 }
 
 

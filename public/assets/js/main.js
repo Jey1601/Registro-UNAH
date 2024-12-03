@@ -21,10 +21,7 @@ inscriptionForm.addEventListener('submit',function(event){
     Modal.showModal('modalEmailCodeVerification');
     verifyEmailBtn.disabled = true;
     Inscription.setConfirmationEmailApplicants();
-   /* submitButton.classList.remove('wrong-form');
-    submitButton.innerText = "Enviar";
-    Inscription.getData();*/
-  
+
    
 }); 
 
@@ -42,15 +39,15 @@ inputsInscriptionForm.forEach((input) => {
   
 });
 
-const loginAdmissionsButton = document.getElementById('loginAdmissionsButton');
+/*const loginAdmissionsButton = document.getElementById('loginAdmissionsButton');
 
 loginAdmissionsButton.addEventListener('click', () => {
   Modal.showModal('loginModalAdmissions');
-});
+});*/
 
 
 
-const loginAdmissions= document.getElementById('loginAdmissions');
+/*const loginAdmissions= document.getElementById('loginAdmissions');
 const btnLogin = document.getElementById('btnLogin');
 loginAdmissions.addEventListener('submit', function(event){
     event.preventDefault();
@@ -58,8 +55,7 @@ loginAdmissions.addEventListener('submit', function(event){
     Modal.hideModal('loginModalAdmissions');
     Login.authAdmisionAdmin();
     
-   
-})
+})*/
 
 const emailCodeVerification = document.getElementById('emailCodeVerification');
 emailCodeVerification.addEventListener('keyup',function(){
@@ -93,3 +89,72 @@ document.getElementById('applicantIdDocument').addEventListener('change', functi
   File.validateFile(file, fileInput);
 
 });
+
+
+// Escuchar los clics en los botones de la lista de login
+document.querySelectorAll('.dropdown-item').forEach(button => {
+  button.addEventListener('click', function() {
+      // Comprobamos el texto del botón para determinar qué valor asignar
+      switch (this.textContent.trim()) {
+          case 'Gestión estratégica':
+              Login.updateUserType('strategicAdmin');
+           
+              break;
+          case 'Facultades':
+              Login.updateUserType('facultyAdmin');
+            
+              break;
+          case 'Admisiones':
+            Login.updateUserType('admissionAdmin');
+
+         
+              break;
+          case 'DIPP':
+            Login.updateUserType('dippAdmin');
+           
+              break;
+          default:
+              break;
+
+      }
+
+
+      //Se llama a la modal de login 
+      Modal.showModal('loginModal');  
+  });
+});
+
+
+const loginForm = document.getElementById("loginForm");
+const btnLoginGeneral = document.getElementById('btnLoginAdministration');
+// Función para autenticar según el tipo de usuario
+loginForm.onsubmit = function(event) {
+  event.preventDefault(); // Prevenir el envío del formulario
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const userType = document.getElementById("userType").value;
+  btnLoginGeneral.disabled = true;
+  // Ejecutar la función correspondiente según el tipo de usuario
+  switch (userType) {
+      case 'strategicAdmin':
+          Modal.hideModal('loginModal');
+          authenticateAdmin(username, password);
+          break;
+      case 'facultyAdmin':
+          Modal.hideModal('loginModal');
+          btnLoginGeneral.disabled = false;
+          authenticateStudent(username, password);
+          break;
+      case 'admissionAdmin':
+          
+          Modal.hideModal('loginModal');
+          Login.authAdmisionAdmin(username,password);
+          break;
+      case 'dippAdmin':
+        authenticateTeacher(username, password);
+           break;
+      default:
+          Alert.display('warning','Algo salio mal','Invalid user type');
+  }
+}
