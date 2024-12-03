@@ -75,6 +75,7 @@ class Login {
         }).then(response => response.json()).then(result => {
             if (result.success) {
                 sessionStorage.setItem('token', result.token);
+                sessionStorage.setItem('typeUser',result.typeUser);
 
                 //Redirección de admisiones
                 const token_saved = result.token;
