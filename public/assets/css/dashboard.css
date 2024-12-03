@@ -1,3 +1,44 @@
+:root {
+    --primary-color: #3498db; /* Azul */
+    --secondary-color: #2ecc71; /* Verde */
+    --tertiary-color: #e74c3c; /* Rojo */
+    --quaternary-color: #9b59b6; /* Púrpura */
+    --quinary-color: #f1c40f; /* Amarillo */
+    --senary-color: #1abc9c; /* Teal */
+    --septenary-color: #34495e; /* Gris oscuro */
+    --octonary-color: #16a085; /* Verde azulado */
+    --nonary-color: #f39c12; /* Naranja */
+    --denary-color: #8e44ad; /* Violeta */
+    --undenary-color: #e67e22; /* Naranja oscuro */
+}
+
+#dashboard{
+    padding: 25px 30px 0 ;
+}
+.cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.card{
+    width: 24%;
+}
+
+.charts{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+.chart {
+    width: auto;
+}
+
+
+
+
 .board{
     margin: auto;
     width: 55%;
@@ -143,14 +184,7 @@
 .b3{ height: 55%}
 .b4{ height: 75%}
 .b5{ height: 85%}
-footer{
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    font-family: sans-serif;
-}
+
 /* Cards */
 .cards {
     display: grid;
@@ -217,4 +251,75 @@ footer{
 .chart h3 {
     font-size: 22px;
     margin-bottom: 20px;
+}
+
+/* General container for the chart and legend */
+.container_chart {
+    width: 700px;
+    height: 550px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Styling for the pie chart */
+.pie_chart {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--primary-color) 0% 40%,
+        var(--secondary-color) 40% 70%,
+        var(--tertiary-color) 70% 88%,
+        var(--quaternary-color) 88% 100%
+    );
+    box-shadow: 1px 1px 5px 1px rgb(70, 70, 70);
+}
+
+/* Styling for each legend item */
+.legend_item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Square colors in the legend */
+[class^="color_"] {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.color_primary {
+    background-color: var(--primary-color);
+}
+
+.color_secondary {
+    background-color: var(--secondary-color);
+}
+
+.color_tertiary {
+    background-color: var(--tertiary-color);
+}
+
+.color_quaternary {
+    background-color: var(--quaternary-color);
+}
+
+/* Text styles for the legend */
+.text {
+    color: #000;
+    line-height: 1.6;
+}
+
+/* Total section styling */
+.total {
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: rgb(30, 50, 70);
 }

@@ -82,7 +82,73 @@ class Chart{
       return board;
   }
 
- 
+  static generatePieChart(data) {
+    if (data.length > 11) {
+        console.error('The maximum number of partitions allowed is 11.');
+        return null;
+    }
+
+    // Predefined color palette
+    const colorPalette = [
+        'var(--primary-color)', 
+        'var(--secondary-color)', 
+        'var(--tertiary-color)', 
+        'var(--quaternary-color)', 
+        'var(--quinary-color)', 
+        'var(--senary-color)', 
+        'var(--septenary-color)', 
+        'var(--octonary-color)', 
+        'var(--nonary-color)', 
+        'var(--denary-color)', 
+        'var(--undenary-color)'
+    ];
+
+    // Assign colors from the colorPalette
+    data = data.map((item, index) => ({
+        ...item,
+        color: colorPalette[index] || colorPalette[colorPalette.length - 1] // Assign default color if more than 11 items
+    }));
+
+    // Check if the sum of percentages equals 100 (optional but recommended for valid pie chart)
+    const totalPercentage = data.reduce((acc, item) => acc + item.percentage, 0);
+    if (totalPercentage !== 100) {
+        console.warn('The total percentage is not equal to 100%. Total: ' + totalPercentage + '%');
+    }
+
+    // Calculate the cumulative percentage for each section
+    let cumulativePercentage = 0;
+
+    // Create gradient stops for the conic-gradient
+    const gradientStops = data.map((item, index) => {
+        const start = cumulativePercentage;
+        cumulativePercentage += item.percentage;
+        return `${item.color} ${start}% ${cumulativePercentage}%`;
+    }).join(', ');
+
+    // Create the chart container
+    const chartContainer = document.createElement('div');
+    chartContainer.className = 'container_chart';
+
+    // Create the pie chart element
+    const chartElement = document.createElement('div');
+    chartElement.className = 'pie_chart';
+    chartElement.style.background = `conic-gradient(${gradientStops})`;
+    chartContainer.appendChild(chartElement);
+
+    // Create the legend container
+    const legendContainer = document.createElement('div');
+    legendContainer.className = 'legend';
+    legendContainer.innerHTML = data.map(item => `
+        <span class="legend_item">
+            <span style="background-color: ${item.color}; width: 15px; height: 15px; border-radius: 3px; margin-right: 8px;"></span>
+            <p class="text">${item.percentage}% ${item.label}</p>
+        </span>
+    `).join('') + `<p class="total">Total: ${data.reduce((acc, item) => acc + item.value, 0).toLocaleString()}</p>`;
+
+    chartContainer.appendChild(legendContainer);
+
+    return chartContainer;
+}
 
   }
 

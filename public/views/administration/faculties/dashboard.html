@@ -37,7 +37,7 @@
   />
   <link
   rel="stylesheet"
-  href="../../../assets/css/grafics.css"
+  href="../../../assets/css/dashboard.css"
 />
     <title>Administrador</title>
     <!-- <script src="../../../assets/js/tokenValidation.js"></script>-->
@@ -87,9 +87,41 @@
     <!--offcanvas main container end=================================================================================-->
     <!--Menu=================================================================================-->
     <section id="dashboard" class="menu">
-       
-    </section>
+        <div class="row">
+          
+                <!-- Dashboard Cards -->
+                <div class="cards" style="display: flex; flex-wrap: wrap;">
+                  <div class="card">
+                      <h3>Total Sales</h3>
+                      <p>$5000</p>
+                  </div>
+                  <div class="card">
+                      <h3>Total Users</h3>
+                      <p>1200</p>
+                  </div>
+                  <div class="card">
+                      <h3>Pending Tasks</h3>
+                      <p>5</p>
+                  </div>
+                  <div class="card">
+                      <h3>Messages</h3>
+                      <p>23</p>
+                  </div>
+              </div>
 
+              <!-- Charts Section -->
+              <div class="charts">
+                  <div  id="pieChart"  class="chart">
+                      <h3>Sales Chart</h3>
+                      <div class=" pie-chart" id="pie-chart"></div>
+                      
+                     
+                  </div>
+              </div>
+    
+        </div>
+        
+    </section>
     <!--Footer=================================================================================-->
 
     <footer class="footer">
@@ -162,7 +194,7 @@
       src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-   <script   type="module"  src="../../../assets/js/administration/faculties/admin.js"> </script>
+   <script   type="module"  src="../../../assets/js/administration/faculties/dashboard.js"> </script>
     <script
       type="module"
       src="../../../assets/js/aspects.js"
