@@ -74,7 +74,7 @@ class Login {
             body: JSON.stringify(credentials)
         }).then(response => response.json()).then(result => {
             if (result.success) {
-                console.log(result);
+           
                 sessionStorage.setItem('token', result.token);
                 sessionStorage.setItem('typeUser',result.typeUser);
 
