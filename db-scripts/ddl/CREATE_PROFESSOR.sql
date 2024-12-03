@@ -91,6 +91,7 @@ CREATE TABLE UndergraduateChangeStudentsProcess (
 	end_dateof_undergraduate_change_student_process DATE NOT NULL,
 	status_undergraduate_change_student_process BOOLEAN NOT NULL,
 	FOREIGN KEY (academic_year_undergraduate_change_student_process) REFERENCES AcademicYear(id_academic_year)
+
 );
 
 CREATE TABLE CancellationExceptionalClassesProcess ( 
@@ -108,12 +109,10 @@ CREATE TABLE CancellationExceptionalClassesProcess (
 CREATE TABLE AcademicPlanningProcess(
 	id_academic_planning_process INT PRIMARY KEY AUTO_INCREMENT,
 	date_academic_periodicity_academic_planning_process INT NOT NULL,
-	department_academic_planning_process INT NOT NULL,
 	start_dateof_academic_planning_process DATE NOT NULL,
 	end_dateof_academic_planning_process DATE NOT NULL,
 	status_academic_planning_process BOOLEAN NOT NULL,
-	FOREIGN KEY (date_academic_periodicity_academic_planning_process) REFERENCES DatesAcademicPeriodicityYear(id_dates_academic_periodicity_year),
-	FOREIGN KEY (department_academic_planning_process) REFERENCES Departments(id_department)
+	FOREIGN KEY (date_academic_periodicity_academic_planning_process) REFERENCES DatesAcademicPeriodicityYear(id_dates_academic_periodicity_year)
 );
 
 
@@ -236,6 +235,7 @@ CREATE TABLE Professors (
     third_name_professor VARCHAR(50),
     first_lastname_professor VARCHAR(50) NOT NULL,
     second_lastname_professor VARCHAR(50),
+    emial_professor VARCHAR (100) NOT NULL,
     picture_professor MEDIUMBLOB,
     id_professors_obligations INT NOT NULL,
     id_regional_center INT NOT NULL,
@@ -437,7 +437,7 @@ CREATE TABLE UsersStudents (
 );
 
 CREATE TABLE RolesUsersStudent (
-    id_user_student VARCHAR(13) NOT NULL,
+    id_user_student INT NOT NULL,
     id_role_student INT NOT NULL,
     status_role_student BOOLEAN NOT NULL,
     CONSTRAINT id_role_user_student PRIMARY KEY (id_user_student, id_role_student),
@@ -448,9 +448,10 @@ CREATE TABLE RolesUsersStudent (
 CREATE TABLE TokenUserStudent (
     id_token_user_student INT PRIMARY KEY AUTO_INCREMENT,
     token_student VARCHAR(512) UNIQUE,
-    id_user_student VARCHAR(13) UNIQUE NOT NULL,
-    FOREIGN KEY (id_user_student) REFERENCES Students(id_student)
+    id_user_student INT UNIQUE NOT NULL,
+    FOREIGN KEY (id_user_student) REFERENCES UsersStudents(id_user_student)
 );
+
 
 CREATE TABLE UsersProfessors (
     id_user_professor INT PRIMARY KEY AUTO_INCREMENT,
@@ -475,3 +476,35 @@ CREATE TABLE TokenUserProfessor (
     id_user_professor INT UNIQUE NOT NULL,
     FOREIGN KEY (id_user_professor) REFERENCES Professors(id_professor)
 );
+
+CREATE TABLE ClassSections (
+    id_class_section INT AUTO_INCREMENT PRIMARY KEY,
+    id_dates_academic_periodicity_year INT NOT NULL,
+    id_classroom_class_section INT NOT NULL,
+    id_academic_schedules INT NOT NULL,
+    id_professor_class_section INT NOT NULL,
+    numberof_spots_available_class_section INT NOT NULL,
+    status_class_section BOOLEAN NOT NULL,
+    FOREIGN KEY (id_dates_academic_periodicity_year) REFERENCES DatesAcademicPeriodicityYear(id_dates_academic_periodicity_year),
+    FOREIGN KEY (id_classroom_class_section) REFERENCES Classrooms(id_classroom),
+    FOREIGN KEY (id_professor_class_section) REFERENCES Professors(id_professor),
+    FOREIGN KEY (id_academic_schedules) REFERENCES AcademicSchedules(id_academic_schedules)
+);
+
+CREATE TABLE ClassSectionsDays (
+    id_class_sections_days INT AUTO_INCREMENT PRIMARY KEY,
+    id_class_section INT NOT NULL,
+    id_day ENUM('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo') NOT NULL,
+    status_class_sections_days BOOLEAN NOT NULL,
+    FOREIGN KEY (id_class_section) REFERENCES ClassSections(id_class_section)
+);
+
+CREATE TABLE ClassSectionsCancelledDepartmentHead (
+    id_class_sections_cancelled INT AUTO_INCREMENT PRIMARY KEY,
+    id_class_section INT NOT NULL,
+    id_department_head INT NOT NULL,
+    justification_sections_cancelled TEXT NOT NULL,
+    FOREIGN KEY (id_class_section) REFERENCES ClassSections(id_class_section),
+    FOREIGN KEY (id_department_head) REFERENCES DepartmentHead(id_department_head)
+);
+
