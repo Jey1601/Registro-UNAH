@@ -146,7 +146,8 @@ class DIIPAdminDAO {
                 }
 
                 //INSERCION ROL-USUARIO_ESTUDIANTE
-                $queryInsertRolUserStudent = "INSERT INTO RolesUsersStudent (id_user_student, id_role_student, status_role_student) VALUES (?, 14, TRUE);"; //NUMERO FIJO DEL ROL DE ESTUDIANTE COMUN =====================
+                //======================== NUMERO FIJO DEL ROL DE ESTUDIANTE COMUN ========================
+                $queryInsertRolUserStudent = "INSERT INTO RolesUsersStudent (id_user_student, id_role_student, status_role_student) VALUES (?, 14, TRUE);"; 
                 $stmtInsertRolUserStudent = $this->connection->prepare($queryInsertRolUserStudent);
                 $stmtInsertRolUserStudent->bind_param('s', $accountNumberStudent);
 
