@@ -1,6 +1,6 @@
-import { Applicant } from "./modules/request/Applicant.mjs";
-import { Results } from "./modules/request/results.mjs";
-import { Login } from "./modules/request/login.mjs";
+import { Applicant } from "../modules/request/Applicant.mjs";
+import { Results } from "../modules/request/results.mjs";
+import { Login } from "../modules/request/login.mjs";
 
 window.addEventListener('load', function(){
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
@@ -17,15 +17,6 @@ window.addEventListener('load', function(){
 });
 
 
-/*window.addEventListener('load', function(){
-    
-
-   
-        Applicant.renderResults('1501200612432');
-
-    
-   
-});*/
 
 const resultsForm = document.getElementById('resultsForm');
 resultsForm.addEventListener('submit',function(event){

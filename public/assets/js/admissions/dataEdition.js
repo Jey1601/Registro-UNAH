@@ -1,7 +1,7 @@
 
-import { Modal, Form, Alert , File} from "./modules/behavior/support.mjs";
-import { Applicant } from "./modules/request/Applicant.mjs";
-import { Login } from "./modules/request/login.mjs";
+import { Modal, Form, Alert , File} from "../modules/behavior/support.mjs";
+import { Applicant } from "../modules/request/Applicant.mjs";
+import { Login } from "../modules/request/login.mjs";
 
 const dataEditionForm = document.getElementById('dataEditionForm');
 const inputsDataEditionForm= Array.from(dataEditionForm.elements);
