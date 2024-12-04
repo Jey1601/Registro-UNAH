@@ -138,7 +138,10 @@ Class  AcademicPlanningStatusDAO{
 
         $currentDate = new DateTime();
         if ($currentDate >= $startDateAcademicPlanning && $currentDate <= $endtDateAcademicPlanning) {
-            return true;
+            return [
+                'status' => true,
+                'idAcademicPlanning' => $idAcademicPlanning
+            ];
         } else {
             return false;
         }
