@@ -132,7 +132,7 @@ class FacultyAdminDAO {
                 } else { //La contrasena no coincide
                     return $response = [
                         'success' => false,
-                        'message' => 'Credenciales invalidas.',
+                        'message' => 'Contrasena invalidas.',
                         'token' => null
                     ];
                 }
@@ -140,11 +140,10 @@ class FacultyAdminDAO {
             } else { //No existe usuario con el username ingresado
                 return $response = [
                     'success' => false,
-                    'message' => 'Usuario  incorrectos.',
+                    'message' => 'Usuario y/o contrasena incorrectos.',
                     'token' => null
                 ];
             }
-
 
         } else { //Credenciales nulas
             return $response = [

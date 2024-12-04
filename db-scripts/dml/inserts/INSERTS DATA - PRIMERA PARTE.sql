@@ -12,9 +12,6 @@ VALUES
 	('admin15031989071', 'Star5*Moon', TRUE),
 	('admin_user', 'BienHecho2-*', TRUE);
 
-INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
-VALUES
-    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
 
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('Rutilia Calderón Padilla', TRUE);
@@ -66,6 +63,10 @@ VALUES
     ('Facultad de Ingeniería', 'Ciudad Universitaria, Edificio B2. Tegucigalpa M.D.C. Honduras, Centroamérica', '2216-6100', 'facultaddeingenieria@unah.edu.hn', TRUE),
     ('Facultad de Ciencias', 'Edificio E1, 2da planta, Ciudad Universitaria Tegucigalpa, M.D.C. Honduras, Centroamérica.', '2216-5100', 'facultaddeciencias@unah.edu.hn', TRUE),
     ('Facultad de Humanidades y Artes', 'Bulevar Suyapa, Tegucigalpa M.D.C., Honduras Decanato Facultad de Humanidades y Artes Planta baja del Edificio F1 Ciudad Universitaria', '2216-6100', 'f.humanidadesyartes@unah.edu.hn', TRUE);
+
+INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
+VALUES
+    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
 
 INSERT INTO Departments (name_departmet, id_faculty, status_department)
 VALUES

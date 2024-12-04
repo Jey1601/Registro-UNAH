@@ -91,7 +91,6 @@ CREATE TABLE UndergraduateChangeStudentsProcess (
 	end_dateof_undergraduate_change_student_process DATE NOT NULL,
 	status_undergraduate_change_student_process BOOLEAN NOT NULL,
 	FOREIGN KEY (academic_year_undergraduate_change_student_process) REFERENCES AcademicYear(id_academic_year)
-
 );
 
 CREATE TABLE CancellationExceptionalClassesProcess ( 

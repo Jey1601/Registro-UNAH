@@ -98,7 +98,7 @@ loginForm.onsubmit = function(event) {
           break;
       case 'facultyAdmin':
           Modal.hideModal('loginModal'); // Cerrar la modal de login
-          // Aquí llamar la función específica para autenticar este tipo de usuario
+          Login.authFacultyAdmin(username, password);
           break;
       case 'admissionAdmin':
           Modal.hideModal('loginModal'); // Cerrar la modal de login

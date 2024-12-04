@@ -36,6 +36,86 @@ class DIIPAdminDAO {
     /**
      * 
      */
+    public function authDIIPAdmin (string $username, $password) {
+        if (isset($username) && isset($password)) {
+            //Busqueda del usuario en la BD
+            $querySelectUserDIIP = "";
+            $stmtSelectUserDIIP = $this->connection->prepare($querySelectUserDIIP);
+            $stmtSelectUserDIIP->bind_param('s', $username);
+            $resultSelectUserDIIP = $stmtSelectUserDIIP->get_result();
+
+            if ($resultSelectUserDIIP->num_rows > 0) {
+                $row = $resultSelectUserDIIP->fetch_array(MYSQLI_ASSOC);
+                $idUserDIIP = $row[''];
+                $hashPassword = $row[''];
+                $coincidence = Encryption::verifyPassword($password, $hashPassword);
+
+                if ($coincidence) {
+                    $queryAccessArray = "";
+                    $stmtAccessArray = $this->connection->prepare($queryAccessArray);
+                    //$stmtAccessArray->bind_param('s', 1); //INGRESAR PARAMETROS==============
+                    $resultAccessArray = $stmtAccessArray->get_result();
+
+                    $accessArray = [];
+                    while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $rowAccess[''];
+                    }
+                    $resultAccessArray->free();
+                    $stmtAccessArray->close();
+
+                    while ($this->connection->more_results() && $this->connection->next_result()) {
+                        $extraResult = $this->connection->store_result();
+                        if ($extraResult) {
+                            $extraResult->free();
+                        }
+                    }
+
+                    $payload = [
+                        'userDIIPAdmin' => $username,
+                        'accessArray' => $accessArray
+                    ];
+                    $newToken = JWT::generateToken($payload);
+
+                    $queryCheck = "";
+                    $stmtCheck = $this->connection->prepare($queryCheck);
+                    //$stmtCheck->bind_param(); //INGRESAR PARAMETROS
+                    $resultCheck = $stmtCheck->get_result();
+
+                    if ($resultCheck->num_rows > 0) { //Usuario encontrado, se actualiza su token
+                        $queryUpdateToken = "";
+                        
+
+                    } else { //Usuario no encontrado, se registra
+
+                    }
+                    
+                } else { //Contrasena no coincide
+                    return $response = [
+                        'success' => false,
+                        'message' => 'Usuario y/o contrasena incorrectos.',
+                        'token' => null
+                    ];
+                }
+
+            } else { //Usuario no encontrado
+                return $response = [
+                    'success' => false,
+                    'message' => 'Usuario y/o contrasena incorrectos.',
+                    'token' => null
+                ];
+            }
+        } else { //Al menos uno de los parametros es nulo
+            return $response = [
+                'success' => false,
+                'message' => 'Credenciales invalidas.',
+                'token' => null
+            ];
+        }
+    }
+
+    /**
+     * 
+     */
     public function insertStudentsByCSV ($csvFile, bool $firstRowHeaders=true) {
         $fileTempPath = $csvFile['tmp_csv'];
         

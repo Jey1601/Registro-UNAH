@@ -27,7 +27,7 @@ VALUES
     ('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
     ('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
     ('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
-    ('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación admin.html', TRUE);
+    ('V3yWAxgH', 'Administrador Facultad Creación de gestion de docentes, y establecimiento de fechas de planificación y cancelcación professors.html', TRUE);
 
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
@@ -51,14 +51,6 @@ VALUES
     (5, 5, TRUE, 1),
     (6, 6, TRUE, 1);
 
-
-
-
-
-    
-    
-
-
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
 VALUES
-    (1, 8, TRUE)
+    (3, 8, TRUE)
