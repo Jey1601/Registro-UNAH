@@ -1,6 +1,6 @@
- import { Applicant } from "./modules/request/Applicant.mjs";
-import { Login } from "./modules/request/login.mjs";
-import { Form } from "./modules/behavior/support.mjs";
+ import { Applicant } from "../../modules/request/Applicant.mjs";
+import { Login } from "../../modules/request/login.mjs";
+import { Form } from "../../modules/behavior/support.mjs";
 
 window.addEventListener('load', function(){
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
