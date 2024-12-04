@@ -247,7 +247,7 @@ class Applicant {
 
     const result = await this.getResults(id_applicant);
     const data = result.data;
-    if(result.status == 'success' && result.view =='data-edtion'){
+    if(result.status == 'success' && result.view =='data-edition'){
       const info = document.getElementById('info');
       const note = document.createElement('h5');
       note.textContent = 'Número de solicitud '.concat(data.id_admission_application_number.value);

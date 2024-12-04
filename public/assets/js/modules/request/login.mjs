@@ -56,9 +56,9 @@ class Login {
     }
   }
 
-  static async authAdmisionAdmin() {
-    const username = document.getElementById('admissionsUser').value;
-    const password = document.getElementById('admissionsPassword').value;
+  static async authAdmisionAdmin(username,password) {
+    //const username = document.getElementById('admissionsUser').value;
+   // const password = document.getElementById('admissionsPassword').value;
 
     const credentials = {
         "userAdmissionAdmin": username,
@@ -74,6 +74,7 @@ class Login {
             body: JSON.stringify(credentials)
         }).then(response => response.json()).then(result => {
             if (result.success) {
+           
                 sessionStorage.setItem('token', result.token);
                 sessionStorage.setItem('typeUser',result.typeUser);
 
@@ -151,6 +152,10 @@ class Login {
   static logout(url){
     sessionStorage.setItem('token','');
     window.location.href = url;
+  }
+
+  static  updateUserType(value) {
+    document.getElementById("userType").value = value;
   }
 
 }

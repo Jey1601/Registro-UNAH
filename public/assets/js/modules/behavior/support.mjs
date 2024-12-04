@@ -76,22 +76,40 @@ class Alert{
 }
 
 
-class Modal{
+class Modal {
+  static modalInstance = null;
 
-    static modalInstance = null;
+  static showModal(id) {
+    const modalElement = document.getElementById(id);
 
-    static showModal(id) {
-        const modalElement = document.getElementById(id);
-        this.modalInstance = new bootstrap.Modal(modalElement);
-        this.modalInstance.show();
+    // Escuchar el evento de cierre para limpiar el estado (sin eliminar placeholders)
+    modalElement.addEventListener('hidden.bs.modal', () => {
+        Modal.cleanupModal(modalElement);
+    });
+
+    this.modalInstance = new bootstrap.Modal(modalElement);
+    this.modalInstance.show();
+    }
+
+    static hideModal() {
+      if (this.modalInstance) {
+          this.modalInstance.hide();
+          this.modalInstance = null; 
       }
+    }
 
-      static hideModal() {
-        if (this.modalInstance) {
-            this.modalInstance.hide();
-            this.modalInstance = null; 
-        }
-      }
+    static cleanupModal(modalElement) {
+      // Reinicia valores de inputs, pero conserva los placeholders
+      const inputs = modalElement.querySelectorAll('input');
+      inputs.forEach(input => {
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+              input.value = ''; // Limpia el valor pero no el placeholder
+          } else {
+              input.checked = false; // Desmarcar checkboxes y radios
+          }
+      });
+
+  }
 }
 
 
@@ -390,5 +408,31 @@ class File {
 }
 
 
+class Sidebar{
 
-export{Alert, Modal,Cell , Search, Entry, Form, File};
+  // Función para alternar la visibilidad del sidebar
+    static toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      const toggleSidebarButton = document.getElementById("toggleSidebar");
+    
+      if (sidebar.classList.contains("hidden")) {
+          sidebar.classList.remove("hidden");
+          sidebar.classList.add("show");
+          // Ocultar el botón de abrir el sidebar
+          toggleSidebarButton.style.display = 'none';
+      } else {
+          sidebar.classList.remove("show");
+          sidebar.classList.add("hidden");
+          // Mostrar el botón de abrir el sidebar
+          toggleSidebarButton.style.display = 'block';
+      }
+    }
+
+  //Se debe agregar una función que cargue las opciones en base a permisos
+
+}
+
+
+
+
+export{Alert, Modal,Cell , Search, Entry, Form, File, Sidebar};

@@ -98,7 +98,7 @@ class AdmissionProccess{
                 imgContainer.className = 'mb-4';
             
                 const img = document.createElement('img');
-                img.src = './assets/img/icons/clock-icon.png';
+                img.src = '../assets/img/icons/clock-icon.png';
                 img.alt = '';
                 img.className = 'animated-icon';
                 imgContainer.appendChild(img);
@@ -137,7 +137,7 @@ class AdmissionProccess{
                 Modal.showModal('Inscription-form');
             
                 // Mostrar alerta
-                Alert.display(data.status, 'Aviso', data.message);
+               // Alert.display(data.status, 'Aviso', data.message);
             }
 
         } catch (error) {
@@ -182,7 +182,7 @@ class AdmissionProccess{
                 imgContainer.className = 'mb-4';
             
                 const img = document.createElement('img');
-                img.src = './assets/img/icons/clock-icon.png';
+                img.src = '../assets/img/icons/clock-icon.png';
                 img.alt = '';
                 img.className = 'animated-icon';
                 imgContainer.appendChild(img);
@@ -262,7 +262,7 @@ class AdmissionProccess{
                 imgContainer.className = 'mb-4';
             
                 const img = document.createElement('img');
-                img.src = './assets/img/icons/clock-icon.png';
+                img.src = '../assets/img/icons/clock-icon.png';
                 img.alt = '';
                 img.className = 'animated-icon';
                 imgContainer.appendChild(img);

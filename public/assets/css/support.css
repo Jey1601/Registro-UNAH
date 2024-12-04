@@ -185,14 +185,16 @@
 
 /* Sidebar visible */
 .sidebar.show {
+    display: block; /* Asegúrate de que este valor coincida con el diseño original */
     transform: translateX(0) ; /* El sidebar se coloca en su lugar original */
 }
 
-/* Sidebar oculto */
 .sidebar.hidden {
-    transform: translateX(100%) ; /* Sidebar oculto fuera de la pantalla */
+     visibility: hidden;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease; /* Ocultar con transición suave */
 }
-
 .sidebar-header {
     height: 10vh;
     width: 90%;
