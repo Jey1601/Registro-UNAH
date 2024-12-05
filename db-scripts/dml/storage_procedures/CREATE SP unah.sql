@@ -632,7 +632,7 @@ BEGIN
         Professors.third_name_professor,
         Professors.first_lastname_professor,
         Professors.second_lastname_professor,
-        Professors.emial_professor,
+        Professors.email_professor,
         Professors.status_professor
     FROM Professors
     JOIN ProfessorsDepartments ON Professors.id_professor = ProfessorsDepartments.id_professor
