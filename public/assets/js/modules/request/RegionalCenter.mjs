@@ -1,5 +1,5 @@
 import { Career } from "./Career.mjs";
-
+import { Alert } from "../behavior/support.mjs";
 class RegionalCenter {
 
     static path = '../../../../'
@@ -105,6 +105,7 @@ class RegionalCenter {
             
            
         } else {
+            Alert.display('error','Lo sentimos','No se encontraron centros regionales','../../../.././');
             console.error("No se encontraron centros regionales o los datos no son válidos.");
         }
     }
