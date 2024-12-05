@@ -6,6 +6,8 @@ const closeSidebarButton = document.getElementById("closeSidebar");
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
+Sidebar.buildSidebar('../../../')
+
 document.addEventListener("DOMContentLoaded", function() {
    /* const contenedor = document.getElementById("barChart"); 
     const barChartContainer = document.getElementById("barChartContainer"); 

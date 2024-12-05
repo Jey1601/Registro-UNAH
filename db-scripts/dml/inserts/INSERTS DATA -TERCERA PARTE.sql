@@ -45,7 +45,7 @@ INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator,
 VALUES 
     (2, 2, TRUE, 1),
     (7, 2, TRUE, 1),
-    (8, 2, TRUE, 1),
+    (8, 2, TRUE, 1);
     (3, 3, TRUE, 1),
     (4, 4, TRUE, 1),
     (5, 5, TRUE, 1),

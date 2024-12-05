@@ -429,7 +429,52 @@ class Sidebar{
     }
 
   //Se debe agregar una función que cargue las opciones en base a permisos
+  static buildSidebar(path) {
+    //En esta parte se deben leer los permisos desde el session storage
 
+   const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+
+    // Select the sidebar container
+    const sidebarBody = document.querySelector(".sidebar-body ul");
+  
+    // Clear any existing content
+    sidebarBody.innerHTML = "";
+    
+    //pagina principal de acceso docente
+    if(accesses.includes('2izGK2WC')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/professors/index.html';
+      a.appendChild(document.createTextNode('Inicio'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+    //Planificación academica
+    if(accesses.includes('zKQFIY69')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/administration/faculties/academic-planning.html';
+      a.appendChild(document.createTextNode('Planificación Académica'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+    
+     //dashboard
+    if(accesses.includes('p62NcCiC')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/administration/faculties/dashboard.html';
+      a.appendChild(document.createTextNode('Dashboard'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+   
+  }
 }
 
 
