@@ -163,16 +163,7 @@ class Login {
                         case 'V3yWAxgH':
                           window.location.href = '../../../../views/administration/faculties/professors.html';
                         
-                          break;
-                        case 'zKQFIY69':
-                          window.location.href = '../../../../views/administration/faculties/academic-planning.html';
-                        
-                          break;
-
-                        case 'p62NcCiC':
-                          window.location.href = '../../../../views/administration/faculties/dashboard.html';
-                        
-                          break;
+                          break;  
                         
                         default:
                           window.location.href = '../../../../index.html';
@@ -224,6 +215,16 @@ class Login {
                         //Carga de las notas de los exámenes de admisión de los solicitantes.
                         case '2izGK2WC':
                           window.location.href = '../../../../views/professors/index.html';
+                        
+                          break;
+                        
+                        case 'zKQFIY69':
+                          window.location.href = '../../../../views/administration/departments/academic-planning.html';
+                        
+                          break;
+
+                        case 'p62NcCiC':
+                          window.location.href = '../../../../views/administration/departments/dashboard.html';
                         
                           break;
                         
