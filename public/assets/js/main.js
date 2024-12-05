@@ -3,7 +3,7 @@ import { RegionalCenter } from "./modules/request/RegionalCenter.mjs";
 import { Modal, Form, Alert, File } from "./modules/behavior/support.mjs";
 import { Login } from "./modules/request/login.mjs";
 import { AdmissionProccess } from "./modules/request/AdmissionProcces.mjs";
-
+import { Password } from "./modules/behavior/password.mjs";
 
 
 
@@ -18,6 +18,11 @@ inscriptionButton.forEach(button => {
 });
 
 
+const  password = document.getElementById('password');
+const buttonPassword = password.nextElementSibling;
+buttonPassword.addEventListener('click', function(){
+  Password.togglePassword('password');
+})
 
 
 
