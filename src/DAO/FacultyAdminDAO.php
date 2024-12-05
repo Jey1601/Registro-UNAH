@@ -57,7 +57,7 @@ class FacultyAdminDAO {
 
                 if ($coincidence) { //Si la contrasena ingresada coincide con la de la BD
                     //Consulta para obtener los accesos del usuario
-                    $queryAccessArray = "SELECT  AccessControl.id_access_control FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersFacultiesAdministrator ON AccessControlRoles.id_role = RolesUsersFacultiesAdministrator.id_role_faculties_administrator INNER JOIN UsersFacultiesAdministrator ON RolesUsersFacultiesAdministrator.id_user_faculties_administrator = UsersFacultiesAdministrator.id_user_faculties_administrator WHERE UsersFacultiesAdministrator.id_user_faculties_administrator = ?;";
+                    $queryAccessArray = "SELECT  AccessControl.id_access_control, Faculties.id_faculty FROM AccessControl INNER JOIN AccessControlRoles ON AccessControl.id_access_control = AccessControlRoles.id_access_control INNER JOIN RolesUsersFacultiesAdministrator ON AccessControlRoles.id_role = RolesUsersFacultiesAdministrator.id_role_faculties_administrator INNER JOIN UsersFacultiesAdministrator ON RolesUsersFacultiesAdministrator.id_user_faculties_administrator = UsersFacultiesAdministrator.id_user_faculties_administrator INNER JOIN Faculties ON UsersFacultiesAdministrator.id_faculty = Faculties.id_faculty WHERE UsersFacultiesAdministrator.id_user_faculties_administrator = ?;";
                     $stmtAccessArray = $this->connection->prepare($queryAccessArray);
                     $stmtAccessArray->bind_param('i', $auxID);
                     $stmtAccessArray->execute();
@@ -66,6 +66,7 @@ class FacultyAdminDAO {
                     $accessArray = [];
                     while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
                         $accessArray[] = $rowAccess['id_access_control'];
+                        $facultyID = $rowAccess['id_faculty'];
                     }
                     $resultAccessArray->free();
                     $stmtAccessArray->close();
@@ -81,7 +82,8 @@ class FacultyAdminDAO {
                     //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
                     $payload = [
                         'userAdmissionAdmin' => $username,
-                        'accessArray' => $accessArray
+                        'accessArray' => $accessArray,
+                        'facultyID' => $facultyID
                     ];
                     $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
                     
@@ -132,7 +134,7 @@ class FacultyAdminDAO {
                 } else { //La contrasena no coincide
                     return $response = [
                         'success' => false,
-                        'message' => 'Contrasena invalidas.',
+                        'message' => 'Credenciales invalidas.',
                         'token' => null
                     ];
                 }
