@@ -165,10 +165,11 @@ class DIIPAdminDAO {
             $rowsInsertRolUserStudent = 0;
             $errors = [];
             $headers = ["id_card_student", "first_name", "second_name", "third_name", "first_lastname", "second_lastname", "address", "email", "phone_number", "id_regional_center", "name_undergraduate"];
+            $headersAdmittedApplicant = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "direccion_aspirante_admitido", "correo_personal_aspirante_admitido", "carrera_aspirante_admitido", "centro_regional_aspirante_admitido", "telefono_aspirante_admitido"];
 
             while (($row = fgetcsv($handle, 0, ',')) !== FALSE) {
                 if ($firstRowHeaders) {
-                    if($row == $headers) {
+                    if($row == $headersAdmittedApplicant) {
                         $firstRowHeaders = false;
                         continue;
                     } else { //Las cabeceras del CSV son las incorrectas
@@ -183,17 +184,46 @@ class DIIPAdminDAO {
                 }
 
                 //Escapar los valores para prevenir inyecciones SQL
-                $idCardStudent = $this->connection->real_escape_string($row[0]);
-                $firstName = $this->connection->real_escape_string($row[1]);
-                $secondName = $this->connection->real_escape_string($row[2]);
-                $thirdName = $this->connection->real_escape_string($row[3]);
-                $firstLastname = $this->connection->real_escape_string($row[4]);
-                $secondLastname = $this->connection->real_escape_string($row[5]);
-                $adress = $this->connection->real_escape_string($row[6]);
-                $personalEmail = $this->connection->real_escape_string($row[7]);
-                $phoneNumber = $this->connection->real_escape_string($row[8]);
-                $nameRegionalCenter = $this->connection->real_escape_string($row[9]);
-                $nameUndergraduate = $this->connection->real_escape_string($row[10]);
+                // $idCardStudent = $this->connection->real_escape_string($row[0]);
+                // $firstName = $this->connection->real_escape_string($row[1]);
+                // $secondName = $this->connection->real_escape_string($row[2]);
+                // $thirdName = $this->connection->real_escape_string($row[3]);
+                // $firstLastname = $this->connection->real_escape_string($row[4]);
+                // $secondLastname = $this->connection->real_escape_string($row[5]);
+                // $adress = $this->connection->real_escape_string($row[6]);
+                // $personalEmail = $this->connection->real_escape_string($row[7]);
+                // $phoneNumber = $this->connection->real_escape_string($row[8]);
+                // $nameRegionalCenter = $this->connection->real_escape_string($row[9]);
+                // $nameUndergraduate = $this->connection->real_escape_string($row[10]);
+
+                $fullName = $this->connection->real_escape_string($row[0]);
+                $idCardStudent = $this->connection->real_escape_string($row[1]);
+                $adress = $this->connection->real_escape_string($row[2]);
+                $personalEmail = $this->connection->real_escape_string($row[3]);
+                $nameRegionalCenter = $this->connection->real_escape_string($row[4]);
+                $nameUndergraduate = $this->connection->real_escape_string($row[5]);
+                $phoneNumber = $this->connection->real_escape_string($row[7]);
+
+
+                $partes = explode(" ", $fullName);
+
+                // Inicializa las variables
+                $firstName = $secondName = $thirdName = $firstLastname = $secondLastname = null;
+
+                // Asigna las partes a las variables correspondientes
+                if (count($partes) === 2) {
+                    // Caso de un name y un lastname
+                    [$firstName, $firstLastname] = $partes;
+                } elseif (count($partes) === 3) {
+                    // Caso de un name, un segundo name, y un lastname
+                    [$firstName, $secondName, $firstLastname] = $partes;
+                } elseif (count($partes) === 4) {
+                    // Caso de dos names y dos lastnames
+                    [$firstName, $secondName, $firstLastname, $secondLastname] = $partes;
+                } elseif (count($partes) === 5) {
+                    // Caso de tres names y dos lastnames
+                    [$firstName, $secondName, $thirdName, $firstLastname, $secondLastname] = $partes;
+}
 
                 $idRegionalCenter = $this->getIdRegionalCenterByName($nameRegionalCenter);
 
