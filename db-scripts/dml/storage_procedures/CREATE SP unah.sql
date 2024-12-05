@@ -516,3 +516,176 @@ END$$
 
 DELIMITER ;
 
+
+DELIMITER $$
+
+CREATE PROCEDURE GetNonServiceClassesByCareer(
+    IN p_id_undergraduate INT,
+    IN p_academic_periodicity INT
+)
+BEGIN
+    SELECT classes.id_class, 
+           classes.name_class
+    FROM UndergraduateClass
+    INNER JOIN classes ON UndergraduateClass.id_class = classes.id_class
+    WHERE UndergraduateClass.id_undergraduate = p_id_undergraduate
+      AND classes.class_service = FALSE
+      AND classes.status_class = TRUE
+      AND UndergraduateClass.status_undergraduate_class = TRUE
+      AND classes.academic_periodicity_class = p_academic_periodicity;
+END$$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+CREATE PROCEDURE GetBuildingsByProfessor(
+    IN p_id_regional_center INT,
+    IN p_id_professor INT
+)
+BEGIN
+    SELECT 
+        Building.id_building AS BuildingID,
+        Building.name_building AS BuildingName
+    FROM 
+        Building
+    JOIN 
+        BuildingsDepartmentsRegionalsCenters ON Building.id_building = BuildingsDepartmentsRegionalsCenters.building_department_regionalcenter
+    JOIN 
+        DepartmentsRegionalCenters ON BuildingsDepartmentsRegionalsCenters.department_regional_center = DepartmentsRegionalCenters.id_department_Regional_Center
+    JOIN 
+        DepartmentHead ON DepartmentsRegionalCenters.id_department = DepartmentHead.id_department
+    WHERE 
+        DepartmentHead.id_professor = p_id_professor
+        AND DepartmentsRegionalCenters.id_regionalcenter = p_id_regional_center
+        AND Building.status_building = TRUE
+        AND DepartmentsRegionalCenters.status_department_regional_center = TRUE
+        AND BuildingsDepartmentsRegionalsCenters.status_building_department_regionalcenter = TRUE
+        AND DepartmentHead.status_department_head = TRUE;
+END$$
+
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE GetBuildingsAndClassroomsByProfessor(
+    IN p_id_regional_center INT,
+    IN p_id_professor INT
+)
+BEGIN
+    SELECT 
+        Building.id_building AS BuildingID,
+        Building.name_building AS BuildingName,
+        Classrooms.id_classroom AS ClassroomID,
+        Classrooms.name_classroom AS ClassroomName
+    FROM 
+        Building
+    JOIN 
+        BuildingsDepartmentsRegionalsCenters ON Building.id_building = BuildingsDepartmentsRegionalsCenters.building_department_regionalcenter
+    JOIN 
+        DepartmentsRegionalCenters ON BuildingsDepartmentsRegionalsCenters.department_regional_center = DepartmentsRegionalCenters.id_department_Regional_Center
+    JOIN 
+        DepartmentHead ON DepartmentsRegionalCenters.id_department = DepartmentHead.id_department
+    JOIN 
+        ClassroomsBuildingsDepartmentsRegionalCenters ON BuildingsDepartmentsRegionalsCenters.id_building_department_regionalcenter = ClassroomsBuildingsDepartmentsRegionalCenters.building_department_regional_center
+    JOIN 
+        Classrooms ON ClassroomsBuildingsDepartmentsRegionalCenters.id_classroom = Classrooms.id_classroom
+    WHERE 
+        DepartmentHead.id_professor = p_id_professor
+        AND DepartmentsRegionalCenters.id_regionalcenter = p_id_regional_center
+        AND Building.status_building = TRUE
+        AND DepartmentsRegionalCenters.status_department_regional_center = TRUE
+        AND BuildingsDepartmentsRegionalsCenters.status_building_department_regionalcenter = TRUE
+        AND DepartmentHead.status_department_head = TRUE
+        AND Classrooms.status_classroom = TRUE
+        AND ClassroomsBuildingsDepartmentsRegionalCenters.status_classroom_building_department_regionalcenter = TRUE;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetActiveSchedules()
+BEGIN
+    SELECT * 
+    FROM AcademicSchedules
+    WHERE status_academic_schedules = TRUE;
+END $$
+
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetProfessorsAssignedToRegionalCenter(
+    IN id_regional_center INT,
+    IN id_professor INT
+)
+BEGIN
+    SELECT 
+        Professors.id_professor,
+        Professors.first_name_professor,
+        Professors.second_name_professor,
+        Professors.third_name_professor,
+        Professors.first_lastname_professor,
+        Professors.second_lastname_professor,
+        Professors.emial_professor,
+        Professors.status_professor
+    FROM Professors
+    JOIN ProfessorsDepartments ON Professors.id_professor = ProfessorsDepartments.id_professor
+    JOIN DepartmentHead ON ProfessorsDepartments.id_department = DepartmentHead.id_department
+    WHERE Professors.id_regional_center = id_regional_center
+    AND DepartmentHead.id_professor = id_professor
+    AND Professors.status_professor = TRUE
+    AND ProfessorsDepartments.status_professor_department = 'active';
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetWorkingHoursActive()
+BEGIN
+    SELECT id_working_hour,
+           name_working_hour,
+           day_week_working_hour,
+           check_in_time_working_hour,
+           check_out_time_working_hour,
+           status_working_hour
+    FROM WorkingHours
+    WHERE status_working_hour = TRUE;
+END $$
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetProfessorWorkingHours(IN professor_id INT)
+BEGIN
+    SELECT ProfessorsDepartmentsWorkingHours.id_working_hour
+    FROM ProfessorsDepartments
+    JOIN ProfessorsDepartmentsWorkingHours ON ProfessorsDepartments.id_professor_department = ProfessorsDepartmentsWorkingHours.id_professor_department
+    WHERE ProfessorsDepartments.id_professor = professor_id 
+    AND ProfessorsDepartmentsWorkingHours.status_working_hour = TRUE;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetProfessorWorkingHoursByDay(IN professor_id INT, IN working_day VARCHAR(20))
+BEGIN
+    SELECT ProfessorsDepartmentsWorkingHours.id_working_hour
+    FROM ProfessorsDepartments
+    JOIN ProfessorsDepartmentsWorkingHours ON ProfessorsDepartments.id_professor_department = ProfessorsDepartmentsWorkingHours.id_professor_department
+    JOIN WorkingHours ON ProfessorsDepartmentsWorkingHours.id_working_hour = WorkingHours.id_working_hour
+    WHERE ProfessorsDepartments.id_professor = professor_id 
+    AND ProfessorsDepartmentsWorkingHours.status_working_hour = TRUE
+    AND WorkingHours.day_week_working_hour = working_day
+    AND WorkingHours.status_working_hour = TRUE;
+END //
+
+DELIMITER ;

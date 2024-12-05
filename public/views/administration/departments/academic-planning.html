@@ -91,7 +91,7 @@
 
        <section class="form">
           <div class="container-fluid" >
-              <form enctype="multipart/form-data" id="inscriptionForm">
+              <form enctype="multipart/form-data" id="planningForm">
                   <div class="row">
                       <div class="col-md-12">
                           <h2 class="mb-4">Creación de secciones</h2>
@@ -108,13 +108,23 @@
 
                             <!-- Carrera -->
                             <div class="mb-3">
-                                <label for="applicantStudyCenter" class="form-label">Carrera</label>
-                                <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                                <label for="academicPlannigUndegraduate" class="form-label">Carrera</label>
+                                <select id="academicPlannigUndegraduate" name="academicPlannigUndegraduate" class="form-select" required>
                                     <option value="" disabled selected>Seleccione una carrera</option>
-                                    <option value="1">Carrera 1</option>
-                                    <option value="2">Carrera 2</option>
+                                   
                                 </select>
                               </div>
+
+
+                                <!-- Periodicidad -->
+                            <div class="mb-3">
+                              <label for="periodicity" class="form-label">Periodicidad</label>
+                              <select id="periodicity" name="periodicity" class="form-select" required>
+                                  <option value="" disabled selected>Seleccione una Periodicidad</option>
+                                  <option value="2">Trimestral</option>
+                                  <option value="1">Semestral</option>
+                              </select>
+                            </div>
 
                           
                           <!-- Información de la clase -->
@@ -122,8 +132,8 @@
                           <div class="row">
                             <!-- Clase -->
                             <div class="mb-3 col-8">
-                                <label for="applicantStudyCenter" class="form-label">Clase</label>
-                                <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                                <label for="classPlanning" class="form-label">Clase</label>
+                                <select id="classPlanning" name="classPlanning" class="form-select" required>
                                     <option value="" disabled selected>Seleccione una clase</option>
                                     <option value="1">Clase 1</option>
                                     <option value="2">Clase 2</option>
@@ -132,8 +142,8 @@
                              </div>
                              <!-- Código de la clase -->
                             <div class="mb-3 col-4">
-                               <label for="applicantStudyCenter" class="form-label">Código</label>
-                            <input class="form-control" type="text" name="" id="" readonly placeholder="Código de la clase">
+                               <label for="classCode" class="form-label">Código</label>
+                            <input class="form-control" type="text" name="" id="classCode" readonly placeholder="Código de la clase">
                                
                              </div>
 
@@ -142,8 +152,8 @@
                           <div class="row">
                              <!-- Edificio -->
                              <div class="mb-3 col-6">
-                                <label for="applicantStudyCenter" class="form-label">Edificio</label>
-                                <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                                <label for="building" class="form-label">Edificio</label>
+                                <select id="building" name="building" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un Edificio</option>
                                     <option value="1">Edifcio 1</option>
                                     <option value="2">Edificio 2</option>
@@ -153,11 +163,10 @@
 
                               <!-- Aula -->
                              <div class="mb-3 col-6">
-                                <label for="applicantStudyCenter" class="form-label">Aula</label>
-                                <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                                <label for="classroom" class="form-label">Aula</label>
+                                <select id="classroom" name="classroom" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un aula</option>
-                                    <option value="1">aula 1</option>
-                                    <option value="2">aula 2</option>
+                                    
                                 </select>
                                
                               </div>
@@ -165,33 +174,34 @@
                           </div>
                            
                           <!-- Dias -->
-                           <div class="row">
+                          <div class="row">
                             <div class="mb-3 col-8">
-                                <label for="applicantStudyCenter" class="form-label">Dias</label>
+                                <label for="applicantStudyCenter" class="form-label">Días</label>
                                 <br>
                                 <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                                    <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+                                    <input value="Lunes" type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
                                     <label class="btn btn-outline-primary" for="btncheck1">Lu</label>
-                                  
-                                    <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+                                    
+                                    <input value="Martes" type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
                                     <label class="btn btn-outline-primary" for="btncheck2">Ma</label>
-                                  
-                                    <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+                                    
+                                    <input value="Miércoles" type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
                                     <label class="btn btn-outline-primary" for="btncheck3">Mi</label>
-    
-                                    <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                                    <label class="btn btn-outline-primary" for="btncheck3">Ju</label>
-    
-                                    <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                                    <label class="btn btn-outline-primary" for="btncheck3">Vi</label>
-    
-                                    <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                                    <label class="btn btn-outline-primary" for="btncheck3">Sa</label>
-    
-                                    <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                                    <label class="btn btn-outline-primary" for="btncheck3">Do</label>
-                                  </div>
-                              </div>
+                                    
+                                    <input value="Jueves" type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="btncheck4">Ju</label>
+                                    
+                                    <input value="Viernes" type="checkbox" class="btn-check" id="btncheck5" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="btncheck5">Vi</label>
+                                    
+                                    <input value="Sabado" type="checkbox" class="btn-check" id="btncheck6" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="btncheck6">Sa</label>
+                                    
+                                    <input value="Domingo" type="checkbox" class="btn-check" id="btncheck7" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="btncheck7">Do</label>
+                                </div>
+                            </div>
+                        
 
                              <!-- Cupos -->
                               <div class="mb-3 col-4">
@@ -207,8 +217,8 @@
                           
 
                             <div class="mb-3">
-                               <label for="applicantStudyCenter" class="form-label">Horario</label>
-                               <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                               <label for="schedule" class="form-label">Horario</label>
+                               <select id="schedule" name="schedule" class="form-select" required>
                                    <option value="" disabled selected>Seleccione una horario</option>
                                    <option value="1">0700-0800</option>
                                    <option value="2">1300-1600</option>
@@ -221,11 +231,10 @@
 
                            <!-- Docente -->
                            <div class="mb-3">
-                            <label for="applicantStudyCenter" class="form-label">Docente</label>
-                            <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                            <label for="professor" class="form-label">Docente</label>
+                            <select id="professor" name="professor" class="form-select" required>
                                 <option value="" disabled selected>Seleccione un docente</option>
-                                <option value="1">Docente 1</option>
-                                <option value="2">Docente 2</option>
+                                
                             </select>
                           
                         </div>

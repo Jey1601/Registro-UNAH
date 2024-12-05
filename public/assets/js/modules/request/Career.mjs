@@ -1,3 +1,6 @@
+import { AcademicPlanning } from "./AcademicPlanning.mjs";
+import { Alert } from "../behavior/support.mjs";
+import { Class } from "./Class.mjs";
 class Career {
 
 
@@ -75,7 +78,7 @@ class Career {
         //Eliminamos el contenido que pueda tener el select de carrera secundaria
         secondOption.innerHTML = '';
 
-     
+           
             Careers.forEach(career => {
                 if(career.id_undergraduate != selectedValue){
 
@@ -87,6 +90,48 @@ class Career {
                  }
             });
     }
+
+    static async renderSelectUndergraduatesByCenter(idSelect, username_user_professor, id_regionalcenter) {
+        const select = document.getElementById(idSelect);
+        select.innerHTML= '';
+      
+      
+    
+        //Eliminamos el contenido que pueda tener el select de carrera principal
+        select.innerHTML = '';
+        
+        
+        const Undergraduates = await AcademicPlanning.UndergraduatesAcademicPlanning(username_user_professor, id_regionalcenter);
+        
+        // Comprobamos que tenemos datos antes de intentar renderizarlos
+        if (Undergraduates && Array.isArray(Undergraduates)) {
+            let counter = 0;
+          
+            Undergraduates.forEach(undergradute => {
+                const option = document.createElement("option");
+                option.value = undergradute.id_undergraduate;
+                option.innerText = undergradute.name_undergraduate;
+       
+                
+                if(counter == 0){
+                    option.selected = true;    
+                    Class.renderSelectClassesForPlanning('classPlanning',undergradute.id_undergraduate , 2);
+                }
+                
+                select.appendChild(option);
+
+                counter++;
+              
+            });
+            
+           
+        } else {
+            Alert.display('error','Lo sentimos','No se encontraron carreras','../../../.././');
+            console.error("No se encontraron carreras o los datos no son válidos.");
+        }
+    }
+
+
 }
 
 export { Career };

@@ -305,37 +305,33 @@ class FacultyAdminDAO {
      */
     public function insertUserProfessor(int $idProfessor, string $password) {
         $hashPassword = Encryption::hashPassword($password);
-
+    
+        // Inserción del usuario profesor
         $queryInsertUserProfessor = "INSERT INTO `UsersProfessors` (username_user_professor, password_user_professor, status_user_professor) VALUES (?, ?, TRUE);";
         $stmtInsertUserProfessor = $this->connection->prepare($queryInsertUserProfessor);
         $stmtInsertUserProfessor->bind_param('is', $idProfessor, $hashPassword);
-
-        if(!($stmtInsertUserProfessor->execute())) { //Fallo en la insercion del usuario
+    
+        if (!$stmtInsertUserProfessor->execute()) { // Fallo en la inserción
             return [
                 'success' => false,
-                'message' => 'Fallo en la insercion del usuario'
+                'message' => 'Fallo en la inserción del usuario: ' . $stmtInsertUserProfessor->error
             ];
         }
-
-        $queryIdUserProfessor = "SELECT id_user_professor FROM `UsersProfessors` WHERE username_user_professor = ?;";
-        $stmtIdUser = $this->connection->prepare($queryIdUserProfessor);
-        $stmtIdUser->bind_param('i', $idProfessor);
-        $resultIdUser = $stmtIdUser->get_result();
-
-        while ($row = $resultIdUser->fetch_array(MYSQLI_ASSOC)) {
-            $idUserProfessor = intval($row['id_user_professor']);
+    
+        // Obtiene el último ID insertado
+        $idUserProfessor = $this->connection->insert_id;
+    
+        // Cierre del statement
+        $stmtInsertUserProfessor->close();
+    
+        // Verifica si el ID fue correctamente asignado
+        if (!$idUserProfessor) {
+            return [
+                'success' => false,
+                'message' => 'No se pudo obtener el ID del usuario insertado'
+            ];
         }
-
-        //Liberacion del resultado de la consulta
-        $resultIdUser->free();
-        $stmtIdUser->close();
-        while ($this->connection->more_results() && $this->connection->next_result()) {
-            $extraResult = $this->connection->store_result();
-            if ($extraResult) {
-                $extraResult->free();
-            }
-        }
-
+    
         return [
             'success' => true,
             'message' => 'Usuario creado exitosamente.',

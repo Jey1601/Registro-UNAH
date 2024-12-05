@@ -1,6 +1,7 @@
 import { Career } from "./Career.mjs";
 import { Alert } from "../behavior/support.mjs";
 import { AcademicPlanning } from "./AcademicPlanning.mjs";
+import { Building } from "./Building.mjs";
 class RegionalCenter {
 
     static path = '../../../../'
@@ -83,7 +84,7 @@ class RegionalCenter {
         
         
         const regionalCenters = await this.getRegionalCentersByDepartment(selectedValue);
-
+  
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (regionalCenters && Array.isArray(regionalCenters)) {
             let counter = 0;
@@ -95,7 +96,7 @@ class RegionalCenter {
                 
                 if(counter == 0){
                     option.selected = true;    
-                  
+                   
                 }
                 
                 select.appendChild(option);
@@ -144,20 +145,20 @@ class RegionalCenter {
         
         
         const regionalCenters = await AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
-
-   
+        
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (regionalCenters && Array.isArray(regionalCenters)) {
             let counter = 0;
             regionalCenters.forEach(center => {
                 const option = document.createElement("option");
-                option.value = center.id_regional_center;
+                option.value = center.id_regionalcenter;
                 option.innerText = center.name_regional_center;
        
                 
                 if(counter == 0){
                     option.selected = true;    
-                  
+                    Career.renderSelectUndergraduatesByCenter('academicPlannigUndegraduate', idProfessor, center.id_regionalcenter);
+                    Building.renderSelectBuildingsByCenter('building',idProfessor , center.id_regionalcenter);
                 }
                 
                 select.appendChild(option);

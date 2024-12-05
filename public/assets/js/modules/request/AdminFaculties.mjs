@@ -80,7 +80,7 @@ class Professor{
           
         //Revisar que devuelve el result;
          if (result.id_application == null ){
-            Alert.display(result.status,'Aviso', result.message);
+            Alert.display(result.status,'Aviso', result.message,this.path);
           }else{
             
             form.reset();
@@ -88,8 +88,8 @@ class Professor{
              Array.from(form.elements).forEach(input => {
               input.classList.remove('right-input');
             });
-            Modal.hideModal('Inscription-form');
-            Alert.display('success', 'Felicidades', result.message);
+           
+            Alert.display('success', 'Felicidades', result.message,this.path);
           }
          
         } catch (error) {

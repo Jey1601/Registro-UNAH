@@ -18,8 +18,8 @@ class AcademicPlanning{
            
            if(data.status == 'success'){
                
-            window.location.href = this.path+'views/administration/faculties/academic-planning.html';
-             
+            window.location.href = this.path+'views/administration/departments/academic-planning.html';
+              
            }else {
                 const body = document.querySelector('#warningModal .modal-body');
                 const footer = document.querySelector('#warningModal .modal-footer');
@@ -81,7 +81,23 @@ class AcademicPlanning{
     }
 
 
+    static async getDataAcademicSchedulesAcademicPlanning() {
+        try {
+            const response = await fetch(this.path+"api/get/academicPlanning/getDataAcademicSchedulesAcademicPlanning.php");
 
+            if (!response.ok) {
+                throw new Error("Error en la solicitud: " + response.status);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data.data; 
+             // Retorna los centros regionales
+        } catch (error) {
+          
+            return [];  // Si hay un error, retornamos un array vacío
+        }
+    }
    
     static async regionalCentersAcademicPlanning(idProfessor) {
         const data = {
@@ -105,6 +121,127 @@ class AcademicPlanning{
             return null;  
         }
     }
+
+    static async UndergraduatesAcademicPlanning(username_user_professor, id_regionalcenter ) {
+        
+        
+        const data = {
+            username_user_professor: username_user_professor,
+            id_regionalcenter: id_regionalcenter
+        };
+
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/UndergraduatesAcademicPlanning.php', {
+                method: 'POST',
+                headers: {  
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+            });
+    
+            const responseData = await response.json();  // Convierte la respuesta en formato JSON
+          // console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            return responseData.data;  // Devuelve la respuesta
+        } catch (error) {
+            console.error('Error:', error);  // Maneja errores
+            return null;  // O cualquier valor que quieras devolver en caso de error
+        }
+    }
+
+
+    static async getDataProfessorsAcademicPlanning(regionalCenter, username_user_professor, days, startTime, endTime) {
+        
+        
+        const data = {
+            username_user_professor: username_user_professor,
+            id_regionalcenter: regionalCenter,
+            days: days,
+            startTime: startTime,
+            endTime: endTime
+        };
+
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostDataProfessorsAcademicPlanning.php', {
+                method: 'POST',
+                headers: {  
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+            });
+    
+            const responseData = await response.json();  // Convierte la respuesta en formato JSON
+          console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            
+          return responseData.data;  // Devuelve la respuesta
+        } catch (error) {
+            console.error('Error:', error);  // Maneja errores
+            return null;  // O cualquier valor que quieras devolver en caso de error
+        }
+    }
+
+
+    static async getDataInfrastructureAcademicPlanning(username_user_professor, id_regionalcenter ) {
+        
+        
+        const data = {
+            username_user_professor: username_user_professor,
+            id_regionalcenter: id_regionalcenter
+        };
+
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostDataInfrastructureAcademicPlanning.php', {
+                method: 'POST',
+                headers: {   
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+            });
+    
+            const responseData = await response.json();  // Convierte la respuesta en formato JSON
+          // console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+          console.log(responseData) ; 
+          return responseData.data;  // Devuelve la respuesta
+           
+        } catch (error) {
+            console.error('Error:', error);  // Maneja errores
+            return null;  // O cualquier valor que quieras devolver en caso de error
+        }
+    }
+    
+
+    static async postDataClassesAcademicPlanning(idUndergraduate, academicPeriodicity) {
+        
+        
+        const data = {
+            idUndergraduate: idUndergraduate,
+            academicPeriodicity: academicPeriodicity
+        };
+       
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostDataClassesAcademicPlanning.php', {
+                method: 'POST', 
+                headers: {   
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+            });
+    
+            const responseData = await response.json();  // Convierte la respuesta en formato JSON
+            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            
+            if(responseData.status == 'succes'){
+                Alert.display(responseData.status,'oh','Clases actualizadas','../../../../') 
+            }else{
+                Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
+            }
+
+            return responseData.data;  // Devuelve la respuesta
+        } catch (error) {
+            console.error('Error:', error);  // Maneja errores
+            return null;  // O cualquier valor que quieras devolver en caso de error
+        }
+    }
+    
    
 }
 
