@@ -72,24 +72,7 @@ class Inscription {
     //inscriptionForm.reset();
   }
 
- /* static DataCorrect(formData) {
-    if (
-      regular_expressions.name.test(formData.get("applicantName")) && // Validate name
-      regular_expressions.LastName.test(formData.get("applicantLastName")) && // Validate last name
-      regular_expressions.idNum.test(formData.get("applicantIdentification")) && // Validate ID number
-      regular_expressions.phone.test(formData.get("applicantPhoneNumber")) && // Validate phone number
-      regular_expressions.email.test(formData.get("applicantEmail")) && // Validate email
-      regular_expressions.address.test(formData.get("applicantDirection")) && // Validate address
-      formData.get("applicantCertificate") != " " && // Ensure applicant certificate is provided
-      formData.get("applicantStudyCenter") != " " && // Ensure study center is selected
-      formData.get("applicantFirstChoice") != " " && // Ensure first choice is selected
-      formData.get("applicantSecondChoice") != " " // Ensure second choice is selected
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }*/
+ 
 
     static async setConfirmationEmailApplicants() {
       const inscriptionForm = document.getElementById("inscriptionForm");

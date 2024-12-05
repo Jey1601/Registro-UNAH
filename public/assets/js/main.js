@@ -4,6 +4,11 @@ import { Modal, Form, Alert, File } from "./modules/behavior/support.mjs";
 import { Login } from "./modules/request/login.mjs";
 import { AdmissionProccess } from "./modules/request/AdmissionProcces.mjs";
 
+
+
+
+/* ========== Validando el proceso de inscripción ============*/
+
 const inscriptionButton = document.querySelectorAll('.btn-inscription')
 inscriptionButton.forEach(button => {
     button.addEventListener('click', function() {
@@ -13,6 +18,10 @@ inscriptionButton.forEach(button => {
 });
 
 
+
+
+
+/* ========== Validando el código del correo ============*/
 
 const inscriptionForm = document.getElementById('inscriptionForm');
 inscriptionForm.addEventListener('submit',function(event){
@@ -25,27 +34,13 @@ inscriptionForm.addEventListener('submit',function(event){
    
 }); 
 
-const inputsInscriptionForm = Array.from(inscriptionForm.elements);
-const submitButton = document.getElementById('inscriptionButton');
-
-inputsInscriptionForm.forEach((input) => {
-
-  
-  input.addEventListener('blur', function(event){
-    Form.validateInput(event, submitButton);
-    Form.checkFormValidity(inputsInscriptionForm,submitButton);
-  });
- 
-  
-});
-
-
 const emailCodeVerification = document.getElementById('emailCodeVerification');
 emailCodeVerification.addEventListener('keyup',function(){
   if(emailCodeVerification.value.length == 5){
     verifyEmailBtn.disabled = false;
   }
 })
+
 const verifyEmailBtn = document.getElementById('verifyEmailBtn');
 verifyEmailBtn.addEventListener('click', function(event){
   event.preventDefault();
@@ -73,6 +68,24 @@ document.getElementById('applicantIdDocument').addEventListener('change', functi
 
 });
 
+
+
+const inputsInscriptionForm = Array.from(inscriptionForm.elements);
+const submitButton = document.getElementById('inscriptionButton');
+
+inputsInscriptionForm.forEach((input) => {
+
+  
+  input.addEventListener('blur', function(event){
+    Form.validateInput(event, submitButton);
+    Form.checkFormValidity(inputsInscriptionForm,submitButton);
+  });
+ 
+  
+});
+
+
+/* ========== Desplegando logins ============*/
 
 // Obtener referencias a los elementos del formulario y el botón de login
 const loginForm = document.getElementById("loginForm");
