@@ -163,7 +163,16 @@ class Login {
                         case 'V3yWAxgH':
                           window.location.href = '../../../../views/administration/faculties/professors.html';
                         
-                          break;  
+                          break;
+                        case 'zKQFIY69':
+                          window.location.href = '../../../../views/administration/faculties/academic-planning.html';
+                        
+                          break;
+
+                        case 'p62NcCiC':
+                          window.location.href = '../../../../views/administration/faculties/dashboard.html';
+                        
+                          break;
                         
                         default:
                           window.location.href = '../../../../index.html';
@@ -216,7 +225,7 @@ class Login {
                         case '2izGK2WC':
                           window.location.href = '../../../../views/professors/index.html';
                         
-                          break;  
+                          break;
                         
                         default:
                           window.location.href = '../../../../index.html';

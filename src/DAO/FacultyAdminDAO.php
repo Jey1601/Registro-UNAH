@@ -228,16 +228,18 @@ class FacultyAdminDAO {
             }
         }
 
+        //INSERCION RELACION Docente-Usuario_Docente
         $passwordUser = Password::generatePassword();
-        $userProfessor = $this->insertUserProfessor($idProfessor, $passwordUser);
+        $idUserProfessor = $this->insertUserProfessor($idProfessor, $passwordUser);
         //Enviar correo aquí
         $mail = new mail();
         $mail->sendUserProfessor($firstName.$firstLastname,$idProfessor,$email,$passwordUser);
 
-        if(!($userProfessor['success'])) {
-            $errors[] = $userProfessor['message'];
+        if(!($idUserProfessor['success'])) {
+            $errors[] = $idUserProfessor['message'];
         }
 
+        //INSERCION RELACION Docente-Departamento
         $queryInsertProfessorDeparment = "INSERT INTO `ProfessorsDepartments` (id_department, id_professor, status_professor_department) VALUES (?, ?, TRUE);";
         $stmtInsertProfessorDepartment = $this->connection->prepare($queryInsertProfessorDeparment);
         $stmtInsertProfessorDepartment->bind_param('ii', $idDepartment, $idProfessor);
@@ -255,6 +257,31 @@ class FacultyAdminDAO {
             if ($extraResult) {
                 $extraResult->free();
             }
+        }
+
+        //INSERCION RELACION Usuario_Docente-Rol
+        $querySelectRoleProfessor = "SELECT id_role FROM `Roles` WHERE role = 'Professor';";
+        $resultSelectRoleProfessor = $this->connection->execute_query($querySelectRoleProfessor);
+        while ($row = $resultSelectRoleProfessor->fetch_array(MYSQLI_ASSOC)) {
+            $idRoleProfessor = intval($row['id_role']);
+        }
+
+        $resultSelectRoleProfessor->free();
+        while ($this->connection->more_results() && $this->connection->next_result()) {
+            $extraResult = $this->connection->store_result();
+            if ($extraResult) {
+                $extraResult->free();
+            }
+        }
+
+        $queryInsertUsuerRol = "INSERT INTO `RolesUsersProfessor` (id_role_professor, id_user_professor, status_role_professor) VALUES (?, ?, TRUE);";
+        $stmtInsertUserRole = $this->connection->prepare($queryInsertUsuerRol);
+        $stmtInsertUserRole->bind_param('ii', $idRoleProfessor, $idUserProfessor['idUserProfessor']);
+        
+        if (!($stmtInsertUserRole->execute())) {
+            $this->connection->rollback();
+            $stmtInsertUserRole->close();
+            $errors[] = 'Insercion Usuario_docente-Rol fallida.';
         }
 
         return $response = [
@@ -290,16 +317,18 @@ class FacultyAdminDAO {
             ];
         }
 
-        $queryIdUserProfessor = "SELECT LAST_INSERT_ID();";
-        $resultIdUserProfessor = $this->connection->execute_query($queryIdUserProfessor);
-        foreach ($resultIdUserProfessor as $rowIdUserProfessor) {
-            $idUserProfessor = intval($rowIdUserProfessor[0]);
-            break;
+        $queryIdUserProfessor = "SELECT id_user_professor FROM `UsersProfessors` WHERE username_user_professor = ?;";
+        $stmtIdUser = $this->connection->prepare($queryIdUserProfessor);
+        $stmtIdUser->bind_param('i', $idProfessor);
+        $resultIdUser = $stmtIdUser->get_result();
+
+        while ($row = $resultIdUser->fetch_array(MYSQLI_ASSOC)) {
+            $idUserProfessor = intval($row['id_user_professor']);
         }
 
         //Liberacion del resultado de la consulta
-        $resultIdUserProfessor->free();
-        $stmtInsertUserProfessor->close();
+        $resultIdUser->free();
+        $stmtIdUser->close();
         while ($this->connection->more_results() && $this->connection->next_result()) {
             $extraResult = $this->connection->store_result();
             if ($extraResult) {
@@ -310,7 +339,7 @@ class FacultyAdminDAO {
         return [
             'success' => true,
             'message' => 'Usuario creado exitosamente.',
-            'username' => $idUserProfessor
+            'idUserProfessor' => $idUserProfessor
         ];
     }
 
