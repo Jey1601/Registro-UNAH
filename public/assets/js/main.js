@@ -125,6 +125,10 @@ loginForm.onsubmit = function(event) {
         Modal.hideModal('loginModal'); // Cerrar la modal de login
         Login.authProfessor(username, password);
         break;
+      case 'student':
+        Modal.hideModal('loginModal'); // Cerrar la modal de login
+        Login.authStudent(username, password)
+        break;
       default:
           // Mostrar una alerta en caso de un tipo de usuario inválido
           Alert.display('warning', 'Algo salió mal', 'Invalid user type');

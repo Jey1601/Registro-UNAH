@@ -53,6 +53,21 @@ class TokenVerification {
                     case 'applicant':
                         $query = "SELECT id_user_applicant FROM TokenUserApplicant WHERE token = ?;";
                         break;
+                    case 'facultyAdmin':
+                        $query = "SELECT id_user_faculties_administrator FROM `TokenUserFacultiesAdministrator` WHERE token_faculties_administrator = ?;";
+                        break;
+                    case 'strategicAdmin':
+                        $query = "";
+                        break;
+                    case 'dippAdmin':
+                        $query = "SELECT id_user_registry_administrator FROM `TokenUserRegistryAdministrator` WHERE token_registry_administrator = ?;";
+                        break;
+                    case 'professor':
+                        $query = "SELECT id_user_professor FROM `TokenUserProfessor` WHERE token_professor = ?;";
+                        break;
+                    case 'student':
+                        $query = "SELECT id_user_student FROM `TokenUserStudent` WHERE token_student = ?;";
+                        break;
                     default:
                         return $response = [
                             'success' => false,
