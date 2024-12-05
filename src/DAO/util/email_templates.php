@@ -86,7 +86,21 @@ function getTemplate($type, $placeholders = []) {
                     <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
                     <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
                 </body>
-                </html>"
+                </html>",
+                    "user_professor" =>'<html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #0056b3;">Estimado(a) {{full_name}},</h2>
+                        <p>Nos complace darte la bienvenida al sistema de gestión universitaria. A continuación, te proporcionamos tu información de inicio de sesión:</p>
+                        <p><strong>Usuario:</strong> {{username}}</p>
+                        <p><strong>Contraseña:</strong> {{password}}</p>
+                        <p><strong>Aviso:</strong> Por favor, mantén esta información en un lugar seguro y no la compartas con nadie. Se recomienda cambiar tu contraseña la primera vez que inicies sesión.</p>
+                        <p>Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte a través de los canales oficiales.</p>
+                        <p>Agradecemos tu compromiso con nuestra institución y estamos aquí para apoyarte en todo momento.</p>
+                        <p>Atentamente,</p>
+                        <p style="color: #0056b3;"><strong>Equipo de Gestión Universitaria</strong></p>
+                        <p style="font-size: 12px; color: #777;">Este es un mensaje automático, por favor no respondas a este correo. Si necesitas ayuda, contáctanos a través de nuestros canales oficiales.</p>
+                    </body>
+                </html>'
     ];
 
     $message = $templates[$type] ?? '';

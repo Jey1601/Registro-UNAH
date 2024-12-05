@@ -1,7 +1,8 @@
 <?php
 include_once 'util/jwt.php';
 include_once 'util/encryption.php';
-include_once 'util/Code.php';
+//include_once 'util/Code.php';
+require_once 'util/mail.php';
 
 /**
  * Clase FacultyAdminDAO es un controlador y objeto de acceso a datos de los administradores de facultad.
@@ -194,7 +195,7 @@ class FacultyAdminDAO {
         $errors = [];
 
         //INSERCION DE DOCENTE
-        $queryInsertProfessor = "INSERT INTO `Professors` (first_name_professor, second_name_professor, third_name_professor, first_lastname_professor, second_lastname_professor, emial_professor, picture_professor, id_professors_obligations, id_regional_center, status_professor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE);";
+        $queryInsertProfessor = "INSERT INTO `Professors` (first_name_professor, second_name_professor, third_name_professor, first_lastname_professor, second_lastname_professor, email_professor, picture_professor, id_professors_obligations, id_regional_center, status_professor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE);";
         $stmtInsertProfessor = $this->connection->prepare($queryInsertProfessor);
         $stmtInsertProfessor->bind_param('sssssssii', $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $email, $image, $idProfessorObligation, $idRegionalCenter);
 
@@ -208,7 +209,7 @@ class FacultyAdminDAO {
             ];
         }
 
-        $queryIDProfessor = "SELECT id_professor FROM Professors WHERE emial_professor = ?;";
+        $queryIDProfessor = "SELECT id_professor FROM Professors WHERE email_professor = ?;";
         $stmtIDProfessor = $this->connection->prepare($queryIDProfessor);
         $stmtIDProfessor->bind_param('s', $email);
         $stmtIDProfessor->execute();
@@ -229,6 +230,9 @@ class FacultyAdminDAO {
 
         $passwordUser = Password::generatePassword();
         $userProfessor = $this->insertUserProfessor($idProfessor, $passwordUser);
+        //Enviar correo aquí
+        $mail = new mail();
+        $mail->sendUserProfessor($firstName.$firstLastname,$idProfessor,$email,$passwordUser);
 
         if(!($userProfessor['success'])) {
             $errors[] = $userProfessor['message'];

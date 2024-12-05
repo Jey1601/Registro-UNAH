@@ -57,7 +57,7 @@ class Professor{
         if (isPictureValid) {
           
             Alert.display('warning','Espere','Estamos cargando su información', this.path);
-           // this.insertData(formData, inscriptionForm);
+            this.insertData(formData, professorCreationForm);
             console.log(formData);
         }
         
@@ -69,17 +69,17 @@ class Professor{
         try {
           // Realizar la solicitud POST usando fetch
           const response = await fetch(
-            this.path+"/api/post/professor/insertProfessor.php",
+            this.path+"/api/post/facultyAdmin/createProfessor.php",
             {
               method: "POST",
               body: formData,
             }
           );
-    
+        
           const result = await response.json(); 
           
         //Revisar que devuelve el result;
-         /*  if (result.id_application == null ){
+         if (result.id_application == null ){
             Alert.display(result.status,'Aviso', result.message);
           }else{
             
@@ -89,8 +89,8 @@ class Professor{
               input.classList.remove('right-input');
             });
             Modal.hideModal('Inscription-form');
-            Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ));
-          }*/
+            Alert.display('success', 'Felicidades', result.message);
+          }
          
         } catch (error) {
           console.log(error);
