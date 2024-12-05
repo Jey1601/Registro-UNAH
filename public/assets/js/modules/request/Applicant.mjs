@@ -194,7 +194,7 @@ class Applicant {
 
       //Tiene acceso a editar
       case 'IeMfti20':
-      console.log('entreo aquí');  
+      
       applicantName.disabled = false;
       applicantLastName.disabled = false;
       applicantIdentification.disabled = false;

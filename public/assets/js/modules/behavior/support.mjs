@@ -1,5 +1,6 @@
 
 import { regular_expressions } from "./configuration.mjs"
+import { Login } from "../request/login.mjs";
 class Alert{
 
    
@@ -185,28 +186,38 @@ class Entry{
 class Form{
 
   static validateInput(event){
-     switch (event.target.name){
-        case 'applicantName':
+  let field = event.target.name;
+
+    // Verificar si contiene 'applicant' o 'professor'
+      if (field.includes('applicant') || field.includes('professor')) {
+        // Eliminar 'applicant' o 'professor' de la cadena
+        field = field.replace('applicant', '').replace('professor', '').trim();
+      }
+
+      
+
+     switch (field){
+        case 'Name':
           this.validateField(regular_expressions.name,event.target);
         break;
 
-        case 'applicantLastName':
+        case 'LastName':
           this.validateField(regular_expressions.LastName,event.target);
         break;
         
-        case 'applicantIdentification':
+        case 'Identification':
           this.validateField(regular_expressions.idNum,event.target);
         break;
 
-        case 'applicantPhoneNumber':
+        case 'PhoneNumber':
           this.validateField(regular_expressions.phone,event.target);
         break;
        
-        case 'applicantEmail':
+        case 'Email':
           this.validateField(regular_expressions.email,event.target);
         break;
 
-        case 'applicantDirection':
+        case 'Direction':
           this.validateField(regular_expressions.address,event.target);
         break;
    
@@ -390,7 +401,7 @@ class File {
                 // Verificar las dimensiones mínimas de la imagen
                 if (width < 800 || height < 1200) {
                    input.value = "";
-                   Alert.display('error','Archivo incorrecto','La imagen no tiene la resolución requerida');
+                   Alert.display('error','Archivo incorrecto','La imagen no tiene la resolución requerida', path);
                    resolve(false);  // Si la imagen es demasiado pequeña, retornamos false
                 } else {
                    resolve(true);  // Si la imagen cumple con los requisitos, retornamos true
@@ -429,7 +440,56 @@ class Sidebar{
     }
 
   //Se debe agregar una función que cargue las opciones en base a permisos
+  static buildSidebar(path) {
+    
+   const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
 
+    // Select the sidebar container
+    const sidebarBody = document.querySelector(".sidebar-body ul");
+   
+
+    // Clear any existing content
+    sidebarBody.innerHTML = "";
+
+    
+   
+
+
+    //pagina principal de acceso docente
+    if(accesses.includes('2izGK2WC')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/professors/index.html';
+      a.appendChild(document.createTextNode('Inicio'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+    //Planificación academica
+    if(accesses.includes('zKQFIY69')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/administration/faculties/academic-planning.html';
+      a.appendChild(document.createTextNode('Planificación Académica'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+    
+     //dashboard
+    if(accesses.includes('p62NcCiC')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path+'views/administration/faculties/dashboard.html';
+      a.appendChild(document.createTextNode('Dashboard'));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+   
+  }
 }
 
 

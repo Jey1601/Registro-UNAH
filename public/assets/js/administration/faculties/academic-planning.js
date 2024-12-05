@@ -5,3 +5,5 @@ const closeSidebarButton = document.getElementById("closeSidebar");
 
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
+
+Sidebar.buildSidebar('../../../')

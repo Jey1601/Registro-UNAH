@@ -41,7 +41,7 @@
 />
   
     <title>Administrador</title>
-    <script src="../../../assets/js/tokenValidation.js"></script>
+    <!-- <script src="../../../assets/js/tokenValidation.js"></script>-->
   </head>
 
   <body class="background-white animation">
@@ -54,80 +54,84 @@
             src="../../../../assets/img/logos/UNAH-version-horizontal-white.png"
           />
         </a>
-
         <button  type="button" id="toggleSidebar" class="toggle-btn">
           <img src="../../../assets/img/icons/inactive-menu-icon.png" alt="">
       </button>
       </div>
     </nav>
-    <!--Logout=================================================================================-->
-
-    <!--offcanvas main container start=================================================================================-->
-    <section class="sidebar hidden">
-       <div class="sidebar-header" style="display: flex; justify-content: end; align-items: center;">
-        <button   style="border: none; background: none;" type="button" id="closeSidebar" class="toggle-btn">
-          <img src="../../../assets/img/icons/inactive-menu-icon.png" alt="Cerrar Sidebar">
-      </button>
-       </div>
-       <div class="sidebar-body">
-          <ul >
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Incio</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Planificación Academica</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Evaluación Docente</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Calificaciones</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Estudiantes</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Administración Docente</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Docencia</a></li>
- 
-          </ul>
-       </div>
-       <div class="sidebar-footer">
-          <a href="">Cerrar sesión <img src="../../../assets/img/icons/logout-icon.png" alt=""></a>
-       </div> 
-    </section>
+    <!--Notificaiones=================================================================================-->
+    <div id="notifications"></div>
+    
+   <!--offcanvas main container start=================================================================================-->
+   <section class="sidebar hidden">
+    <div class="sidebar-header" style="display: flex; justify-content: end; align-items: center;">
+     <button   style="border: none; background: none;" type="button" id="closeSidebar" class="toggle-btn">
+       <img src="../../../assets/img/icons/inactive-menu-icon.png" alt="Cerrar Sidebar">
+   </button>
+    </div>
+    <div class="sidebar-body">
+       <ul >
+         <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Incio</a></li>
+  
+       </ul>
+    </div>
+    <div class="sidebar-footer">
+       <a href="">Cerrar sesión <img src="../../../assets/img/icons/logout-icon.png" alt=""></a>
+    </div> 
+ </section>
     <!--offcanvas main container end=================================================================================-->
     <!--Menu=================================================================================-->
     <section class="menu" style="display: flex; flex-wrap: wrap; padding: 15px;">
 
        <section class="form">
           <div class="container-fluid" >
-              <form enctype="multipart/form-data" id="inscriptionForm">
+              <form enctype="multipart/form-data" id="professorCreationForm">
                   <div class="row">
                       <div class="col-md-12">
                           <h2 class="mb-4">Creación de Docentes</h2>
 
                           <!-- Nombre -->
                           <div class="mb-3">
-                              <label for="applicantName" class="form-label">Nombre</label>
-                              <input type="text" id="applicantName" name="applicantName" class="form-control input-entry" placeholder="Ejemplo: Juan José María" title="Solo letras y tildes..." required>
+                              <label for="professorName" class="form-label">Nombre</label>
+                              <input type="text" id="professorName" name="professorName" class="form-control input-entry" placeholder="Ejemplo: Juan José María" title="Solo letras y tildes..." required>
                               <small class="input-error">Formato: Solo letras, máximo 3 palabras.</small>
                           </div>
 
                           <!-- Apellidos -->
                           <div class="mb-3">
-                              <label for="applicantLastName" class="form-label">Apellidos</label>
-                              <input type="text" id="applicantLastName" name="applicantLastName" class="form-control input-entry" placeholder="Ejemplo: López Pérez" title="Solo letras y tildes..." required>
+                              <label for="professorLastName" class="form-label">Apellidos</label>
+                              <input type="text" id="professorLastName" name="professorLastName" class="form-control input-entry" placeholder="Ejemplo: López Pérez" title="Solo letras y tildes..." required>
                               <small class="input-error">Formato: Solo letras, máximo 2 apellidos.</small>
                           </div>
 
                           <!-- Correo -->
                           <div class="mb-3">
-                              <label for="applicantEmail" class="form-label">Correo Electrónico</label>
-                              <input type="email" id="applicantEmail" name="applicantEmail" class="form-control input-entry" placeholder="Ejemplo: usuario@dominio.com" required>
+                              <label for="professorEmail" class="form-label">Correo Electrónico</label>
+                              <input type="email" id="professorEmail" name="professorEmail" class="form-control input-entry" placeholder="Ejemplo: usuario@dominio.com" required>
                               <small class="input-error">Formato: usuario@dominio.com</small>
                           </div>
 
                           <!-- Fotografía -->
                           <div class="mb-3">
-                              <label for="applicantIdDocument" class="form-label">Fotografía Personal</label>
-                              <input type="file" id="applicantIdDocument" name="applicantIdDocument" class="form-control" accept=".jpg,.jpeg,.png" required>
+                              <label for="professorPicture" class="form-label">Fotografía Personal</label>
+                              <input type="file" id="professorPicture" name="professorPicture" class="form-control" accept=".jpg,.jpeg,.png" required>
                               <small class="input-error">Formatos: JPG, PNG. Máximo 5MB.</small>
                           </div>
 
+                          <!-- Departamento -->
+                          <div class="mb-3">
+                            <label for="professorDepartment" class="form-label">Departamentos</label>
+                            <select id="professorDepartment" name="professorDepartment" class="form-select" required>
+                                <option value="" disabled selected>Seleccione un departamento</option>
+                                <option value="1">Departamento 1</option>
+                                <option value="2">Departamento 2</option>
+                            </select>
+                            <small class="input-error">Seleccione un departamento.</small>
+                        </div>
                           <!-- Centro Regional -->
                           <div class="mb-3">
-                              <label for="applicantStudyCenter" class="form-label">Centro Regional</label>
-                              <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
+                              <label for="professorCenter" class="form-label">Centro Regional</label>
+                              <select id="professorCenter" name="professorCenter" class="form-select" required>
                                   <option value="" disabled selected>Seleccione un centro regional</option>
                                   <option value="1">Centro Regional 1</option>
                                   <option value="2">Centro Regional 2</option>
@@ -135,23 +139,14 @@
                               <small class="input-error">Seleccione un centro.</small>
                           </div>
 
-                           <!-- Departamento -->
-                           <div class="mb-3">
-                            <label for="applicantStudyCenter" class="form-label">Departamentos</label>
-                            <select id="applicantStudyCenter" name="applicantStudyCenter" class="form-select" required>
-                                <option value="" disabled selected>Seleccione un departamento</option>
-                                <option value="1">Departamento 1</option>
-                                <option value="2">Departamento 2</option>
-                            </select>
-                            <small class="input-error">Seleccione un departamento.</small>
-                        </div>
+                           
                       </div>
                   </div>
 
                   <!-- Botones -->
                   <div class="text-end">
                       <button type="button" class="btn btn-secondary oficial-yellow" data-bs-dismiss="modal">LImpiar</button>
-                      <button type="submit" class="btn btn-primary oficial-blue">Crear</button>
+                      <button  id="createProfessorButton" type="submit" class="btn btn-primary oficial-blue">Crear</button>
                   </div>
               </form>
           </div>
@@ -177,7 +172,7 @@
                   <th scope="col">Opciones</th>
                 </tr>
               </thead>
-              <tbody id="viewDataApplicantsBody">
+              <tbody id="viewDataprofessorsBody">
                 <tr>
                   <td>1</td>
                   <td>1001</td>
@@ -283,6 +278,10 @@
     ></script>
    
 
+    <script
+      type="module"
+      src="../../../assets/js/administration/faculties/professors.js"
+    ></script>
 
   </body>
 </html>
