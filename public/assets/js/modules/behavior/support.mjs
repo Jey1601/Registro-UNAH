@@ -474,13 +474,13 @@ class Sidebar{
       a.setAttribute("id", "academicPlanningButton");
       const li = document.createElement("li");
       li.classList.add("slidebar-item");
-      //a.href = path+'views/administration/faculties/academic-planning.html';
+      //a.href = path+'views/administration/departments/academic-planning.html';
       a.appendChild(document.createTextNode('Planificación Académica'));
       li.appendChild(a);
       sidebarBody.appendChild(li);
 
       a.style.color = "white";
-      
+
       a.addEventListener('click', function(event) {
         event.preventDefault();  // Prevenir la acción predeterminada del enlace, si la tuviera
         AcademicPlanning.verityAcademicPlanning();  // Llamar a la función correspondiente
@@ -492,7 +492,7 @@ class Sidebar{
       const a = document.createElement("a");
       const li = document.createElement("li");
       li.classList.add("slidebar-item");
-      a.href = path+'views/administration/faculties/dashboard.html';
+      a.href = path+'views/administration/departments/dashboard.html';
       a.appendChild(document.createTextNode('Dashboard'));
       li.appendChild(a);
       sidebarBody.appendChild(li);

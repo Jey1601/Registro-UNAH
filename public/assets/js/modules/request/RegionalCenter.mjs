@@ -143,9 +143,9 @@ class RegionalCenter {
         select.innerHTML = '';
         
         
-        const response = await AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
-        
-        const regionalCenters = response.data;
+        const regionalCenters = await AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
+
+   
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (regionalCenters && Array.isArray(regionalCenters)) {
             let counter = 0;
