@@ -1,4 +1,5 @@
 import { Alert, Modal } from "../behavior/support.mjs";
+import { Login } from "./login.mjs";
 
 class AcademicPlanning{
     static path = '../../../';
@@ -80,6 +81,31 @@ class AcademicPlanning{
     }
 
 
+
+   
+    static regionalCentersAcademicPlanning(idProfessor) {
+       
+
+        const data = {
+            username_user_professor: idProfessor  // Sustituye con el valor que quieras enviar
+        };
+        fetch( this.path+'api/post/academicPlanning/regionalCentersAcademicPlanning.php', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),  // Convierte el objeto JavaScript a JSON
+        })
+        .then(response => response.json())  // Convierte la respuesta en formato JSON
+        .then(data => {
+            console.log("Respuesta del servidor:", data);  // Maneja la respuesta
+        })
+        .catch((error) => {
+            console.error('Error:', error);  // Maneja errores
+        });
+    
+    }
+   
 }
 
 export {AcademicPlanning};
