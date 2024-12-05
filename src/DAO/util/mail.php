@@ -158,6 +158,32 @@ public function sendConfirmation($name,$id_application,$email,$password){
  
 }
 
+public function sendUserProfessor($name,$username,$email,$password){
+    $mail = $this->PHPMailerConfig();
+
+
+        $placeholders = [
+            'full_name' => $name ?? '',
+            'username' =>$username ?? '',
+            'password' => $password ?? ''
+         ];
+
+        $message = getTemplate('user_professor', $placeholders);
+
+        try {
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = 'Admisiones UNAH';
+            $mail->Body = $message;
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Error al enviar correo a {$email}: {$mail->ErrorInfo}<br>";
+        }
+
+        $mail->clearAddresses();
+ 
+}
+
 public function sendVerificationConfirmation($name,$id_application,$email){
     $mail = $this->PHPMailerConfig();
 

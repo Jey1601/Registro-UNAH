@@ -14,18 +14,18 @@
     }
 
     $inputBody = json_decode(file_get_contents('php://input'), true);
-    $imageProfessor = $_FILES['applicantIdDocument'];
+    $imageProfessor = $_FILES['professorPicture'];
 
-    $firstName = trim($inputBody['firstName']);
-    $secondName = trim($inputBody['secondName']);
-    $thirdName = trim($inputBody['thirdName']);
-    $firstLastname = trim($inputBody['firstLastname']);
-    $secondLastname = trim($inputBody['secondLastname']);
-    $email = trim($inputBody['email']);
+    $firstName = trim($_POST['professorFirstName']);
+    $secondName = trim($_POST['professorSecondName']);
+    $thirdName = trim($_POST['professorThirdName']);
+    $firstLastname = trim($_POST['professorFirstLastName']);
+    $secondLastname = trim($_POST['professorSecondLastName']);
+    $email = trim($_POST['professorEmail']);
     $image = file_get_contents($imageProfessor['tmp_name']);
-    $idObligation = intval(trim($inputBody['idObligation']));
-    $idRegionalCenter = intval(trim($inputBody['idRegionalCenter']));
-    $idDepartment = intval(trim($inputBody['idDepartment']));
+    $idObligation = 1; //intval(trim($$_POST['idObligation']));
+    $idRegionalCenter = intval(trim($_POST['professorCenter']));
+    $idDepartment = intval(trim($_POST['professorDepartment']));
 
     $controller = new FacultyAdminDAO();
     $response = $controller->createProfessor($firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $email, $image, $idObligation, $idRegionalCenter, $idDepartment);
