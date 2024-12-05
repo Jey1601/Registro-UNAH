@@ -18,7 +18,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-                RegionalCenter.renderSelectRegionalCenters();
+                RegionalCenter.renderSelectRegionalCenters('applicantStudyCenter');
                 Modal.showModal('Inscription-form');
            }else{
 
@@ -45,7 +45,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-                RegionalCenter.renderSelectRegionalCenters();
+                RegionalCenter.renderSelectRegionalCenters('applicantStudyCenter');
                 Modal.showModal('Inscription-form');
            }else{
                 
@@ -79,7 +79,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-                RegionalCenter.renderSelectRegionalCenters();
+                RegionalCenter.renderSelectRegionalCenters('applicantStudyCenter');
                 Modal.showModal('Inscription-form');
            }else {
                 const body = document.querySelector('#Inscription-form .modal-body');

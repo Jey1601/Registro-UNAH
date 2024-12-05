@@ -1,5 +1,8 @@
 import { Form, File, Sidebar } from "../../modules/behavior/support.mjs";
 import { Professor } from "../../modules/request/AdminFaculties.mjs";
+import { RegionalCenter } from "../../modules/request/RegionalCenter.mjs";
+import { Department } from "../../modules/request/Departments.mjs";
+
 /* ========== Constantes del DOM ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 
@@ -10,6 +13,9 @@ const professorCreationForm = document.getElementById('professorCreationForm');
 
 //Obtener inputs del formulario de creación docente
 const inputsProfessorCreationForm = Array.from(professorCreationForm.elements);
+
+//Obtener el select de centros reginales
+const professorDepartment = document.getElementById('professorDepartment');
 
 //Obtener el botón de creación del formulario de creación docente
 const submitButton = document.getElementById('createProfessorButton');
@@ -25,7 +31,15 @@ Sidebar.buildSidebar('../../../');
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
+/* ========== Rellenando select ============*/
+window.addEventListener('load', () => {
+  RegionalCenter.renderSelectRegionalCentersByDepartment('professorCenter','professorDepartment');
+  Department.renderSelectDepartmentsByFaculty('professorDepartment', 1);
+});
 
+professorDepartment.addEventListener('change', function(){
+  RegionalCenter.renderSelectRegionalCentersByDepartment('professorCenter','professorDepartment');
+})
 /* ========== Validando el formato de los input ============*/
 
 //Verificar los inputs del formulario

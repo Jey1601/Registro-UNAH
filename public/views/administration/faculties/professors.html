@@ -41,7 +41,7 @@
 />
   
     <title>Administrador</title>
-    <script src="../../../assets/js/tokenValidation.js"></script>
+    <!-- <script src="../../../assets/js/tokenValidation.js"></script>-->
   </head>
 
   <body class="background-white animation">
@@ -118,10 +118,20 @@
                               <small class="input-error">Formatos: JPG, PNG. Máximo 5MB.</small>
                           </div>
 
+                          <!-- Departamento -->
+                          <div class="mb-3">
+                            <label for="professorDepartment" class="form-label">Departamentos</label>
+                            <select id="professorDepartment" name="professorDepartment" class="form-select" required>
+                                <option value="" disabled selected>Seleccione un departamento</option>
+                                <option value="1">Departamento 1</option>
+                                <option value="2">Departamento 2</option>
+                            </select>
+                            <small class="input-error">Seleccione un departamento.</small>
+                        </div>
                           <!-- Centro Regional -->
                           <div class="mb-3">
-                              <label for="professorStudyCenter" class="form-label">Centro Regional</label>
-                              <select id="professorStudyCenter" name="professorStudyCenter" class="form-select" required>
+                              <label for="professorCenter" class="form-label">Centro Regional</label>
+                              <select id="professorCenter" name="professorCenter" class="form-select" required>
                                   <option value="" disabled selected>Seleccione un centro regional</option>
                                   <option value="1">Centro Regional 1</option>
                                   <option value="2">Centro Regional 2</option>
@@ -129,16 +139,7 @@
                               <small class="input-error">Seleccione un centro.</small>
                           </div>
 
-                           <!-- Departamento -->
-                           <div class="mb-3">
-                            <label for="professorStudyCenter" class="form-label">Departamentos</label>
-                            <select id="professorStudyCenter" name="professorStudyCenter" class="form-select" required>
-                                <option value="" disabled selected>Seleccione un departamento</option>
-                                <option value="1">Departamento 1</option>
-                                <option value="2">Departamento 2</option>
-                            </select>
-                            <small class="input-error">Seleccione un departamento.</small>
-                        </div>
+                           
                       </div>
                   </div>
 
