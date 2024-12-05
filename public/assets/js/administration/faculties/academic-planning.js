@@ -7,7 +7,7 @@ import {  Building } from "../../modules/request/Building.mjs";
 import { Classroom } from "../../modules/request/Classroom.mjs";
 import { Schedule } from "../../modules/request/Schedules.mjs";
 import { Professor } from "../../modules/request/AdminFaculties.mjs";
-
+import { Login } from "../../modules/request/login.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
@@ -91,3 +91,10 @@ buildingSelect.addEventListener('change', function(){
     const id_building = parseInt(buildingSelect.value, 10);
     Classroom.renderSelectClassroomsByCenter('classroom', idProfessor,idCenter,id_building);
 })
+
+
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout('../../../index.html')
+});  

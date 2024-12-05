@@ -597,3 +597,13 @@ VALUES
 
 
 
+
+INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control) VALUES ('bG8uB0wH', 'Registrar estudiantes', TRUE);
+
+INSERT INTO Roles (role, description_role, status_role) VALUES ('Registry Administrator', 'Registro de estudiantes', TRUE);
+
+INSERT INTO AccessControlRoles (id_access_control, id_role, status_access_control_roles) VALUES ('bG8uB0wH', 15, TRUE);
+
+INSERT INTO UsersRegistryAdministrator (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator) VALUES ('2024', 'gat0_h1dr4licO', TRUE);
+
+INSERT INTO RolesUsersRegistryAdministrator (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator) VALUES (15, 1, 1, TRUE);

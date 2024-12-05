@@ -1,5 +1,5 @@
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
     const type_user = sessionStorage.getItem('typeUser');
     
@@ -27,4 +27,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error en la validacion del token: ", error);
         window.location.href = '../../index.html';
     });
-});
+});*/

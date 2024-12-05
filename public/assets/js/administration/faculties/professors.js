@@ -2,7 +2,7 @@ import { Form, File, Sidebar } from "../../modules/behavior/support.mjs";
 import { Professor } from "../../modules/request/AdminFaculties.mjs";
 import { RegionalCenter } from "../../modules/request/RegionalCenter.mjs";
 import { Department } from "../../modules/request/Departments.mjs";
-
+import { Login } from "../../modules/request/login.mjs";
 /* ========== Constantes del DOM ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 
@@ -73,3 +73,8 @@ submitButton.addEventListener('click', function(event){
     Professor.getData();
 });
 
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout('../../../index.html')
+});  

@@ -3,9 +3,9 @@ import { Login } from "./login.mjs";
  const path = '../../../../';
 async function submitCSVFile() {
     
-    const formInscriptionGrades=document.getElementById('formInscriptionGrades');
+    const formUploadStudents=document.getElementById('formUploadStudents');
 
-    formInscriptionGrades.addEventListener('submit', async function (e) {
+    formUploadStudents.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const file_input = document.getElementById('csvFile');
@@ -15,13 +15,13 @@ async function submitCSVFile() {
             form_data.append('csvFile', file_input.files[0]);
             
             try {
-                const response = await fetch (path+'api/post/admissionAdmin/uploadRatingsCSV.php', {
+                const response = await fetch (path+'api/post/diipAdmin/uploadStudentsCSV.php', {
                     method: 'POST',
-                    body: form_data
+                    body: form_data 
                 });
 
                 const result = await response.json();
-                formInscriptionGrades.reset();
+                formUploadStudents.reset();
                 Alert.display("warning", 'Aviso',result.message,'../../' );
             } catch (error) {
                 console.log(error);
@@ -41,6 +41,4 @@ logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
     Login.logout('../../index.html')
 });
-
-
 
