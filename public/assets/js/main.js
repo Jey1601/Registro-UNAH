@@ -3,7 +3,7 @@ import { RegionalCenter } from "./modules/request/RegionalCenter.mjs";
 import { Modal, Form, Alert, File } from "./modules/behavior/support.mjs";
 import { Login } from "./modules/request/login.mjs";
 import { AdmissionProccess } from "./modules/request/AdmissionProcces.mjs";
-
+import { Password } from "./modules/behavior/password.mjs";
 
 
 
@@ -18,6 +18,11 @@ inscriptionButton.forEach(button => {
 });
 
 
+const  password = document.getElementById('password');
+const buttonPassword = password.nextElementSibling;
+buttonPassword.addEventListener('click', function(){
+  Password.togglePassword('password');
+})
 
 
 
@@ -101,7 +106,7 @@ loginForm.onsubmit = function(event) {
   const userType = document.getElementById("userType").value;
   
   // Deshabilitar el botón de login mientras se procesa
-  btnLogin.disabled = true;
+ // btnLogin.disabled = true;
 
   // Seleccionar la acción según el tipo de usuario
   switch (userType) {
@@ -122,8 +127,10 @@ loginForm.onsubmit = function(event) {
           // Aquí llamar la función específica para autenticar este tipo de usuario
           break;
       case 'professor':
-        Modal.hideModal('loginModal'); // Cerrar la modal de login
-        Login.authProfessor(username, password);
+        Modal.hideModal('loginModal');
+         // Cerrar la modal de login
+         const usernameAsInteger = parseInt(username, 10);
+        Login.authProfessor(usernameAsInteger, password);
         break;
       case 'student':
         Modal.hideModal('loginModal'); // Cerrar la modal de login

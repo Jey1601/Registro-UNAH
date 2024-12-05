@@ -1,6 +1,6 @@
 <?php
 include_once 'util/jwt.php';
-
+require_once 'util/encryption.php';
 /**
  * Objeto de acceso a datos y controlador de maestros.
  * 
@@ -39,12 +39,12 @@ class ProfessorsDAO {
      * 
      * @return array $response Arreglo asociativo que indica si la autenticacion fallo o no junto con un mensaje de retroalimentacion y el valor del token (nulo en caso de fallo de autenticacion).
      */
-    public function authProfessor(string $username, string $password) {
+    public function authProfessor(int $username, string $password) {
         if (isset($username) && isset($password)) {
             //Busqueda del usuario en la base de datos
             $query = "SELECT id_user_professor, password_user_professor FROM `UsersProfessors` WHERE username_user_professor = ?;";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('s', $username);
+            $stmt->bind_param('i', $username);
             $stmt->execute();
             $result = $stmt->get_result();
 

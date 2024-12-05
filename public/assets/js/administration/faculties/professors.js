@@ -20,6 +20,7 @@ const professorDepartment = document.getElementById('professorDepartment');
 //Obtener el botón de creación del formulario de creación docente
 const submitButton = document.getElementById('createProfessorButton');
 
+
 /* ========== Creando y dando funcionalidad al sidebar ============*/
 
 //Consruir la slidebar en base a permisos
@@ -71,3 +72,4 @@ submitButton.addEventListener('click', function(event){
     event.preventDefault();
     Professor.getData();
 });
+
