@@ -1,0 +1,85 @@
+/* Estilo general para la sección del formulario */
+section.form {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    float: left;
+    margin-right: 3%;
+    box-sizing: border-box;
+}
+
+.form{
+    width: 100%;
+}
+.form input{
+    width: 100%;
+}
+
+/* Estilo para la sección de la tabla */
+section.sections {
+    width: 67%;
+    float: left;
+    box-sizing: border-box;
+}
+
+/* Estilo para los encabezados */
+section.form h5 {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+/* Estilo para los labels */
+.form-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Estilo para los campos de entrada */
+.input-entry {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 100%;
+    padding: 10px;
+}
+.input-entry:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+/* Estilo para el select */
+.form-select {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    padding: 10px;
+}
+.form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilo para la tabla */
+section.table-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left;
+}
