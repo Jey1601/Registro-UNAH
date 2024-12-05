@@ -300,6 +300,59 @@ class Login {
     }
   }
 
+  static async authDIIPAdmin(username,password) {
+    const credentials = {
+        "userDIIPAdmin": username,
+        "passwordDIIPAdmin": password
+    }
+
+    try {
+        fetch(this.path+'api/post/diipAdmin/authDIIPAdmin.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        }).then(response => response.json()).then(result => {
+            if (result.success) {
+                sessionStorage.setItem('token', result.token);
+                sessionStorage.setItem('typeUser',result.typeUser);
+
+                //Redirección de admisiones
+                const token_saved = result.token;
+                const payload_decoded = JWT.decodeToken(token_saved);
+                let access = [];
+
+                if (!(JWT.payloadIsEmpty(payload_decoded))) {
+                    access = payload_decoded.accessArray;
+
+                  access.forEach(element => {
+                      switch (element) {
+                        //Carga de las notas de los exámenes de admisión de los solicitantes.
+                        case 'bG8uB0wH':
+                          window.location.href = '../../../../views/administration/DIPP/upload-students.html';
+                        
+                          break;  
+                        
+                        default:
+                          window.location.href = '../../../../index.html';
+                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
+                          break;
+                      }
+                  });
+              } else {
+                console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
+                window.location.href = '../../../../index.html';
+              }
+          } else {
+            Alert.display("warning", "Error en la autenticacion", result.message);
+          }
+      })
+    } catch (error) {
+      console.log('Error al mandar la peticion: ',error);
+    }
+  }
+
   static regexValidation(credentials){
     if (
       regular_expressions.idNum.test(credentials.applicant_identification) && // Validate ID number

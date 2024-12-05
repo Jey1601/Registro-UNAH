@@ -2,6 +2,7 @@
 include_once 'util/jwt.php';
 include_once 'util/Code.php';
 include_once 'util/StudentFunctions.php';
+include_once 'util/encryption.php';
 
 /**
  * Clase objeto de acceso a datos y controlador de administrador de DIPP
@@ -39,26 +40,32 @@ class DIIPAdminDAO {
     public function authDIIPAdmin (string $username, $password) {
         if (isset($username) && isset($password)) {
             //Busqueda del usuario en la BD
-            $querySelectUserDIIP = "";
+            $querySelectUserDIIP = "SELECT id_user_registry_administrator, password_user_registry_administrator FROM `UsersRegistryAdministrator` WHERE username_user_registry_administrator = ?;";
             $stmtSelectUserDIIP = $this->connection->prepare($querySelectUserDIIP);
             $stmtSelectUserDIIP->bind_param('s', $username);
+            $stmtSelectUserDIIP->execute();
             $resultSelectUserDIIP = $stmtSelectUserDIIP->get_result();
 
             if ($resultSelectUserDIIP->num_rows > 0) {
                 $row = $resultSelectUserDIIP->fetch_array(MYSQLI_ASSOC);
-                $idUserDIIP = $row[''];
-                $hashPassword = $row[''];
+                $idUserDIIP = $row['id_user_registry_administrator'];
+                $hashPassword = $row['password_user_registry_administrator'];
                 $coincidence = Encryption::verifyPassword($password, $hashPassword);
 
                 if ($coincidence) {
-                    $queryAccessArray = "";
+                    $queryAccessArray = "SELECT `AccessControl`.id_access_control FROM `AccessControl`
+                    INNER JOIN `AccessControlRoles` ON `AccessControl`.id_access_control = `AccessControlRoles`.id_access_control
+                    INNER JOIN `RolesUsersRegistryAdministrator` ON `AccessControlRoles`.id_role = `RolesUsersRegistryAdministrator`.id_role_registry_administrator
+                    INNER JOIN `UsersRegistryAdministrator` ON `RolesUsersRegistryAdministrator`.id_user_registry_administrator = `UsersRegistryAdministrator`.id_user_registry_administrator
+                    WHERE `UsersRegistryAdministrator`.id_user_registry_administrator = ?;";
                     $stmtAccessArray = $this->connection->prepare($queryAccessArray);
-                    //$stmtAccessArray->bind_param('s', 1); //INGRESAR PARAMETROS==============
+                    $stmtAccessArray->bind_param('s', $idUserDIIP);
+                    $stmtAccessArray->execute();
                     $resultAccessArray = $stmtAccessArray->get_result();
 
                     $accessArray = [];
                     while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
-                        $accessArray[] = $rowAccess[''];
+                        $accessArray[] = $rowAccess['id_access_control'];
                     }
                     $resultAccessArray->free();
                     $stmtAccessArray->close();
@@ -76,18 +83,48 @@ class DIIPAdminDAO {
                     ];
                     $newToken = JWT::generateToken($payload);
 
-                    $queryCheck = "";
+                    $queryCheck = "SELECT id_user_registry_administrator FROM `TokenUserRegistryAdministrator` WHERE id_user_registry_administrator = ?;";
                     $stmtCheck = $this->connection->prepare($queryCheck);
-                    //$stmtCheck->bind_param(); //INGRESAR PARAMETROS
+                    $stmtCheck->bind_param('i', $idUserDIIP);
+                    $stmtCheck->execute();
                     $resultCheck = $stmtCheck->get_result();
 
                     if ($resultCheck->num_rows > 0) { //Usuario encontrado, se actualiza su token
-                        $queryUpdateToken = "";
+                        $queryUpdate = "UPDATE `TokenUserRegistryAdministrator` SET token_registry_administrator = ? WHERE id_user_registry_administrator = ?;";
+                        $stmtUpdate = $this->connection->prepare($queryUpdate);
+                        $stmtUpdate->bind_param('si', $newToken, $idUserDIIP);
+                        $resultUpdate = $stmtUpdate->execute();
                         
-
+                        if ($resultUpdate === false) { //Si la actualizacion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no actualizado.',
+                                'token' => null
+                            ];
+                        }
+                        $stmtUpdate->close();
                     } else { //Usuario no encontrado, se registra
+                        $queryInsert = "INSERT INTO `TokenUserRegistryAdministrator` (id_user_registry_administrator, token_registry_administrator) VALUES (?, ?);";
+                        $stmtInsert = $this->connection->prepare($queryInsert);
+                        $stmtInsert->bind_param('is', $idUserDIIP, $newToken);
+                        $resultInsert = $stmtInsert->execute();
 
+                        if ($resultInsert === false) { //Si la insercion falla
+                            return $response = [
+                                'success' => false,
+                                'message' => 'Token no insertado.',
+                                'token' => null
+                            ];
+                        }
+                        $stmtInsert->close();
                     }
+
+                    return $response = [ //Si todo funciona se retorna un arreglo asociativo donde va el token
+                        'success' => true,
+                        'message' => 'Validacion de credenciales exitosa.',
+                        'token' => $newToken,
+                        'typeUser' => 'dippAdmin'
+                    ];
                     
                 } else { //Contrasena no coincide
                     return $response = [
@@ -133,7 +170,7 @@ class DIIPAdminDAO {
                 if ($firstRowHeaders) {
                     if($row == $headers) {
                         $firstRowHeaders = false;
-
+                        continue;
                     } else { //Las cabeceras del CSV son las incorrectas
                         $errors[] = "Error en la lectura de las cabeceras.";
                         return $response = [
@@ -155,10 +192,20 @@ class DIIPAdminDAO {
                 $adress = $this->connection->real_escape_string($row[6]);
                 $personalEmail = $this->connection->real_escape_string($row[7]);
                 $phoneNumber = $this->connection->real_escape_string($row[8]);
-                $idRegionalCenter = intval($this->connection->real_escape_string($row[9]));
+                $nameRegionalCenter = $this->connection->real_escape_string($row[9]);
                 $nameUndergraduate = $this->connection->real_escape_string($row[10]);
 
-                $accountNumberStudent = StudentFunctions::generateAccountNumber($idRegionalCenter); //Generacion del numero de cuenta
+                $idRegionalCenter = $this->getIdRegionalCenterByName($nameRegionalCenter);
+
+                if (!($idRegionalCenter['success'])) {
+                    $this->connection->rollback();
+                    return $response = [
+                        'success' => false,
+                        'message' => 'Centro regional no encontrado.'
+                    ];
+                }
+
+                $accountNumberStudent = StudentFunctions::generateAccountNumber($idRegionalCenter['idRegionalCenter']); //Generacion del numero de cuenta
                 $institutionalEmail = StudentFunctions::generateEmail($personalEmail); //Generacion de correo institucional
 
                 //INSERCION ESTUDIANTE
@@ -172,14 +219,29 @@ class DIIPAdminDAO {
                     $errors[] = "Fallo en la insercion del estudiante con numero de identidad: " . $idCardStudent;
                 }
 
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
+                }
+
                 //INSERCION ESTUDIANTE-CENTRO_REGIONAL
-                $queryInsertStudentRegionalCenter = "INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student) VALUES (?, ?, TRUE);";
+                $queryInsertStudentRegionalCenter = "INSERT INTO `StudentsRegionalCenters` (id_student, id_regional_center, status_regional_center_student)
+                VALUES (?, ?, TRUE);";
                 $stmtInsertStudentRegionalCenter = $this->connection->prepare($queryInsertStudentRegionalCenter);
-                $stmtInsertStudentRegionalCenter->bind_param('si', $accountNumberStudent, $idRegionalCenter);
-                if($stmtInsertStudent->execute()) {
+                $stmtInsertStudentRegionalCenter->bind_param('si', $accountNumberStudent, $idRegionalCenter['idRegionalCenter']);
+                if($stmtInsertStudentRegionalCenter->execute()) {
                     $rowsInsertedStudentRegionalCenter++;
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-centro_regional, con numero de identidad del estudiante: " . $idCardStudent;
+                }
+
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
                 }
 
                 //INSERCION ESTUDIANTE-PREGRADO
@@ -199,6 +261,12 @@ class DIIPAdminDAO {
                     $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent . ". Carrera no encontrada.";
                 }
 
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
+                }
 
                 //INSERCION ESTUDIANTE-PERFIL_ESTUDIANTE
                 $queryStudentProfile = "INSERT INTO StudentProfile (id_student, first_student_profile_picture, second_student_profile_picture, third_student_profile_picture, student_personal_description, status_student_profile) VALUES (?, null, null, null, null, TRUE);";
@@ -209,6 +277,13 @@ class DIIPAdminDAO {
                     $rowsInsertedStudentProfile++;
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-perfil, con numero de identidad del estudiante: " . $idCardStudent;
+                }
+
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
                 }
 
                 //INSERCION USUARIO_ESTUDIANTE
@@ -225,11 +300,31 @@ class DIIPAdminDAO {
                     $errors[] = "Fallo en la insercion estudiante-perfil, con numero de identidad del estudiante: " . $idCardStudent;
                 }
 
+                while ($this->connection->more_results() && $this->connection->next_result()) {
+                    $extraResult = $this->connection->store_result();
+                    if ($extraResult) {
+                        $extraResult->free();
+                    }
+                }
+
                 //INSERCION ROL-USUARIO_ESTUDIANTE
-                //======================== NUMERO FIJO DEL ROL DE ESTUDIANTE COMUN ========================
-                $queryInsertRolUserStudent = "INSERT INTO RolesUsersStudent (id_user_student, id_role_student, status_role_student) VALUES (?, 14, TRUE);"; 
+                $idRole = 0;
+                $querySelectIdRole = "SELECT id_role FROM Roles WHERE role = 'Student';";
+                $resultSelectIdRole = $this->connection->execute_query($querySelectIdRole);
+                while ($row = $resultSelectIdRole->fetch_array(MYSQLI_ASSOC)) {
+                    $idRole = intval($row['id_role']);
+                }
+
+                $idUser = 0;
+                $querySelectIdUser = "SELECT id_user_student FROM UsersStudents WHERE username_user_student = ?";
+                $resultSelectIdUser = $this->connection->execute_query($querySelectIdUser, [$accountNumberStudent]);
+                while ($row = $resultSelectIdUser->fetch_array(MYSQLI_ASSOC)) {
+                    $idUser = intval($row['id_user_student']);
+                }
+
+                $queryInsertRolUserStudent = "INSERT INTO RolesUsersStudent (id_user_student, id_role_student, status_role_student) VALUES (?, ?, TRUE);"; 
                 $stmtInsertRolUserStudent = $this->connection->prepare($queryInsertRolUserStudent);
-                $stmtInsertRolUserStudent->bind_param('s', $accountNumberStudent);
+                $stmtInsertRolUserStudent->bind_param('si', $idUser, $idRole);
 
                 if($stmtInsertRolUserStudent->execute()) {
                     $rowsInsertRolUserStudent++;
@@ -242,7 +337,15 @@ class DIIPAdminDAO {
                 'success' => true,
                 'message' => 'Inserciones finalizadas.',
                 'passwordUser' => $randomPassword,
-                'errors' => $errors
+                'errors' => $errors,
+                'rows' => [
+                    'Total estudiantes registrados: '.$rowsInsertedStudent,
+                    'Total filas estudiante-centro_regional registradas: '.$rowsInsertedStudentRegionalCenter,
+                    'Total filas estudiantes-pregrado registradas: '.$rowsInsertedStudentUndergraduate,
+                    'Total perfiles de estudiantes creados: '.$rowsInsertedStudentProfile,
+                    'Total usuarios estudiantes creados: '.$rowsInsertUserStudent,
+                    'Total filas usuario-rol registradas: '.$rowsInsertRolUserStudent
+                ]
             ];
 
         } else {
@@ -277,6 +380,33 @@ class DIIPAdminDAO {
             return [
                 'success' => false,
                 'message' => 'Carrera de pregrado no encontrada.'
+            ];
+        }
+    }
+
+    public function getIdRegionalCenterByName (string $regionalCenterName) {
+        if (isset($regionalCenterName)) {
+            $query = "SELECT id_regional_center FROM RegionalCenters WHERE name_regional_center = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('s', $regionalCenterName);
+
+            if($stmt->execute()) {
+                $idRegionalCenter = 0;
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                    $idRegionalCenter = $row['id_regional_center'];
+                }
+
+                return [
+                    'success' => true,
+                    'message' => 'Carrera de pregrado encontrada.',
+                    'idRegionalCenter' => $idRegionalCenter 
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Centro regional no encontrado.'
             ];
         }
     }

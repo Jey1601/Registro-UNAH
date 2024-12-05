@@ -124,7 +124,7 @@ loginForm.onsubmit = function(event) {
           break;
       case 'dippAdmin':
           Modal.hideModal('loginModal'); // Cerrar la modal de login
-          // Aquí llamar la función específica para autenticar este tipo de usuario
+          Login.authDIIPAdmin(username, password);
           break;
       case 'professor':
         Modal.hideModal('loginModal');
