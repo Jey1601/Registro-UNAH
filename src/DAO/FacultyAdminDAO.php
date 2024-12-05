@@ -64,9 +64,9 @@ class FacultyAdminDAO {
                     $resultAccessArray = $stmtAccessArray->get_result();
 
                     $accessArray = [];
-                        while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
-                            $accessArray[] = $rowAccess['id_access_control'];
-                        }
+                    while ($rowAccess = $resultAccessArray->fetch_array(MYSQLI_ASSOC)) {
+                        $accessArray[] = $rowAccess['id_access_control'];
+                    }
                     $resultAccessArray->free();
                     $stmtAccessArray->close();
 
@@ -176,12 +176,12 @@ class FacultyAdminDAO {
      *      SIN FALLOS PRODUCIDOS: 'success'=>true (Se retornan el nombre de usuario y la contrasena del usuario del profesor)
      */
     public function createProfessor (
-        string $firstName, string $secondName, string $thirdName, string $firstLastname, string $secondLastname,
-        string $image, int $idProfessorObligation, string $nameRegionalCenter, string $departmentName
+        string $firstName, string $secondName, string $thirdName, string $firstLastname, string $secondLastname, string $email,
+        string $image, int $idProfessorObligation, int $idRegionalCenter, int $idDepartment
     ) {
         if (!(
             isset($firstName) && isset($secondName) && isset($firstLastname)
-            && isset($idProfessorObligation) && isset($nameRegionalCenter)
+            && isset($idProfessorObligation) && isset($idRegionalCenter)
         )) { //Hay un parametro nulo
             return $response = [
                 'success' => false,
@@ -189,18 +189,12 @@ class FacultyAdminDAO {
             ];
         }
 
-        $idRegionalCenter = $this->getIdRegionalCenterByName($nameRegionalCenter);
+        $errors = [];
 
-        if(!($idRegionalCenter)) {
-            return $response = [
-                'success' => false,
-                'message' => 'Centro regional no encontrado.'
-            ];
-        }
-
-        $queryInsertProfessor = "INSERT INTO `Professors` (first_name_professor, second_name_professor, third_name_professor, first_lastname_professor, second_lastname_professor, picture_professor, id_professors_obligations, id_regional_center, status_professor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1);";
+        //INSERCION DE DOCENTE
+        $queryInsertProfessor = "INSERT INTO `Professors` (first_name_professor, second_name_professor, third_name_professor, first_lastname_professor, second_lastname_professor, emial_professor, picture_professor, id_professors_obligations, id_regional_center, status_professor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE);";
         $stmtInsertProfessor = $this->connection->prepare($queryInsertProfessor);
-        $stmtInsertProfessor->bind_param('ssssssii', $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $image, $idProfessorObligation, $idRegionalCenter);
+        $stmtInsertProfessor->bind_param('sssssssii', $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $email, $image, $idProfessorObligation, $idRegionalCenter);
 
         if (!($stmtInsertProfessor->execute())) { //La insercion falla
             $this->connection->rollback();
@@ -212,10 +206,13 @@ class FacultyAdminDAO {
             ];
         }
 
-        $queryIDProfessor = "SELECT LAST_INSERT_ID();";
-        $resultIDProfessor = $this->connection->execute_query($queryIDProfessor);
-        foreach ($resultIDProfessor as $rowIDProfessor) {
-            $idProfessor = intval($rowIDProfessor[0]);
+        $queryIDProfessor = "SELECT id_professor FROM Professors WHERE emial_professor = ?;";
+        $stmtIDProfessor = $this->connection->prepare($queryIDProfessor);
+        $stmtIDProfessor->bind_param('s', $email);
+        $stmtIDProfessor->execute();
+        $resultIDProfessor = $stmtIDProfessor->get_result();
+        while ($rowIDProfessor = $resultIDProfessor->fetch_array(MYSQLI_ASSOC)) {
+            $idProfessor = $rowIDProfessor['id_professor'];
             break;
         }
 
@@ -232,10 +229,8 @@ class FacultyAdminDAO {
         $userProfessor = $this->insertUserProfessor($idProfessor, $passwordUser);
 
         if(!($userProfessor['success'])) {
-            return $userProfessor['message'];
+            $errors[] = $userProfessor['message'];
         }
-
-        $idDepartment = $this->getIdDeparmentByName($departmentName);
 
         $queryInsertProfessorDeparment = "INSERT INTO `ProfessorsDepartments` (id_department, id_professor, status_professor_department) VALUES (?, ?, TRUE);";
         $stmtInsertProfessorDepartment = $this->connection->prepare($queryInsertProfessorDeparment);
@@ -244,11 +239,7 @@ class FacultyAdminDAO {
         if(!($stmtInsertProfessorDepartment->execute())) {
             $this->connection->rollback();
             $stmtInsertProfessorDepartment->close();
-
-            return $response = [
-                'success' => false,
-                'message' => 'Insercion Profesor-Departamento fallida.'
-            ];
+            $errors[] = 'Insercion Profesor-Departamento fallida.';
         }
         
         //Liberacion del resultado de la consulta
@@ -262,9 +253,10 @@ class FacultyAdminDAO {
 
         return $response = [
             'success' => true,
-            'message' => 'Profesor, usuario del profesor y relacion profesor-departamento insertados exitosamente.',
+            'message' => 'Profesor creado.',
+            'errors' => $errors,
             'userPassword' => $passwordUser,
-            'usernameProfessor' => $userProfessor['username']
+            'usernameProfessor' => $idProfessor
         ];
     }
     
