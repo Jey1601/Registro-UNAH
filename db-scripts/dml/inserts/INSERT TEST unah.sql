@@ -140,8 +140,9 @@ VALUES
 	('Academic Planning Coordinator', 'Establecer y coordinar el proceso de planificación académica dentro de la facultad.', TRUE),
 	('Process Administrator Cancellation Of Classes', 'Definir y gestionar el proceso para la cancelación de clases excepcionales ', TRUE),
 	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
-	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE);
-
+	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
+	('Department Head', 'Administración de un departamento.', TRUE),
+	('Professor', 'Docente ', TRUE);
 	
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
 VALUES
@@ -154,8 +155,10 @@ VALUES
     	('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
     	('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
     	('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
-    	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE);
-
+    	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE),
+		('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
+		('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
+		('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE);
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(2, 'lwx50K7f', TRUE),
@@ -165,7 +168,10 @@ VALUES
     	(6, 'pFw9dYOw', TRUE),
     	(12, '78mD0SYa', TRUE),
     	(12, 'dJPR7ohs', TRUE),
-    	(8, 'V3yWAxgH', TRUE);
+    	(8, 'V3yWAxgH', TRUE),
+		(13, 'zKQFIY69', TRUE),
+		(13, 'p62NcCiC', TRUE),
+		(14, '2izGK2WC', TRUE);
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
@@ -177,6 +183,8 @@ VALUES
     	(4, 4, TRUE, 1),
     	(5, 5, TRUE, 1),
     	(6, 6, TRUE, 1);
+
+
 INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
 VALUES
     ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
