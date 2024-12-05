@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $inputBody = json_decode(file_get_contents('php://input'), true);
 
-$userProfessor = trim($inputBody['userProfessor']);
+$userProfessor = (int)$inputBody['userProfessor'];
 $passwordProfessor = trim($inputBody['passwordProfessor']);
 
 $regexPasswordValidation = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+*\-_])[A-Za-z\d+*\-_]{8,}$/';

@@ -1,6 +1,7 @@
 
 import { regular_expressions } from "./configuration.mjs"
 import { Login } from "../request/login.mjs";
+import { AcademicPlanning } from "../request/AcademicPlanning.mjs";
 class Alert{
 
    
@@ -469,12 +470,21 @@ class Sidebar{
     //Planificación academica
     if(accesses.includes('zKQFIY69')){
       const a = document.createElement("a");
+      a.setAttribute("role", "button");
+      a.setAttribute("id", "academicPlanningButton");
       const li = document.createElement("li");
       li.classList.add("slidebar-item");
-      a.href = path+'views/administration/faculties/academic-planning.html';
+      //a.href = path+'views/administration/faculties/academic-planning.html';
       a.appendChild(document.createTextNode('Planificación Académica'));
       li.appendChild(a);
       sidebarBody.appendChild(li);
+
+      a.style.color = "white";
+      
+      a.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevenir la acción predeterminada del enlace, si la tuviera
+        AcademicPlanning.verityAcademicPlanning();  // Llamar a la función correspondiente
+      });
     }
     
      //dashboard

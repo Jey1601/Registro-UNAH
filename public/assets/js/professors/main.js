@@ -17,3 +17,4 @@ logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
     Login.logout(path+'/index.html')
 });  
+

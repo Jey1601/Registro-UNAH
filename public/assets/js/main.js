@@ -106,7 +106,7 @@ loginForm.onsubmit = function(event) {
   const userType = document.getElementById("userType").value;
   
   // Deshabilitar el botón de login mientras se procesa
-  btnLogin.disabled = true;
+ // btnLogin.disabled = true;
 
   // Seleccionar la acción según el tipo de usuario
   switch (userType) {
@@ -127,8 +127,10 @@ loginForm.onsubmit = function(event) {
           // Aquí llamar la función específica para autenticar este tipo de usuario
           break;
       case 'professor':
-        Modal.hideModal('loginModal'); // Cerrar la modal de login
-        Login.authProfessor(username, password);
+        Modal.hideModal('loginModal');
+         // Cerrar la modal de login
+         const usernameAsInteger = parseInt(username, 10);
+        Login.authProfessor(usernameAsInteger, password);
         break;
       default:
           // Mostrar una alerta en caso de un tipo de usuario inválido
