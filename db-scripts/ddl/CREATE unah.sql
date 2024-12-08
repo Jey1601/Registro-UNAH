@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS unah_registration;
+¿CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
 -- @author TABLE Roles: Alejandro Moya 20211020462  @created 23/11/2024
@@ -513,7 +513,7 @@ CREATE TABLE CancellationExceptionalClassesProcess (
 	FOREIGN KEY (id_undergraduate) REFERENCES Undergraduates(id_undergraduate)
 );
 
--- @author TABLE AcademicPlanningProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE AcademicPlanningProcess: Alejandro Moya 20211020462 @created 03/11/2024
 CREATE TABLE AcademicPlanningProcess(
 	id_academic_planning_process INT PRIMARY KEY AUTO_INCREMENT,
 	date_academic_periodicity_academic_planning_process INT NOT NULL,
