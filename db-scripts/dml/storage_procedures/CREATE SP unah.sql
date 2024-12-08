@@ -1,4 +1,5 @@
 USE unah_registration;
+
 DELIMITER $$
 	CREATE PROCEDURE SP_APPLICANTS_ADMITTED_DATA()
 	BEGIN
@@ -749,4 +750,18 @@ BEGIN
     WHERE id_class_section = p_id_class_section;
 END $$
 
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE INSERT_CLASS_SECTION_DAY(
+    IN p_id_class_section INT,
+    IN p_id_day ENUM('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'),
+    IN p_status_class_sections_days BOOLEAN
+)
+BEGIN
+    INSERT INTO ClassSectionsDays (id_class_section, id_day, status_class_sections_days)
+    VALUES (p_id_class_section, p_id_day, p_status_class_sections_days);
+END $$
+
 DELIMITER ;
+
+
