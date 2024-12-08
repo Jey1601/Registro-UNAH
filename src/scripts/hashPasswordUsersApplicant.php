@@ -1,4 +1,10 @@
 <?php
+/**
+ * Script que cifra las contrasenas de los usuarios de aspirantes. Usado unicamente para agilizar el desarrollo, las contrasenas se encriptan automaticamente al insertar al aspirante desde la plataforma.
+ * 
+ * @author @AngelNolasco
+ */
+
 $host = 'localhost';
 $user = 'root';
 $password = '12345';
