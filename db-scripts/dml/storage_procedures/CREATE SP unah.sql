@@ -749,6 +749,10 @@ BEGIN
         AcademicSchedules ON ClassSections.id_academic_schedules = AcademicSchedules.id_academic_schedules
     JOIN 
         Classrooms ON ClassSections.id_classroom_class_section = Classrooms.id_classroom
+    JOIN 
+        ClassroomsBuildingsDepartmentsRegionalCenters ON Classrooms.id_classroom = ClassroomsBuildingsDepartmentsRegionalCenters.id_classroom
+    JOIN 
+        BuildingsDepartmentsRegionalsCenters ON ClassroomsBuildingsDepartmentsRegionalCenters.building_department_regional_center = BuildingsDepartmentsRegionalsCenters.id_building_department_regionalcenter
     WHERE 
         Departments.id_department = p_department_id
         AND DepartmentsRegionalCenters.id_regionalcenter = p_regional_center_id
@@ -756,7 +760,10 @@ BEGIN
         AND ClassSections.status_class_section = TRUE
         AND Professors.status_professor = TRUE  -- Solo obtener profesores activos
         AND AcademicSchedules.status_academic_schedules = TRUE  -- Solo obtener horarios activos
-        AND UndergraduatesRegionalCenters.status_undergraduate_Regional_Center = TRUE; -- Solo pregrados activos en el centro regional
+        AND UndergraduatesRegionalCenters.status_undergraduate_Regional_Center = TRUE  -- Solo pregrados activos en el centro regional
+        AND BuildingsDepartmentsRegionalsCenters.department_regional_center = DepartmentsRegionalCenters.id_department_Regional_Center
+        AND ClassroomsBuildingsDepartmentsRegionalCenters.status_classroom_building_department_regionalcenter = TRUE  -- Solo salones activos
+        AND BuildingsDepartmentsRegionalsCenters.status_building_department_regionalcenter = TRUE; -- Solo edificios activos
 END $$
 
 -- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
