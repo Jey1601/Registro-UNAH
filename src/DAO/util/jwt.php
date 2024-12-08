@@ -2,7 +2,10 @@
 /**
  * Script que contiene la clase JWT para la creación y verificación de JSON Web Token.
  * 
- * @property static string $secret_key Llace secreta para la codificación de tokens.
+ * @property string $secret_key Llace secreta para la codificación de tokens.
+ * 
+ * @author @AngelNolasco
+ * @created 12/11/2024
  */
 class JWT {
     private static $secret_key = 'is802';

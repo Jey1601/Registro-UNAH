@@ -38,6 +38,9 @@ class ProfessorsDAO {
      * @param string $password Contrasena de usuario docente.
      * 
      * @return array $response Arreglo asociativo que indica si la autenticacion fallo o no junto con un mensaje de retroalimentacion y el valor del token (nulo en caso de fallo de autenticacion).
+     * 
+     * @author @AngelNolasco
+     * @created 02/12/2024
      */
     public function authProfessor(int $username, string $password) {
         if (isset($username) && isset($password)) {
@@ -138,7 +141,7 @@ class ProfessorsDAO {
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
                         'token' => $newToken,
-                        'typeUser' => 'professor'
+                        'typeUser' => 14
                     ];
 
                 } else { //La contrasena no coincide
@@ -166,5 +169,130 @@ class ProfessorsDAO {
         }
     }
 
+    /**
+     * Metodo para obtener las solicitudes de cancelacion excepcional de clases, las solicitudes de cambio de centro regional y las solicitudes de cambio de carrera que aun no tienen respuesta.
+     * 
+     * @param int $idProfessor El numero de cuenta del docente que las solicita (para verificar que sea un coordinador academico).
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (success), un mensaje de retroalimentacion (message), un arreglo con los posibles errores que se pudieron haber dado (errors) y, en caso de exito, las solicitudes sin respuesta antes mencionadas.
+     * 
+     * @author @AngelNolasco
+     * @created 08/12/2024
+     */
+    public function getRequests (int $idProfessor) {
+        $querySearchAcademicCoordinator = "SELECT `AcademicCoordinator`.status_academic_coordinator FROM `AcademicCoordinator`
+        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
+        WHERE `Professors`.id_professor = ?;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+
+        if ($resultSearchAcademicCoordinator->num_rows > 0) {
+            $requestsExceptionalCancellationClasses = [];
+            $requestsChangeRegionalCenter = [];
+            $requestsChangeUndergraduate = [];
+            $errors = [];
+
+            $querySelectRequestsExceptionalCancellationClassesWithOutResolution = "SELECT requests.*
+            FROM `RequestsCancellationExceptionalClasses` requests
+            LEFT JOIN `ResolutionRequestsCancellationExceptionalClasses` resolutions
+            ON requests.id_requests_cancellation_exceptional_classes = resolutions.id_requests_cancellation_exceptional_classes
+            WHERE resolutions.id_requests_cancellation_exceptional_classes IS NULL;";
+            
+            $querySelectRequestsRegionalCentersChangeWithOutResolution = "SELECT requests.* FROM `RegionalCentersChangeRequestsStudents` requests
+            LEFT JOIN `ResolutionRegionalCentersChangeRequestsStudents` resolutions
+            ON requests.id_regional_center_change_request_student = resolutions.id_regional_center_change_request_student
+            WHERE resolutions.id_regional_center_change_request_student IS NULL;";
+
+            $querySelectRequestsUndergraduatesChangeWithOutResolution = "SELECT requests.* FROM `UndergraduateChangeRequestsStudents` requests
+            LEFT JOIN `ResolutionUndergraduateChangeRequestsStudents` resolutions
+            ON requests.id_undergraduate_change_request_student = resolutions.id_undergraduate_change_request_student
+            WHERE resolutions.id_undergraduate_change_request_student IS NULL;";
+
+            if ($resultRequestsCancellation = $this->connection->execute_query($querySelectRequestsExceptionalCancellationClassesWithOutResolution)) {
+                while ($row = $resultRequestsCancellation->fetch_assoc()) {
+                    $requestsExceptionalCancellationClasses [] = $row;
+                }
+            } else {
+                $errors [] = "No se pudieron obtener las solicitudes de cancelacion excepcional de clase.";
+            }
+
+            if ($resultRequestsChangeReionalCenter = $this->connection->execute_query($querySelectRequestsRegionalCentersChangeWithOutResolution)) {
+                while ($row = $resultRequestsChangeReionalCenter->fetch_assoc()) {
+                    $requestsChangeRegionalCenter [] = $row;
+                }
+            } else {
+                $errors [] = "No se pudieron obtener las solicitudes de cambio de centro.";
+            }
+
+            if ($resultRequestsChangeUndergraduate = $this->connection->execute_query($querySelectRequestsUndergraduatesChangeWithOutResolution)) {
+                while ($row = $resultRequestsChangeUndergraduate->fetch_assoc()) {
+                    $requestsChangeUndergraduate [] = $row;
+                }
+            } else {
+                $errors [] = "No se pudieron obtener las solicitudes de cambio de carrera.";
+            }
+
+            return $response = [
+                'success' => true,
+                'message' => 'Consultas de solicitudes sin repuesta finalizadas.',
+                'requestsExceptionalCancellation' => $requestsExceptionalCancellationClasses,
+                'requestsChangeRegionalCenter' => $requestsChangeRegionalCenter,
+                'requestsChangeUndergraduate' => $requestsChangeUndergraduate,
+                'errors' => $errors
+            ];
+
+        } else { //El docente no es coordinador academico
+            return $response = [
+                'success' => false,
+                'message' => 'Docente no identificado como coordinador academico.'
+            ];
+        }
+    }
+
+    /**
+     * Metodo para obtener las clases asignadas a un docente especifico.
+     * 
+     * @param int $idProfessor El numero de cuenta del docente del que se quiere obtener sus clases asignadas.
+     * 
+     * @return array $response Arreglo asociativo con el resultado de la consulta (success), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo con todas sus clases asignadas (assignedClasses).
+     * 
+     * @author @AngelNolasco
+     * @created 08/12/2024
+     */
+    public function getAssignedClasses (int $idProfessor) {
+        $querySelectAssignedClasses = "SELECT `ClassSections`.id_class_section, classes.name_class, classes.credit_units FROM `ClassSections`
+        INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
+        INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
+        WHERE `Professors`.id_professor = ?;";
+        $stmtAssignedClasses = $this->connection->prepare($querySelectAssignedClasses);
+        $stmtAssignedClasses->bind_param('i', $idProfessor);
+        $resultAssignedClasses = $stmtAssignedClasses->get_result();
+
+        if ($resultAssignedClasses->num_rows > 0) {
+            $assignedClasses = [];
+            while ($row = $resultAssignedClasses->fetch_array()) {
+                $assignedClasses [] = $row;
+            }
+
+            return $response = [
+                'success' => true,
+                'message' => 'Consulta de clases exitosa.',
+                'assignedClasses' => $assignedClasses
+            ];
+        } else {
+            return $response = [
+                'success' => true,
+                'message' => 'El docente no tiene clases asignadas.'
+            ];
+        }
+    }
+
+    /**
+     * 
+     */
+    public function getReportsByPeriod (int $idProfessor) {
+        
+    }
 }
 ?>

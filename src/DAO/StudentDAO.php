@@ -31,6 +31,17 @@ class StudentDAO {
         }   
     }
 
+    /**
+     * Metodo para la autenticacion de usuarios estudiantes.
+     * 
+     * @param string $username Nombre de usuario (numero de cuenta) del estudiante.
+     * @param string $password Contrasena del usuario estudiante.
+     * 
+     * @return array $response Arreglo asociativo con el resultado de la autenticacion (success), un mensaje de retroalimentacion (message), el valor del token (nulo en caso de fallo) y el tipo de usuario en caso de exito (rol del usuario).
+     * 
+     * @author @AngelNolasco
+     * @created 03/12/2024
+     */
     public function authStudent (string $username, string $password) {
         if (isset($username) && isset($password)) {
             //Busqueda del usuario en la base de datos
@@ -121,7 +132,7 @@ class StudentDAO {
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
                         'token' => $newToken,
-                        'typeUser' => 'student'
+                        'typeUser' => 15
                     ];
 
                 } else { //La contrasena no coincide
@@ -145,6 +156,47 @@ class StudentDAO {
                 'success' => false,
                 'message' => 'Credenciales invalidas.',
                 'token' => null
+            ];
+        }
+    }
+
+    public function createRequestExcepcionalCancellation (string $idStudent, $reasons, $document, $evidence, $idsClassSections) {
+        if (!(isset($idRequest) && isset($reasons) && isset($document) && isset($idsClassSections)) || empty($idsClassSections)) {
+            return $response = [
+                'success' => false,
+                'message' => 'Hay datos nulos que necesitan un valor obligatoriamente o no hay secciones definidas.'
+            ];
+        }
+        
+        $queryInsertRequest = "INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
+        VALUES (?, ?, ?, ?, TRUE);";
+        $stmtInsertRequest = $this->connection->prepare($queryInsertRequest);
+        $stmtInsertRequest->bind_param('ssss', $idStudent, $reasons, $document, $evidence);
+        
+        if ($stmtInsertRequest->execute()) {
+            $idRequest = $this->connection->insert_id;
+            $errors = [];
+            
+            foreach ($idsClassSections as $idSection) {
+                $queryInsertListClassSection = "INSERT INTO `ListClassSectionCancellationExceptional` (id_class_section, id_requests_cancellation_exceptional_classes)
+                VALUES (?, ?);";
+                $stmtInsertListClassSection = $this->connection->prepare($queryInsertListClassSection);
+                $stmtInsertListClassSection->bind_param('ii', $idSection, $idRequest);
+
+                if (!($stmtInsertListClassSection->execute())) {
+                    $errors [] = 'No se registro la seccion con ID '.$idSection.' en la solicitud.';
+                }
+            }
+
+            return $response = [
+                'success' => true,
+                'message' => 'Registro de solicitud finalizado.',
+                'errors' => $errors
+            ];
+        } else {
+            return $response = [
+                'success' => false,
+                'message' => 'No se pudo registrar la solicitud.'
             ];
         }
     }

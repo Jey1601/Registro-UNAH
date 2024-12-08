@@ -1,6 +1,9 @@
 <?php
 /**
  * Clase auxiliar para el encriptado y desencriptado de contrasenas
+ * 
+ * @author @AngelNolasco
+ * @created 24/12/2024
  */
 class Encryption {
     /**

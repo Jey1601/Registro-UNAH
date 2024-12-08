@@ -1,6 +1,6 @@
 <?php
 /**
- * Controlador de Aspirantes
+ * Controlador y objeto de acceso a datos de Aspirantes.
  * 
  * @property string $host Direccion de host de base de datos
  * @property string $user Usuario de acceso a la base de datos
@@ -447,6 +447,9 @@ class ApplicantDAO
      * @param string $password Password del usuario aspirante.
      * 
      * @return array $response Arreglo asociativo con resultado de la autenticacion y un token (valido en caso de exito, nulo en caso de fallo).
+     * 
+     * @author @AngelNolasco @JeysonEspinal
+     * @created 18/11/2024
      */
     public function authApplicant(string $username, string $password) {
         if (isset($username) && isset($password)) {
@@ -529,7 +532,7 @@ class ApplicantDAO
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
                         'token' => $newToken,
-                        'typeUser' => 'applicant'
+                        'typeUser' => 12
                     ];
 
                 } else { //Contrasena incorrecta
@@ -563,6 +566,9 @@ class ApplicantDAO
      * Metodo para obtener numero de identidad, numero de solicitud, nombre del tipo de examen, nota del examen, nombre completo y centro regional de los aspirantes en un CSV.
      * 
      * @return string $csvContent Informacion de los aspirantes.
+     * 
+     * @author @AngelNolasco
+     * @created 17/11/2024
      */
     public function getApplicantsInfoCSV()
     {
@@ -601,7 +607,6 @@ class ApplicantDAO
      * 
      * @return string $applicantsAdmitted Informacion de todos aquellos  aspirantes admitidos.
      */
-
     public function getApplicantsAdmittedCSV()
     {
         $query = "CALL SP_APPLICANTS_ADMITTED_DATA();";

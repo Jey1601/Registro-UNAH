@@ -142,7 +142,9 @@ VALUES
 	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
 	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
 	('Department Head', 'Administración de un departamento.', TRUE),
-	('Professor', 'Docente ', TRUE);
+	('Professor', 'Docente ', TRUE),
+	('Student', 'Estudiante', TRUE), --@AngelNolasco
+	('Coordinator', 'Coordinador', TRUE); --@AngelNolasco
 	
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
 VALUES
@@ -150,28 +152,31 @@ VALUES
 	('P3pwBDfx', 'Administrador Admisiones see-inscriptions.html', TRUE),
 	('Fz1YeRgv', 'Administrador Admisiones upload-grades.html', TRUE),
 	('lwx50K7f', 'Administrador Admisiones Verificar la información personal y de solicitud de los aspirantes.', TRUE),
-   	('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
-    	('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
-    	('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
-    	('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
-    	('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
-    	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE),
-		('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
-		('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
-		('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE);
+	('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
+	('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
+	('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
+	('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
+	('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
+	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE),
+	('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
+	('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
+	('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE),
+	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE); --@AngelNolasco
+
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(2, 'lwx50K7f', TRUE),
-    	(3, 'IeMfti20', TRUE),
-    	(4, 'rllHaveq', TRUE),
-    	(5, 'Fz1YeRgv', TRUE),
-    	(6, 'pFw9dYOw', TRUE),
-    	(12, '78mD0SYa', TRUE),
-    	(12, 'dJPR7ohs', TRUE),
-    	(8, 'V3yWAxgH', TRUE),
-		(13, 'zKQFIY69', TRUE),
-		(13, 'p62NcCiC', TRUE),
-		(14, '2izGK2WC', TRUE);
+	(3, 'IeMfti20', TRUE),
+	(4, 'rllHaveq', TRUE),
+	(5, 'Fz1YeRgv', TRUE),
+	(6, 'pFw9dYOw', TRUE),
+	(12, '78mD0SYa', TRUE),
+	(12, 'dJPR7ohs', TRUE),
+	(8, 'V3yWAxgH', TRUE),
+	(13, 'zKQFIY69', TRUE),
+	(13, 'p62NcCiC', TRUE),
+	(14, '2izGK2WC', TRUE),
+	(7, 'bG8uB0wH', TRUE); --@AngelNolasco
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
@@ -187,10 +192,21 @@ VALUES
 
 INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
 VALUES
-    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
+    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE); --@AngelNolasco
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
 VALUES
-    (1, 8, TRUE); 
+    (1, 8, TRUE); --@AngelNolasco
+
+INSERT INTO `UsersRegistryAdministrator` (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator)
+VALUES
+	('20001001010', 'G4to-h1Draulico', TRUE), --@AngelNolasco
+	('20002002020', 'seDosa*4crobat1ca', TRUE); --@AngelNolasco
+
+INSERT INTO `RolesUsersRegistryAdministrator` (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator)
+VALUES
+	(7, 1, 1, TRUE), --@AngelNolasco
+	(7, 2, 1, TRUE); --@AngelNolasco
+
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('SIN NOMNRE', FALSE);
 
@@ -585,18 +601,6 @@ VALUES
 (1, 3, TRUE), 
 (1, 4, TRUE),
 (1, 5, TRUE); 
-
-
-
-
-
-
-
-
-
-
-
-
 
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control) VALUES ('bG8uB0wH', 'Registrar estudiantes', TRUE);
 

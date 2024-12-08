@@ -749,4 +749,39 @@ BEGIN
     WHERE id_class_section = p_id_class_section;
 END $$
 
+-- @author STORAGE PROCEDURE SP_GET_ACADEMIC_LOAD_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
+CREATE PROCEDURE SP_GET_ACADEMIC_LOAD_BY_PERIOD ()
+BEGIN
+    SELECT `ClassSections`.id_class_section, classes.id_class, classes.name_class, `Professors`.id_professor,
+    CONCAT(
+            COALESCE(`Professors`.first_name_professor, ''),
+            ' ',
+            COALESCE(`Professors`.second_name_professor, ''),
+            ' ',
+            COALESCE(`Professors`.third_name_professor, ''),
+            ' ',
+            COALESCE(`Professors`.first_lastname_professor, ''),
+            ' ',
+            COALESCE(`Professors`.second_lastname_professor, '')
+    ) AS fullname_professor, COUNT(`EnrollmentClassSections`.id_student) as inscriptions, 
+    `ClassSections`.numberof_spots_available_class_section as spots, `Building`.name_building, 
+    `Classrooms`.name_classroom, `ClassSections`.status_class_section FROM `ClassSections`
+    INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
+    INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
+    INNER JOIN `EnrollmentClassSections` ON `ClassSections`.id_class_section = `EnrollmentClassSections`.id_class_section
+    INNER JOIN `Classrooms` ON `ClassSections`.id_classroom_class_section = `Classrooms`.id_classroom
+    INNER JOIN `ClassroomsBuildingsDepartmentsRegionalCenters` ON `Classrooms`.id_classroom = `ClassroomsBuildingsDepartmentsRegionalCenters`.id_classroom
+    INNER JOIN `BuildingsDepartmentsRegionalsCenters` ON `ClassroomsBuildingsDepartmentsRegionalCenters`.building_department_regional_center = `BuildingsDepartmentsRegionalsCenters`.id_building_department_regionalcenter
+    INNER JOIN `Building` ON `BuildingsDepartmentsRegionalsCenters`.building_department_regionalcenter = `Building`.id_building
+    GROUP BY `ClassSections`.id_class_section, 
+            classes.id_class, 
+            classes.name_class, 
+            `Professors`.id_professor, 
+            fullname_professor, 
+            `Building`.name_building, 
+            `Classrooms`.name_classroom, 
+            `ClassSections`.numberof_spots_available_class_section, 
+            `ClassSections`.status_class_section;
+END$$
+
 DELIMITER ;

@@ -35,7 +35,14 @@ class DIIPAdminDAO {
     }
 
     /**
+     * Metodo para la autenticacion de un usuario administrador de registro (DIIP).
      * 
+     * @param string $username Nombre de usuario (numero de cuenta de empleado) del administrador de registro ingresado en el login.
+     * @param string $password Contresena del usuario administrador ingresada en el login.
+     * 
+     * @return array $response Arreglo asociativo que indica el resultado de la autenticacion (success) junto a un mensaje de retroalimentacion (message) y el valor del token generado (nulo en caso de fallo en la autenticacion).
+     * 
+     * @author @AngelNolasco
      */
     public function authDIIPAdmin (string $username, $password) {
         if (isset($username) && isset($password)) {
@@ -123,7 +130,7 @@ class DIIPAdminDAO {
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
                         'token' => $newToken,
-                        'typeUser' => 'dippAdmin'
+                        'typeUser' => 7
                     ];
                     
                 } else { //Contrasena no coincide
@@ -151,7 +158,17 @@ class DIIPAdminDAO {
     }
 
     /**
+     * Metodo para el registro masivo de estudiantes a traves de un archivo CSV.
      * 
+     * @param $csvFile Archivo CSV que contiene los datos necesarios de los estudiantes para registrarlos correctamente en la base de datos.
+     * @param bool $firstRowHeaders Booleano para indicar si el archivo CSV trae cabeceras, verdadero (true) por defecto.
+     * 
+     * @return array $response Arreglo asociativo que indica el resultado del registro de los estudiantes (success), junto con un mensaje de retroalimentacion (message) y otro arreglo asociativo en el que se guardan los posibles errores de insercion (errors). Tambien se retorna la cantidad de registros hechos en cada tabla modificada, excepto en caso de errores mayores como los descritos a continuacion:
+     *      En caso de que se indique que el CSV tiene cabeceras y no sean las correctas (array $headers), se retorna directamente el fallo.
+     *      En caso de que el estudiante no se inserte en la tabla Students correctamente se retorna el fallo directamente y se hace un rollback de la base de datos.
+     * 
+     * @author @AngelNolasco
+     * @created 04/12/2024
      */
     public function insertStudentsByCSV ($csvFile, bool $firstRowHeaders=true) {
         $fileTempPath = $csvFile['tmp_csv'];
@@ -164,7 +181,7 @@ class DIIPAdminDAO {
             $rowsInsertUserStudent = 0;
             $rowsInsertRolUserStudent = 0;
             $errors = [];
-            $headers = ["id_card_student", "first_name", "second_name", "third_name", "first_lastname", "second_lastname", "address", "email", "phone_number", "id_regional_center", "name_undergraduate"];
+            $headers = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "direccion_aspirante_admitido", "celular_aspirante_admitido","correo_personal_aspirante_admitido", "carrera_aspirante_admitido", "centro_regional_aspirante_admitido"];
 
             while (($row = fgetcsv($handle, 0, ',')) !== FALSE) {
                 if ($firstRowHeaders) {
@@ -181,42 +198,51 @@ class DIIPAdminDAO {
                         break;
                     }
                 }
+            
 
                 //Escapar los valores para prevenir inyecciones SQL
-                $idCardStudent = $this->connection->real_escape_string($row[0]);
-                $firstName = $this->connection->real_escape_string($row[1]);
-                $secondName = $this->connection->real_escape_string($row[2]);
-                $thirdName = $this->connection->real_escape_string($row[3]);
-                $firstLastname = $this->connection->real_escape_string($row[4]);
-                $secondLastname = $this->connection->real_escape_string($row[5]);
-                $adress = $this->connection->real_escape_string($row[6]);
-                $personalEmail = $this->connection->real_escape_string($row[7]);
-                $phoneNumber = $this->connection->real_escape_string($row[8]);
-                $nameRegionalCenter = $this->connection->real_escape_string($row[9]);
-                $nameUndergraduate = $this->connection->real_escape_string($row[10]);
+                $fullName = $this->connection->real_escape_string($row[0]);
+                $idCardStudent = $this->connection->real_escape_string($row[1]);
+                $address = $this->connection->real_escape_string($row[2]);
+                $phoneNumber = $this->connection->real_escape_string($row[3]);
+                $personalEmail = $this->connection->real_escape_string($row[4]);
+                $idUndergraduate = intval($this->connection->real_escape_string($row[5]));
+                $idRegionalCenter = intval($this->connection->real_escape_string($row[6]));
 
-                $idRegionalCenter = $this->getIdRegionalCenterByName($nameRegionalCenter);
+                $partes = explode(" ", $fullName);
 
-                if (!($idRegionalCenter['success'])) {
-                    $this->connection->rollback();
-                    return $response = [
-                        'success' => false,
-                        'message' => 'Centro regional no encontrado.'
-                    ];
+                // Inicializa las variables
+                $firstName = $secondName = $thirdName = $firstLastname = $secondLastname = '';
+
+                // Asigna las partes a las variables correspondientes
+                if (count($partes) === 2) {
+                    [$firstName, $firstLastname] = $partes;
+                } elseif (count($partes) === 3) {
+                    [$firstName, $secondName, $firstLastname] = $partes;
+                } elseif (count($partes) === 4) {
+                    [$firstName, $secondName, $firstLastname, $secondLastname] = $partes;
+                } elseif (count($partes) === 5) {
+                    [$firstName, $secondName, $thirdName, $firstLastname, $secondLastname] = $partes;
                 }
-
-                $accountNumberStudent = StudentFunctions::generateAccountNumber($idRegionalCenter['idRegionalCenter']); //Generacion del numero de cuenta
+                
+                $accountNumberStudent = StudentFunctions::generateAccountNumber($idRegionalCenter); //Generacion del numero de cuenta
                 $institutionalEmail = StudentFunctions::generateEmail($personalEmail); //Generacion de correo institucional
 
                 //INSERCION ESTUDIANTE
                 $queryInsertStudent = "INSERT INTO `Students` (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, third_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE);";
                 $stmtInsertStudent = $this->connection->prepare($queryInsertStudent);
-                $stmtInsertStudent->bind_param('sssssssssss', $accountNumberStudent, $institutionalEmail, $idCardStudent, $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $adress, $personalEmail, $phoneNumber);
+                $stmtInsertStudent->bind_param('sssssssssss', $accountNumberStudent, $institutionalEmail, $idCardStudent, $firstName, $secondName, $thirdName, $firstLastname, $secondLastname, $address, $personalEmail, $phoneNumber);
                 
                 if($stmtInsertStudent->execute()) {
                     $rowsInsertedStudent++;
                 } else {
                     $errors[] = "Fallo en la insercion del estudiante con numero de identidad: " . $idCardStudent;
+                    $this->connection->rollback();
+                    return [
+                        'success' => false,
+                        'message' => 'Estudiante no insertado.',
+                        'errors' => $errors
+                    ];
                 }
 
                 while ($this->connection->more_results() && $this->connection->next_result()) {
@@ -230,7 +256,7 @@ class DIIPAdminDAO {
                 $queryInsertStudentRegionalCenter = "INSERT INTO `StudentsRegionalCenters` (id_student, id_regional_center, status_regional_center_student)
                 VALUES (?, ?, TRUE);";
                 $stmtInsertStudentRegionalCenter = $this->connection->prepare($queryInsertStudentRegionalCenter);
-                $stmtInsertStudentRegionalCenter->bind_param('si', $accountNumberStudent, $idRegionalCenter['idRegionalCenter']);
+                $stmtInsertStudentRegionalCenter->bind_param('si', $accountNumberStudent, $idRegionalCenter);
                 if($stmtInsertStudentRegionalCenter->execute()) {
                     $rowsInsertedStudentRegionalCenter++;
                 } else {
@@ -245,20 +271,14 @@ class DIIPAdminDAO {
                 }
 
                 //INSERCION ESTUDIANTE-PREGRADO
-                $idUndergraduate = $this->getIdUndergraduteByName($nameUndergraduate); //Obtencion del ID de la carrera de pregrado
-
-                if ($idUndergraduate['success']) {
-                    $queryInsertStudentUndergraduate = "INSERT INTO `StudentsUndergraduates` (id_student, id_undergraduate, status_student_undergraduate) VALUES (?, ?, TRUE);";
-                    $stmtInsertStudentUndergraduate = $this->connection->prepare($queryInsertStudentUndergraduate);
-                    $stmtInsertStudentUndergraduate->bind_param('si', $accountNumberStudent, $idUndergraduate['idUndergraduate']);
+                $queryInsertStudentUndergraduate = "INSERT INTO `StudentsUndergraduates` (id_student, id_undergraduate, status_student_undergraduate) VALUES (?, ?, TRUE);";
+                $stmtInsertStudentUndergraduate = $this->connection->prepare($queryInsertStudentUndergraduate);
+                $stmtInsertStudentUndergraduate->bind_param('si', $accountNumberStudent, $idUndergraduate);
     
-                    if($stmtInsertStudentUndergraduate->execute()) {
-                        $rowsInsertedStudentUndergraduate++;
-                    } else {
-                        $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent;
-                    }
+                if($stmtInsertStudentUndergraduate->execute()) {
+                    $rowsInsertedStudentUndergraduate++;
                 } else {
-                    $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent . ". Carrera no encontrada.";
+                    $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent;
                 }
 
                 while ($this->connection->more_results() && $this->connection->next_result()) {
@@ -347,66 +367,10 @@ class DIIPAdminDAO {
                     'Total filas usuario-rol registradas: '.$rowsInsertRolUserStudent
                 ]
             ];
-
         } else {
             return $response = [
                 'success' => false,
                 'message' => 'Error al abrir el archivo CSV.'
-            ];
-        }
-    }
-
-    /**
-     * Metodo auxiliar para obtener el ID de una carrera de pregrado a traves de su nombre. Usado en metodo insertStudentsByCSV.
-     * 
-     * @param string $nameUndergraduate Nombre de la carrera de pregrado.
-     * 
-     * @return array Arreglo asociativo con resultado de la consulta (success), mensaje de retroalimentacion (message) e ID de la carrera (en caso de exito).
-     */
-    public function getIdUndergraduteByName (string $nameUndergraduate) {
-        $querySelectIdUndergraduate = "SELECT id_undergraduate FROM `Undergraduates` WHERE name_undergraduate = ?;";
-        $resultSelectIdUndergraduate = $this->connection->execute_query($querySelectIdUndergraduate, [$nameUndergraduate]);
-
-        if ($resultSelectIdUndergraduate->num_rows > 0) {
-            $row = $resultSelectIdUndergraduate->fetch_assoc();
-            $idUndergraduate = $row['id_undergraduate'];
-
-            return [
-                'success' => true,
-                'message' => 'Carrera de pregrado encontrada.',
-                'idUndergraduate' => $idUndergraduate 
-            ];
-        } else{
-            return [
-                'success' => false,
-                'message' => 'Carrera de pregrado no encontrada.'
-            ];
-        }
-    }
-
-    public function getIdRegionalCenterByName (string $regionalCenterName) {
-        if (isset($regionalCenterName)) {
-            $query = "SELECT id_regional_center FROM RegionalCenters WHERE name_regional_center = ?";
-            $stmt = $this->connection->prepare($query);
-            $stmt->bind_param('s', $regionalCenterName);
-
-            if($stmt->execute()) {
-                $idRegionalCenter = 0;
-                $result = $stmt->get_result();
-                while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                    $idRegionalCenter = $row['id_regional_center'];
-                }
-
-                return [
-                    'success' => true,
-                    'message' => 'Carrera de pregrado encontrada.',
-                    'idRegionalCenter' => $idRegionalCenter 
-                ];
-            }
-        } else {
-            return [
-                'success' => false,
-                'message' => 'Centro regional no encontrado.'
             ];
         }
     }
