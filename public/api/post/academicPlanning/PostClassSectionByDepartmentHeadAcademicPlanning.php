@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener la entrada JSON
     $input = file_get_contents('php://input');
     $_POST = json_decode($input, true);
-    $department_id = $_POST['department_id'];
-    $regional_center_id = $_POST['regional_center_id'];
+    $department_id = intval($_POST['department_id']);
+    $regional_center_id = intval($_POST['regional_center_id']);
     if (!is_int($department_id) || !is_int($regional_center_id)) {
         echo json_encode(["error" => "Parámetros inválidos. Asegúrese de enviar enteros para los IDs."]);
         exit;

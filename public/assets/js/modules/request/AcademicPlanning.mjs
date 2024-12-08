@@ -141,10 +141,10 @@ class AcademicPlanning{
     
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
           // console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
-            return responseData.data;  // Devuelve la respuesta
+            return responseData.data;  
         } catch (error) {
-            console.error('Error:', error);  // Maneja errores
-            return null;  // O cualquier valor que quieras devolver en caso de error
+            console.error('Error:', error);  
+            return null;  
         }
     }
 
@@ -172,10 +172,10 @@ class AcademicPlanning{
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
             console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
             
-          return responseData.data;  // Devuelve la respuesta
+          return responseData.data;  
         } catch (error) {
-            console.error('Error:', error);  // Maneja errores
-            return null;  // O cualquier valor que quieras devolver en caso de error
+            console.error('Error:', error);  
+            return null;  
         }
     }
 
@@ -198,13 +198,12 @@ class AcademicPlanning{
             });
     
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
-          // console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
-          console.log(responseData) ; 
-          return responseData.data;  // Devuelve la respuesta
+       
+          return responseData.data;  
            
         } catch (error) {
-            console.error('Error:', error);  // Maneja errores
-            return null;  // O cualquier valor que quieras devolver en caso de error
+            console.error('Error:', error);  
+            return null;  
         }
     }
     
@@ -235,13 +234,129 @@ class AcademicPlanning{
                 Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
             }
 
-            return responseData.data;  // Devuelve la respuesta
+            return responseData.data;  
         } catch (error) {
-            console.error('Error:', error);  // Maneja errores
-            return null;  // O cualquier valor que quieras devolver en caso de error
+            console.error('Error:', error);  
+            return null;  
         }
     }
     
+    static async getClassSectionByDepartmentHeadAcademicPlanning(department_id, regional_center_id){
+        
+        const data = {
+            department_id: department_id,
+            regional_center_id: regional_center_id
+        };
+       
+        
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostClassSectionByDepartmentHeadAcademicPlanning.php', {
+                method: 'POST', 
+                headers: {    
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+            });
+    
+            const responseData = await response.json();  // Convierte la respuesta en formato JSON
+            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            
+            if(responseData.status == 'succes'){
+                Alert.display(responseData.status,'Enhorabuena','Secciones actualizadas','../../../../') 
+            }else{
+                Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
+            }
+
+            return responseData.data;  
+        } catch (error) {
+            console.error('Error:', error);  
+            return null;  
+        }
+    }
+
+
+    static async createClassSectionAcademicPlanning(formData){
+        
+        const data = {
+            id_class: parseInt(formData.get('id_class'), 10),
+            id_dates_academic_periodicity_year: parseInt(formData.get('id_dates_academic_periodicity_year'), 10),
+            id_classroom_class_section:  parseInt(formData.get('id_classroom_class_section'), 10),
+            id_academic_schedules:parseInt(formData.get('id_academic_schedules'), 10),
+            id_professor_class_section:parseInt(formData.get('id_professor_class_section'), 10),
+            numberof_spots_available_class_section: parseInt(formData.get('numberof_spots_available_class_section'), 10),
+            status_class_section:  1,
+
+
+        };
+       
+        console.log(data);
+       try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostcreateClassSectionAcademicPlanning.php', {
+                method: 'POST',  
+                headers: {    
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  
+            });
+    
+            const responseData = await response.json();  
+            console.log("Respuesta del servidor:", responseData);  
+            
+            if(responseData.status == 'succes'){
+                Alert.display(responseData.status,'Enhorabuena','Secciones actualizadas','../../../../') 
+            }else{
+                Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
+            }
+
+            return responseData.data; 
+        } catch (error) {
+            console.error('Error:', error);  
+            return null;  
+        }
+    }
+
+    static async associateSlassSectionsDaysAcademicPlanning(formData){
+        
+        const data = {
+            id_class: parseInt(formData.get('id_class'), 10),
+            id_dates_academic_periodicity_year: parseInt(formData.get('id_dates_academic_periodicity_year'), 10),
+            id_classroom_class_section:  parseInt(formData.get('id_classroom_class_section'), 10),
+            id_academic_schedules:parseInt(formData.get('id_academic_schedules'), 10),
+            id_professor_class_section:parseInt(formData.get('id_professor_class_section'), 10),
+            numberof_spots_available_class_section: parseInt(formData.get('numberof_spots_available_class_section'), 10),
+            status_class_section:  1,
+
+
+        };
+        console.log(data);
+        try {
+            const response = await fetch(this.path + 'api/post/academicPlanning/PostClassSectionsDaysAcademicPlanning.php', {
+                method: 'POST',   
+                headers: {    
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)  
+            });
+    
+            const responseData = await response.json();  
+            console.log("Respuesta del servidor:", responseData);  
+            
+            if(responseData.status == 'succes'){
+
+                //Llamar al metodo que asocia días
+                console.log('La sección insertada es');
+                console.log(responseData.idClassSection);
+                Alert.display(responseData.status,'Enhorabuena',responseData.message,'../../../../') 
+            }else{
+                Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
+            }
+
+            return responseData.data; 
+        } catch (error) {
+            console.error('Error:', error);  
+            return null;  
+        }
+    }
    
 }
 
