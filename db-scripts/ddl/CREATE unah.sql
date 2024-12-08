@@ -1,3 +1,4 @@
+
 CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
