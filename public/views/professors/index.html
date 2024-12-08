@@ -83,7 +83,66 @@
     <!--offcanvas main container end=================================================================================-->
     <!--Menu=================================================================================-->
     <section style="display: flex; justify-content: center;" class="menu">
-     <img style="width: 30%;" src="../../assets/img/background/construction.png" alt="">
+      <section class="table-container" > 
+        
+        <div class="title-container">
+          <div class="table-title">
+              <h2>Clases asignadas</h2>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 10px; display: flex; justify-content: left; gap:10px;">
+          <input id="searchSection" type="text" placeholder="Buscar" style="border-radius: 5px; border: solid 1px rgba(0, 0, 0, 0.4); height: 30px; ">
+        </div>
+        
+                <table id="viewSections" class="table table-striped table-hover" >
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"># Código</th>
+                        <th scope="col">Clase</th>
+                        <th scope="col">Sección</th>
+                        <th scope="col">Días</th>
+                        <th scope="col">HI</th>
+                        <th scope="col">HF</th>
+                        <th scope="col">Aula</th>
+                        <th scope="col">cupos</th>
+                        <th scope="col">Opciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="viewDataSectionsBody">
+                      <tr>
+                        <td>1</td>
+                        <td>1001</td>
+                        <td>Introducción a la inginiería en sistemas</td>
+                        <td>0700</td>
+                        <td>lu,ma,mi</td>
+                        <td>0700</td>
+                        <td>0800</td>
+                        <td>201</td>
+                        <td>25</td>
+                        <td  ><button  class="btn table-btn "><img src="../../assets/img/icons/add-video-icon.png" alt=""></button>
+                         <button  class="btn table-btn "><img src="../../assets/img/icons/download-grey-icon.png" alt=""></button>
+                         <button  class="btn table-btn "><img src="../../assets/img/icons/grade-icon.png" alt=""></button></td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>1002</td>
+                        <td>Ingeniería de Software</td>
+                        <td>0800</td>
+                        <td>lu,ma,mi,ju</td>
+                        <td>0800</td>
+                        <td>0900</td>
+                        <td>201</td>
+                        <td>25</td>
+                        <td  ><button  class="btn table-btn "><img src="../../assets/img/icons/add-video-icon.png" alt=""></button>
+                          <button  class="btn table-btn "><img src="../../assets/img/icons/download-grey-icon.png" alt=""></button>
+                          <button  class="btn table-btn "><img src="../../assets/img/icons/grade-icon.png" alt=""></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+      </section>
+
     </section>
 
 
@@ -156,23 +215,49 @@
       <p class="footer-text">@año | Todos los derechos reservados</p>
     </footer>
 
-    <!-- Modal de avisos -->
-<div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl ">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="warningModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
+        <!-- Modal de avisos -->
+    <div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl ">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+
+        <!-- Modal para agregar video -->
+        <div class="modal fade" id="videoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog  ">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Agregar video de presentación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="" class="form-label">URL video</label>
+                      <input type="email" class="form-control" id="" aria-describedby="emailHelp">
+                      <div id="emailHelp" class="form-text">Utiliza un link de la plafaforma Youtube, verifica que el video se encuentre público</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                  </form>
+              </div>
+              <div class="modal-footer">
+              </div>
+            </div>
+          </div>
+        </div>
    
+
+        
     <script
       src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"

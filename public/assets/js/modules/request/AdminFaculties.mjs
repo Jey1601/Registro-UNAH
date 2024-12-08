@@ -48,9 +48,6 @@ class Professor{
         formData.append("professorFirstLastName", first_lastname);
         formData.append("professorSecondLastName", second_lastname); // Si no hay segundo apellido, pasará null
     
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
-          } 
        
         const isPictureValid = await File.validateFile(professorPictureFile); 
     
@@ -60,9 +57,7 @@ class Professor{
             this.insertData(formData, professorCreationForm);
             console.log(formData);
         }
-        
-        //Limpiamos el formulario
-        //inscriptionForm.reset();
+       
       }
 
       static async insertData(formData, form) {

@@ -112,7 +112,7 @@ class Applicant {
 
       accessess.forEach(access =>{
         
-        console.log(access);
+   
 
               //Agregamos el evento a los botones para poder ver el certificado
             const viewCertificateButtons =

@@ -443,7 +443,9 @@ class Sidebar{
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
     
-   const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+    //Deben leerse de manera dinamica desde el sessión storage
+     //const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+     const accesses = ['iAV7sDXj'];
 
     // Select the sidebar container
     const sidebarBody = document.querySelector(".sidebar-body ul");
@@ -498,11 +500,100 @@ class Sidebar{
       sidebarBody.appendChild(li);
     }
 
+    //Si tiene acceso a la pantalla
+    if (accesses.includes('iAV7sDXj')) {
+      // Opción "Inicio"
+      const aInicio = document.createElement("a");
+      const liInicio = document.createElement("li");
+      liInicio.classList.add("slidebar-item");
+      aInicio.href = path + 'views/students';
+      aInicio.appendChild(document.createTextNode('Inicio'));
+      liInicio.appendChild(aInicio);
+      sidebarBody.appendChild(liInicio);
+    
+      // Opción "Matrícula"
+      const aMatricula = document.createElement("a");
+      const liMatricula = document.createElement("li");
+      liMatricula.classList.add("slidebar-item");
+      aMatricula.href = path + 'views/students/registration.html';
+      aMatricula.appendChild(document.createTextNode('Matrícula'));
+      liMatricula.appendChild(aMatricula);
+      sidebarBody.appendChild(liMatricula);
+    
+      // Opción "Calificaciones" con subopciones
+      const liCalificaciones = document.createElement("li");
+      liCalificaciones.classList.add("slidebar-item");
+      const aCalificaciones = document.createElement("a");
+      aCalificaciones.href = path + 'views/students/grades.html'; 
+      aCalificaciones.appendChild(document.createTextNode('Calificaciones'));
+      liCalificaciones.appendChild(aCalificaciones);
+    
+      sidebarBody.appendChild(liCalificaciones);
+    
+      // Opción "Solicitudes" con subopciones
+      const liSolicitudes = document.createElement("li");
+      liSolicitudes.classList.add("slidebar-item");
+      const aSolicitudes = document.createElement("a");
+      aSolicitudes.href = path + 'views/students/requests.html'; 
+      aSolicitudes.appendChild(document.createTextNode('Solicitudes'));
+      liSolicitudes.appendChild(aSolicitudes);
+    
+     
+    
+      sidebarBody.appendChild(liSolicitudes);
+    }
+
    
   }
 }
 
 
+class Table{
+
+  static renderDynamicTable(data, tableId) {
+    const tableBody = document.querySelector(`#${tableId} tbody`);
+    tableBody.innerHTML = "";
+  
+    if (!Array.isArray(data) || data.length === 0) return;
+  
+    // Generar configuración dinámica
+    const { headers } = this.generateDynamicConfig(data);
+  
+    // Crear filas
+    data.forEach((item, index) => {
+      const row = document.createElement("tr");
+  
+      // Crear celda para el número de fila
+      const rowNumberCell = document.createElement("th");
+      rowNumberCell.scope = "row";
+      rowNumberCell.textContent = index + 1; // Número de fila
+      row.appendChild(rowNumberCell);
+  
+      // Agregar celdas dinámicas
+      headers.forEach(({ key, type }) => {
+        const cell = document.createElement(type);
+        cell.textContent = key ? item[key] || "" : ""; // Agregar valor de la clave
+        row.appendChild(cell);
+      });
+  
+      tableBody.appendChild(row);
+    });
+  }
+
+  static generateDynamicConfig(data) {
+    if (!Array.isArray(data) || data.length === 0) return { headers: [] };
+  
+    const keys = Object.keys(data[0]); // Obtiene las claves del primer objeto
+    return {
+      headers: keys.map((key) => ({
+        text: key.replace(/_/g, " ").toUpperCase(), // Formato de encabezados
+        key: key,
+        type: "td",
+      })),
+    };
+  }
+}
 
 
-export{Alert, Modal,Cell , Search, Entry, Form, File, Sidebar};
+
+export{Alert, Modal,Cell , Search, Entry, Form, File, Sidebar, Table};

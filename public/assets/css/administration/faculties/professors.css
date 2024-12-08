@@ -65,21 +65,3 @@ section.form h5 {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Estilo para la tabla */
-section.table-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #dee2e6;
-    padding: 8px;
-    text-align: left;
-}

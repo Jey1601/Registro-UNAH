@@ -35,7 +35,7 @@
     rel="stylesheet"
     href="../../../assets/css/support.css"
   />
-    <title>Pregrado</title>
+    <title>Matricula</title>
     <!-- <script src="../../../assets/js/tokenValidation.js"></script>-->
   </head>
 
@@ -88,15 +88,36 @@
       <section class="table-container" > 
         <div class="title-container">
           <div class="table-title">
-              <h2>Clases matriculadas</h2>
+              <h2>Matrícula</h2>
           </div>
         </div>
 
-        <div style="margin-bottom: 10px; display: flex; justify-content: left; gap:10px;">
-          <input id="searchSection" type="text" placeholder="Buscar" style="border-radius: 5px; border: solid 1px rgba(0, 0, 0, 0.4); height: 30px; ">
-        </div>
-        
-                <table id="viewSections" class="table table-striped table-hover" >
+        <div style="display: flex; flex-direction: row !important; gap: 1%;" >
+            <div style="width: 49%;">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Departamento</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+           </div>  
+            <div  style="width: 49%;" >
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Clase</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select> 
+            </div>      
+           
+          </div>
+
+      
+          <form   action="">
+            <div style="height: 70vh; overflow: scroll;">
+
+            
+                <table  id="viewSections" class="table table-striped table-hover" >
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -121,8 +142,12 @@
                         <td>0700</td>
                         <td>0800</td>
                         <td>201</td>
-                        <td>Juan</td>
-                        <td  ><button  class="btn btn-danger">Cancelar</button>
+                        <td>Juan</td>     
+                        <td  ><div style="width: 100%;">
+                            <input type="radio" class="btn-check"  name="btnradio" id="btnradio1" autocomplete="off" checked />
+                            <label  style="width: 100%; " class="btn btn-outline-primary" for="btnradio1">Agregar</label>
+                            </div> 
+                        </td>    
                       </tr>
                       <tr>
                         <td>2</td>
@@ -134,10 +159,19 @@
                         <td>0900</td>
                         <td>201</td>
                         <td>Julio</td>
-                        <td  ><button  class="btn btn-danger">Cancelar</button>
-                      </tr>
+                        <td  ><div style="width: 100%;">
+                            <input type="radio" class="btn-check"  name="btnradio" id="btnradio2" autocomplete="off" />
+                            <label  style="width: 100%; " class="btn btn-outline-primary" for="btnradio2">Agregar</label>
+                            </div> 
+                        </td>
+                        </tr>
                     </tbody>
                   </table>
+                </div>
+                  <div style="display: flex; justify-content: end;">
+                    <button id="inscriptionButton" type="submit" class="btn btn-primary oficial-blue" style="border: none; position: sticky; right: 0;">Matrícular</button>
+                  </div>
+                </form>  
       </section>
 
 
@@ -223,6 +257,10 @@
       type="module"
       src="../../../assets/js/aspects.js"
     ></script>
+    <script
+    type="module"
+    src="../../../assets/js/students/registration.js"
+  ></script>
 
   </body>
 </html>
