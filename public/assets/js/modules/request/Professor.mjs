@@ -14,7 +14,7 @@ class Professor{
         select.innerHTML = '';
         
         
-        const professors = await AcademicPlanning.getDataAcademicprofessorsAcademicPlanning(regionalCenter, username_user_professor, days, startTime, endTime);
+        const professors = await AcademicPlanning.getDataProfessorsAcademicPlanning(regionalCenter, username_user_professor, days, startTime, endTime);
   
         // Comprobamos que tenemos datos antes de intentar renderizarlos
         if (professors && Array.isArray(professors)) {

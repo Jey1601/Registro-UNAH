@@ -170,7 +170,7 @@ class AcademicPlanning{
             });
     
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
-          console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
             
           return responseData.data;  // Devuelve la respuesta
         } catch (error) {
