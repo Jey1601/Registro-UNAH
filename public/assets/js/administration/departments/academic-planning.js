@@ -6,8 +6,9 @@ import { Class } from "../../modules/request/Class.mjs";
 import {  Building } from "../../modules/request/Building.mjs";
 import { Classroom } from "../../modules/request/Classroom.mjs";
 import { Schedule } from "../../modules/request/Schedules.mjs";
-import { Professor } from "../../modules/request/AdminFaculties.mjs";
+import { Professor } from "../../modules/request/Professor.mjs";
 import { Login } from "../../modules/request/login.mjs";
+
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
@@ -34,8 +35,8 @@ const classSelect = document.getElementById('classPlanning');
 //Edificio
 const buildingSelect = document.getElementById('building');
 //horario
-const schedule = document.getElementById('schedule');
-const selectedSchedule = schedule.options[schedule.selectedIndex];
+let schedule = document.getElementById('schedule');
+let selectedSchedule = '';
 
 
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
@@ -47,9 +48,10 @@ Sidebar.buildSidebar('../../../')
 window.addEventListener('load', function(event){
     
     event.preventDefault();
+    Schedule.renderSelectSchedules('schedule');
     AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
     RegionalCenter.renderSelectRegionalCentersByProfessor('ademicPlanningCenter',idProfessor);
-    Schedule.renderSelectSchedules('schedule');
+    
     
 })
 
@@ -58,6 +60,9 @@ academicPlanningCenterSelect.addEventListener('change', function(){
     const idCenter = parseInt(academicPlanningCenterSelect.value, 10);
     Career.renderSelectUndergraduatesByCenter('academicPlannigUndegraduate', idProfessor, idCenter);
     Building.renderSelectBuildingsByCenter('building',idProfessor , idCenter);
+
+    //Se selecciona el horario que escogió el usuario
+    selectedSchedule = schedule.options[schedule.selectedIndex];
     const days = Schedule.getSelectedDays();
     const startTime = selectedSchedule.getAttribute('start_time')
     const endTime = selectedSchedule.getAttribute('end_time')
