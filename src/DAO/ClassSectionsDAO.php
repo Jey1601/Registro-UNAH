@@ -73,10 +73,11 @@ Class  ClassSectionsDAO{
 
                 if ($resultTwo->num_rows <= 0) {
                     // Insertar la nueva sección de clase
-                    $stmtInsert = $this->connection->prepare("CALL INSERT_CLASS_SECTION(?, ?, ?, ?, ?, ?, ?)");
+                    $stmtInsert = $this->connection->prepare("CALL INSERT_CLASS_SECTION(?, ?, ?, ?, ?, ?, ?,@new_id)");
                     $stmtInsert->bind_param("iiiiiii", $id_class, $id_dates_academic_periodicity_year, $id_classroom_class_section, $id_academic_schedules, $id_professor_class_section, $numberof_spots_available_class_section, $status_class_section);
                     $stmtInsert->execute();
-                    $newClassSectionId = $this->connection->insert_id;
+                    $result = $this->connection->query("SELECT @new_id AS new_id");
+                    $newClassSectionId = $result->fetch_assoc()['new_id'];
                     return [
                         "status" => "success",
                         "message" => "Sección de clase creada exitosamente.",
@@ -197,6 +198,76 @@ Class  ClassSectionsDAO{
             return [
                 "status" => "error",
                 "message" => "Error en updateSpotsAvailableClassSection() al procesar la solicitud: " . $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteClassSectionsByDepartmentHead($idClassSection, $department_id, $justification){
+        if (
+            !is_int($idClassSection) ||
+            !is_int($department_id) 
+        ) {
+            throw new InvalidArgumentException("Parámetros inválidos en: deleteClassSectionsByDepartmentHead().");
+        }
+        try {
+            $stmtOne = $this->connection->prepare("CALL GET_ENROLLMENT_CLASS_SECTION_IDS(?)");
+            $stmtOne->bind_param("i", $idClassSection);
+            $stmtOne->execute();
+            $resultOne = $stmtOne->get_result();
+            $stmtOne->close();
+            //verificar que haya menos de 15 alumnos matriculados.
+            if ($resultOne->num_rows < 15) {
+                $verify = true;
+                while ($oneStundet = $resultOne->fetch_assoc()) {
+                    $idStudent = $oneStundet['id_student'];
+                    $stmtTwo = $this->connection->prepare("CALL GET_UNDERGRADUATE_PROGRESS(?)");
+                    $stmtTwo->bind_param("i",$idStudent);
+                    $stmtTwo->execute();
+                    $resultTwo = $stmtTwo->get_result();
+                    $stmtTwo->close();
+                    $associativeResultTwo = $resultTwo->fetch_assoc();
+                    //si se encuentra un estudiante por egresar no se puede cancelar la seccion de la clase. 
+                    if ($associativeResultTwo['progressPercentage']  > 85 ) {
+                        $verify = false;
+                        break; 
+                    }
+                }
+                if ($verify == true) {
+                    $stmtInsert = $this->connection->prepare("CALL INSERT_CLASS_SECTION_CANCELLED(?, ?, ?)");
+                    $stmtInsert->bind_param("iis", $idClassSection, $department_id, $justification);
+                    $stmtInsert->execute();
+                    $stmtInsert->close();
+                    //desactivar la matricula de cada estudiante.
+                    $stmtUpdate = $this->connection->prepare("CALL UPDATE_CLASS_SECTION_STATUS(?)");
+                    $stmtUpdate->bind_param("i", $idClassSection);
+                    $stmtUpdate->execute();
+                    $stmtUpdate->close();
+                    //desactivar la seccion de la clase
+                    $stmtUpdateOne = $this->connection->prepare("CALL UPDATE_CLASS_SECTION_STATUS(?)");
+                    $stmtUpdateOne->bind_param("i", $idClassSection);
+                    $stmtUpdateOne->execute();
+                    $stmtUpdateOne->close();
+                    return [
+                        "status" => "success",
+                        "message" => "Sección de clase eliminada correctamente."
+                    ];
+                } else {
+                    return [
+                        "status" => "warning",
+                        "message" => "Se ha encontrado un estudiante por egresar"
+                    ];
+                }
+            } else {
+                return [
+                    "status" => "warning",
+                    "message" => "Traslape con secciones ya creadas."
+                ];
+            }
+        } catch (Exception $e) {
+            // Manejo de excepciones
+            return [
+                "status" => "error",
+                "message" => "Error en deleteClassSectionsByDepartmentHead() al procesar la solicitud: " . $e->getMessage()
             ];
         }
     }
