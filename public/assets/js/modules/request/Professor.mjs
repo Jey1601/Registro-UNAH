@@ -21,7 +21,7 @@ class Professor{
             let counter = 0;
             professors.forEach(professor => {
                 const option = document.createElement("option");
-                option.value = professor.id_academic_professor;
+                option.value = professor.id_professor;
                 option.innerText = `${professor.id_professor}-${professor.first_name} - ${professor.first_lastname}`;
                 option.setAttribute('id_professor',professor.id_professor );
 

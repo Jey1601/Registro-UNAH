@@ -1,4 +1,4 @@
-import { Sidebar } from "../../modules/behavior/support.mjs";
+import { Sidebar, Form, Table } from "../../modules/behavior/support.mjs";
 import { AcademicPlanning } from "../../modules/request/AcademicPlanning.mjs";
 import { RegionalCenter } from "../../modules/request/RegionalCenter.mjs";
 import { Career } from "../../modules/request/Career.mjs";
@@ -16,12 +16,14 @@ const closeSidebarButton = document.getElementById("closeSidebar");
 const academicPlanningCenterSelect = document.getElementById('ademicPlanningCenter');
 //Jefe de departamento
 const idProfessor = 1;
+const departmentId = 9;
  //Aquí se debe obtener el usuario del profesor del token
-
+//Aquí se debe obtener el departamento al que pertenece el jefe
      /*const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
         const payload = Login.getPayloadFromToken(token);
         const username_user_professor = payload.userProfessor; */
 
+        
 //carrera select
 const academicPlannigUndegraduateSelect = document.getElementById('academicPlannigUndegraduate');
 
@@ -41,6 +43,10 @@ let selectedSchedule = '';
 //Formulario de creación de secciones
 const planningForm = document.getElementById('planningForm');
 
+//Contenedor de centros regionales filtros
+const containerFilters = document.getElementById("regionalCenterFilter");
+
+
 
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
@@ -48,14 +54,35 @@ closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 Sidebar.buildSidebar('../../../')
 
 
-window.addEventListener('load', function(event){
+window.addEventListener('load', async function(event){
     
     event.preventDefault();
-    Schedule.renderSelectSchedules('schedule');
-    AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
-    RegionalCenter.renderSelectRegionalCentersByProfessor('ademicPlanningCenter',idProfessor);
+    await Schedule.renderSelectSchedules('schedule');
+    await AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
+    await RegionalCenter.renderSelectRegionalCentersByProfessor('ademicPlanningCenter',idProfessor);
     
+    //Filtro de centro regional
+    const selectedFilter= document.querySelector('input[name="btnradio"]:checked');
+
+    //Se obtiene el centro regional
+    const idCenter = parseInt(selectedFilter.value, 10);
     
+    // Se obtiene las secciones
+    const sections = await AcademicPlanning.getClassSectionByDepartmentHeadAcademicPlanning(departmentId, idCenter);
+    console.log(idCenter);
+    console.log('secciones');
+    console.log(sections);
+
+
+    //Se selecciona el horario que escogió el usuario
+    selectedSchedule = schedule.options[schedule.selectedIndex];
+    const days = Schedule.getSelectedDays();
+    const startTime = selectedSchedule.getAttribute('start_time')
+    const endTime = selectedSchedule.getAttribute('end_time')
+
+    //Se cargan los profesores
+    Professor.renderSelectProfessors('professor',idCenter, idProfessor,days ,startTime, endTime );
+ 
 })
 
 
@@ -69,11 +96,8 @@ academicPlanningCenterSelect.addEventListener('change', function(){
     const days = Schedule.getSelectedDays();
     const startTime = selectedSchedule.getAttribute('start_time')
     const endTime = selectedSchedule.getAttribute('end_time')
-    console.log(days);
-    console.log(startTime);
-    console.log(endTime);
     Professor.renderSelectProfessors('professor',idCenter, idProfessor,days ,startTime, endTime );
-   
+
 })
 
 academicPlannigUndegraduateSelect.addEventListener('change', function(){
@@ -108,8 +132,46 @@ logoutBtn.addEventListener('click', function(event){
 });  
 
 
-/* ========== Evento de creaciond de secciones ============*/
+/* ========== Evento de creacionde secciones ============*/
 planningForm.addEventListener('submit', function(event){
     event.preventDefault();
+    const createSectionBtn = document.getElementById('createSectionBtn');
+
+    const formData = new FormData(planningForm);
+
+// Puedes verificar los datos del FormData (opcional)
+formData.forEach((value, key) => {
+    console.log(key, value);  // Muestra cada par clave-valor de los campos del formulario
+});
+    Form.checkFormValidity(planningForm.querySelectorAll("input"),createSectionBtn);
+    AcademicPlanning.createClassSectionAcademicPlanning(formData);
     console.log('se quiere crear una sección');
 })
+
+/* ========== Verificación de campos ============*/
+planningForm.addEventListener('change', function(){
+    const createSectionBtn = document.getElementById('createSectionBtn');
+
+    Form.checkFormValidity(planningForm.querySelectorAll("input"),createSectionBtn);
+   
+})
+
+  /* ========== Carga de secciones ============*/
+
+  containerFilters.addEventListener('change',async function(){
+    
+
+    //Filtro de centro regional
+    const selectedFilter= document.querySelector('input[name="btnradio"]:checked');
+
+    //Se obtiene el centro regional
+    const idCenter = parseInt(selectedFilter.value, 10);
+
+    // Se obtiene las secciones
+    const sections = await AcademicPlanning.getClassSectionByDepartmentHeadAcademicPlanning(departmentId, idCenter);
+
+    Table.renderDynamicTable(sections,'viewDataSections');
+
+
+  })
+
