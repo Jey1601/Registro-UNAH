@@ -472,10 +472,6 @@ BEGIN
     WHERE AcademicPlanningProcess.id_academic_planning_process = p_id_academic_planning_process;
 END$$
 
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE GetRegionalCentersByProfessor(
     IN p_id_professor INT
 )
@@ -498,6 +494,7 @@ BEGIN
         )
         AND DepartmentsRegionalCenters.status_department_regional_center = 1;
 END$$
+
 CREATE PROCEDURE ACTIVE_ACADEMIC_PLANNING()
 BEGIN
    	SELECT id_academic_planning_process FROM AcademicPlanningProcess WHERE status_academic_planning_process = 1;
@@ -508,16 +505,10 @@ BEGIN
    	SELECT start_dateof_academic_planning_process FROM AcademicPlanningProcess WHERE id_academic_planning_process = IdAcademicPlanning AND status_academic_planning_process = 1;
 END$$
 
-
 CREATE PROCEDURE END_DATE_ACADEMIC_PLANNING(IN IdAcademicPlanning INT)
 BEGIN
    	SELECT end_dateof_academic_planning_process FROM AcademicPlanningProcess WHERE id_academic_planning_process = IdAcademicPlanning AND status_academic_planning_process = 1;
 END$$
-
-DELIMITER ;
-
-
-DELIMITER $$
 
 CREATE PROCEDURE GetNonServiceClassesByCareer(
     IN p_id_undergraduate INT,
@@ -535,11 +526,6 @@ BEGIN
       AND classes.academic_periodicity_class = p_academic_periodicity;
 END$$
 
-DELIMITER ;
-
-
-
-DELIMITER $$
 CREATE PROCEDURE GetBuildingsByProfessor(
     IN p_id_regional_center INT,
     IN p_id_professor INT
@@ -566,9 +552,6 @@ BEGIN
 END$$
 
 
-DELIMITER ;
-
-DELIMITER $$
 CREATE PROCEDURE GetBuildingsAndClassroomsByProfessor(
     IN p_id_regional_center INT,
     IN p_id_professor INT
@@ -601,10 +584,6 @@ BEGIN
         AND Classrooms.status_classroom = TRUE
         AND ClassroomsBuildingsDepartmentsRegionalCenters.status_classroom_building_department_regionalcenter = TRUE;
 END$$
-DELIMITER ;
-
-
-DELIMITER $$
 
 CREATE PROCEDURE GetActiveSchedules()
 BEGIN
@@ -613,12 +592,6 @@ BEGIN
     WHERE status_academic_schedules = TRUE;
 END $$
 
-DELIMITER ;
-
-
-
-
-DELIMITER $$
 
 CREATE PROCEDURE GetProfessorsAssignedToRegionalCenter(
     IN id_regional_center INT,
@@ -643,10 +616,6 @@ BEGIN
     AND ProfessorsDepartments.status_professor_department = 'active';
 END$$
 
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE GetWorkingHoursActive()
 BEGIN
     SELECT id_working_hour,
@@ -659,10 +628,6 @@ BEGIN
     WHERE status_working_hour = TRUE;
 END $$
 
-DELIMITER ;
-
-DELIMITER //
-
 CREATE PROCEDURE GetProfessorWorkingHours(IN professor_id INT)
 BEGIN
     SELECT ProfessorsDepartmentsWorkingHours.id_working_hour
@@ -670,11 +635,8 @@ BEGIN
     JOIN ProfessorsDepartmentsWorkingHours ON ProfessorsDepartments.id_professor_department = ProfessorsDepartmentsWorkingHours.id_professor_department
     WHERE ProfessorsDepartments.id_professor = professor_id 
     AND ProfessorsDepartmentsWorkingHours.status_working_hour = TRUE;
-END //
+END $$
 
-DELIMITER ;
-
-DELIMITER //
 
 CREATE PROCEDURE GetProfessorWorkingHoursByDay(IN professor_id INT, IN working_day VARCHAR(20))
 BEGIN
@@ -686,6 +648,105 @@ BEGIN
     AND ProfessorsDepartmentsWorkingHours.status_working_hour = TRUE
     AND WorkingHours.day_week_working_hour = working_day
     AND WorkingHours.status_working_hour = TRUE;
-END //
+END $$
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE GET_CLASS_SECTION_ID(
+    IN p_id_dates_academic_periodicity_year INT,
+    IN p_id_classroom_class_section INT,
+    IN p_id_academic_schedules INT,
+    IN p_id_class INT
+)
+BEGIN
+    SELECT id_class_section
+    FROM ClassSections
+    WHERE id_dates_academic_periodicity_year = p_id_dates_academic_periodicity_year
+      AND id_classroom_class_section = p_id_classroom_class_section
+      AND id_academic_schedules = p_id_academic_schedules
+      AND id_class = p_id_class;
+END $$
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE GET_CLASS_SECTION_BY_PROFESSOR_AND_SCHEDULE(
+    IN p_id_professor_class_section INT,
+    IN p_id_academic_schedules INT
+)
+BEGIN
+    SELECT id_class_section
+    FROM ClassSections
+    WHERE id_professor_class_section = p_id_professor_class_section
+      AND id_academic_schedules = p_id_academic_schedules;
+END $$
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE INSERT_CLASS_SECTION(
+    IN p_id_class INT,
+    IN p_id_dates_academic_periodicity_year INT,
+    IN p_id_classroom_class_section INT,
+    IN p_id_academic_schedules INT,
+    IN p_id_professor_class_section INT,
+    IN p_numberof_spots_available_class_section INT,
+    IN p_status_class_section BOOLEAN
+)
+BEGIN
+    INSERT INTO ClassSections (
+        id_class,
+        id_dates_academic_periodicity_year,
+        id_classroom_class_section,
+        id_academic_schedules,
+        id_professor_class_section,
+        numberof_spots_available_class_section,
+        status_class_section
+    )
+    VALUES (
+        p_id_class,
+        p_id_dates_academic_periodicity_year,
+        p_id_classroom_class_section,
+        p_id_academic_schedules,
+        p_id_professor_class_section,
+        p_numberof_spots_available_class_section,
+        p_status_class_section
+    );
+END $$
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE GET_CLASS_SECTION_BY_DEPARTMENT_AND_REGIONAL_CENTER(
+    IN p_department_id INT,
+    IN p_regional_center_id INT
+)
+BEGIN
+    SELECT ClassSections.id_class_section,
+           ClassSections.id_class,
+           classes.name_class,
+           ClassSections.id_dates_academic_periodicity_year,
+           Classrooms.name_classroom AS classroom_name,
+           ClassSections.numberof_spots_available_class_section,
+           CONCAT(Professors.first_name_professor, ' ', Professors.first_lastname_professor) AS professor_name,
+           AcademicSchedules.start_timeof_classes,
+           AcademicSchedules.end_timeof_classes
+    FROM ClassSections
+    JOIN classes ON ClassSections.id_class = classes.id_class
+    JOIN Departments ON classes.department_class = Departments.id_department
+    JOIN DepartmentsRegionalCenters ON Departments.id_department = DepartmentsRegionalCenters.id_department
+    JOIN Professors ON ClassSections.id_professor_class_section = Professors.id_professor
+    JOIN AcademicSchedules ON ClassSections.id_academic_schedules = AcademicSchedules.id_academic_schedules
+    JOIN Classrooms ON ClassSections.id_classroom_class_section = Classrooms.id_classroom
+    WHERE Departments.id_department = p_department_id
+    AND DepartmentsRegionalCenters.id_regionalcenter = p_regional_center_id
+    AND ClassSections.status_class_section = TRUE
+    AND Professors.status_professor = TRUE  -- Solo obtener profesores activos
+    AND AcademicSchedules.status_academic_schedules = TRUE;  -- Solo obtener horarios activos
+END $$
+
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+CREATE PROCEDURE UPDATE_SPOTS_AVAILABLE(
+    IN p_id_class_section INT,
+    IN p_new_numberof_spots INT
+)
+BEGIN
+    UPDATE ClassSections
+    SET numberof_spots_available_class_section = p_new_numberof_spots
+    WHERE id_class_section = p_id_class_section;
+END $$
 
 DELIMITER ;
