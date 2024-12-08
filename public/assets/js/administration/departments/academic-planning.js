@@ -22,21 +22,24 @@ const idProfessor = 1;
         const payload = Login.getPayloadFromToken(token);
         const username_user_professor = payload.userProfessor; */
 
-
 //carrera select
 const academicPlannigUndegraduateSelect = document.getElementById('academicPlannigUndegraduate');
 
 //Periodicidad
 const  periodicitySelect = document.getElementById('periodicity');
 
-
 //clase
 const classSelect = document.getElementById('classPlanning');
+
 //Edificio
 const buildingSelect = document.getElementById('building');
+
 //horario
 let schedule = document.getElementById('schedule');
 let selectedSchedule = '';
+
+//Formulario de creación de secciones
+const planningForm = document.getElementById('planningForm');
 
 
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
@@ -103,3 +106,10 @@ logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
     Login.logout('../../../index.html')
 });  
+
+
+/* ========== Evento de creaciond de secciones ============*/
+planningForm.addEventListener('submit', function(event){
+    event.preventDefault();
+    console.log('se quiere crear una sección');
+})
