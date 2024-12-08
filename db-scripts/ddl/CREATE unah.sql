@@ -919,15 +919,17 @@ CREATE TABLE TokenUserProfessor (
     FOREIGN KEY (id_user_professor) REFERENCES Professors(id_professor)
 );
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 16/11/2024
+-- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 08/12/2024
 CREATE TABLE ClassSections (
     id_class_section INT AUTO_INCREMENT PRIMARY KEY,
+    id_class INT NOT NULL,
     id_dates_academic_periodicity_year INT NOT NULL,
     id_classroom_class_section INT NOT NULL,
     id_academic_schedules INT NOT NULL,
     id_professor_class_section INT NOT NULL,
     numberof_spots_available_class_section INT NOT NULL,
     status_class_section BOOLEAN NOT NULL,
+    FOREIGN KEY (id_class) REFERENCES classes(id_class),
     FOREIGN KEY (id_dates_academic_periodicity_year) REFERENCES DatesAcademicPeriodicityYear(id_dates_academic_periodicity_year),
     FOREIGN KEY (id_classroom_class_section) REFERENCES Classrooms(id_classroom),
     FOREIGN KEY (id_professor_class_section) REFERENCES Professors(id_professor),
@@ -1150,5 +1152,4 @@ CREATE TABLE EvaluationOfProfessors (
     FOREIGN KEY (id_class_section) REFERENCES ClassSections(id_class_section),
     FOREIGN KEY (id_professor) REFERENCES Professors(id_professor)
 );
-
 
