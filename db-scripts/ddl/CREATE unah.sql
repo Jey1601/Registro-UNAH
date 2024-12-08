@@ -1,4 +1,4 @@
-¿CREATE DATABASE IF NOT EXISTS unah_registration;
+CREATE DATABASE IF NOT EXISTS unah_registration;
 USE unah_registration;
 
 -- @author TABLE Roles: Alejandro Moya 20211020462  @created 23/11/2024
@@ -447,7 +447,7 @@ CREATE TABLE DatesAcademicPeriodicityYear (
 	FOREIGN KEY (id_academic_year) REFERENCES AcademicYear(id_academic_year)
 );
 
--- @author TABLE  StudentRegistrationProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE  StudentRegistrationProcess: Alejandro Moya 20211020462 @created 01/12/2024
 CREATE TABLE  StudentRegistrationProcess (
 	id_students_registration_process INT PRIMARY KEY AUTO_INCREMENT,
 	start_dateof_creation_students_registration_process DATE NOT NULL,
@@ -459,7 +459,7 @@ CREATE TABLE  StudentRegistrationProcess (
 	status_students_registration_process BOOLEAN NOT NULL
 );
 
--- @author TABLE TypesEnrollmentConditions: Alejandro Moya 20211020462 @created
+-- @author TABLE TypesEnrollmentConditions: Alejandro Moya 20211020462 @created 05/12/2024
 CREATE TABLE TypesEnrollmentConditions (
 	id_type_enrollment_conditions INT PRIMARY KEY AUTO_INCREMENT,
 	maximum_student_global_average DECIMAL(4,2) UNSIGNED NOT NULL,
@@ -470,7 +470,7 @@ CREATE TABLE TypesEnrollmentConditions (
 	status_type_enrollment_conditions BOOLEAN NOT NULL
 );
 
--- @author TABLE EnrollmentProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE EnrollmentProcess: Alejandro Moya 20211020462 @created 05/12/2024
 CREATE TABLE EnrollmentProcess (
 	id_enrollment_process INT PRIMARY KEY AUTO_INCREMENT,
 	id_dates_academic_periodicity_year INT NOT NULL,
@@ -478,7 +478,7 @@ CREATE TABLE EnrollmentProcess (
 	FOREIGN KEY (id_dates_academic_periodicity_year) REFERENCES DatesAcademicPeriodicityYear(id_dates_academic_periodicity_year)
 );
 
--- @author TABLE DatesEnrollmentProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE DatesEnrollmentProcess: Alejandro Moya 20211020462 @created 05/12/2024
 CREATE TABLE DatesEnrollmentProcess (
 	id_dates_enrollment_process INT PRIMARY KEY AUTO_INCREMENT,
 	id_enrollment_process INT NOT NULL,
@@ -491,7 +491,7 @@ CREATE TABLE DatesEnrollmentProcess (
 	FOREIGN KEY (id_type_enrollment_conditions) REFERENCES  TypesEnrollmentConditions(id_type_enrollment_conditions)
 );
 
--- @author TABLE UndergraduateChangeStudentsProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE UndergraduateChangeStudentsProcess: Alejandro Moya 20211020462 @created 05/12/2024
 CREATE TABLE UndergraduateChangeStudentsProcess (
 	id_undergraduate_change_student_process INT PRIMARY KEY AUTO_INCREMENT,
 	academic_year_undergraduate_change_student_process INT NOT NULL,
@@ -501,7 +501,7 @@ CREATE TABLE UndergraduateChangeStudentsProcess (
 	FOREIGN KEY (academic_year_undergraduate_change_student_process) REFERENCES AcademicYear(id_academic_year)
 );
 
--- @author TABLE CancellationExceptionalClassesProcess: Alejandro Moya 20211020462 @created
+-- @author TABLE CancellationExceptionalClassesProcess: Alejandro Moya 20211020462 @created 05/12/2024
 CREATE TABLE CancellationExceptionalClassesProcess ( 
 	id_cancellation_exceptional_classes_process INT PRIMARY KEY AUTO_INCREMENT,
 	academic_periodicity INT NOT NULL,
