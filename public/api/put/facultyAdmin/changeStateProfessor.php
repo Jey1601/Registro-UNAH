@@ -31,7 +31,6 @@ try {
 
     echo json_encode($response);
 } catch (Exception $e) {
-    // Manejar errores inesperados
     echo json_encode([
         'success' => false,
         'message' => 'Ocurrió un error al procesar la solicitud.',

@@ -619,7 +619,8 @@ VALUES
 INSERT INTO `ClassSections` (id_class, id_dates_academic_periodicity_year, id_classroom_class_section, id_academic_schedules, id_professor_class_section, numberof_spots_available_class_section, status_class_section)
 VALUES
 (1, 1, 27, 4, 1, 25, TRUE),
-(2, 1, 28, 4, 1, 25, TRUE);
+(2, 1, 28, 4, 1, 25, TRUE),
+(3, 1, 26, 5, 1, 15, TRUE);
 
 INSERT INTO `ClassSectionsProfessor` (id_class_section, class_presentation_video, status_class_section_professor)
 VALUES
@@ -642,3 +643,4 @@ VALUES
 INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
 VALUES
 ('20201001559', 'Calamidad domestica', '', null, TRUE);
+

@@ -326,5 +326,71 @@ class ProfessorsDAO {
     public function getReportsByPeriod (int $idProfessor) {
         
     }
+
+    /**
+     * 
+     */
+    public function setUrlVideoClass (int $idProfessor, string $urlVideo, int $idClassSection) {
+        if (!(isset($idProfessor) && isset($urlVideo) && isset($idClassSection))) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Parametros no definidos o nulos.'
+            ];
+        }
+        
+        $querySearchProfessorClassSection = "SELECT * FROM `ClassSections` WHERE id_class = ? AND id_professor_class_section = ?;";
+        $stmtSearchProfessorClassSection = $this->connection->prepare($querySearchProfessorClassSection);
+        $stmtSearchProfessorClassSection->bind_param('ii', $idClassSection, $idProfessor);
+        $stmtSearchProfessorClassSection->execute();
+        $resultSearchProfessorClassSection = $stmtSearchProfessorClassSection->get_result();
+
+        if ($resultSearchProfessorClassSection->num_rows > 0) {
+            $queryCheckExistUrl = "SELECT class_presentation_video FROM `ClassSectionsProfessor` WHERE id_class_section = ?;";
+            $stmtCheckExistUrl = $this->connection->prepare($queryCheckExistUrl);
+            $stmtCheckExistUrl->bind_param('i', $idClassSection);
+            $stmtCheckExistUrl->execute();
+            $resultCheckExistUrl = $stmtCheckExistUrl->get_result();
+
+            if ($resultCheckExistUrl->num_rows > 0) {
+                $queryUpdateUrlVideo = "UPDATE `ClassSectionsProfessor` SET class_presentation_video = ? WHERE id_class_section = ?;";
+                $stmtUpdateUrlVideo = $this->connection->prepare($queryUpdateUrlVideo);
+                $stmtUpdateUrlVideo->bind_param('si', $urlVideo, $idClassSection);
+    
+                if ($stmtUpdateUrlVideo->execute()) {
+                    return $response = [
+                        'status' => 'success',
+                        'message' => 'URL actualizada.'
+                    ];
+                } else {
+                    return $response = [
+                        'status' => 'error',
+                        'message' => 'No se actualizo la URL.'
+                    ];
+                }
+            } else {
+                $queryInsertUrlVideo = "INSERT INTO `ClassSectionsProfessor` (class_presentation_video, id_class_section, status_class_section_professor) VALUES (?, ?, TRUE);";
+                $stmtInsertUrlVideo = $this->connection->prepare($queryInsertUrlVideo);
+                $stmtInsertUrlVideo->bind_param('si', $urlVideo, $idClassSection);
+
+                if ($stmtInsertUrlVideo->execute()) {
+                    return $response = [
+                        'status' => 'success',
+                        'message' => 'URL registrada.'
+                    ];
+                } else {
+                    return $response = [
+                        'status' => 'error',
+                        'message' => 'No se registro la URL.'
+                    ];
+                }
+            }
+
+        } else {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'No se encontro la seccion indicada con el maestro indicado.'
+            ];
+        }
+    }
 }
 ?>
