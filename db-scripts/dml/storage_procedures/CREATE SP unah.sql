@@ -846,7 +846,6 @@ BEGIN
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 
-DROP PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT;
 CREATE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT(IN idStudent VARCHAR(13))
 BEGIN
     SELECT classes.id_class as class_code, classes.name_class, `ClassSections`.id_class_section as section_code,
@@ -863,7 +862,7 @@ BEGIN
     INNER JOIN `Classrooms` ON `ClassSections`.id_classroom_class_section = `Classrooms`.id_classroom
     INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
     INNER JOIN `EnrollmentClassSections` ON `ClassSections`.id_class_section = `EnrollmentClassSections`.id_class_section
-    WHERE `EnrollmentClassSections`.id_student = idStudent AND `EnrollmentClassSections`.status_enrollment_class_sections = 1 AND `ClassSections`.status_class_section = 1;
+    WHERE `EnrollmentClassSections`.id_student = idStudent AND `ClassSections`.status_class_section = 1;
 END$$
 
 DELIMITER ;
