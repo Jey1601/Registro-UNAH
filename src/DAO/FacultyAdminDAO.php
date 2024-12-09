@@ -402,5 +402,42 @@ class FacultyAdminDAO {
             }
         }
     }
+
+    public function getProfessorsByFaculty (int $idFaculty) {
+        if (!(isset($idFaculty))) {
+            return $response = [
+                'success' => false,
+                'message' => 'Codigo de facultad no definido o nulo.'
+            ];
+        }
+
+        $querySelectProfessorsByFaculty = "CALL SP_GET_PROFESSORS_BY_FACULTY(?)";
+        $resultSelectProfessorByFaculty = $this->connection->execute_query($querySelectProfessorsByFaculty, [$idFaculty]);
+
+        if (!($resultSelectProfessorByFaculty)) {
+            return $response = [
+                'success' => false,
+                'message' => 'Error en la ejecucion de la consulta.'
+            ];
+        }
+
+        $professors = [];
+        while ($row = $resultSelectProfessorByFaculty->fetch_assoc()) {
+            $professors [] = $row;
+        }
+
+        if (empty($professors)) {
+            return $response = [
+                'success' => true,
+                'message' => 'No se encontraron docentes asignados a la facultad.'
+            ];
+        } else {
+            return $response = [
+                'success' => true,
+                'message' => 'Ejecucion de consulta exitosa. Campos: id_professor, names_professor, lastnames_professors, email_professor, name_departmet, status_professor.',
+                'professors' => $professors
+            ];
+        }
+    }
 }
 ?>

@@ -797,6 +797,26 @@ BEGIN
             `ClassSections`.status_class_section;
 END$$
 
+CREATE PROCEDURE SP_GET_PROFESSORS_BY_FACULTY(IN idFaculty INT)
+BEGIN
+    SELECT `Professors`.id_professor,
+    CONCAT(
+            COALESCE(`Professors`.first_name_professor, ''),
+            ' ',
+            COALESCE(`Professors`.second_name_professor, ''),
+            ' ',
+            COALESCE(`Professors`.third_name_professor, '')
+    ) AS names_professor,
+    CONCAT(
+            COALESCE(`Professors`.first_lastname_professor, ''),
+            ' ',
+            COALESCE(`Professors`.second_lastname_professor, '')
+    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet, `Professors`.status_professor FROM `Professors`
+    INNER JOIN `ProfessorsDepartments` ON `Professors`.id_professor = `ProfessorsDepartments`.id_professor
+    INNER JOIN `Departments` ON `ProfessorsDepartments`.id_department = `Departments`.id_department
+    WHERE `Departments`.id_faculty = idFaculty;
+END$$
+
 DELIMITER ;
 
 
