@@ -12,7 +12,7 @@ class Department{
 
             const data = await response.json();
             
-            console.log(data);
+         
             return data;  // Retorna los departamentos
 
         } catch (error) {

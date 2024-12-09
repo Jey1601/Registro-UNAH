@@ -680,17 +680,18 @@ BEGIN
 END $$
 
 -- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
-CREATE PROCEDURE INSERT_CLASS_SECTION(
+CREATE PROCEDURE INSERT_CLASS_SECTION (
     IN p_id_class INT,
     IN p_id_dates_academic_periodicity_year INT,
     IN p_id_classroom_class_section INT,
     IN p_id_academic_schedules INT,
     IN p_id_professor_class_section INT,
     IN p_numberof_spots_available_class_section INT,
-    IN p_status_class_section BOOLEAN
+    IN p_status_class_section INT,
+    OUT new_id INT
 )
 BEGIN
-    INSERT INTO ClassSections (
+     INSERT INTO ClassSections (
         id_class,
         id_dates_academic_periodicity_year,
         id_classroom_class_section,
@@ -708,7 +709,9 @@ BEGIN
         p_numberof_spots_available_class_section,
         p_status_class_section
     );
-END $$
+
+    SET new_id = LAST_INSERT_ID();
+END$$
 
 -- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE GET_CLASS_SECTION_BY_DEPARTMENT_AND_REGIONAL_CENTER(
@@ -716,27 +719,51 @@ CREATE PROCEDURE GET_CLASS_SECTION_BY_DEPARTMENT_AND_REGIONAL_CENTER(
     IN p_regional_center_id INT
 )
 BEGIN
-    SELECT ClassSections.id_class_section,
-           ClassSections.id_class,
-           classes.name_class,
-           ClassSections.id_dates_academic_periodicity_year,
-           Classrooms.name_classroom AS classroom_name,
-           ClassSections.numberof_spots_available_class_section,
-           CONCAT(Professors.first_name_professor, ' ', Professors.first_lastname_professor) AS professor_name,
-           AcademicSchedules.start_timeof_classes,
-           AcademicSchedules.end_timeof_classes
-    FROM ClassSections
-    JOIN classes ON ClassSections.id_class = classes.id_class
-    JOIN Departments ON classes.department_class = Departments.id_department
-    JOIN DepartmentsRegionalCenters ON Departments.id_department = DepartmentsRegionalCenters.id_department
-    JOIN Professors ON ClassSections.id_professor_class_section = Professors.id_professor
-    JOIN AcademicSchedules ON ClassSections.id_academic_schedules = AcademicSchedules.id_academic_schedules
-    JOIN Classrooms ON ClassSections.id_classroom_class_section = Classrooms.id_classroom
-    WHERE Departments.id_department = p_department_id
-    AND DepartmentsRegionalCenters.id_regionalcenter = p_regional_center_id
-    AND ClassSections.status_class_section = TRUE
-    AND Professors.status_professor = TRUE  -- Solo obtener profesores activos
-    AND AcademicSchedules.status_academic_schedules = TRUE;  -- Solo obtener horarios activos
+    SELECT 
+        ClassSections.id_class_section,
+        ClassSections.id_class,
+        classes.name_class,
+        ClassSections.id_dates_academic_periodicity_year,
+        Classrooms.name_classroom AS classroom_name,
+        ClassSections.numberof_spots_available_class_section,
+        CONCAT(Professors.first_name_professor, ' ', Professors.first_lastname_professor) AS professor_name,
+        AcademicSchedules.start_timeof_classes,
+        AcademicSchedules.end_timeof_classes
+    FROM 
+        ClassSections
+    JOIN 
+        classes ON ClassSections.id_class = classes.id_class
+    JOIN 
+        UndergraduateClass ON classes.id_class = UndergraduateClass.id_class
+    JOIN 
+        Undergraduates ON UndergraduateClass.id_undergraduate = Undergraduates.id_undergraduate
+    JOIN 
+        UndergraduatesRegionalCenters ON Undergraduates.id_undergraduate = UndergraduatesRegionalCenters.id_undergraduate
+    JOIN 
+        Departments ON classes.department_class = Departments.id_department
+    JOIN 
+        DepartmentsRegionalCenters ON Departments.id_department = DepartmentsRegionalCenters.id_department
+    JOIN 
+        Professors ON ClassSections.id_professor_class_section = Professors.id_professor
+    JOIN 
+        AcademicSchedules ON ClassSections.id_academic_schedules = AcademicSchedules.id_academic_schedules
+    JOIN 
+        Classrooms ON ClassSections.id_classroom_class_section = Classrooms.id_classroom
+    JOIN 
+        ClassroomsBuildingsDepartmentsRegionalCenters ON Classrooms.id_classroom = ClassroomsBuildingsDepartmentsRegionalCenters.id_classroom
+    JOIN 
+        BuildingsDepartmentsRegionalsCenters ON ClassroomsBuildingsDepartmentsRegionalCenters.building_department_regional_center = BuildingsDepartmentsRegionalsCenters.id_building_department_regionalcenter
+    WHERE 
+        Departments.id_department = p_department_id
+        AND DepartmentsRegionalCenters.id_regionalcenter = p_regional_center_id
+        AND UndergraduatesRegionalCenters.id_regionalcenter = p_regional_center_id
+        AND ClassSections.status_class_section = TRUE
+        AND Professors.status_professor = TRUE  -- Solo obtener profesores activos
+        AND AcademicSchedules.status_academic_schedules = TRUE  -- Solo obtener horarios activos
+        AND UndergraduatesRegionalCenters.status_undergraduate_Regional_Center = TRUE  -- Solo pregrados activos en el centro regional
+        AND BuildingsDepartmentsRegionalsCenters.department_regional_center = DepartmentsRegionalCenters.id_department_Regional_Center
+        AND ClassroomsBuildingsDepartmentsRegionalCenters.status_classroom_building_department_regionalcenter = TRUE  -- Solo salones activos
+        AND BuildingsDepartmentsRegionalsCenters.status_building_department_regionalcenter = TRUE; -- Solo edificios activos
 END $$
 
 -- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
@@ -812,12 +839,15 @@ BEGIN
             COALESCE(`Professors`.first_lastname_professor, ''),
             ' ',
             COALESCE(`Professors`.second_lastname_professor, '')
-    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet, `Professors`.status_professor FROM `Professors`
+    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet,`RegionalCenters`.name_regional_center, `Professors`.status_professor FROM `Professors`
     INNER JOIN `ProfessorsDepartments` ON `Professors`.id_professor = `ProfessorsDepartments`.id_professor
     INNER JOIN `Departments` ON `ProfessorsDepartments`.id_department = `Departments`.id_department
+    INNER JOIN `RegionalCenters` ON `Professors`.id_regional_center = `RegionalCenters`.id_regional_center
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 
 DELIMITER ;
+
+
 
 
