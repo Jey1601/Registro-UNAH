@@ -74,15 +74,16 @@ const classData = [
   },
 ];
 
-window.addEventListener("load", function () {
-  Table.renderDynamicTable(classData, "viewSections");
+window.addEventListener("load", async function () {
+  const classes = await  Professor.getAssignedClasses(1);
+  
+  Table.renderDynamicTable(classes, "viewSections");
   Search.onInputChange("searchSection", "viewDataSectionsBody");
   Section.addOptions("viewSections");
-
   //Agregamos el evento a los botones para poder agregar el video
     const addVideoButtons = document.querySelectorAll(".btn-video");
 
-     Professor.getAssignedClasses(1);
+    
 
     addVideoButtons.forEach((button) => {
     button.addEventListener("click", function () {

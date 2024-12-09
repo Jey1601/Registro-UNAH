@@ -269,14 +269,14 @@ class ProfessorsDAO {
     public function getAssignedClasses (int $idProfessor) {
         $querySelectAssignedClasses = "SELECT classes.id_class as class_code, classes.name_class, `ClassSections`.id_class_section as section_code,
         `ClassSectionsDays`.id_day as section_day, `AcademicSchedules`.start_timeof_classes as hi,
-        `AcademicSchedules`.end_timeof_classes as hf, `ClassSectionsProfessor`.class_presentation_video as url_video
+        `AcademicSchedules`.end_timeof_classes as hf, `Classrooms`.name_classroom 
         FROM `ClassSections`
         INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
         INNER JOIN `ClassSectionsDays` ON `ClassSections`.id_class_section = `ClassSectionsDays`.id_class_section
         INNER JOIN `AcademicSchedules` ON `ClassSections`.id_academic_schedules = `AcademicSchedules`.id_academic_schedules
-        INNER JOIN `ClassSectionsProfessor` ON `ClassSections`.id_class_section = `ClassSectionsProfessor`.id_class_section
         INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
-        WHERE `Professors`.id_professor = ? AND `ClassSections`.status_class_section = TRUE;;";
+        INNER JOIN  `Classrooms` ON `ClassSections`.id_classroom_class_section = `Classrooms`.id_classroom
+        WHERE `Professors`.id_professor = ? AND `ClassSections`.status_class_section=1;";
         $stmtAssignedClasses = $this->connection->prepare($querySelectAssignedClasses);
         $stmtAssignedClasses->bind_param('i', $idProfessor);
         $stmtAssignedClasses->execute();
@@ -296,7 +296,7 @@ class ProfessorsDAO {
                         'section_days' => [],
                         'hi' => $row['hi'],
                         'hf' => $row['hf'],
-                        'url_video' => $row['url_video']
+                        'name_classroom' =>$row['name_classroom']
                     ];
                 }
 
