@@ -423,8 +423,8 @@ class Sidebar {
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
     //Deben leerse de manera dinamica desde el sessión storage
-    const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
-    //const accesses = ["iAV7sDXj"];
+    //const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+    const accesses = ["iAV7sDXj"];
 
     // Select the sidebar container
     const sidebarBody = document.querySelector(".sidebar-body ul");
