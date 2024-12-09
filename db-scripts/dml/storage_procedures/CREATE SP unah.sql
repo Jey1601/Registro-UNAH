@@ -797,6 +797,7 @@ BEGIN
             `ClassSections`.status_class_section;
 END$$
 
+-- @author STORAGE PROCEDURE SP_GET_PROFESSORS_BY_FACULTY: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_PROFESSORS_BY_FACULTY(IN idFaculty INT)
 BEGIN
     SELECT `Professors`.id_professor,

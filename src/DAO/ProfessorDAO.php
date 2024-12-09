@@ -180,14 +180,20 @@ class ProfessorsDAO {
      * @created 08/12/2024
      */
     public function getRequests (int $idProfessor) {
-        $querySearchAcademicCoordinator = "SELECT `AcademicCoordinator`.status_academic_coordinator FROM `AcademicCoordinator`
-        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
-        WHERE `Professors`.id_professor = ?;";
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ?;";
         $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
         $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
         $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
+            $roles [] = $row;
+        }
 
-        if ($resultSearchAcademicCoordinator->num_rows > 0) {
+        if (in_array('Coordinator', $roles)) {
             $requestsExceptionalCancellationClasses = [];
             $requestsChangeRegionalCenter = [];
             $requestsChangeUndergraduate = [];
@@ -267,6 +273,7 @@ class ProfessorsDAO {
         WHERE `Professors`.id_professor = ?;";
         $stmtAssignedClasses = $this->connection->prepare($querySelectAssignedClasses);
         $stmtAssignedClasses->bind_param('i', $idProfessor);
+        $stmtAssignedClasses->execute();
         $resultAssignedClasses = $stmtAssignedClasses->get_result();
 
         if ($resultAssignedClasses->num_rows > 0) {

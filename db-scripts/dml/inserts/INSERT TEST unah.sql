@@ -143,8 +143,8 @@ VALUES
 	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
 	('Department Head', 'Administración de un departamento.', TRUE),
 	('Professor', 'Docente ', TRUE),
-	('Student', 'Estudiante', TRUE), --@AngelNolasco
-	('Coordinator', 'Coordinador', TRUE); --@AngelNolasco
+	('Student', 'Estudiante', TRUE),
+	('Coordinator', 'Coordinador', TRUE);
 	
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
 VALUES
@@ -161,7 +161,7 @@ VALUES
 	('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
 	('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
 	('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE),
-	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE); --@AngelNolasco
+	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE);
 
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
@@ -176,7 +176,7 @@ VALUES
 	(13, 'zKQFIY69', TRUE),
 	(13, 'p62NcCiC', TRUE),
 	(14, '2izGK2WC', TRUE),
-	(7, 'bG8uB0wH', TRUE); --@AngelNolasco
+	(7, 'bG8uB0wH', TRUE);
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
@@ -192,20 +192,20 @@ VALUES
 
 INSERT INTO UsersFacultiesAdministrator (username_user_faculties_administrator, password_user_faculties_administrator, id_faculty, status_user_faculties_administrator)
 VALUES
-    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE); --@AngelNolasco
+    ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
 VALUES
-    (1, 8, TRUE); --@AngelNolasco
+    (1, 8, TRUE);
 
 INSERT INTO `UsersRegistryAdministrator` (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator)
 VALUES
-	('20001001010', 'G4to-h1Draulico', TRUE), --@AngelNolasco
-	('20002002020', 'seDosa*4crobat1ca', TRUE); --@AngelNolasco
+	('20001001010', 'G4to-h1Draulico', TRUE),
+	('20002002020', 'seDosa*4crobat1ca', TRUE);
 
 INSERT INTO `RolesUsersRegistryAdministrator` (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator)
 VALUES
-	(7, 1, 1, TRUE), --@AngelNolasco
-	(7, 2, 1, TRUE); --@AngelNolasco
+	(7, 1, 1, TRUE),
+	(7, 2, 1, TRUE);
 
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('SIN NOMNRE', FALSE);
@@ -496,6 +496,16 @@ VALUES
 ('Diana', 'Paola', NULL, 'Moreno', 'Zapata', 'diana.moreno@example.com', 1, 4, TRUE),
 ('César', NULL, NULL, 'Ortega', 'Méndez', 'cesar.ortega@example.com', 1, 4, TRUE);
 
+INSERT INTO `UsersProfessors` (username_user_professor, password_user_professor, status_user_professor)
+VALUES
+(1, 'd4nDadAn', TRUE);
+
+INSERT INTO `RolesUsersProfessor` (id_user_professor, id_role_professor, status_role_professor)
+VALUES
+(1, 14, TRUE),
+(1, 8, TRUE),
+(1, 16, TRUE);
+
 INSERT INTO ProfessorsDepartments (id_department, id_professor, status_professor_department) 
 VALUES
 (9, 1, 'active'),
@@ -602,12 +612,8 @@ VALUES
 (1, 4, TRUE),
 (1, 5, TRUE); 
 
-INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control) VALUES ('bG8uB0wH', 'Registrar estudiantes', TRUE);
+INSERT INTO `ClassSections` (id_class, id_dates_academic_periodicity_year, id_classroom_class_section, id_academic_schedules, id_professor_class_section, numberof_spots_available_class_section, status_class_section)
+VALUES
+(1, 1, 27, 4, 1, 25, TRUE),
+(2, 1, 28, 4, 1, 25, TRUE);
 
-INSERT INTO Roles (role, description_role, status_role) VALUES ('Registry Administrator', 'Registro de estudiantes', TRUE);
-
-INSERT INTO AccessControlRoles (id_access_control, id_role, status_access_control_roles) VALUES ('bG8uB0wH', 15, TRUE);
-
-INSERT INTO UsersRegistryAdministrator (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator) VALUES ('2024', 'gat0_h1dr4licO', TRUE);
-
-INSERT INTO RolesUsersRegistryAdministrator (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator) VALUES (15, 1, 1, TRUE);
