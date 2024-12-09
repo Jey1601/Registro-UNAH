@@ -1,4 +1,4 @@
-import { Form, File, Sidebar } from "../../modules/behavior/support.mjs";
+import { Form, File, Sidebar, Alert, Table } from "../../modules/behavior/support.mjs";
 import { Professor } from "../../modules/request/AdminFaculties.mjs";
 import { RegionalCenter } from "../../modules/request/RegionalCenter.mjs";
 import { Department } from "../../modules/request/Departments.mjs";
@@ -32,10 +32,21 @@ Sidebar.buildSidebar('../../../');
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
-/* ========== Rellenando select ============*/
-window.addEventListener('load', () => {
+/* ========== Rellenando select  y tabla de profesores============*/
+window.addEventListener('load', async () => {
   RegionalCenter.renderSelectRegionalCentersByDepartment('professorCenter','professorDepartment');
   Department.renderSelectDepartmentsByFaculty('professorDepartment', 1);
+  
+  
+  const data = await Professor.getProfessorsByFaculty(1);
+  if(!'professors' in data){
+    Alert.display('warning','oh no', 'Al parecer no hay profesores asignados a esta facultad', '../../../../')
+    Table.renderDynamicTable(data.professors,'viewDataProfessors');
+  }else{
+    console.log('aquí');
+    Table.renderDynamicTable(data.professors,'viewDataProfessors');
+    Professor.addOptions('viewDataProfessors');
+  }
 });
 
 professorDepartment.addEventListener('change', function(){
@@ -78,3 +89,6 @@ logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
     Login.logout('../../../index.html')
 });  
+
+
+

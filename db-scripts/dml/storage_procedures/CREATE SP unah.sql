@@ -838,9 +838,10 @@ BEGIN
             COALESCE(`Professors`.first_lastname_professor, ''),
             ' ',
             COALESCE(`Professors`.second_lastname_professor, '')
-    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet, `Professors`.status_professor FROM `Professors`
+    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet,`RegionalCenters`.name_regional_center, `Professors`.status_professor FROM `Professors`
     INNER JOIN `ProfessorsDepartments` ON `Professors`.id_professor = `ProfessorsDepartments`.id_professor
     INNER JOIN `Departments` ON `ProfessorsDepartments`.id_department = `Departments`.id_department
+    INNER JOIN `RegionalCenters` ON `Professors`.id_regional_center = `RegionalCenters`.id_regional_center
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 

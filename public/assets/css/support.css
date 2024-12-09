@@ -406,5 +406,7 @@ th, td {
      margin: 10px 0;
     
 }
-
+tbody {
+    font-size: small; 
+  }
 
