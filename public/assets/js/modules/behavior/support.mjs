@@ -192,6 +192,10 @@ class Form {
       case "Direction":
         this.validateField(regular_expressions.address, event.target);
         break;
+
+      case "urlYoutube":
+        this.validateField(regular_expressions.urlYoutube, event.target);
+        break;
     }
   }
 
@@ -234,7 +238,7 @@ class Form {
 
   static checkFormValidity(inputsForm, submitButton) {
     let isFormValid = true;
-    let check = true;
+   
     // Filtrar solo los checkboxes
     const checkboxes = Array.from(inputsForm).filter(
       (input) => input.type === "checkbox"
@@ -262,6 +266,8 @@ class Form {
         } else {
           if (input.classList.contains("wrong-input")) {
             isFormValid = false;
+          }else{
+            isFormValid = true;
           }
         }
       }
@@ -284,12 +290,12 @@ class Form {
   }
 
   static changeActionByChecks(
-    idForm,
+    
     idButton,
     messageTrue,
     messageFalse,
-    actionTrue,
-    actionFalse
+    
+  
   ) {
     const submitButton = document.getElementById(idButton);
 

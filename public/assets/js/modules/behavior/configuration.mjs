@@ -20,7 +20,9 @@ const regular_expressions = {
     // - at least one digit
     // - at least one special character: +, *, -, or _
     
-    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+*\-_])[A-Za-z\d+*\-_]{8,}$/
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[+*\-_])[A-Za-z\d+*\-_]{8,}$/,
+
+    urlYoutube: /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w\-]{11}$/
    
 };
 

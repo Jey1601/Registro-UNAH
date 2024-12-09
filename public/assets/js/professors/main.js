@@ -1,4 +1,4 @@
-import { Sidebar, Search, Modal } from "../modules/behavior/support.mjs";
+import { Sidebar, Search, Modal, Form } from "../modules/behavior/support.mjs";
 import { Login } from "../modules/request/login.mjs";
 import { Table } from "../modules/behavior/support.mjs";
 import { Section } from "../modules/request/Section.mjs";
@@ -12,71 +12,21 @@ toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
 Sidebar.buildSidebar("../../");
+//Formulario para actualizar el video
 
+const videoForm = document.getElementById('videoForm');
+//Botón de guardado de url 
+const saveUrlButton = document.getElementById('saveUrlButton');
 const logoutBtn = document.getElementById("logoutBtn");
 logoutBtn.addEventListener("click", function (event) {
   event.preventDefault();
   Login.logout(path + "/index.html");
 });
 
-const classData = [
-  {
-    codigo: "MAT101",
-    clase: "Matemáticas Básicas",
-    seccion: "A",
-    dias: "Lunes y Miércoles",
-    hi: "08:00 AM",
-    hf: "10:00 AM",
-    aula: "Aula 101",
-    cupos: 25,
-  },
-  {
-    codigo: "QUI102",
-    clase: "Química General",
-    seccion: "B",
-    dias: "Martes y Jueves",
-    hi: "10:00 AM",
-    hf: "12:00 PM",
-    aula: "Laboratorio 3",
-    cupos: 15,
-  },
-  {
-    codigo: "HIS201",
-    clase: "Historia Universal",
-    seccion: "C",
-    dias: "Viernes",
-    hi: "01:00 PM",
-    hf: "03:00 PM",
-
-    aula: "Aula 202",
-    cupos: 30,
-  },
-  {
-    codigo: "ING303",
-    clase: "Inglés Avanzado",
-    seccion: "D",
-    dias: "Lunes, Miércoles y Viernes",
-    hi: "02:00 PM",
-    hf: "04:00 PM",
-
-    aula: "Aula 304",
-    cupos: 20,
-  },
-  {
-    codigo: "FIS301",
-    clase: "Física Aplicada",
-    seccion: "E",
-    dias: "Martes y Jueves",
-    hi: "08:00 AM",
-    hf: "10:00 AM",
-    aula: "Laboratorio 5",
-    cupos: 10,
-  },
-];
 
 window.addEventListener("load", async function () {
   const classes = await  Professor.getAssignedClasses(1);
-  
+
   Table.renderDynamicTable(classes, "viewSections");
   Search.onInputChange("searchSection", "viewDataSectionsBody");
   Section.addOptions("viewSections");
@@ -87,9 +37,15 @@ window.addEventListener("load", async function () {
 
     addVideoButtons.forEach((button) => {
     button.addEventListener("click", function () {
-        //Aquí se debe llamar la modal para agregar video
-        console.log(button.getAttribute('section'));
+   
+
+        document.getElementById('sectionField').value =button.getAttribute('section') ;
+     
         Modal.showModal("videoModal");
+
+      
+
+
     });
     });
 
@@ -123,5 +79,36 @@ window.addEventListener("load", async function () {
 
 
 });
+
+videoForm.addEventListener('change', function(){
+  const urlVideo = document.getElementById('urlVideo');
+  const inputs = videoForm.querySelectorAll('input');
+
+  urlVideo.addEventListener('blur', function(event){
+    Form.validateInput(event);
+    Form.checkFormValidity(inputs,saveUrlButton)
+  });
+  
+ 
+  Form.checkFormValidity(inputs,saveUrlButton)
+})
+
+
+
+videoForm.addEventListener('submit', async function(event){
+  const section = document.getElementById('sectionField').value;
+  const urlVideo = document.getElementById('urlVideo').value;
+  event.preventDefault();
+  saveUrlButton.disabled = true;
+  //El id del profesor se debe obtener dinamicamente del payload
+  const status = await Professor.setUrlVideoClassSection(1,urlVideo,section);
+  saveUrlButton.disabled = false;
+
+  if(status == 'success'){
+   Modal.hideModal('videoModal') 
+  }
+})
+
+
 
 

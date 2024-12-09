@@ -82,7 +82,7 @@ inputsInscriptionForm.forEach((input) => {
 
   
   input.addEventListener('blur', function(event){
-    Form.validateInput(event, submitButton);
+    Form.validateInput(event);
     Form.checkFormValidity(inputsInscriptionForm,submitButton);
   });
  

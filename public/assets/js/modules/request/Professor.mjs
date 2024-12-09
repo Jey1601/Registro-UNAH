@@ -2,7 +2,7 @@ import { AcademicPlanning } from "./AcademicPlanning.mjs";
 import { Alert } from "../behavior/support.mjs";
 
 class Professor {
-    static path ='../../../../'
+  static path = "../../../../";
   static async renderSelectProfessors(
     idSelect,
     regionalCenter,
@@ -58,7 +58,7 @@ class Professor {
       const response = await fetch(
         this.path +
           `/api/get/professor/getAssignedClasses.php?idProfessor=${idProfessor}`
-      );  
+      );
 
       if (!response.ok) {
         throw new Error("Error en la solicitud: " + response.status);
@@ -69,6 +69,53 @@ class Professor {
       return data.assignedClasses;
     } catch (error) {
       return [];
+    }
+  }
+
+  static async setUrlVideoClassSection(idProfessor, urlVideo, idClassSection) {
+    const data = {
+        idProfessor:idProfessor,
+        urlVideo:urlVideo,
+        idClassSection:idClassSection
+    };
+
+    console.log(data);
+    try {
+      const response = await fetch(
+        this.path +
+          "api/put/professor/setUrlVideoClassSection.php",
+        {  
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const responseData = await response.json();
+      console.log("Respuesta del servidor:", responseData);
+
+      if (responseData.status == "success") {
+        Alert.display(
+          responseData.status,
+          "Enhorabuena",
+          responseData.message,
+          "../../../../"
+        );
+      } else {
+        Alert.display(
+          responseData.status,
+          "oh",
+          responseData.message,
+          "../../../../"
+        );
+      }
+
+      return responseData.status;
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
     }
   }
 }
