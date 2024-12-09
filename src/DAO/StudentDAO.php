@@ -160,6 +160,65 @@ class StudentDAO {
         }
     }
 
+    /**
+     * 
+     */
+    public function getEnrollmentClassSection (string $idStudent) {
+        if (!isset($idStudent)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Numero de cuenta no definido o nulo.'
+            ];
+        }
+
+        $queryEnrollmentClassSection = "CALL SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT(?);";
+        $stmtEnrollmentClassSection = $this->connection->prepare($queryEnrollmentClassSection);
+        $stmtEnrollmentClassSection->bind_param('s', $idStudent);
+        $stmtEnrollmentClassSection->execute();
+        $resultEnrollmentClassSection = $stmtEnrollmentClassSection->get_result();
+
+        if ($resultEnrollmentClassSection->num_rows > 0) {
+            $groupedClasses = [];
+
+            while ($row = $resultEnrollmentClassSection->fetch_array(MYSQLI_ASSOC)) {
+                $sectionCode = $row['section_code'];
+
+                if (!isset($groupedClasses[$sectionCode])) {
+                    $groupedClasses[$sectionCode] = [
+                        'class_code' => $row['class_code'],
+                        'name_class' => $row['name_class'],
+                        'section_code' => $row['section_code'],
+                        'section_days' => [],
+                        'hi' => $row['hi'],
+                        'hf' => $row['hf'],
+                        'name_classroom' => $row['name_classroom'],
+                        'professor_name' =>$row['professor_name']
+                    ];
+                }
+
+                $groupedClasses[$sectionCode]['section_days'][] = $row['section_day'];
+            }
+
+            foreach ($groupedClasses as &$class) {
+                $class['section_days'] = implode(', ', $class['section_days']);
+            }
+
+            return $response = [
+                'status' => 'success',
+                'message' => 'Consulta de clases exitosa.',
+                'enrollmentClassSections' => array_values($groupedClasses)
+            ];
+        } else {
+            return $response = [
+                'status' => 'info',
+                'message' => 'No se encontraron secciones de clases activas en las que el estudiante este matriculado.'
+            ];
+        }
+    }
+
+    /**
+     * 
+     */
     public function createRequestExcepcionalCancellation (string $idStudent, $reasons, $document, $evidence, $idsClassSections) {
         if (!(isset($idRequest) && isset($reasons) && isset($document) && isset($idsClassSections)) || empty($idsClassSections)) {
             return $response = [

@@ -183,7 +183,7 @@ class ProfessorsDAO {
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
         INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
         INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
-        WHERE `UsersProfessors`.username_user_professor = ?;";
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
         $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
         $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
         $stmtSearchAcademicCoordinator->execute();

@@ -640,6 +640,12 @@ VALUES
 (2, 'Jueves', TRUE),
 (2, 'Viernes', TRUE);
 
+INSERT INTO `EnrollmentClassSections` (id_student, id_class_section, status_enrollment_class_sections)
+VALUES
+('20201001559', '1', TRUE),
+('20201001559', '2', TRUE),
+('20201001559', '3', TRUE);
+
 INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
 VALUES
 ('20201001559', 'Calamidad domestica', '', null, TRUE);
