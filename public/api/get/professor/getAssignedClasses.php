@@ -13,7 +13,7 @@ try {
         exit;
     }
 
-    $idProfessor = intval($_GET['idProfessor']); //Se espera el ID del docente del que se quiere obtener las clases
+    $idProfessor = intval($_GET['idProfessor']); 
 
     if (!isset($idProfessor)) {
         echo json_encode([

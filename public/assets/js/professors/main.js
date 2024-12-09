@@ -2,7 +2,7 @@ import { Sidebar, Search, Modal } from "../modules/behavior/support.mjs";
 import { Login } from "../modules/request/login.mjs";
 import { Table } from "../modules/behavior/support.mjs";
 import { Section } from "../modules/request/Section.mjs";
-
+import { Professor } from "../modules/request/Professor.mjs";
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
 
@@ -81,6 +81,8 @@ window.addEventListener("load", function () {
 
   //Agregamos el evento a los botones para poder agregar el video
     const addVideoButtons = document.querySelectorAll(".btn-video");
+
+     Professor.getAssignedClasses(1);
 
     addVideoButtons.forEach((button) => {
     button.addEventListener("click", function () {

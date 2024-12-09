@@ -19,7 +19,7 @@ class Section {
       // Obtén todas las celdas de la fila actual
       const cells = row.querySelectorAll("td");
 
-      const sectionId = cells[2].textContent.trim();
+      const fourthCellText = cells[2].textContent.trim();
 
       //Celda que contendrá las opciones
       const cellOptions = Cell.createCell("td", "");
