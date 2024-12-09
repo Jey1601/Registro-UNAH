@@ -276,7 +276,7 @@ class ProfessorsDAO {
         INNER JOIN `AcademicSchedules` ON `ClassSections`.id_academic_schedules = `AcademicSchedules`.id_academic_schedules
         INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
         INNER JOIN  `Classrooms` ON `ClassSections`.id_classroom_class_section = `Classrooms`.id_classroom
-        WHERE `Professors`.id_professor = ?;";
+        WHERE `Professors`.id_professor = ? AND `ClassSections`.status_class_section=1;";
         $stmtAssignedClasses = $this->connection->prepare($querySelectAssignedClasses);
         $stmtAssignedClasses->bind_param('i', $idProfessor);
         $stmtAssignedClasses->execute();
