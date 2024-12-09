@@ -90,7 +90,7 @@ class AcademicPlanning{
             }
 
             const data = await response.json();
-            console.log(data);
+        
             return data.data; 
              // Retorna los centros regionales
         } catch (error) {
@@ -136,11 +136,12 @@ class AcademicPlanning{
                 headers: {  
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+                body: JSON.stringify(data)  
             });
     
-            const responseData = await response.json();  // Convierte la respuesta en formato JSON
-          // console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            const responseData = await response.json();  
+         
+          
             return responseData.data;  
         } catch (error) {
             console.error('Error:', error);  
@@ -166,11 +167,11 @@ class AcademicPlanning{
                 headers: {  
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)  // Convierte el objeto JavaScript a JSON
+                body: JSON.stringify(data)  
             });
     
-            const responseData = await response.json();  // Convierte la respuesta en formato JSON
-            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+            const responseData = await response.json();  
+          
             
           return responseData.data;  
         } catch (error) {
@@ -226,10 +227,10 @@ class AcademicPlanning{
             });
     
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
-            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
+          
             
-            if(responseData.status == 'succes'){
-                Alert.display(responseData.status,'oh','Clases actualizadas','../../../../') 
+            if(responseData.status == 'success'){
+                Alert.display(responseData.status,'Enhorabuena','Clases actualizadas','../../../../') 
             }else{
                 Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
             }
@@ -259,12 +260,11 @@ class AcademicPlanning{
             });
     
             const responseData = await response.json();  // Convierte la respuesta en formato JSON
-            console.log("Respuesta del servidor:", responseData);  // Maneja la respuesta
             
-            if(responseData.status == 'succes'){
+            if(responseData.status == 'success'){
                 Alert.display(responseData.status,'Enhorabuena','Secciones actualizadas','../../../../') 
             }else{
-                Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
+                Alert.display(responseData.status,'oh','Algo anda mal','../../../../') 
             }
 
             return responseData.data;  
@@ -303,28 +303,23 @@ class AcademicPlanning{
             console.log("Respuesta del servidor:", responseData);  
             
             if(responseData.status == 'succes'){
-                Alert.display(responseData.status,'Enhorabuena','Secciones actualizadas','../../../../') 
+                Alert.display(responseData.status,'Enhorabuena',responseData.message,'../../../../') 
             }else{
                 Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
             }
 
-            return responseData.data; 
+            return responseData.idClassSection; 
         } catch (error) {
             console.error('Error:', error);  
             return null;  
         }
     }
 
-    static async associateSlassSectionsDaysAcademicPlanning(formData){
+    static async associateSlassSectionsDaysAcademicPlanning(newClassSectionId, days){
         
         const data = {
-            id_class: parseInt(formData.get('id_class'), 10),
-            id_dates_academic_periodicity_year: parseInt(formData.get('id_dates_academic_periodicity_year'), 10),
-            id_classroom_class_section:  parseInt(formData.get('id_classroom_class_section'), 10),
-            id_academic_schedules:parseInt(formData.get('id_academic_schedules'), 10),
-            id_professor_class_section:parseInt(formData.get('id_professor_class_section'), 10),
-            numberof_spots_available_class_section: parseInt(formData.get('numberof_spots_available_class_section'), 10),
-            status_class_section:  1,
+            newClassSectionId: parseInt(newClassSectionId, 10),
+            days: days,
 
 
         };

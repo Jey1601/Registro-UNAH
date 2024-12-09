@@ -123,7 +123,6 @@ class RegionalCenter {
 
       const data = await response.json();
 
-      console.log(data);
       return data; // Retorna los departamentos
     } catch (error) {
       return []; // Si hay un error, retornamos un array vacío
@@ -139,8 +138,7 @@ class RegionalCenter {
 
     const regionalCenters =
       await AcademicPlanning.regionalCentersAcademicPlanning(idProfessor);
-      console.log('Centros regionales');
-      console.log(regionalCenters);
+    
     // Comprobamos que tenemos datos antes de intentar renderizarlos
     if (regionalCenters && Array.isArray(regionalCenters)) {
       let counter = 0;
