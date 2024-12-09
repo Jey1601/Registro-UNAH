@@ -267,8 +267,14 @@ class ProfessorsDAO {
      * @created 08/12/2024
      */
     public function getAssignedClasses (int $idProfessor) {
-        $querySelectAssignedClasses = "SELECT `ClassSections`.id_class_section, classes.name_class, classes.credit_units FROM `ClassSections`
+        $querySelectAssignedClasses = "SELECT classes.id_class as class_code, classes.name_class, `ClassSections`.id_class_section as section_code,
+        `ClassSectionsDays`.id_day as section_day, `AcademicSchedules`.start_timeof_classes as hi,
+        `AcademicSchedules`.end_timeof_classes as hf, `ClassSectionsProfessor`.class_presentation_video as url_video
+        FROM `ClassSections`
         INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
+        INNER JOIN `ClassSectionsDays` ON `ClassSections`.id_class_section = `ClassSectionsDays`.id_class_section
+        INNER JOIN `AcademicSchedules` ON `ClassSections`.id_academic_schedules = `AcademicSchedules`.id_academic_schedules
+        INNER JOIN `ClassSectionsProfessor` ON `ClassSections`.id_class_section = `ClassSectionsProfessor`.id_class_section
         INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
         WHERE `Professors`.id_professor = ?;";
         $stmtAssignedClasses = $this->connection->prepare($querySelectAssignedClasses);
@@ -277,15 +283,34 @@ class ProfessorsDAO {
         $resultAssignedClasses = $stmtAssignedClasses->get_result();
 
         if ($resultAssignedClasses->num_rows > 0) {
-            $assignedClasses = [];
-            while ($row = $resultAssignedClasses->fetch_array()) {
-                $assignedClasses [] = $row;
+            $groupedClasses = [];
+
+            while ($row = $resultAssignedClasses->fetch_array(MYSQLI_ASSOC)) {
+                $sectionCode = $row['section_code'];
+
+                if (!isset($groupedClasses[$sectionCode])) {
+                    $groupedClasses[$sectionCode] = [
+                        'class_code' => $row['class_code'],
+                        'name_class' => $row['name_class'],
+                        'section_code' => $row['section_code'],
+                        'section_days' => [],
+                        'hi' => $row['hi'],
+                        'hf' => $row['hf'],
+                        'url_video' => $row['url_video']
+                    ];
+                }
+
+                $groupedClasses[$sectionCode]['section_days'][] = $row['section_day'];
+            }
+
+            foreach ($groupedClasses as &$class) {
+                $class['section_days'] = implode(', ', $class['section_days']);
             }
 
             return $response = [
                 'success' => true,
                 'message' => 'Consulta de clases exitosa.',
-                'assignedClasses' => $assignedClasses
+                'assignedClasses' => array_values($groupedClasses)
             ];
         } else {
             return $response = [

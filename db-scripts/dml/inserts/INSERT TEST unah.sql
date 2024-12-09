@@ -612,8 +612,33 @@ VALUES
 (1, 4, TRUE),
 (1, 5, TRUE); 
 
+INSERT INTO `Students` (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, third_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES
+('20201001559', 'enrique.valenzuela@unah.hn', '0801200049092', 'Enrique', null, null, 'Valenzuela', null, 'Col. Kennedy', 'enrique.valenzuela@example.com', '93940294', TRUE);
+
 INSERT INTO `ClassSections` (id_class, id_dates_academic_periodicity_year, id_classroom_class_section, id_academic_schedules, id_professor_class_section, numberof_spots_available_class_section, status_class_section)
 VALUES
 (1, 1, 27, 4, 1, 25, TRUE),
 (2, 1, 28, 4, 1, 25, TRUE);
 
+INSERT INTO `ClassSectionsProfessor` (id_class_section, class_presentation_video, status_class_section_professor)
+VALUES
+(1, 'www.youtube.com', TRUE),
+(2, 'www.youtube.com', TRUE);
+
+INSERT INTO `ClassSectionsDays` (id_class_section, id_day, status_class_sections_days)
+VALUES
+(1, 'Lunes', TRUE),
+(1, 'Martes', TRUE),
+(1, 'Miercoles', TRUE),
+(1, 'Jueves', TRUE),
+(1, 'Viernes', TRUE),
+(2, 'Lunes', TRUE),
+(2, 'Martes', TRUE),
+(2, 'Miercoles', TRUE),
+(2, 'Jueves', TRUE),
+(2, 'Viernes', TRUE);
+
+INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
+VALUES
+('20201001559', 'Calamidad domestica', '', null, TRUE);
