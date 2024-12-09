@@ -338,7 +338,7 @@ class ProfessorsDAO {
             ];
         }
         
-        $querySearchProfessorClassSection = "SELECT * FROM `ClassSections` WHERE id_class = ? AND id_professor_class_section = ?;";
+        $querySearchProfessorClassSection = "SELECT * FROM `ClassSections` WHERE id_class_section = ? AND id_professor_class_section = ?;";
         $stmtSearchProfessorClassSection = $this->connection->prepare($querySearchProfessorClassSection);
         $stmtSearchProfessorClassSection->bind_param('ii', $idClassSection, $idProfessor);
         $stmtSearchProfessorClassSection->execute();

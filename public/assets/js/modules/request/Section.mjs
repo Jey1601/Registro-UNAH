@@ -18,7 +18,7 @@ class Section {
     rows.forEach((row) => {
       // Obtén todas las celdas de la fila actual
       const cells = row.querySelectorAll("td");
-
+   
       const fourthCellText = cells[2].textContent.trim();
 
       //Celda que contendrá las opciones
@@ -29,6 +29,7 @@ class Section {
       buttonVideo.classList.add("btn");
       buttonVideo.classList.add("btn-video");
       buttonVideo.setAttribute("section", fourthCellText);
+   
 
       // Creamos la imagen y configuramos su fuente
       const videoIcon = document.createElement("img");
@@ -38,6 +39,7 @@ class Section {
       buttonDownload.classList.add("btn");
       buttonDownload.classList.add("btn-download");
       buttonDownload.setAttribute("section", fourthCellText);
+     
 
       // Creamos la imagen y configuramos su fuente
       const downloadIcon = document.createElement("img");

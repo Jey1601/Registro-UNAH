@@ -302,7 +302,7 @@ class AcademicPlanning{
             const responseData = await response.json();  
             console.log("Respuesta del servidor:", responseData);  
             
-            if(responseData.status == 'succes'){
+            if(responseData.status == 'success'){
                 Alert.display(responseData.status,'Enhorabuena',responseData.message,'../../../../') 
             }else{
                 Alert.display(responseData.status,'oh',responseData.message,'../../../../') 
@@ -336,11 +336,7 @@ class AcademicPlanning{
             const responseData = await response.json();  
             console.log("Respuesta del servidor:", responseData);  
             
-            if(responseData.status == 'succes'){
-
-                //Llamar al metodo que asocia días
-                console.log('La sección insertada es');
-                console.log(responseData.idClassSection);
+            if(responseData.status == 'success'){
                 Alert.display(responseData.status,'Enhorabuena',responseData.message,'../../../../') 
             }else{
                 Alert.display(responseData.status,'oh',responseData.message,'../../../../') 

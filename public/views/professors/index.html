@@ -56,7 +56,7 @@
       </div>
     </nav>
     <!--Logout=================================================================================-->
-
+    <div id="notifications"></div>
     <!--offcanvas main container start=================================================================================-->
     <section class="sidebar hidden">
        <div class="sidebar-header" style="display: flex; justify-content: end; align-items: center;">
@@ -213,13 +213,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                  <form>
+                  <form id="videoForm">
                     <div class="mb-3">
+                      <input type="hidden" name="" id="sectionField">
                       <label for="" class="form-label">URL video</label>
-                      <input type="email" class="form-control" id="" aria-describedby="emailHelp">
-                      <div id="emailHelp" class="form-text">Utiliza un link de la plafaforma Youtube, verifica que el video se encuentre público</div>
+                      <input type="text" class="form-control" id="urlVideo" name="urlYoutube" >
+                      <div  class="form-text">Utiliza un link de la plafaforma Youtube, verifica que el video se encuentre público</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button id="saveUrlButton" type="submit" class="btn btn-primary">Guardar</button>
                   </form>
               </div>
               <div class="modal-footer">
