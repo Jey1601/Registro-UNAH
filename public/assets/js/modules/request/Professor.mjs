@@ -66,7 +66,7 @@ class Professor {
 
       const data = await response.json();
       console.log(data);
-      return data;
+      return data.assignedClasses;
     } catch (error) {
       return [];
     }
