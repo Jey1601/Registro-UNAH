@@ -218,14 +218,30 @@ class StudentDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 10/12/2024
      */
-    public function checkDatesCancellationExceptionalProcess () {
+    public function checkDatesCancellationExceptionalProcess (string $idStudent) : bool {
+        $queryGetUndergraduateStudent = "SELECT id_undergraduate FROM `StudentsUndergraduates` WHERE id_student = ?;";
+        $resultGetUndergraduateStudent = $this->connection->execute_query($queryGetUndergraduateStudent, [$idStudent]);
+        while ($row = $resultGetUndergraduateStudent->fetch_assoc()) {
+            $idUndergraduate = $row['id_undergraduate'];
+            break;
+        }
+
         //COMPROBACION DE QUE LA FECHA ACTUAL ESTA ENTRE LAS FECHAS DESIGNADAS (1 MES DESPUES DE INICIADO EL PERIODO O 3 SEMANAS ANTES)
         $queryGetDatesProcess = "SELECT start_dateof_cancellation_exceptional_classes_process as date_start_process, end_dateof_cancellation_exceptional_classes_process as date_end_process
-        FROM `CancellationExceptionalClassesProcess`  WHERE status_cancellation_exceptional_classes_process = TRUE;";
-        $resultGetDatesProcess = $this->connection->execute_query($queryGetDatesProcess);
+        FROM `CancellationExceptionalClassesProcess`  WHERE status_cancellation_exceptional_classes_process = TRUE AND id_undergraduate = ?;";
+        $resultGetDatesProcess = $this->connection->execute_query($queryGetDatesProcess, [$idUndergraduate]);
         
+        while ($row = $resultGetDatesProcess->fetch_assoc()) {
+            $startDate = new DateTime($row['date_start_process']);
+            $endDate = new DateTime($row['date_end_process']);
+            break;
+        }
+
+        $currentDate = new DateTime();
+        return ($currentDate >= $startDate && $currentDate <= $endDate);
     }
 
     /**
