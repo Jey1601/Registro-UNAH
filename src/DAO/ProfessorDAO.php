@@ -168,7 +168,7 @@ class ProfessorsDAO {
             ];
         }
     }
-
+    
     /**
      * Metodo para obtener las solicitudes de cancelacion excepcional de clases, las solicitudes de cambio de centro regional y las solicitudes de cambio de carrera que aun no tienen respuesta.
      * 
@@ -179,7 +179,7 @@ class ProfessorsDAO {
      * @author @AngelNolasco
      * @created 08/12/2024
      */
-    public function getRequests (int $idProfessor) {
+    public function getPendingRequestsCancellationExceptionalClass (int $idProfessor) {
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
         INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
         INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
@@ -189,33 +189,16 @@ class ProfessorsDAO {
         $stmtSearchAcademicCoordinator->execute();
         $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
         $roles = [];
-        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
-            $roles [] = $row;
+        while ($row = $resultSearchAcademicCoordinator->fetch_assoc()) {
+            $roles [] = $row['role'];
         }
 
         if (in_array('Coordinator', $roles)) {
             $requestsExceptionalCancellationClasses = [];
-            $requestsChangeRegionalCenter = [];
-            $requestsChangeUndergraduate = [];
             $errors = [];
 
-            $querySelectRequestsExceptionalCancellationClassesWithOutResolution = "SELECT requests.*
-            FROM `RequestsCancellationExceptionalClasses` requests
-            LEFT JOIN `ResolutionRequestsCancellationExceptionalClasses` resolutions
-            ON requests.id_requests_cancellation_exceptional_classes = resolutions.id_requests_cancellation_exceptional_classes
-            WHERE resolutions.id_requests_cancellation_exceptional_classes IS NULL;";
-            
-            $querySelectRequestsRegionalCentersChangeWithOutResolution = "SELECT requests.* FROM `RegionalCentersChangeRequestsStudents` requests
-            LEFT JOIN `ResolutionRegionalCentersChangeRequestsStudents` resolutions
-            ON requests.id_regional_center_change_request_student = resolutions.id_regional_center_change_request_student
-            WHERE resolutions.id_regional_center_change_request_student IS NULL;";
-
-            $querySelectRequestsUndergraduatesChangeWithOutResolution = "SELECT requests.* FROM `UndergraduateChangeRequestsStudents` requests
-            LEFT JOIN `ResolutionUndergraduateChangeRequestsStudents` resolutions
-            ON requests.id_undergraduate_change_request_student = resolutions.id_undergraduate_change_request_student
-            WHERE resolutions.id_undergraduate_change_request_student IS NULL;";
-
-            if ($resultRequestsCancellation = $this->connection->execute_query($querySelectRequestsExceptionalCancellationClassesWithOutResolution)) {
+            $queryGetPendingRequests = "CALL SP_GET_PENDING_REQUESTS_CANCELLATION_EXCEPTIONAL_BY_COORDINATOR(?);";
+            if ($resultRequestsCancellation = $this->connection->execute_query($queryGetPendingRequests, [$idProfessor])) {
                 while ($row = $resultRequestsCancellation->fetch_assoc()) {
                     $requestsExceptionalCancellationClasses [] = $row;
                 }
@@ -223,28 +206,10 @@ class ProfessorsDAO {
                 $errors [] = "No se pudieron obtener las solicitudes de cancelacion excepcional de clase.";
             }
 
-            if ($resultRequestsChangeReionalCenter = $this->connection->execute_query($querySelectRequestsRegionalCentersChangeWithOutResolution)) {
-                while ($row = $resultRequestsChangeReionalCenter->fetch_assoc()) {
-                    $requestsChangeRegionalCenter [] = $row;
-                }
-            } else {
-                $errors [] = "No se pudieron obtener las solicitudes de cambio de centro.";
-            }
-
-            if ($resultRequestsChangeUndergraduate = $this->connection->execute_query($querySelectRequestsUndergraduatesChangeWithOutResolution)) {
-                while ($row = $resultRequestsChangeUndergraduate->fetch_assoc()) {
-                    $requestsChangeUndergraduate [] = $row;
-                }
-            } else {
-                $errors [] = "No se pudieron obtener las solicitudes de cambio de carrera.";
-            }
-
             return $response = [
                 'success' => true,
                 'message' => 'Consultas de solicitudes sin repuesta finalizadas.',
                 'requestsExceptionalCancellation' => $requestsExceptionalCancellationClasses,
-                'requestsChangeRegionalCenter' => $requestsChangeRegionalCenter,
-                'requestsChangeUndergraduate' => $requestsChangeUndergraduate,
                 'errors' => $errors
             ];
 
@@ -252,6 +217,56 @@ class ProfessorsDAO {
             return $response = [
                 'success' => false,
                 'message' => 'Docente no identificado como coordinador academico.'
+            ];
+        }
+    }
+
+    /**
+     * @author @AngelNolasco
+     * @created 10/12/2024
+     */
+    public function getDetailsRequestCancellationExceptional (int $idRequest) {
+        if (!isset($idRequest)) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'Codigo de solicitud no definido o nulo.'
+            ];
+        }
+
+        $queryGetDetails = "CALL SP_GET_DETAILS_REQUEST_BY_ID(?)";
+        if ($resultGetDetails = $this->connection->execute_query($queryGetDetails, [$idRequest])) {
+            $groupedSections = [];
+            while ($row = $resultGetDetails->fetch_array(MYSQLI_ASSOC)) {
+                $codeRequest = $row['id_request'];
+
+                if (!isset($groupedSections['$codeRequest'])) {
+                    $groupedSections['$codeRequest'] = [
+                        'idStudent' => $row['id_student'],
+                        'nameStudent' => $row['name_student'],
+                        'lastnameStudent' => $row['lastname_student'],
+                        'emailStudent' => $row['email_student'],
+                        'regionalCenter' => $row['name_regional_center'],
+                        'reason' => $row['reason'],
+                        'document' => $row['document_justification'],
+                        'evidence' => $row['evidence']
+                    ];
+                }
+
+                $groupedSections['$codeRequest']['idSectionClass'][] = [
+                    'idSection' => $row['id_class_section'],
+                    'nameClass' => $row['name_class']
+                ];
+            }
+
+            return $response = [
+                'status' => 'success',
+                'message' => 'Se obtuvo satisfactoriamente los detalles de la solicitud.',
+                'detailsRequest' => array_values($groupedSections)
+            ];
+        } else {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudieron obtener los detalles de la solicitud.'
             ];
         }
     }

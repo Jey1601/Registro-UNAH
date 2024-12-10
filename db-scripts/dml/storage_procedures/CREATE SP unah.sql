@@ -898,6 +898,58 @@ BEGIN
     GROUP BY classes.name_class, classes.id_class;
 END$$
 
+CREATE PROCEDURE SP_GET_PENDING_REQUESTS_CANCELLATION_EXCEPTIONAL_BY_COORDINATOR(IN idProfessor INT)
+BEGIN
+    SELECT `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes as id_request,
+    `Students`.id_student, `RequestsCancellationExceptionalClasses`.reasons_request_cancellation_exceptional_classes as reason 
+    FROM `Undergraduates`
+    INNER JOIN `ProfessorsDepartments` ON `Undergraduates`.id_department = `ProfessorsDepartments`.id_department
+    INNER JOIN `StudentsUndergraduates` ON `Undergraduates`.id_undergraduate = `StudentsUndergraduates`.id_undergraduate
+    INNER JOIN `RequestsCancellationExceptionalClasses` ON `StudentsUndergraduates`.id_student = `RequestsCancellationExceptionalClasses`.id_student
+    LEFT JOIN `ResolutionRequestsCancellationExceptionalClasses` ON `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes = `ResolutionRequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes
+    INNER JOIN `Students` ON `RequestsCancellationExceptionalClasses`.id_student = `Students`.id_student
+    WHERE `ProfessorsDepartments`.id_professor = idProfessor AND (`ResolutionRequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes IS NULL);
+END$$
+
+CREATE PROCEDURE SP_GET_DETAILS_REQUEST_BY_ID(IN idRequest INT)
+BEGIN
+    SELECT 
+        `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes as id_request,
+        `Students`.id_student, 
+        CONCAT(
+                COALESCE(`Students`.first_name_student, ''),
+                ' ',
+                COALESCE(`Students`.second_name_student, ''),
+                ' ',
+                COALESCE(`Students`.third_name_student, '')
+        ) AS name_student, 
+        CONCAT(
+            COALESCE(`Students`.first_lastname_student, ''),
+                ' ',
+            COALESCE(`Students`.second_lastname_student, '')
+        ) as lastname_student,
+        `Students`.email_student,
+        `RegionalCenters`.name_regional_center,
+        `RequestsCancellationExceptionalClasses`.reasons_request_cancellation_exceptional_classes as reason,
+        `RequestsCancellationExceptionalClasses`.document_request_cancellation_exceptional_classes as document_justification,
+        COALESCE(`RequestsCancellationExceptionalClasses`.evidence_request_cancellation_exceptional_classes, 'Sin evidencia') as evidence,
+        `ListClassSectionCancellationExceptional`.id_class_section, classes.name_class 
+    FROM `ListClassSectionCancellationExceptional`
+    INNER JOIN `RequestsCancellationExceptionalClasses` 
+        ON `ListClassSectionCancellationExceptional`.id_requests_cancellation_exceptional_classes = `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes
+    INNER JOIN `Students` 
+        ON `RequestsCancellationExceptionalClasses`.id_student = `Students`.id_student
+    INNER JOIN `StudentsRegionalCenters` 
+        ON `StudentsRegionalCenters`.id_student = `StudentsRegionalCenters`.id_student
+    INNER JOIN `RegionalCenters` 
+        ON `StudentsRegionalCenters`.id_regional_center_student = `RegionalCenters`.id_regional_center
+    INNER JOIN `ClassSections` 
+        ON `ListClassSectionCancellationExceptional`.id_class_section = `ClassSections`.id_class_section
+    INNER JOIN classes 
+        ON `ClassSections`.id_class = classes.id_class
+    WHERE `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes = idRequest;
+END$$
+
 DELIMITER ;
 
 
