@@ -161,4 +161,30 @@ function getApprovedApplicants($connection) {
     ";
     return $connection->query($sql);
 }
+
+function getStudentsPassword(PDO $connection) {
+    $sql = "
+        SELECT 
+            Students.id_student,
+            CONCAT(
+                Students.first_name_student, ' ',
+                IFNULL(Students.second_name_student, ''), ' ',
+                IFNULL(Students.third_name_student, ''), ' ',
+                Students.first_lastname_student, ' ',
+                IFNULL(Students.second_lastname_student, '')
+            ) AS full_name, 
+			UsersStudents.username_user_student AS usser,
+            UsersStudents.password_user_student AS password,
+            Students.email_student AS email 
+        FROM 
+            UsersStudents   
+        JOIN 
+            Students 
+        ON 
+            UsersStudents.username_user_student = Students.id_student
+        WHERE 
+            UsersStudents.status_user_student = TRUE;
+    ";
+    return $connection->query($sql);
+}
 ?>
