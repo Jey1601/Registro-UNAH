@@ -3,7 +3,7 @@
 require 'PHPMailer/Exception.php';
 require 'PHPMailer/PHPMailer.php';
 require 'PHPMailer/SMTP.php';
-require 'getApplicantsEmail.php';
+require 'getUsersInfoForMail.php';
 require 'email_templates.php';
 require 'Code.php';
 use PHPMailer\PHPMailer\PHPMailer;
