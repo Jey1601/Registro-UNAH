@@ -180,7 +180,7 @@ class Form {
       case "Identification":
         this.validateField(regular_expressions.idNum, event.target);
         break;
-
+        
       case "PhoneNumber":
         this.validateField(regular_expressions.phone, event.target);
         break;
@@ -202,16 +202,6 @@ class Form {
   static validateField(expression, input) {
     const errorElement = input.nextElementSibling; // Obtén el <p> inmediatamente después del input
 
-    if (expression.test(input.value)) {
-      input.classList.add("right-input");
-      input.classList.remove("wrong-input");
-      errorElement.classList.remove("input-error-active");
-    } else {
-      input.classList.add("wrong-input");
-      input.classList.remove("right-input");
-      errorElement.classList.add("input-error-active");
-    }
-
     if (input.name == "applicantIdentification") {
       // Obtener el año actual
       const currentYear = new Date().getFullYear();
@@ -232,21 +222,37 @@ class Form {
         input.classList.add("wrong-input");
         input.classList.remove("right-input");
         errorElement.classList.add("input-error-active");
+        return;
       }
     }
+
+    if (expression.test(input.value)) {
+      input.classList.add("right-input");
+      input.classList.remove("wrong-input");
+      errorElement.classList.remove("input-error-active");
+    } else {
+      input.classList.add("wrong-input");
+      input.classList.remove("right-input");
+      errorElement.classList.add("input-error-active");
+    }
+
+    
   }
 
-  static checkFormValidity(inputsForm, submitButton) {
+  static checkFormValidity(inputsForm, submitButton, textRight="Enviar", textWrong ="Revisa la información") {
+    
     let isFormValid = true;
    
     // Filtrar solo los checkboxes
-    const checkboxes = Array.from(inputsForm).filter(
+   /* const checkboxes = Array.from(inputsForm).filter(
       (input) => input.type === "checkbox"
     );
-    const isChecked = checkboxes.some((checkbox) => checkbox.checked);
-    if (!isChecked) {
-      isFormValid = false;
-    }
+    if(checkboxes.length>0){
+      const isChecked = checkboxes.some((checkbox) => checkbox.checked);
+      if (!isChecked) {
+        isFormValid = false;
+      }
+    }*/
     // Recorre todos los inputs del formulario
     inputsForm.forEach((input) => {
       if (input.disabled == "false" || input.type != "hidden") {
@@ -264,28 +270,32 @@ class Form {
 
           // Verificación para otros inputs
         } else {
+          
           if (input.classList.contains("wrong-input")) {
             isFormValid = false;
           }else{
-            isFormValid = true;
+       
+           //isFormValid = true;
           }
         }
       }
     });
 
     // Aquí se maneja el estado del botón al final de todas las verificaciones
+    console.log(isFormValid);
     if (isFormValid) {
       submitButton.classList.add("oficial-blue");
       submitButton.classList.remove("wrong-form");
-      submitButton.innerText = "Enviar";
+      submitButton.innerText = textRight;
       submitButton.disabled = false; // Habilita el botón
     } else {
+
       submitButton.classList.remove("oficial-blue");
       submitButton.classList.add("wrong-form");
-      submitButton.innerText = "¡Verifica tus datos!";
+      submitButton.innerText = textWrong;
       submitButton.disabled = true; // Deshabilita el botón
     }
-
+    
     return isFormValid;
   }
 
@@ -295,7 +305,7 @@ class Form {
     messageTrue,
     messageFalse,
     
-  
+ 
   ) {
     const submitButton = document.getElementById(idButton);
 
@@ -429,8 +439,8 @@ class Sidebar {
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
     //Deben leerse de manera dinamica desde el sessión storage
-    //const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
-    const accesses = ["iAV7sDXj"];
+    const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+    //const accesses = ["iAV7sDXj"];
 
     // Select the sidebar container
     const sidebarBody = document.querySelector(".sidebar-body ul");

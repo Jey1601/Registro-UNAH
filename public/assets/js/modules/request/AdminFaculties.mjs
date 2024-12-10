@@ -3,6 +3,16 @@ import { File, Alert } from "../behavior/support.mjs";
 class Professor {
   static path = "../../../";
 
+  /**
+   * Obtiene y valida la información del formulario de creación de un profesor,
+   * ajustando los datos antes de enviarlos.
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12-04
+   * @returns {Promise<void>} Retorna una promesa, pero no devuelve ningún valor.
+   * @throws {Error} Si la validación del archivo de imagen falla o si ocurre un error en la solicitud.
+   */
+
   static async getData() {
     const professorCreationForm = document.getElementById(
       "professorCreationForm"
@@ -60,6 +70,17 @@ class Professor {
       console.log(formData);
     }
   }
+
+  /**
+   * Inserta los datos del formulario a través de una solicitud POST y maneja la respuesta.
+   * Si la inserción es exitosa, resetea el formulario y muestra un mensaje de éxito.
+   * Si ocurre algún error, muestra un mensaje de error.
+   *
+   * @param {FormData} formData - Los datos del formulario que serán enviados en la solicitud.
+   * @param {HTMLFormElement} form - El formulario del cual se recopilaron los datos.
+   * @returns {Promise<void>} Retorna una promesa, pero no devuelve ningún valor.
+   * @throws {Error} Si ocurre un error al hacer la solicitud o procesar la respuesta.
+   */
 
   static async insertData(formData, form) {
     try {

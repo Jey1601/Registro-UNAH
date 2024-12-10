@@ -60,7 +60,7 @@ class AdmissionProccess{
 
         } catch (error) {
             console.log(error);
-            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos');
+            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos', this.path);
         }
     }
 
@@ -142,7 +142,7 @@ class AdmissionProccess{
 
         } catch (error) {
             console.log(error);
-            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos');
+            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos', this.path);
         }
     }
 
@@ -161,7 +161,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-            window.location.href = this.path+'views/administration/verify-data-applications.html';
+            window.location.href = this.path+'views/administration/admissions/verify-data-applications.html';
              
            }else {
                 const body = document.querySelector('#warningModal .modal-body');
@@ -190,12 +190,9 @@ class AdmissionProccess{
                 // Crear y agregar título
                 const title = document.createElement('p');
                 title.className = 'fs-4';
-                title.textContent = 'El proceso de validación de documentos aún no está activo. Estará activo el:';
+                title.textContent = 'El proceso de validación de documentos aún no está activo. ';
             
-                // Crear y agregar fecha destacada
-                const highlight = document.createElement('div');
-                highlight.className = 'highlight mx-auto';
-                highlight.textContent = '2 de diciembre de 2024';
+          
             
                 // Crear y agregar párrafo de información adicional
                 const infoParagraph = document.createElement('p');
@@ -210,7 +207,7 @@ class AdmissionProccess{
                 // Agregar todos los elementos al contenedor centralizado
                 centeredContainer.appendChild(imgContainer);
                 centeredContainer.appendChild(title);
-                centeredContainer.appendChild(highlight);
+  
                 centeredContainer.appendChild(infoParagraph);
             
                 // Agregar el contenedor al cuerpo del modal
@@ -223,7 +220,7 @@ class AdmissionProccess{
 
         } catch (error) {
             console.log(error);
-            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos');
+            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos',this.path);
         }
     }
 
@@ -241,7 +238,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-            window.location.href = this.path+'views/administration/download-admitted.html';
+            window.location.href = this.path+'views/administration/admissions/download-admitted.html';
              
            }else {
                 const body = document.querySelector('#warningModal .modal-body');
@@ -270,12 +267,9 @@ class AdmissionProccess{
                 // Crear y agregar título
                 const title = document.createElement('p');
                 title.className = 'fs-4';
-                title.textContent = 'El proceso de descarga de aplicantes admitidos aún no está activo. Estará activo el:';
+                title.textContent = 'El proceso de descarga de aplicantes admitidos aún no está activo. ';
             
-                // Crear y agregar fecha destacada
-                const highlight = document.createElement('div');
-                highlight.className = 'highlight mx-auto';
-                highlight.textContent = '15 de diciembre de 2024';
+                
             
                 // Crear y agregar párrafo de información adicional
                 const infoParagraph = document.createElement('p');
@@ -290,7 +284,7 @@ class AdmissionProccess{
                 // Agregar todos los elementos al contenedor centralizado
                 centeredContainer.appendChild(imgContainer);
                 centeredContainer.appendChild(title);
-                centeredContainer.appendChild(highlight);
+ 
                 centeredContainer.appendChild(infoParagraph);
             
                 // Agregar el contenedor al cuerpo del modal
@@ -303,7 +297,7 @@ class AdmissionProccess{
 
         } catch (error) {
             console.log(error);
-            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos');
+            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos', this.path);
         }
     }
 
@@ -321,7 +315,7 @@ class AdmissionProccess{
            
            if(data.status == 'success'){
                
-            window.location.href = this.path+'views/administration/upload-grades.html';
+            window.location.href = this.path+'views/administration/admissions/upload-grades.html';
              
            }else {
                 const body = document.querySelector('#warningModal .modal-body');
@@ -350,12 +344,9 @@ class AdmissionProccess{
                 // Crear y agregar título
                 const title = document.createElement('p');
                 title.className = 'fs-4';
-                title.textContent = 'El proceso de carga de calificaciones aún no está activo. Estará activo el:';
+                title.textContent = 'El proceso de carga de calificaciones aún no está activo. ';
             
-                // Crear y agregar fecha destacada
-                const highlight = document.createElement('div');
-                highlight.className = 'highlight mx-auto';
-                highlight.textContent = '10 de diciembre de 2024';
+               
             
                 // Crear y agregar párrafo de información adicional
                 const infoParagraph = document.createElement('p');
@@ -370,7 +361,7 @@ class AdmissionProccess{
                 // Agregar todos los elementos al contenedor centralizado
                 centeredContainer.appendChild(imgContainer);
                 centeredContainer.appendChild(title);
-                centeredContainer.appendChild(highlight);
+              
                 centeredContainer.appendChild(infoParagraph);
             
                 // Agregar el contenedor al cuerpo del modal
@@ -383,7 +374,7 @@ class AdmissionProccess{
 
         } catch (error) {
             console.log(error);
-            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos');
+            Alert.display('error', 'Algo ha salido mal', 'Lo sentimos', this.path);
         }
     }
 

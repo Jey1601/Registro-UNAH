@@ -22,13 +22,13 @@ async function submitCSVFile() {
 
                 const result = await response.json();
                 formInscriptionGrades.reset();
-                Alert.display("warning", 'Aviso',result.message,'../../' );
+                Alert.display("warning", 'Aviso',result.message,path );
             } catch (error) {
                 console.log(error);
-                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", "../../");
+                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", path);
             }
         } else {
-            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.','../../');
+            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.',path);
         }
     })
 }
