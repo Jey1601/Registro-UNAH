@@ -509,60 +509,42 @@ function sendCareerAcceptanceNotification($email, $name, $career) {
 }
 
 //Enviar el usuario y contraseña de los estudiantes
-function sendStudentsLogin( $type) {
+function sendStudentsLogin($full_name, $username_user_student, $password, $email) {
     $mail = $this->PHPMailerConfig();
-    $maxEmailsPerDay = 500;
-    // Obtener los usuarios según el tipo de mensaje
-    $result = match ($type) {
-        'users_login' => getStudentsPassword($this->connection),
-        default => null
-    };
 
-    if (!$result || empty($result)) {
-        echo "No se encontraron usuarios para enviar correos.<br>";
+    // Crear los datos para la plantilla
+    $placeholders = [
+        'full_name' => $full_name,
+        'username_user_student' => $username_user_student,
+        'password_user_student' => $password
+    ];
+
+    // Obtener la plantilla del mensaje
+    $message = getTemplate('users_login', $placeholders);
+
+    if (!$message) {
+        echo "Error: No se pudo generar el mensaje.<br>";
         return;
     }
 
-    $emailCount = 0;
+    try {
+        // Configuración del correo
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Admisiones UNAH';
+        $mail->Body = $message;
 
-    foreach ($result as $student) {
-        if ($emailCount >= $maxEmailsPerDay) break;
-
-        //Configurar el cuerpo del mensaje dependiendo del tipo
-        $placeholders = [
-            'full_name' => $student['full_name'],
-            'username_user_student' => $student['username_user_student'],
-            'password_user_student' => $student['password']
-        ];
-
-        $message = getTemplate($type, $placeholders);
-
-        try {
-            $mail->addAddress($student['email']);
-            $mail->isHTML(true);
-            $mail->Subject = 'Admisiones UNAH';
-            $mail->Body = $message;
-            $mail->send();
-            echo "Correo enviado a {$student['full_name']}<br>";
-            $emailCount++;
-        } catch (Exception $e) {
-            echo "Error al enviar correo a {$student['email']}: {$mail->ErrorInfo}<br>";
-        }
-
-        //Limpiar las direcciones para evitar conflictos en futuros envíos
+        // Enviar el correo
+        $mail->send();
+       
+    } catch (Exception $e) {
+        echo "Error al enviar correo a {$email}: {$e->getMessage()}<br>";
+    } finally {
+        // Limpiar direcciones para futuros envíos
         $mail->clearAddresses();
     }
-    
-    echo "Se enviaron $emailCount correos.<br>";
 }
 
-//Configuración
-
-
-/*Ejecutar el sistema: prueba para enviar confirmación
-$connection = DBConection($host, $user, $password, $database);
-sendEmails($connection, 'confirmation', $maxEmailsPerDay);
-$connection->close();*/
 }
 
 ?>

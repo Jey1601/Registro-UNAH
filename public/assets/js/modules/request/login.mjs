@@ -266,28 +266,21 @@ class Login {
                 sessionStorage.setItem('token', result.token);
                 sessionStorage.setItem('typeUser',result.typeUser);
 
-                //Redirección de admisiones
+            
                 const token_saved = result.token;
                 const payload_decoded = JWT.decodeToken(token_saved);
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
+                  console.log(payload_decoded);
                     access = payload_decoded.accessArray;
-
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case 'iAV7sDXj':
-                          window.location.href = this.path+'views/students/index.html';
-                        
-                          break;  
-                        
-                        default:
-                          window.location.href = this.path+'index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
+                 
+                    if (access.includes('iAV7sDXj')) {
+                      window.location.href = this.path + 'views/students/index.html';
+                    } else {
+                      window.location.href = this.path + 'index.html';
+                      Alert.display("warning", "Usuario no tiene accesos.", result.message);
+                    }
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
                 window.location.href = this.path+'index.html';

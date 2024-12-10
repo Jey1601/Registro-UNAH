@@ -10,7 +10,7 @@
  */
 
 include_once 'util/jwt.php';
-
+include_once 'util/encryption.php'; 
 class StudentDAO {
     private $host = 'localhost';
     private $user = 'root';
@@ -84,9 +84,9 @@ class StudentDAO {
                         }
                     }
 
-                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
+                    //Creacion del payload con el username y el arreglo de accesos del usuario de estudiante
                     $payload = [
-                        'userAdmissionAdmin' => $username,
+                        'username' => $username,
                         'accessArray' => $accessArray
                     ];
                     $newToken = JWT::generateToken($payload); //Generacion del token a partir del payload
@@ -288,7 +288,7 @@ class StudentDAO {
             
             $counterPerClass ['class'] = $row['name_class'] ?? "";
             $counterPerClass ['times'] = $row['total_failed_abandoned_class'] ?? 0;
-            $counterPerclass ['idClass'] = $row['id_class'] ?? $auxArray['classID'];
+            $counterPerClass ['idClass'] = $row['id_class'] ?? $auxArray['classID'];
             $classCounter [] = $counterPerClass;
             
             // Liberar el resultado actual del procedimiento

@@ -31,14 +31,14 @@ class Inscription {
     if (allowedTypes.includes(certificateFile.type)) {
       const myBlob = new Blob([certificateFile], { type: certificateFile.type });
 
-     // const formData = new FormData();
+     
       formData.set("applicantCertificate", myBlob, certificateFile.name);
     }
         
     if (allowedTypes.includes(idFile.type)) {
       const myBlob = new Blob([idFile], { type: idFile.type });
 
-      //const formData = new FormData();
+    
       formData.set("applicantCertificate", myBlob, idFile.name);
     }
 

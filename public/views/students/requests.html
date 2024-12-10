@@ -108,7 +108,7 @@
       <div class="sidebar-footer">
         <a href=""
           >Cerrar sesión
-          <img src="../../../assets/img/icons/logout-icon.png" alt=""
+          <a role="button" style="color: white;" id="logoutBtn" href="">Cerrar sesión <img src="../../../assets/img/icons/logout-icon.png" alt=""></a>
         /></a>
       </div>
     </section>
@@ -302,6 +302,7 @@
                   <form
                     id="excepcionalCancelationForm"
                     class="p-4 border rounded"
+                    enctype="multipart/form-data"
                   >
                     <h4 class="text-center mb-4">
                       Formulario Para Cancelación de Asignaturas
@@ -380,8 +381,9 @@
                           <input
                             class="form-check-input"
                             type="radio"
-                            name="flexRadioDefault"
+                            name="reason"
                             id="calamidad"
+                            value = 'calamidad doméstica'
                             checked
                           />
                           <label class="form-check-label" for="calamidad"
@@ -392,7 +394,8 @@
                           <input
                             class="form-check-input"
                             type="radio"
-                            name="flexRadioDefault"
+                            name="reason"
+                            value = 'enfermedad'
                             id="enfermedad"
                           />
                           <label class="form-check-label" for="enfermedad"
@@ -405,8 +408,9 @@
                           <input
                             class="form-check-input"
                             type="radio"
-                            name="flexRadioDefault"
+                            name="reason"
                             id="trabajo"
+                            value = 'trabajo'
                           />
                           <label class="form-check-label" for="trabajo"
                             >Trabajo</label
@@ -416,8 +420,9 @@
                           <input
                             class="form-check-input"
                             type="radio"
-                            name="flexRadioDefault"
+                            name="reason"
                             id="otro"
+                            value = 'otro'
                           />
                           <label class="form-check-label" for="otro"
                             >Otro</label
@@ -433,7 +438,8 @@
                       <textarea
                         style="text-transform: uppercase"
                         class="form-control"
-                        id="justificacion"
+                        name ="justification"
+                        id="justification"
                         rows="3"
                       ></textarea>
                     </div>
@@ -444,10 +450,10 @@
                         >Subir Documento</label
                       >
                       <input
-                        id="justificationFile"
+                        id="formatFile"
                         type="file"
+                        name = "document"
                         class="form-control"
-                        id="documentos"
                         accept=".pdf"
                         aria-label="Upload"
                       />
@@ -470,7 +476,7 @@
                         id="justificationFile"
                         type="file"
                         class="form-control"
-                        id="documentos"
+                        name="evidence"
                         accept=".pdf"
                         aria-label="Upload"
                       />
@@ -564,7 +570,7 @@
                       <input
                         type="checkbox"
                         class="form-check-input"
-                        id="aceptarTerminos"
+                        id="confirmTerms"
                       />
                       <label class="form-check-label" for="aceptarTerminos"
                         >He leído los términos para la cancelación
