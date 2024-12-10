@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $mailer = new mail();
 
-        $mailer->sendStudentsLogin($mailer->connection, $type, $mailer->maxEmailsPerDay);
+        $mailer->sendStudentsLogin( $type, );
 
         $response['success'] = true;
         $response['message'] = "Correos enviados correctamente.";

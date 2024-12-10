@@ -1,6 +1,6 @@
-import { Modal, Form, File } from "../modules/behavior/support.mjs";
+import { Modal, Form, File, Table } from "../modules/behavior/support.mjs";
 import { modalTemplates } from "../modules/templates/students/requests/modalTemplates.mjs";
-
+import { Student } from "../modules/request/Student.mjs";
 import { Sidebar } from "../modules/behavior/support.mjs";
 
 /* ========== Constantes  ============*/
@@ -16,6 +16,15 @@ toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
 Sidebar.buildSidebar('../../../')
+
+
+/* ========== Cargando las clases matrículadas en caso de cancelación excepcional ============*/
+window.addEventListener('load', async function(){
+  const sections = await Student.getEnrollmentClassSection('20240003');
+  
+  Table.renderDynamicTable(sections,'viewSections');
+  Student.addOptionTableRequestCancellation('viewSections');
+});
 
 
 /* ========== Mostrando la modal con los terminos de la solicitud ============*/

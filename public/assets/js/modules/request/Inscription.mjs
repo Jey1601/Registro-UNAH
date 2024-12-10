@@ -55,21 +55,17 @@ class Inscription {
     formData.append("applicantFirstLastName", first_lastname);
     formData.append("applicantSecondLastName", second_lastname); // Si no hay segundo apellido, pasará null
 
-    /*for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
-      } */
+ 
     const isCertificateValid = await File.validateFile(certificateFile);
     const isIdValid = await File.validateFile(idFile); 
 
     if (isCertificateValid && isIdValid) {
       
-        Alert.display('warning','Espere','Estamos cargando su información');
+        Alert.display('warning','Espere','Estamos cargando su información',this.path);
         this.insertData(formData, inscriptionForm);
       
     }
     
-    //Limpiamos el formulario
-    //inscriptionForm.reset();
   }
 
  
@@ -94,7 +90,7 @@ class Inscription {
         
 
         
-          Alert.display( result.status, 'Aviso', result.message);
+          Alert.display( result.status, 'Aviso', result.message, this.path);
         
        
       } catch (error) {
@@ -120,14 +116,14 @@ class Inscription {
     
             if(result.status === 'success'){
 
-              Alert.display(result.status, 'Gracias', result.message, '../../../');
+              Alert.display(result.status, 'Gracias', result.message, this.path);
               emailCodeVerificationInput.value='';
               
               Modal.hideModal('modalEmailCodeVerification');
               this.getData();
             }else{
-              Modal.hideModal('modalEmailCodeVerification');
-              Alert.display(result.status, 'Algo ha salido mal', result.message);
+              
+              Alert.display(result.status, 'Algo ha salido mal', result.message, this.path);
             }
         } catch (error) {
      
@@ -159,7 +155,7 @@ class Inscription {
           input.classList.remove('right-input');
         });
         Modal.hideModal('Inscription-form');
-        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ));
+        Alert.display('success', 'Felicidades', result.message.concat(" Numero de solicitud : ", result.id_application ),this.path);
       }
      
     } catch (error) {

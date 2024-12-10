@@ -25,10 +25,10 @@ async function submitCSVFile() {
                 Alert.display("warning", 'Aviso',result.message,'../../' );
             } catch (error) {
                 console.log(error);
-                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", "../../");
+                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", path);
             }
         } else {
-            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.','../../');
+            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.',path);
         }
     })
 }
@@ -39,6 +39,6 @@ btn_upload.addEventListener('click', submitCSVFile);
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
-    Login.logout('../../index.html')
+    Login.logout()
 });
 

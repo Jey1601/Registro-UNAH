@@ -846,7 +846,11 @@ BEGIN
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 
+<<<<<<< HEAD
 --@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 08/12/2024
+=======
+
+>>>>>>> 3e6dc7f (feat correo usuario contraseña estudiante)
 CREATE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT(IN idStudent VARCHAR(13))
 BEGIN
     SELECT classes.id_class as class_code, classes.name_class, `ClassSections`.id_class_section as section_code,

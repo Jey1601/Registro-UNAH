@@ -428,7 +428,7 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
 
 //Enviar resultados de los diferentes tipos de exámenes realizados
 function sendRatings(/*$connection, $type, $maxEmailsPerDay*/) {
-    $mail = $this->$this->PHPMailerConfig();
+    $mail = $this->PHPMailerConfig();
     $type = 'exam_results';
     $maxEmailsPerDay = 500;
     // Obtener los usuarios según el tipo de mensaje
@@ -509,12 +509,12 @@ function sendCareerAcceptanceNotification($email, $name, $career) {
 }
 
 //Enviar el usuario y contraseña de los estudiantes
-function sendStudentsLogin($connection, $type, $maxEmailsPerDay) {
-    $mail = PHPMailerConfig();
-
+function sendStudentsLogin( $type) {
+    $mail = $this->PHPMailerConfig();
+    $maxEmailsPerDay = 500;
     // Obtener los usuarios según el tipo de mensaje
     $result = match ($type) {
-        'users_login' => getStudentsPassword($connection),
+        'users_login' => getStudentsPassword($this->connection),
         default => null
     };
 
