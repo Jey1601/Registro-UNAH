@@ -257,6 +257,69 @@ class ProfessorsDAO {
     }
 
     /**
+     * @author @AngelNolasco
+     * @created 09/12/2024
+     */
+    public function respondRequest (int $idProfessor) {
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
+            $roles [] = $row;
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no es coordinador academico.'
+            ];
+        }
+
+        
+    }
+
+    /**
+     * 
+     */
+    public function getAcademicHistoryOfAllStudents (int $idProfessor) {
+        if (!(isset($idProfessor))) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Numero de empleado docente no definido o nulo.'
+            ];
+        }
+
+        $querySearchDepartmentHead = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ?;";
+        $stmtSearchDepartmentHead = $this->connection->prepare($querySearchDepartmentHead);
+        $stmtSearchDepartmentHead->bind_param('i', $idProfessor);
+        $stmtSearchDepartmentHead->execute();
+        $resultSearchDepartmentHead = $stmtSearchDepartmentHead->get_result();
+        $roles = [];
+
+        while ($row = $resultSearchDepartmentHead->fetch_assoc()) {
+            $roles [] = $row['role'];
+        }
+
+        if (in_array('Department Head', $roles)) {
+            
+        } else {
+            return $response = [
+                'status' => 'info',
+                'message' => 'El usuario docente no tiene rol de jefe de departamento.'
+            ];
+        }
+    }
+
+    /**
      * Metodo para obtener las clases asignadas a un docente especifico.
      * 
      * @param int $idProfessor El numero de cuenta del docente del que se quiere obtener sus clases asignadas.

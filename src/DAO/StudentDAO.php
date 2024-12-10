@@ -161,7 +161,8 @@ class StudentDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 08/12/2024
      */
     public function getEnrollmentClassSection (string $idStudent) {
         if (!isset($idStudent)) {
@@ -219,42 +220,111 @@ class StudentDAO {
     /**
      * 
      */
-    public function createRequestExcepcionalCancellation (string $idStudent, $reasons, $document, $evidence, $idsClassSections) {
-        if (!(isset($idRequest) && isset($reasons) && isset($document) && isset($idsClassSections)) || empty($idsClassSections)) {
+    public function checkDatesCancellationExceptionalProcess () {
+        //COMPROBACION DE QUE LA FECHA ACTUAL ESTA ENTRE LAS FECHAS DESIGNADAS (1 MES DESPUES DE INICIADO EL PERIODO O 3 SEMANAS ANTES)
+        $queryGetDatesProcess = "SELECT start_dateof_cancellation_exceptional_classes_process as date_start_process, end_dateof_cancellation_exceptional_classes_process as date_end_process
+        FROM `CancellationExceptionalClassesProcess`  WHERE status_cancellation_exceptional_classes_process = TRUE;";
+        $resultGetDatesProcess = $this->connection->execute_query($queryGetDatesProcess);
+        
+    }
+
+    /**
+     * @author @AngelNolasco
+     * @created 08/12/2024
+     */
+    public function createRequestExcepcionalCancellation (string $idStudent, $reasons, $document, $evidence=null, $idsClassSections) {
+        if (!(isset($idStudent) && isset($reasons) && isset($document) && isset($idsClassSections)) || empty($idsClassSections)) {
             return $response = [
                 'success' => false,
                 'message' => 'Hay datos nulos que necesitan un valor obligatoriamente o no hay secciones definidas.'
             ];
         }
+
+        //COMPROBACION DE QUE EL ESTUDIANTE NO HAYA REPROBADO O ABANDONADO 2 VECES O MAS
+        //Obtencion de las clases de las secciones
+        $queryGetClassesId = "SELECT classes.id_class FROM `ClassSections` INNER JOIN classes ON `ClassSections`.id_class = classes.id_class WHERE `ClassSections`.id_class_section = ?;";
+        $auxArray = [];
+        $classid_sectionid = [];
+        foreach ($idsClassSections as $classSection) {
+            $stmtGetClassesId = $this->connection->prepare($queryGetClassesId);
+            $stmtGetClassesId->bind_param('i', $classSection);
+            $stmtGetClassesId->execute();
+            $resultGetClassesId = $stmtGetClassesId->get_result();
+            $row = $resultGetClassesId->fetch_assoc();
+            
+            $auxArray['classID'] = $row['id_class'];
+            $auxArray['sectionID'] = $classSection;
+            $classid_sectionid [] = $auxArray;
+        }
+
+        //Conteo de veces reprobada o abandonada
+        $queryCountFailedAbandonedTimes = "CALL SP_COUNT_FAILED_ABANDONED_CLASS_BY_STUDENT(?, ?)";
         
+        $counterPerClass = [];
+        $classCounter = [];
+        foreach($classid_sectionid as $auxArray) {
+            $stmtCount = $this->connection->prepare($queryCountFailedAbandonedTimes);
+            $stmtCount->bind_param('si', $idStudent, $auxArray['classID']);
+            $stmtCount->execute();
+            $resultCount = $stmtCount->get_result();
+            $row = $resultCount->fetch_assoc();
+
+            
+            $counterPerClass ['class'] = $row['name_class'] ?? "";
+            $counterPerClass ['times'] = $row['total_failed_abandoned_class'] ?? 0;
+            $counterPerclass ['idClass'] = $row['id_class'] ?? $auxArray['classID'];
+            $classCounter [] = $counterPerClass;
+            
+            // Liberar el resultado actual del procedimiento
+            while ($this->connection->more_results()) {
+                $this->connection->next_result();
+            }
+        }
+
+        //CREACION DE LA SOLICITUD
         $queryInsertRequest = "INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
         VALUES (?, ?, ?, ?, TRUE);";
         $stmtInsertRequest = $this->connection->prepare($queryInsertRequest);
         $stmtInsertRequest->bind_param('ssss', $idStudent, $reasons, $document, $evidence);
-        
+
         if ($stmtInsertRequest->execute()) {
             $idRequest = $this->connection->insert_id;
             $errors = [];
-            
-            foreach ($idsClassSections as $idSection) {
-                $queryInsertListClassSection = "INSERT INTO `ListClassSectionCancellationExceptional` (id_class_section, id_requests_cancellation_exceptional_classes)
-                VALUES (?, ?);";
-                $stmtInsertListClassSection = $this->connection->prepare($queryInsertListClassSection);
-                $stmtInsertListClassSection->bind_param('ii', $idSection, $idRequest);
+            $registered = [];
+            $queryInsertListClassSection = "INSERT INTO `ListClassSectionCancellationExceptional` (id_class_section, id_requests_cancellation_exceptional_classes) VALUES (?, ?);";
 
-                if (!($stmtInsertListClassSection->execute())) {
-                    $errors [] = 'No se registro la seccion con ID '.$idSection.' en la solicitud.';
+            for ($i=0; $i < count($classCounter); $i++) { 
+                if ($classCounter[$i]['times'] > 2) {
+                    $errors [] = 'La clase '.$classCounter[$i]['class'].' ha sido reprobada o abandonada mas de dos veces.';
+                    continue;
+                }
+
+                //INSERCION DE SECCION EN LA SOLICITUD
+                $stmtInsertListClassSection = $this->connection->prepare($queryInsertListClassSection);
+                $stmtInsertListClassSection->bind_param('ii', $classid_sectionid[$i]['sectionID'], $idRequest);
+
+                if ($stmtInsertListClassSection->execute()) {
+                    $registered [] = "La seccion de la clase con codigo ".$classid_sectionid[$i]['classID']." ha sido registrada en la solicitud.";
+                } else {
+                    $erros [] = "La seccion de la clase ".$classCounter[$i]['class']." no ha sido registrada en la solicitud.";
+                }
+
+                // Liberar el resultado actual del procedimiento
+                while ($this->connection->more_results()) {
+                    $this->connection->next_result();
                 }
             }
 
             return $response = [
-                'success' => true,
+                'status' => 'success',
                 'message' => 'Registro de solicitud finalizado.',
+                'registered' => $registered,
                 'errors' => $errors
             ];
         } else {
+            $this->connection->rollback();
             return $response = [
-                'success' => false,
+                'status' => 'error',
                 'message' => 'No se pudo registrar la solicitud.'
             ];
         }

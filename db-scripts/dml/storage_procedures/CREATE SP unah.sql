@@ -839,13 +839,14 @@ BEGIN
             COALESCE(`Professors`.first_lastname_professor, ''),
             ' ',
             COALESCE(`Professors`.second_lastname_professor, '')
-    ) AS lastnames_professor, `Professors`.email_professor, `Departments`.name_departmet,`RegionalCenters`.name_regional_center, `Professors`.status_professor FROM `Professors`
+    ) AS lastnames_professor, `Professors`.email_professor, `RegionalCenters`.name_regional_center, `Departments`.name_departmet, `Professors`.status_professor FROM `Professors`
     INNER JOIN `ProfessorsDepartments` ON `Professors`.id_professor = `ProfessorsDepartments`.id_professor
     INNER JOIN `Departments` ON `ProfessorsDepartments`.id_department = `Departments`.id_department
     INNER JOIN `RegionalCenters` ON `Professors`.id_regional_center = `RegionalCenters`.id_regional_center
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 
+--@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT(IN idStudent VARCHAR(13))
 BEGIN
     SELECT classes.id_class as class_code, classes.name_class, `ClassSections`.id_class_section as section_code,
@@ -863,6 +864,38 @@ BEGIN
     INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
     INNER JOIN `EnrollmentClassSections` ON `ClassSections`.id_class_section = `EnrollmentClassSections`.id_class_section
     WHERE `EnrollmentClassSections`.id_student = idStudent AND `ClassSections`.status_class_section = 1;
+END$$
+
+--@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 09/12/2024
+CREATE PROCEDURE SP_COUNT_CANCELLATION_TIMES_BY_STUDENT(IN idStudent VARCHAR(13), IN idClass INT)
+BEGIN
+    SELECT COUNT(*) as total_cancellation, classes.name_class, `Students`.id_student FROM `ListClassSectionCancellationExceptional`
+    INNER JOIN `RequestsCancellationExceptionalClasses`
+        ON `ListClassSectionCancellationExceptional`.id_requests_cancellation_exceptional_classes = `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes
+    INNER JOIN `ClassSections`
+        ON `ListClassSectionCancellationExceptional`.id_class_section = `ClassSections`.id_class_section
+    INNER JOIN `Students`
+        ON `RequestsCancellationExceptionalClasses`.id_student = `Students`.id_student
+    INNER JOIN classes
+        ON `ClassSections`.id_class = classes.id_class
+    INNER JOIN `ResolutionListClassSectionCancellationExceptional`
+        ON `ListClassSectionCancellationExceptional`.id_list_class_section_cancellation_exceptional = `ResolutionListClassSectionCancellationExceptional`.id_list_class_section_cancellation_exceptional
+    WHERE `RequestsCancellationExceptionalClasses`.id_student = idStudent AND classes.id_class = idClass AND `ResolutionListClassSectionCancellationExceptional`.resolution_request_student = TRUE
+    GROUP BY classes.name_class, `Students`.id_student;
+END$$
+
+--@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 10/12/2024
+CREATE PROCEDURE SP_COUNT_FAILED_ABANDONED_CLASS_BY_STUDENT(IN idStudent VARCHAR(13), IN idClass INT)
+BEGIN
+    SELECT COUNT(*) as total_failed_abandoned_class, classes.name_class as name_class, classes.id_class as id_class
+    FROM `SpecificationClassStatus`
+    INNER JOIN `ClassSections` ON `SpecificationClassStatus`.id_class_section = `ClassSections`.id_class_section
+    INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
+    WHERE 
+        `SpecificationClassStatus`.id_student_class_status = idStudent
+        AND (`SpecificationClassStatus`.specification_class_status = "REPROBADO" OR specification_class_status = "ABANDONO") 
+        AND `ClassSections`.id_class = idClass
+    GROUP BY classes.name_class, classes.id_class;
 END$$
 
 DELIMITER ;

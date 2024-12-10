@@ -350,6 +350,70 @@ class FacultyAdminDAO {
     }
 
     /**
+     * Metodo para actualizar la foto, el las obligaciones y el centro regional de un docente.
+     * 
+     * @param int $idProfessor El numero de cuenta del docente.
+     * @param string|null $pictureProfessor La foto del docente en formato BLOB
+     * @param int|null $idProfessorObligation El ID que hace referencias a las obligaciones definidas a nivel institucional.
+     * @param int|null $idRegionalCenter El ID del centro regional al que esta vinculado el docente.
+     * 
+     * @author @AngelNolasco
+     * @created 09/12/2024
+     */
+    public function updateProfessor (int $idProfessor, string|null $pictureProfessor=null, int|null $idProfessorObligation=null, int|null $idRegionalCenter=null) {
+        if (!(isset($idProfessor))) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Numero empleado docente no definido o nulo.'
+            ];
+        }
+
+        $querySelectProfessor = "SELECT * FROM Professors WHERE id_professor = ?;";
+        $stmtSelectProfessor = $this->connection->prepare($querySelectProfessor);
+        $stmtSelectProfessor->bind_param('i', $idProfessor);
+        $resultSelectProfessor = $stmtSelectProfessor->get_result();
+
+        if($resultSelectProfessor->num_rows > 0) {
+            if(isset($pictureProfessor) && isset($idProfessorObligation) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, id_regional_center = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idProfessorObligation, $idRegionalCenter];
+            } elseif (isset($pictureProfessor) && isset($idProfessorObligation)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idProfessorObligation];
+            } elseif (isset($pictureProfessor) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_regional_center = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idRegionalCenter];
+            } elseif (isset($idProfessorObligation) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, id_regional_center = ? WHERE id_professor = ?;";
+                $params = [$idProfessorObligation, $idRegionalCenter];
+            } else {
+                return $response = [
+                    'status' => 'error',
+                    'message' => 'Parametros nulos o no definidos. No hubo actualizacion.'
+                ];
+            }
+
+            $resultUpdateProfessor = $this->connection->execute_query($queryUpdateProfessor, $params);
+            if ($resultUpdateProfessor) {
+                return $response = [
+                    'status' => 'success',
+                    'message' => 'Actualizacion realizada satisfactoriamente.'
+                ];
+            } else {
+                return $response = [
+                    'status' => 'error',
+                    'message' => 'Error en la ejecucion de la consulta.'
+                ];
+            }
+        } else {
+            return $response = [
+                'status' => 'info',
+                'message' => 'Docente no encontrado.'
+            ];
+        }
+    }
+
+    /**
      * Metodo para actualizar el estado de un docente.
      * 
      * @param int $idProfessor El numero de cuenta del docente.
@@ -403,6 +467,10 @@ class FacultyAdminDAO {
         }
     }
 
+    /**
+     * @author @AngelNolasco
+     * @created 08/12/2024
+     */
     public function getProfessorsByFaculty (int $idFaculty) {
         if (!(isset($idFaculty))) {
             return $response = [
@@ -434,10 +502,12 @@ class FacultyAdminDAO {
         } else {
             return $response = [
                 'success' => true,
-                'message' => 'Ejecucion de consulta exitosa. Campos: id_professor, names_professor, lastnames_professors, email_professor, name_departmet, status_professor.',
+                'message' => 'Ejecucion de consulta exitosa. Campos: id_professor, names_professor, lastnames_professors, email_professor, name_regional_center, name_departmet, status_professor.',
                 'professors' => $professors
             ];
         }
     }
+
+
 }
 ?>

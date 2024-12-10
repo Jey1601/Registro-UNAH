@@ -504,7 +504,8 @@ INSERT INTO `RolesUsersProfessor` (id_user_professor, id_role_professor, status_
 VALUES
 (1, 14, TRUE),
 (1, 8, TRUE),
-(1, 16, TRUE);
+(1, 16, TRUE),
+(1, 13, TRUE);
 
 INSERT INTO ProfessorsDepartments (id_department, id_professor, status_professor_department) 
 VALUES

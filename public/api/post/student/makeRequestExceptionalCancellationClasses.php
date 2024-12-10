@@ -3,11 +3,9 @@
 const PATH = '../../../../src';
 include_once PATH.'/DAO/StudentDAO.php';
 
-// Configurar las cabeceras necesarias
 header('Content-Type: application/json');
 
 try {
-    // Verificar que los datos requeridos están en la solicitud
     if (!isset($_POST['idStudent'], $_POST['reasons'], $_FILES['document'], $_POST['idsClassSections'])) {
         echo json_encode([
             'success' => false,
