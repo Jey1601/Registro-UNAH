@@ -275,7 +275,7 @@ class ProfessorsDAO {
      * @author @AngelNolasco
      * @created 09/12/2024
      */
-    public function respondRequest (int $idProfessor) {
+    public function respondRequestCancellationExceptional (int $idProfessor, int $idRequest) {
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
         INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
         INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
@@ -292,11 +292,125 @@ class ProfessorsDAO {
         if (!in_array('Coordinator', $roles)) {
             return $response = [
                 'status' => 'warning',
-                'message' => 'El docente no es coordinador academico.'
+                'message' => 'El docente no tiene el rol de coordinador academico.'
             ];
         }
 
-        
+        $queryGetIdAcademicCoordinator = "SELECT `AcademicCoordinator`.id_academic_coordinator FROM `AcademicCoordinator`
+        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
+        WHERE `Professors`.id_professor = ? AND `AcademicCoordinator`.status_academic_coordinator = TRUE;";
+        $resultGetIdAcademicCoordinator = $this->connection->execute_query($queryGetIdAcademicCoordinator, [$idProfessor]);
+        $idAcademicCoordinator = 0;
+        while ($row = $resultGetIdAcademicCoordinator->fetch_assoc()) {
+            $idAcademicCoordinator = $row['id_academic_coordinator'] ?? 0;
+            break;
+        }
+
+        if($idAcademicCoordinator == 0) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no esta registrado como coordinador academico.'
+            ];
+        }
+
+        $queryInsertRespondRequest = "INSERT INTO `ResolutionRequestsCancellationExceptionalClasses` (id_academic_coordinator, id_requests_cancellation_exceptional_classes, resolution_request_student, date_resolution)
+        VALUES (?, ?, TRUE, CURRENT_DATE());";
+        $resultInsertRespondRequest = $this->connection->execute_query($queryInsertRespondRequest, [$idAcademicCoordinator, $idRequest]);
+
+        if($resultInsertRespondRequest) {
+            return $response = [
+                'status' => 'success',
+                'message' => 'La solicitud con codigo '.$idRequest.' ha sido registrada como contestada.'
+            ];
+        } else {
+            $this->connection->rollback();
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se ha registrado el dictamen de la solicitud.'
+            ];
+        }
+    }
+
+    /**
+     * 
+     */
+    public function respondeRequestListSectionClass (int $idProfessor, int $idRequest, $arrayClassSectionIdResolution) {
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
+            $roles [] = $row;
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no tiene el rol de coordinador academico.'
+            ];
+        }
+
+        $queryGetIdAcademicCoordinator = "SELECT `AcademicCoordinator`.id_academic_coordinator FROM `AcademicCoordinator`
+        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
+        WHERE `Professors`.id_professor = ? AND `AcademicCoordinator`.status_academic_coordinator = TRUE;";
+        $resultGetIdAcademicCoordinator = $this->connection->execute_query($queryGetIdAcademicCoordinator, [$idProfessor]);
+        $idAcademicCoordinator = 0;
+        while ($row = $resultGetIdAcademicCoordinator->fetch_assoc()) {
+            $idAcademicCoordinator = $row['id_academic_coordinator'] ?? 0;
+            break;
+        }
+
+        if($idAcademicCoordinator == 0) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no esta registrado como coordinador academico.'
+            ];
+        }
+
+        $querySelectIdListsIdSections = "SELECT `ListClassSectionCancellationExceptional`.id_list_class_section_cancellation_exceptional, `ListClassSectionCancellationExceptional`.id_class_section FROM `ListClassSectionCancellationExceptional`
+        INNER JOIN `RequestsCancellationExceptionalClasses` ON `ListClassSectionCancellationExceptional`.id_requests_cancellation_exceptional_classes = `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes
+        WHERE `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes = ?;";
+
+        $resultSelectIdListsIdSections = $this->connection->execute_query($querySelectIdListsIdSections, [$idRequest]);
+        if (!$resultSelectIdListsIdSections) {
+            return $reponse = [
+                'status' => 'error',
+                'message' => 'No se ha podido obtener la lista de las secciones solicitadas para cancelacion.'
+            ];
+        }
+
+        $arrayIdListIdSection = [];
+        while ($row = $resultSelectIdListsIdSections->fetch_assoc()) {
+            $arrayIdListIdSection [] = [
+                'idList' => $row['id_list_class_section_cancellation_exceptional'],
+                'idSection' => $row['id_class_section']
+            ];
+        }
+
+        $erros = [];
+        $queryInsertRespondList = "INSERT INTO `ResolutionListClassSectionCancellationExceptional` (id_academic_coordinator, id_list_class_section_cancellation_exceptional, resolution_request_student, date_resolution)
+        VALUES (?, ?, TRUE, CURRENT_DATE());";
+        foreach($arrayClassSectionIdResolution as $classSectionResolution) {
+            for ($i=0; $i < count($arrayIdListIdSection); $i++) { 
+                if (in_array($classSectionResolution['idSection'], $arrayIdListIdSection[$i]['idSection'])) {
+                    $resultRespondListSection = $this->connection->execute_query($queryInsertRespondList, [$idAcademicCoordinator, $arrayIdListIdSection[$i]['idList']]);
+
+                    if(!$resultRespondListSection) {
+                        $this->connection->rollback();
+                        return $erros [] = 'No se registro el dictamen de la seccion '.$arrayIdListIdSection[$i]['idSection'];
+                    }
+                }
+            }
+        }
+
+
+
+
     }
 
     /**
