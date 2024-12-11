@@ -657,3 +657,27 @@ INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_reques
 VALUES
 ('20201001559', 'Calamidad domestica', '', null, TRUE);
 
+-- @author INSERT INTO TypesEnrollmentConditions: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO TypesEnrollmentConditions (
+    maximum_student_global_average, minimum_student_global_average, 
+    status_student_global_average, 
+    maximum_student_period_average, minimum_student_period_average, 
+    status_type_enrollment_conditions
+) VALUES 
+(100.00, 80.00, TRUE, 100.00, 0.00, TRUE),
+(79.99, 0.00, FALSE, 100.00, 71.99, TRUE),
+(79.99, 0.00, FALSE, 79.00, 0.00, TRUE);
+
+
+-- @author INSERT INTO DatesEnrollmentProcess: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO DatesEnrollmentProcess (
+    id_enrollment_process, 
+    id_type_enrollment_conditions, 
+    day_available_enrollment_process, 
+    start_time_available_enrollment_process, 
+    end_time_available_enrollment_process, 
+    status_date_enrollment_process
+) VALUES 
+(1, 1, '2024-12-12', '09:00:00', '23:59:00', TRUE),
+(1, 2, '2024-12-13', '09:00:00', '23:59:00', TRUE),
+(1, 3, '2024-12-14', '09:00:00', '23:59:00', TRUE);
