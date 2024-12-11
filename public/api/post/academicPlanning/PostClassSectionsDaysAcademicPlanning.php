@@ -1,7 +1,7 @@
 <?php
 
 $path = '../../../../';
-include_once $path . "src/DAO/ClassSectionsDaysDAO.php";
+include_once $path . "src/DAO/Enrollment/ClassSectionsDaysDAO.php";
 $dao = new  ClassSectionsDaysDAO();
 
 /**
@@ -29,15 +29,13 @@ $dao = new  ClassSectionsDaysDAO();
  *
  * @throws Exception Si ocurre un error en la ejecución del proceso.
  * 
- * @author Alejandro Moya
+ * @author Alejandro Moya 20211020462
  * @created 07/12/2024
  */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Obtener la entrada JSON
     $input = file_get_contents('php://input');
     $_POST = json_decode($input, true);
 
-    // Validar parámetros
     $newClassSectionId = $_POST['newClassSectionId'] ?? null;
     $days = $_POST['days'] ?? null;
 
@@ -50,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     try {
-        // Llamar al método del DAO
         $result = $dao->createClassSectionsDays($newClassSectionId, $days);
         echo json_encode($result);
     } catch (Exception $e) {
