@@ -789,23 +789,34 @@ BEGIN
     VALUES (p_id_class_section, p_id_day, p_status_class_sections_days);
 END $$
 
--- @author STORAGE PROCEDURE SP_GET_ACADEMIC_LOAD_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
-CREATE PROCEDURE SP_GET_ACADEMIC_LOAD_BY_PERIOD ()
+DROP PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD;
+-- @author STORAGE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
+CREATE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD ()
 BEGIN
-    SELECT `ClassSections`.id_class_section, classes.id_class, classes.name_class, `Professors`.id_professor,
-    CONCAT(
-            COALESCE(`Professors`.first_name_professor, ''),
-            ' ',
-            COALESCE(`Professors`.second_name_professor, ''),
-            ' ',
-            COALESCE(`Professors`.third_name_professor, ''),
-            ' ',
-            COALESCE(`Professors`.first_lastname_professor, ''),
-            ' ',
-            COALESCE(`Professors`.second_lastname_professor, '')
-    ) AS fullname_professor, COUNT(`EnrollmentClassSections`.id_student) as inscriptions, 
-    `ClassSections`.numberof_spots_available_class_section as spots, `Building`.name_building, 
-    `Classrooms`.name_classroom, `ClassSections`.status_class_section FROM `ClassSections`
+    SELECT 
+        `DatesAcademicPeriodicityYear`.description_dates_academic_periodicity_year as description_periodicity,
+        `ClassSections`.id_class_section as code_section, 
+        classes.id_class, classes.name_class, 
+        `Professors`.id_professor as id_professor,
+        TRIM(REPLACE(
+                CONCAT(
+                COALESCE(`Professors`.first_name_professor, ''),
+                ' ',
+                COALESCE(`Professors`.second_name_professor, ''),
+                ' ',
+                COALESCE(`Professors`.third_name_professor, ''),
+                ' ',
+                COALESCE(`Professors`.first_lastname_professor, ''),
+                ' ',
+                COALESCE(`Professors`.second_lastname_professor, '')
+                ),
+                '  ', ' '
+        )) as fullname_professor, 
+        COUNT(`EnrollmentClassSections`.id_student) as inscriptions, 
+        `ClassSections`.numberof_spots_available_class_section as spots, 
+        `Building`.name_building as building, 
+        `Classrooms`.name_classroom as classroom
+    FROM `ClassSections`
     INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
     INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
     INNER JOIN `EnrollmentClassSections` ON `ClassSections`.id_class_section = `EnrollmentClassSections`.id_class_section
@@ -813,15 +824,17 @@ BEGIN
     INNER JOIN `ClassroomsBuildingsDepartmentsRegionalCenters` ON `Classrooms`.id_classroom = `ClassroomsBuildingsDepartmentsRegionalCenters`.id_classroom
     INNER JOIN `BuildingsDepartmentsRegionalsCenters` ON `ClassroomsBuildingsDepartmentsRegionalCenters`.building_department_regional_center = `BuildingsDepartmentsRegionalsCenters`.id_building_department_regionalcenter
     INNER JOIN `Building` ON `BuildingsDepartmentsRegionalsCenters`.building_department_regionalcenter = `Building`.id_building
+    INNER JOIN `DatesAcademicPeriodicityYear` ON `ClassSections`.id_dates_academic_periodicity_year = `DatesAcademicPeriodicityYear`.id_dates_academic_periodicity_year
+    WHERE `ClassSections`.status_class_section = TRUE AND (CURRENT_DATE BETWEEN `DatesAcademicPeriodicityYear`.start_dateof_academic_periodicity AND `DatesAcademicPeriodicityYear`.end_dateof_academic_periodicity)
     GROUP BY `ClassSections`.id_class_section, 
             classes.id_class, 
             classes.name_class, 
-            `Professors`.id_professor, 
+            id_professor, 
             fullname_professor, 
-            `Building`.name_building, 
-            `Classrooms`.name_classroom, 
-            `ClassSections`.numberof_spots_available_class_section, 
-            `ClassSections`.status_class_section;
+            building, 
+            classroom, 
+            spots,
+            description_periodicity;
 END$$
 
 -- @author STORAGE PROCEDURE SP_GET_PROFESSORS_BY_FACULTY: Angel Nolasco 20211021246 @created 08/12/2024

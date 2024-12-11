@@ -758,10 +758,255 @@ class ProfessorsDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 11/12/2024
      */
-    public function getReportsByPeriod (int $idProfessor) {
-        
+    public function getReportCurrentPeriod (int $idProfessor) {
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array(MYSQLI_ASSOC)) {
+            $roles [] = $row['role'];
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no tiene el rol de coordinador academico.'
+            ];
+        }
+
+        $queryGetAcademicCharge = "CALL SP_GET_ACADEMIC_CHARGE_BY_PERIOD();";
+        $resultGetAcademicCharge = $this->connection->execute_query($queryGetAcademicCharge);
+
+        if (!$resultGetAcademicCharge) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo obtener la carga academica del periodo actual.'
+            ];
+        }
+
+        $sections = [];
+        while ($row = $resultGetAcademicCharge->fetch_assoc()) {
+            $periodicity = $row['description_periodicity'];
+
+            $sections[$periodicity][] = [
+                'currentPeriodicity' => $row['description_periodicity'],
+                'idSection' => $row['code_section'],
+                'nameClass' => $row['name_class'],
+                'idProfessor' => $row['id_professor'],
+                'nameProfessor' => $row['fullname_professor'],
+                'inscriptions' => $row['inscriptions'],
+                'spots' => $row['spots'],
+                'nameBuilding' => $row['building'],
+                'nameClassroom' => $row['classroom']
+            ];
+        }
+
+        return $response = [
+            'status' => 'success',
+            'message' => 'Se obtuvo la carga academica satisfactoriamente.',
+            'academicCharge' => array_values($sections)
+        ];
     }
+
+    /**
+     * @author @AngelNolasco
+     * @created 10/12/2024
+     */
+    public function getReportCurrentPeriodPDF (int $idProfessor) {
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array(MYSQLI_ASSOC)) {
+            $roles [] = $row['role'];
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no tiene el rol de coordinador academico.'
+            ];
+        }
+
+        $queryGetAcademicCharge = "CALL SP_GET_ACADEMIC_CHARGE_BY_PERIOD();";
+        $resultGetAcademicCharge = $this->connection->execute_query($queryGetAcademicCharge);
+
+        if (!$resultGetAcademicCharge) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo obtener la carga academica del periodo actual.'
+            ];
+        }
+
+        $sections = [];
+        while ($row = $resultGetAcademicCharge->fetch_assoc()) {
+            $periodicity = $row['description_periodicity'];
+
+            $sections[$periodicity][] = [
+                'currentPeriodicity' => $row['description_periodicity'],
+                'idSection' => $row['code_section'],
+                'nameClass' => $row['name_class'],
+                'idProfessor' => $row['id_professor'],
+                'nameProfessor' => $row['fullname_professor'],
+                'inscriptions' => $row['inscriptions'],
+                'spots' => $row['spots'],
+                'nameBuilding' => $row['building'],
+                'nameClassroom' => $row['classroom']
+            ];
+        }
+
+        // return $response = [
+        //     'status' => 'success',
+        //     'message' => 'Se obtuvo la carga academica satisfactoriamente.',
+        //     'academicCharge' => array_values($sections)
+        // ];
+
+        // Crear PDF con FPDF
+        $pdf = new FPDF('L');
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+
+        // Título
+        $pdf->Cell(0, 10, 'Carga Academica', 0, 1, 'C');
+        $pdf->Ln(10);
+
+        // Encabezados de la tabla
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(35, 10, 'Periodo', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'Codigo Seccion', 1, 0, 'C');
+        $pdf->Cell(70, 10, 'Nombre de la Clase', 1, 0, 'C');
+        $pdf->Cell(60, 10, 'Profesor', 1, 0, 'C');
+        $pdf->Cell(25, 10, 'Matricula', 1, 0, 'C');
+        $pdf->Cell(15, 10, 'Cupo', 1, 0, 'C');
+        $pdf->Cell(15, 10, 'Edificio', 1, 0, 'C');
+        $pdf->Cell(15, 10, 'Aula', 1, 1, 'C');
+
+        // Datos de la tabla
+        $pdf->SetFont('Arial', '', 10);
+        foreach ($sections as $periodicity => $sectionData) {
+            foreach ($sectionData as $section) {
+                $periodicity = $this->replaceSpecialChars($section['currentPeriodicity']);
+                $className = $this->replaceSpecialChars($section['nameClass']);
+                if (strlen($periodicity) > 18) {
+                    $periodicity = substr($periodicity, 0, 18) . '...'; // Limitar a 18 caracteres
+                }
+                if (strlen($className) > 40) {
+                    $className = substr($className, 0, 40) . '...';
+                }
+
+                $pdf->Cell(35, 10, $periodicity, 1, 0, 'C');
+                $pdf->Cell(30, 10, $section['idSection'], 1, 0, 'C');
+                $pdf->Cell(70, 10, $className, 1, 0, 'L');
+                $pdf->Cell(60, 10, $this->replaceSpecialChars($section['nameProfessor']), 1, 0, 'L');
+                $pdf->Cell(25, 10, $section['inscriptions'], 1, 0, 'C');
+                $pdf->Cell(15, 10, $section['spots'], 1, 0, 'C');
+                $pdf->Cell(15, 10, $section['nameBuilding'], 1, 0, 'C');
+                $pdf->Cell(15, 10, $section['nameClassroom'], 1, 1, 'C');
+            }
+        }
+
+        // Forzar la descarga del PDF
+        $pdf->Output('D', 'academic_charge_report.pdf');
+        exit;
+    }
+
+    /**
+     * @author @AngelNolasco
+     * @created 11/12/2024
+     */
+    public function getReportCurrentPeriodCSV (int $idProfessor) {
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_array(MYSQLI_ASSOC)) {
+            $roles [] = $row['role'];
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no tiene el rol de coordinador academico.'
+            ];
+        }
+
+        $queryGetAcademicCharge = "CALL SP_GET_ACADEMIC_CHARGE_BY_PERIOD();";
+        $resultGetAcademicCharge = $this->connection->execute_query($queryGetAcademicCharge);
+
+        if (!$resultGetAcademicCharge) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo obtener la carga academica del periodo actual.'
+            ];
+        }
+
+        $sections = [];
+        while ($row = $resultGetAcademicCharge->fetch_assoc()) {
+            $periodicity = $row['description_periodicity'];
+
+            $sections[$periodicity][] = [
+                'currentPeriodicity' => $row['description_periodicity'],
+                'idSection' => $row['code_section'],
+                'nameClass' => $row['name_class'],
+                'idProfessor' => $row['id_professor'],
+                'nameProfessor' => $row['fullname_professor'],
+                'inscriptions' => $row['inscriptions'],
+                'spots' => $row['spots'],
+                'nameBuilding' => $row['building'],
+                'nameClassroom' => $row['classroom']
+            ];
+        }
+
+        // Generar el archivo CSV
+        $filename = 'academic_charge_period' . date('Y-m-d_H-i-s') . '.csv';
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $output = fopen('php://output', 'w');
+
+        // Escribir encabezados de la tabla
+        fputcsv($output, ['PERIODO-SEMESTRE', 'CODIGO_SECCION', 'NOMBRE_CLASE', 'NUM_CUENTA_DOCENTE', 'NOMBRE_DOCENTE', 'MATRICULA', 'CUPOS', 'EDIFICIO', 'AULA']);
+
+        // Escribir los datos
+        foreach ($sections as $periodicity => $sectionData) {
+            foreach ($sectionData as $section) {
+                fputcsv($output, [
+                    $section['currentPeriodicity'],
+                    $section['idSection'],
+                    $section['nameClass'],
+                    $section['idProfessor'],
+                    $section['nameProfessor'],
+                    $section['inscriptions'],
+                    $section['spots'],
+                    $section['nameBuilding'],
+                    $section['nameClassroom']
+                ]);
+            }
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    
 }
+
+
 ?>
