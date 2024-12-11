@@ -193,9 +193,9 @@ VALUES
 -- SECCIONES PARA MATRICULAR ALUMNOS
 INSERT INTO ClassSections (id_class, id_dates_academic_periodicity_year, id_classroom_class_section, id_academic_schedules, id_professor_class_section, numberof_spots_available_class_section, status_class_section)
 VALUES
-(5, 1, 27, 4, 3, 5, TRUE),
-(6, 1, 29, 6, 9, 10, TRUE),
-(10, 1, 30, 5, 1, 15, TRUE);
+(5, 1, 27, 4, 10, 5, TRUE),
+(6, 1, 29, 6, 10, 10, TRUE),
+(10, 1, 30, 5, 10, 15, TRUE);
 
 INSERT INTO ClassSectionsDays (id_class_section, id_day, status_class_sections_days)
 VALUES
@@ -227,3 +227,12 @@ INSERT INTO StudentGradesAverages (id_student, global_grade_average_student, per
 VALUES
 ('20240004', 92.3, 91.8, 92.0),
 ('20240003', 78.4, 80.1, 79.2);
+
+
+select * from `Students`;
+
+
+
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES
+('20240003', '7', TRUE);
