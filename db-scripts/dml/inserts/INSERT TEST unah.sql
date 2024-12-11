@@ -664,8 +664,8 @@ INSERT INTO TypesEnrollmentConditions (
     maximum_student_period_average, minimum_student_period_average, 
     status_type_enrollment_conditions
 ) VALUES 
-(100.00, 80.00, TRUE, 100.00, 0.00, TRUE),
-(79.99, 0.00, FALSE, 100.00, 71.99, TRUE),
+(99.99, 80.00, TRUE, 99.99, 0.00, TRUE),
+(79.99, 0.00, FALSE, 99.99, 71.99, TRUE),
 (79.99, 0.00, FALSE, 79.00, 0.00, TRUE);
 
 
