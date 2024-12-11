@@ -1014,7 +1014,7 @@ BEGIN
     LIMIT 1; 
 END$$
 
--- @author STORAGE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
+-- @author PROCEDURE SP_GET_STUDENT_DATA_BY_REGCENT_UNDER: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_STUDENT_DATA_BY_REGCENT_UNDER (IN idRegionalCenter INT, IN idUndergraduate INT)
 BEGIN
     SELECT 
@@ -1044,6 +1044,7 @@ BEGIN
     WHERE `StudentsRegionalCenters`.id_regional_center = idRegionalCenter AND `StudentsUndergraduates`.id_undergraduate = idUndergraduate;
 END$$
 
+-- @author PROCEDURE SP_GET_ACADEMIC_HISTORY_BY_STUDENT: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_ACADEMIC_HISTORY_BY_STUDENT (IN idStudent VARCHAR(13))
 BEGIN
     SELECT 
@@ -1063,7 +1064,229 @@ BEGIN
     WHERE `Students`.id_student = idStudent AND `EnrollmentClassSections`.status_enrollment_class_sections = FALSE;
 END$$
 
+-- @author PROCEDURE GET_STUDENT_GRADES_AVERAGES: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE GET_STUDENT_GRADES_AVERAGES(IN student_id VARCHAR(13))
+BEGIN
+    SELECT id_student_grades_averages,
+           id_student,
+           global_grade_average_student,
+           period_grade_average_student,
+           annual_academic_grade_average_student
+    FROM StudentGradesAverages
+    WHERE id_student = student_id;
+END $$
+
+-- @author PROCEDURE GET_ENROLLMENT_PROCESS_BY_DATE: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE GET_ENROLLMENT_PROCESS_BY_DATE(IN input_date DATE)
+BEGIN
+    SELECT
+        id_dates_enrollment_process,
+        id_enrollment_process,
+        id_type_enrollment_conditions,
+        day_available_enrollment_process,
+        start_time_available_enrollment_process,
+        end_time_available_enrollment_process,
+        status_date_enrollment_process
+    FROM DatesEnrollmentProcess
+    WHERE day_available_enrollment_process = input_date;
+END $$
+
+-- @author PROCEDURE GET_ENROLLMENT_CONDITION_DETAILS: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE GET_ENROLLMENT_CONDITION_DETAILS(IN p_id_type_enrollment_conditions INT)
+BEGIN
+    SELECT 
+        id_type_enrollment_conditions,
+        maximum_student_global_average,
+        minimum_student_global_average,
+        status_student_global_average,
+        maximum_student_period_average,
+        minimum_student_period_average
+    FROM TypesEnrollmentConditions
+    WHERE id_type_enrollment_conditions = p_id_type_enrollment_conditions
+      AND status_type_enrollment_conditions = TRUE;
+END $$
+
+
+-- @author PROCEDURE GET_PENDING_CLASSES_BY_STUDENT: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE GET_PENDING_CLASSES_BY_STUDENT(IN student_id VARCHAR(13))
+BEGIN
+    SELECT 
+        StudentClassStatus.id_class AS id_class, 
+        classes.name_class AS class_name,
+        Departments.name_departmet AS department_name
+    FROM 
+        StudentClassStatus
+    INNER JOIN 
+        classes ON StudentClassStatus.id_class = classes.id_class
+    INNER JOIN 
+        Departments ON classes.department_class = Departments.id_department
+    WHERE 
+        StudentClassStatus.id_student = student_id
+        AND StudentClassStatus.class_status = TRUE
+        AND StudentClassStatus.id_class NOT IN (
+            SELECT 
+                ClassSections.id_class
+            FROM 
+                SpecificationClassStatus
+            INNER JOIN 
+                ClassSections ON SpecificationClassStatus.id_class_section = ClassSections.id_class_section
+            WHERE 
+                SpecificationClassStatus.id_student_class_status = student_id
+                AND SpecificationClassStatus.specification_class_status = 'APROBADO'
+        );
+END$$
+
+
+-- @author PROCEDURE VERYFY_STUDENT_PREREQUISITES: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE VERYFY_STUDENT_PREREQUISITES(
+    IN p_class_id INT,
+    IN p_student_id VARCHAR(13)
+)
+BEGIN
+    DECLARE v_missing_classes INT;
+
+    -- Verificar si el estudiante tiene todas las clases requeridas como prerequisitos para la clase solicitada
+    SELECT COUNT(*) INTO v_missing_classes
+    FROM RequirementUndergraduateClass
+    WHERE RequirementUndergraduateClass.id_undergraduate_class = p_class_id
+      AND NOT EXISTS (
+          -- Verificar que el estudiante haya aprobado la clase que es requisito
+          SELECT 1
+          FROM SpecificationClassStatus
+          WHERE SpecificationClassStatus.id_student_class_status = p_student_id
+            AND SpecificationClassStatus.id_class_section IN (
+                SELECT ClassSections.id_class_section
+                FROM ClassSections
+                WHERE ClassSections.id_class = RequirementUndergraduateClass.id_class
+                  AND ClassSections.status_class_section = TRUE
+            )
+            AND SpecificationClassStatus.specification_class_status = 'APROBADO'
+      );
+    IF v_missing_classes > 0 THEN
+        SELECT 'El estudiante No cumple con los requisitos.' AS message;
+    ELSE
+        SELECT 'El estudiante cumple con los requisitos.' AS message;
+    END IF;
+END$$
+
+-- @author PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT (
+    IN input_id_student VARCHAR(13),
+    IN input_id_class INT
+)
+BEGIN
+    DECLARE regional_center_id INT;
+
+    SELECT id_regional_center
+    INTO regional_center_id
+    FROM StudentsRegionalCenters
+    WHERE id_student = input_id_student;
+
+    SELECT 
+	Classes.id_class as clasId,
+    	ClassSections.id_class_section,
+        Classes.name_class AS class_name,
+        AcademicSchedules.start_timeof_classes AS start_time,
+        AcademicSchedules.end_timeof_classes AS end_time,
+        Classrooms.name_classroom AS classroom_name,
+        CONCAT(Professors.first_name_professor, ' ', Professors.second_name_professor) AS professor_names
+    FROM 
+        ClassSections
+    JOIN Classes ON Classes.id_class = ClassSections.id_class
+    JOIN AcademicSchedules ON AcademicSchedules.id_academic_schedules = ClassSections.id_academic_schedules
+    JOIN Classrooms ON Classrooms.id_classroom = ClassSections.id_classroom_class_section
+    JOIN Professors ON Professors.id_professor = ClassSections.id_professor_class_section
+    JOIN ClassroomsBuildingsDepartmentsRegionalCenters
+        ON ClassSections.id_classroom_class_section = ClassroomsBuildingsDepartmentsRegionalCenters.id_classroom
+    JOIN BuildingsDepartmentsRegionalsCenters
+        ON ClassroomsBuildingsDepartmentsRegionalCenters.building_department_regional_center = BuildingsDepartmentsRegionalsCenters.id_building_department_regionalcenter
+    JOIN DepartmentsRegionalCenters
+        ON BuildingsDepartmentsRegionalsCenters.department_regional_center = DepartmentsRegionalCenters.id_department_Regional_Center
+    WHERE 
+        DepartmentsRegionalCenters.id_regionalcenter = regional_center_id
+        AND ClassSections.id_class = input_id_class
+        AND ClassSections.status_class_section = TRUE;
+
+END $$
+
+-- @author PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_ENROLLMENT_STATUS(
+    IN p_id_student VARCHAR(13),
+    IN p_id_class_section INT
+)
+BEGIN
+    SELECT id_enrollment_class_sections
+    FROM EnrollmentClassSections
+    WHERE id_student = p_id_student
+      AND id_class_section = p_id_class_section
+      AND status_enrollment_class_sections = TRUE;
+END $$
+
+-- @author PROCEDURE GET_STUDENT_COUNT_BY_CLASS_SECTION: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_STUDENT_COUNT_BY_CLASS_SECTION(
+    IN section_id INT,
+    OUT student_count INT
+)
+BEGIN
+    SELECT COUNT(*) 
+    INTO student_count
+    FROM EnrollmentClassSections
+    WHERE id_class_section = section_id
+      AND status_enrollment_class_sections = TRUE;
+END$$
+
+-- @author PROCEDURE GET_AVAILABLE_SPOTS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_AVAILABLE_SPOTS(
+    IN classSectionID INT,
+    OUT availableSpots INT
+)
+BEGIN
+    SELECT numberof_spots_available_class_section
+    INTO availableSpots
+    FROM ClassSections
+    WHERE id_class_section = classSectionID
+      AND status_class_section = TRUE; -- Solo se considera si la sección está activa
+END $$
+
+-- @author PROCEDURE GET_COUNT_WAITING_LIST_CLASS_SECTION: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_COUNT_WAITING_LIST_CLASS_SECTION(
+    IN p_id_class_section INT,
+    OUT tuple_count INT
+)
+BEGIN
+    SELECT COUNT(*)
+    INTO tuple_count
+    FROM WaitingListsClassSections
+    WHERE id_class_section = p_id_class_section;
+END $$
+
+-- @author PROCEDURE INSERT_ENROLLMENT_CLASS_SECTION: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE INSERT_ENROLLMENT_CLASS_SECTION(
+    IN p_id_student VARCHAR(13),
+    IN p_id_class_section INT,
+    IN p_status_enrollment_class_sections INT
+)
+BEGIN
+    INSERT INTO EnrollmentClassSections (
+        id_student, 
+        id_class_section, 
+        status_enrollment_class_sections
+    ) VALUES (
+        p_id_student, 
+        p_id_class_section, 
+        p_status_enrollment_class_sections
+    );
+END $$
+
+-- @author PROCEDURE UPDATE_ENROLLMENT_STATUS: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE UPDATE_ENROLLMENT_STATUS(
+    IN p_id_student VARCHAR(13),
+    IN p_id_class_section INT
+)
+BEGIN
+    UPDATE EnrollmentClassSections
+    SET status_enrollment_class_sections = FALSE
+    WHERE id_student = p_id_student AND id_class_section = p_id_class_section;
+END $$
+
 DELIMITER ;
-
-
-
