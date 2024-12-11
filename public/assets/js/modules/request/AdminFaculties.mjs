@@ -67,7 +67,7 @@ class Professor {
         this.path
       );
       this.insertData(formData, professorCreationForm);
-      console.log(formData);
+    
     }
   }
 
@@ -94,10 +94,10 @@ class Professor {
       );
 
       const result = await response.json();
-
+      console.log(result);
       //Revisar que devuelve el result;
       if (result.id_application == null) {
-        Alert.display(result.status, "Aviso", result.message, this.path);
+        Alert.display('success', "Aviso", result.message, this.path);
       } else {
         form.reset();
 
@@ -112,7 +112,8 @@ class Professor {
       Alert.display(
         "error",
         "Lamentamos decirte esto",
-        "Hubo un error al cargar la información"
+        "Hubo un error al cargar la información",
+        this.path
       );
     }
   }
@@ -129,7 +130,7 @@ class Professor {
       }
 
       const data = await response.json();
-      console.log(data);
+      
       return data;
     } catch (error) {
       return [];
@@ -210,10 +211,10 @@ class Professor {
           "success",
           "Enhorabuena",
           responseData.message,
-          "../../../../"
+          this.path
         );
       } else {
-        Alert.display("warning", "oh", responseData.message, "../../../../");
+        Alert.display("warning", "oh", responseData.message, this.path);
       }
     } catch (error) {
       console.error("Error:", error);

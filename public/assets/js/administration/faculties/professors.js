@@ -20,7 +20,10 @@ const professorDepartment = document.getElementById('professorDepartment');
 //Obtener el botón de creación del formulario de creación docente
 const submitButton = document.getElementById('createProfessorButton');
 
-
+//Variable que guarda el id del usuario
+let username = '';
+//Variable que guarda la facultad a la que pertenece el administrador
+let facultyID = '';
 /* ========== Creando y dando funcionalidad al sidebar ============*/
 
 //Consruir la slidebar en base a permisos
@@ -34,8 +37,26 @@ closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
 /* ========== Rellenando select  y tabla de profesores============*/
 window.addEventListener('load', async () => {
+
+  const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+
+  if (!token)  // Si no hay token, no se ejecuta lo demás
+  
+  this.window.location.href ='../../../../index.html'
+ try {
+   
+   const payload = Login.getPayloadFromToken(token);
+   username = payload.username;
+   facultyID = payload.facultyID; 
+    console.log(payload);
+ } catch (error) {
+   // Si ocurre un error, simplemente no se ejecuta el resto del código.
+   console.log(error);
+   this.window.location.href ='../../../../index.html'
+ }
+
   RegionalCenter.renderSelectRegionalCentersByDepartment('professorCenter','professorDepartment');
-  Department.renderSelectDepartmentsByFaculty('professorDepartment', 1);
+  Department.renderSelectDepartmentsByFaculty('professorDepartment', facultyID);
   
   
   const data = await Professor.getProfessorsByFaculty(1);
@@ -43,7 +64,7 @@ window.addEventListener('load', async () => {
     Alert.display('warning','oh no', 'Al parecer no hay profesores asignados a esta facultad', '../../../../')
     Table.renderDynamicTable(data.professors,'viewDataProfessors');
   }else{
-    console.log('aquí');
+    
     Table.renderDynamicTable(data.professors,'viewDataProfessors');
     Professor.addOptions('viewDataProfessors');
   }
