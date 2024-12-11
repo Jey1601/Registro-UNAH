@@ -651,7 +651,7 @@ BEGIN
     AND WorkingHours.status_working_hour = TRUE;
 END $$
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE GET_CLASS_SECTION_ID: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE GET_CLASS_SECTION_ID(
     IN p_id_dates_academic_periodicity_year INT,
     IN p_id_classroom_class_section INT,
@@ -667,7 +667,7 @@ BEGIN
       AND id_class = p_id_class;
 END $$
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE GET_CLASS_SECTION_BY_PROFESSOR_AND_SCHEDULE: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE GET_CLASS_SECTION_BY_PROFESSOR_AND_SCHEDULE(
     IN p_id_professor_class_section INT,
     IN p_id_academic_schedules INT
@@ -679,7 +679,7 @@ BEGIN
       AND id_academic_schedules = p_id_academic_schedules;
 END $$
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE INSERT_CLASS_SECTION: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE INSERT_CLASS_SECTION (
     IN p_id_class INT,
     IN p_id_dates_academic_periodicity_year INT,
@@ -713,7 +713,7 @@ BEGIN
     SET new_id = LAST_INSERT_ID();
 END$$
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE GET_CLASS_SECTION_BY_DEPARTMENT_AND_REGIONAL_CENTER: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE GET_CLASS_SECTION_BY_DEPARTMENT_AND_REGIONAL_CENTER(
     IN p_department_id INT,
     IN p_regional_center_id INT
@@ -766,7 +766,7 @@ BEGIN
         AND BuildingsDepartmentsRegionalsCenters.status_building_department_regionalcenter = TRUE; -- Solo edificios activos
 END $$
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE UPDATE_SPOTS_AVAILABLE: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE UPDATE_SPOTS_AVAILABLE(
     IN p_id_class_section INT,
     IN p_new_numberof_spots INT
@@ -778,7 +778,7 @@ BEGIN
 END $$
 
 
--- @author TABLE ClassSections: Alejandro Moya 20211020462 @created 07/12/2024
+-- @author PROCEDURE INSERT_CLASS_SECTION_DAY: Alejandro Moya 20211020462 @created 07/12/2024
 CREATE PROCEDURE INSERT_CLASS_SECTION_DAY(
     IN p_id_class_section INT,
     IN p_id_day ENUM('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'),
@@ -870,7 +870,7 @@ BEGIN
     WHERE `EnrollmentClassSections`.id_student = idStudent AND `ClassSections`.status_class_section = 1;
 END$$
 
---@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 09/12/2024
+-- @author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 09/12/2024
 CREATE PROCEDURE SP_COUNT_CANCELLATION_TIMES_BY_STUDENT(IN idStudent VARCHAR(13), IN idClass INT)
 BEGIN
     SELECT COUNT(*) as total_cancellation, classes.name_class, `Students`.id_student FROM `ListClassSectionCancellationExceptional`
@@ -888,7 +888,7 @@ BEGIN
     GROUP BY classes.name_class, `Students`.id_student;
 END$$
 
---@author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 10/12/2024
+-- @author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 10/12/2024
 CREATE PROCEDURE SP_COUNT_FAILED_ABANDONED_CLASS_BY_STUDENT(IN idStudent VARCHAR(13), IN idClass INT)
 BEGIN
     SELECT COUNT(*) as total_failed_abandoned_class, classes.name_class as name_class, classes.id_class as id_class
@@ -954,8 +954,56 @@ BEGIN
     WHERE `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes = idRequest;
 END$$
 
-DELIMITER ;
+-- @author PROCEDURE CHECK_ENROLLMENT_PROCESS_STATUS: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE CHECK_ENROLLMENT_PROCESS_STATUS()
+BEGIN
+    SET @process_exists = (
+        SELECT EXISTS (
+            SELECT 1
+            FROM EnrollmentProcess
+            WHERE status_enrollment_process = TRUE
+        )
+    );
+END $$
 
+CREATE PROCEDURE GET_DATES_BY_ENROLLMENT_PROCESS(
+    IN p_id_enrollment_process INT
+)
+BEGIN
+    SELECT 
+        DatesEnrollmentProcess.id_dates_enrollment_process,
+        DatesEnrollmentProcess.id_enrollment_process,
+        DatesEnrollmentProcess.id_type_enrollment_conditions,
+        DatesEnrollmentProcess.day_available_enrollment_process,
+        DatesEnrollmentProcess.start_time_available_enrollment_process,
+        DatesEnrollmentProcess.end_time_available_enrollment_process,
+        DatesEnrollmentProcess.status_date_enrollment_process,
+        TypesEnrollmentConditions.maximum_student_global_average,
+        TypesEnrollmentConditions.minimum_student_global_average,
+        TypesEnrollmentConditions.status_student_global_average,
+        TypesEnrollmentConditions.maximum_student_period_average,
+        TypesEnrollmentConditions.minimum_student_period_average,
+        TypesEnrollmentConditions.status_type_enrollment_conditions
+    FROM 
+        DatesEnrollmentProcess
+    JOIN 
+        TypesEnrollmentConditions 
+    ON 
+        DatesEnrollmentProcess.id_type_enrollment_conditions = TypesEnrollmentConditions.id_type_enrollment_conditions
+    WHERE 
+        DatesEnrollmentProcess.id_enrollment_process = p_id_enrollment_process;
+END $$
+
+-- @author PROCEDURE GET_ACTIVE_ENROLLMENT_PROCESS: Alejandro Moya 20211020462 @created 09/12/2024
+CREATE PROCEDURE GET_ACTIVE_ENROLLMENT_PROCESS()
+BEGIN
+    SELECT id_enrollment_process
+    FROM EnrollmentProcess
+    WHERE status_enrollment_process = TRUE
+    LIMIT 1; 
+END$$
+
+DELIMITER ;
 
 
 
