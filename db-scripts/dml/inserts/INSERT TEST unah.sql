@@ -668,6 +668,9 @@ INSERT INTO TypesEnrollmentConditions (
 (79.99, 0.00, FALSE, 99.99, 71.99, TRUE),
 (79.99, 0.00, FALSE, 79.00, 0.00, TRUE);
 
+-- @author INSERT INTO EnrollmentProcess: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO EnrollmentProcess (id_dates_academic_periodicity_year, status_enrollment_process)
+VALUES (4, true);
 
 -- @author INSERT INTO DatesEnrollmentProcess: Alejandro Moya 20211020462 @created 09/12/2024
 INSERT INTO DatesEnrollmentProcess (
@@ -681,3 +684,5 @@ INSERT INTO DatesEnrollmentProcess (
 (1, 1, '2024-12-12', '09:00:00', '23:59:00', TRUE),
 (1, 2, '2024-12-13', '09:00:00', '23:59:00', TRUE),
 (1, 3, '2024-12-14', '09:00:00', '23:59:00', TRUE);
+
+
