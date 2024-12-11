@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author @AngelNolasco
+ * @created 08/12/2024
+ */
 const PATH = '../../../../src';
 include_once PATH.'/DAO/FacultyAdminDAO.php';
 

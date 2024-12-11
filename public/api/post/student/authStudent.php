@@ -1,6 +1,9 @@
 <?php
 /**
  * Endpoint para autenticacion de los usuarios estudiantes.
+ * 
+ * @author @AngelNolasco
+ * @created 03/12/2024
  */
 
 const PATH = '../../../../src';

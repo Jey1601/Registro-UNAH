@@ -332,7 +332,8 @@ class ProfessorsDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 10/12/2024
      */
     public function respondeRequestListSectionClass (int $idProfessor, int $idRequest, string $idStudent, $arrayClassSectionIdResolution) {
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
@@ -470,6 +471,8 @@ class ProfessorsDAO {
                 'message' => 'El usuario docente no tiene rol de jefe de departamento.'
             ];
         }
+
+
     }
 
     /**
@@ -537,14 +540,8 @@ class ProfessorsDAO {
     }
 
     /**
-     * 
-     */
-    public function getReportsByPeriod (int $idProfessor) {
-        
-    }
-
-    /**
-     * 
+     * @author @AngelNolasco
+     * @created 09/12/2024
      */
     public function setUrlVideoClass (int $idProfessor, string $urlVideo, int $idClassSection) {
         if (!(isset($idProfessor) && isset($urlVideo) && isset($idClassSection))) {
@@ -607,6 +604,58 @@ class ProfessorsDAO {
                 'message' => 'No se encontro la seccion indicada con el maestro indicado.'
             ];
         }
+    }
+
+    /**
+     * 
+     */
+    public function getStudentsBySection (int $idSectionClass) {
+        $queryGetStudents = "SELECT `Students`.id_student,
+        CONCAT(
+                COALESCE(`Students`.first_name_student, ''),
+                ' ',
+                COALESCE(`Students`.second_name_student, ''),
+                ' ',
+                COALESCE(`Students`.third_name_student, ''),
+                ' ',
+                COALESCE(`Students`.first_lastname_student, ''),
+                ' ',
+                COALESCE(`Students`.second_lastname_student, '')
+        ) as name_student, `Students`.email_student FROM `EnrollmentClassSections`
+        INNER JOIN `ClassSections` ON `EnrollmentClassSections`.id_class_section = `ClassSections`.id_class_section
+        INNER JOIN `Students` ON `EnrollmentClassSections`.id_student = `Students`.id_student
+        WHERE `EnrollmentClassSections`.id_class_section = ?;";
+
+        $resulGetStudents = $this->connection->execute_query($queryGetStudents, [$idSectionClass]);
+
+        if (!$resulGetStudents) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudieron obtener los estudiantes de la seccion con codigo '.$idSectionClass
+            ];
+        }
+
+        $students = [];
+        while ($row = $resulGetStudents->fetch_assoc()) {
+            $students[] = [
+                'idStudent' => $row['id_student'],
+                'nameStudent' => $row['name_student'],
+                'emailStudent' => $row['email_student']
+            ]; 
+        }
+
+        return $response = [
+            'status' => 'success',
+            'message' => 'Estudiantes obtenidos de la seccion con codigo '.$idSectionClass,
+            'students' => $students
+        ];
+    }
+
+    /**
+     * 
+     */
+    public function getReportsByPeriod (int $idProfessor) {
+        
     }
 }
 ?>
