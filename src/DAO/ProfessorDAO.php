@@ -611,7 +611,8 @@ class ProfessorsDAO {
      */
     public function getStudentsBySection (int $idSectionClass) {
         $queryGetStudents = "SELECT `Students`.id_student,
-        CONCAT(
+        TRIM(REPLACE(
+            CONCAT(
                 COALESCE(`Students`.first_name_student, ''),
                 ' ',
                 COALESCE(`Students`.second_name_student, ''),
@@ -621,7 +622,9 @@ class ProfessorsDAO {
                 COALESCE(`Students`.first_lastname_student, ''),
                 ' ',
                 COALESCE(`Students`.second_lastname_student, '')
-        ) as name_student, `Students`.email_student FROM `EnrollmentClassSections`
+            ),
+            '  ', ''
+        )) as name_student, `Students`.email_student FROM `EnrollmentClassSections`
         INNER JOIN `ClassSections` ON `EnrollmentClassSections`.id_class_section = `ClassSections`.id_class_section
         INNER JOIN `Students` ON `EnrollmentClassSections`.id_student = `Students`.id_student
         WHERE `EnrollmentClassSections`.id_class_section = ?;";
@@ -644,11 +647,26 @@ class ProfessorsDAO {
             ]; 
         }
 
-        return $response = [
-            'status' => 'success',
-            'message' => 'Estudiantes obtenidos de la seccion con codigo '.$idSectionClass,
-            'students' => $students
-        ];
+        if (empty($students)) {
+            return [
+                'status' => 'error',
+                'message' => 'No hay estudiantes registrados en la seccion con codigo '.$idSectionClass
+            ];
+        }
+
+        $filename = "students_section_{$idSectionClass}.csv";
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+    
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['CUENTA', 'NOMBRE_COMPLETO', 'CORREO_ELECTRONICO']);
+
+        foreach ($students as $student) {
+            fputcsv($output, [$student['idStudent'], $student['nameStudent'], $student['emailStudent']]);
+        }
+    
+        fclose($output);
+        exit;
     }
 
     /**
