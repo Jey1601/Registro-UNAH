@@ -27,7 +27,7 @@ window.addEventListener('load', async function(){
     
     const payload = Login.getPayloadFromToken(token);
     idStudent = payload.username;
-   
+      
   } catch (error) {
     // Si ocurre un error, simplemente no se ejecuta el resto del código.
     console.log(error);

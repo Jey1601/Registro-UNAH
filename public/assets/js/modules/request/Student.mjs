@@ -24,9 +24,11 @@ class Student {
       }
 
       const data = await response.json();
-
+      console.log(data);
       if (data.status != "success") {
-        Alert.display(data.status, "oh", data.message, "../../../../");
+        Alert.display('warning', "oh", data.message, this.path);
+      }else{
+        Alert.display('info', "oh", data.message, this.path);  
       }
       return data.enrollmentClassSections; // Retorna las clases matriculadas
     } catch (error) {
@@ -78,6 +80,32 @@ class Student {
 
       row.appendChild(cellOptions); // Agregamos las opciones a la fila
     });
+  }
+
+
+
+  static async  requestPasswordReset(email) {
+    const data = { email: email }; 
+  
+    try {
+      const response = await fetch(this.path+'api/post/student/Students-process-reset.php', {
+        method: 'POST', 
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded', 
+        },
+        body: new URLSearchParams(data),
+      });
+  
+      const responseData = await response.json(); 
+      console.log(response);
+      if (responseData.success) {
+        console.log('Éxito:', responseData.message); 
+      } else {
+        console.error('Error:', responseData.message); 
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error); 
+    }
   }
 
 

@@ -15,7 +15,7 @@ class ResetStudents{
 
     private $host = 'localhost';
     private $user = 'root';
-    private $password = 'root';
+    private $password = '12345';
     private $dbName = 'unah_registration';
 
 //Conexión BD
@@ -29,7 +29,6 @@ public function __construct()
         printf("Failed connection: %s\n", $error->getMessage());
     }
 
-    return $this->connection;
 }
 
 public function getConnection() {
@@ -47,9 +46,12 @@ public function createPasswordResetRequest(mysqli $connection, int $userId): str
     $expiryDateTime = date("Y-m-d H:i:s", $expiryTime);
 
     //Almacenar el token en la tabla TokenUserStudent
-    $query = "INSERT INTO TokenUserStudent (id_user_student, token_student) VALUES (?, ?)";
+   // Almacenar o actualizar el token en la tabla TokenUserStudent
+    $query = "INSERT INTO TokenUserStudent (id_user_student, token_student) 
+    VALUES (?, ?) 
+    ON DUPLICATE KEY UPDATE token_student = ?";
     $stmt = $connection->prepare($query);
-    $stmt->bind_param('is', $userId, $token_hash);
+    $stmt->bind_param('iss', $userId, $token_hash, $token_hash);
     $stmt->execute();
     $tokenId = $stmt->insert_id;
     $stmt->close();

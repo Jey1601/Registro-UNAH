@@ -1,5 +1,5 @@
 <?php
-require 'ResetStudents.php';
+require '../../../../src/DAO/util/ResetStudents.php';
 
 header('Content-Type: application/json');
 

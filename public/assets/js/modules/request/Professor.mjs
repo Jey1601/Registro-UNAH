@@ -323,6 +323,38 @@ static async getAcademicChargePDF(idProfessor) {
     console.error('Error en la solicitud:', error);
   }
 }
+
+static async getRequestsCancellationExceptional(idProfessor) {
+  const data = { idProfessor: parseInt(idProfessor, 10) };
+
+  try {
+    const response = await fetch(this.path + 'api/post/professor/getRequestsCancellationExceptional.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', 
+      },
+      body: JSON.stringify(data), 
+    });
+
+
+    const responseData = await response.json();
+
+    if (responseData.success) {
+      console.log('Respuesta:', responseData); 
+    } else {
+      console.error('Error:', responseData.message); 
+    }
+
+
+    return responseData.requestsExceptionalCancellation;
+
+   
+  } catch (error) {
+    console.error('Error en la solicitud:', error); 
+  }
+}
+
+
 }
 
 export { Professor };
