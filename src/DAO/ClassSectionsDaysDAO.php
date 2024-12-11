@@ -17,50 +17,55 @@ Class  ClassSectionsDaysDAO{
             printf("Conexion Fallida en ClassSectionsDaysDAO: %s\n", $error->getMessage());
         }  
     }
-    
     /**
-     * Asigna días específicos a una sección de clase utilizando el procedimiento almacenado 
-     * INSERT_CLASS_SECTION_DAY.
+     * Obtiene los días asignados a una sección de clase específica cuando están activos.
      *
-     * @param int   $newClassSectionId ID de la nueva sección de clase.
-     * @param array $days              Array de días a asignar a la sección (por ejemplo: ['Lunes', 'Miercoles']).
+     * Este método utiliza un procedimiento almacenado para obtener los días de clase asociados 
+     * a una sección específica, basado en el ID proporcionado.
+     *
+     * @param int $idClassSection ID de la sección de clase.
      *
      * @return array Resultado de la operación:
-     *               - status: 'success' si la operación fue exitosa, 'error' en caso de falla.
-     *               - message: Detalle del resultado de la operación.
+     *               - "status" => "success" en caso de éxito.
+     *               - "days" => Lista de días con su estado asociado.
+     * @throws InvalidArgumentException Si los parámetros no son válidos.
+     * @throws mysqli_sql_exception Si ocurre un error en la ejecución del procedimiento almacenado.
      *
-     * @throws InvalidArgumentException Si los parámetros proporcionados no son válidos.
-     * 
      * @author Alejandro Moya
-     * @created 07/12/2024
+     * @created 08/12/2024
      */
-    public function createClassSectionsDays($newClassSectionId, $days){
-        if (
-            !is_int($newClassSectionId) 
-        ) {
-            throw new InvalidArgumentException("Parámetros inválidos en: createClassSection().");
+    public function getClassSectionDays($idClassSection){
+        if (!is_int($idClassSection)) {
+            throw new InvalidArgumentException("El parámetro debe ser un entero válido en getClassSectionDays().");
         }
+
         try {
-            $status_class_section = 1;
-            foreach ($days as $day) {
-                $stmtDay = $this->connection->prepare("CALL INSERT_CLASS_SECTION_DAY(?, ?, ?)");
-                $stmtDay->bind_param("isi", $newClassSectionId, $day, $status_class_section);
-                $stmtDay->execute();
-                $stmtDay->close();
+            $stmt = $this->connection->prepare("CALL GET_CLASS_SECTION_DAYS(?)");
+            if ($stmt === false) {
+                throw new mysqli_sql_exception("Error al preparar la consulta: " . $this->connection->error);
             }
+            $stmt->bind_param("i", $idClassSection);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result === false) {
+                throw new mysqli_sql_exception("Error al obtener los resultados: " . $stmt->error);
+            }
+
+            $days = [];
+            while ($row = $result->fetch_assoc()) {
+                $days[] = $row['id_day'];
+            }
+
+            $stmt->close();
+            $daysClassSection = implode(", ", $days);
             return [
                 "status" => "success",
-                "message" => "Los dias de la seccion se asignaron correctamente."
+                "days" => $daysClassSection
             ];
-        } catch (Exception $e) {
-            // Manejo de excepciones
-            return [
-                "status" => "error",
-                "message" => "Error en createClassSectionsDays() al procesar la solicitud: " . $e->getMessage()
-            ];
+        } catch (mysqli_sql_exception $e) {
+            throw new mysqli_sql_exception("Error al ejecutar GET_CLASS_SECTION_DAYS(): " . $e->getMessage());
         }
     }
-
     // Método para cerrar la conexión (opcional), 
     public function closeConnection() {
         if ($this->connection) {
