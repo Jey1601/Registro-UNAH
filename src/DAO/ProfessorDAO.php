@@ -440,10 +440,11 @@ class ProfessorsDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 11/12/2024
      */
-    public function getAcademicHistoryOfAllStudents (int $idProfessor) {
-        if (!(isset($idProfessor))) {
+    public function getStudentsByRegionalCenterUndergraduate (int $idProfessor, int $idRegionalCenter, int $idUndergraduate) {
+        if (!(isset($idProfessor, $idRegionalCenter, $idUndergraduate))) {
             return $response = [
                 'status' => 'warning',
                 'message' => 'Numero de empleado docente no definido o nulo.'
@@ -464,16 +465,106 @@ class ProfessorsDAO {
             $roles [] = $row['role'];
         }
 
-        if (in_array('Department Head', $roles)) {
-            
-        } else {
+        if (!in_array('Department Head', $roles)) {
             return $response = [
                 'status' => 'info',
                 'message' => 'El usuario docente no tiene rol de jefe de departamento.'
             ];
         }
 
+        $queryGetStudents = "CALL SP_GET_STUDENT_DATA_BY_REGCENT_UNDER(?, ?)";
+        $resultGetStudents = $this->connection->execute_query($queryGetStudents, [$idRegionalCenter, $idUndergraduate]);
+        if (!$resultGetStudents) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se han podido obtener los alumnos.'
+            ];
+        }
 
+        $students = [];
+        $student = [];
+        while ($row = $resultGetStudents->fetch_assoc()) {
+            $student = [
+                'idStudent' => $row['id_student'],
+                'nameStudent' => $row['name_student'],
+                'undergraduate' => $row['undergraduate'],
+                'regionalCenter' => $row['regional_center'],
+                'statusStudent' => $row['status_student']
+            ];
+
+            $students[] = $student;
+        }
+
+        return $response = [
+            'status' => 'success',
+            'message' => 'Estudiantes obtenidos.',
+            'students' => $students
+        ];
+    }
+
+    /**
+     * 
+     */
+    public function getAcademicHistoryByStudent (int $idProfessor, string $idStudent) {
+        if (!isset($idProfessor, $idStudent)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Numero de cuenta de estudiante no definido o nulo.'
+            ];
+        }
+
+        $querySearchDepartmentHead = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ?;";
+        $stmtSearchDepartmentHead = $this->connection->prepare($querySearchDepartmentHead);
+        $stmtSearchDepartmentHead->bind_param('i', $idProfessor);
+        $stmtSearchDepartmentHead->execute();
+        $resultSearchDepartmentHead = $stmtSearchDepartmentHead->get_result();
+        $roles = [];
+
+        while ($row = $resultSearchDepartmentHead->fetch_assoc()) {
+            $roles [] = $row['role'];
+        }
+
+        if (!in_array('Department Head', $roles)) {
+            return $response = [
+                'status' => 'info',
+                'message' => 'El usuario docente no tiene rol de jefe de departamento.'
+            ];
+        }
+
+        $queryAcademicHistory = "CALL SP_GET_ACADEMIC_HISTORY_BY_STUDENT(?)";
+        $resultAcademicHistory = $this->connection->execute_query($queryAcademicHistory, [$idStudent]);
+
+        if (!$resultAcademicHistory) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo obtener el historial academico del estudiante.'
+            ];
+        }
+
+        $sections = [];
+        $details = [];
+        while ($row = $resultAcademicHistory->fetch_assoc()) {
+            $details = [
+                'idSection' => $row['code_section'],
+                'idClass' => $row['id_class'],
+                'nameClass' => $row['name_class'],
+                'uv' => $row['uv'],
+                'periodicity' => $row['period_semester'],
+                'grade' => $row['grade'],
+                'specification' => $row['specification']
+            ];
+
+            $sections[] = $details;
+        }
+
+        return $response = [
+            'status' => 'success',
+            'message' => 'Historial academico del estudiante con numero de cuenta '.$idStudent.' obtenido satisfactoriamente.',
+            'secciones' => $sections
+        ];
     }
 
     /**

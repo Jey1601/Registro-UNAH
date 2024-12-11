@@ -789,7 +789,6 @@ BEGIN
     VALUES (p_id_class_section, p_id_day, p_status_class_sections_days);
 END $$
 
-DROP PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD;
 -- @author STORAGE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD ()
 BEGIN
@@ -911,6 +910,7 @@ BEGIN
     GROUP BY classes.name_class, classes.id_class;
 END$$
 
+-- @author STORAGE PROCEDURE SP_GET_PENDING_REQUESTS_CANCELLATION_EXCEPTIONAL_BY_COORDINATOR: Angel Nolasco 20211021246 @created 10/12/2024
 CREATE PROCEDURE SP_GET_PENDING_REQUESTS_CANCELLATION_EXCEPTIONAL_BY_COORDINATOR(IN idProfessor INT)
 BEGIN
     SELECT `RequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes as id_request,
@@ -924,6 +924,7 @@ BEGIN
     WHERE `ProfessorsDepartments`.id_professor = idProfessor AND (`ResolutionRequestsCancellationExceptionalClasses`.id_requests_cancellation_exceptional_classes IS NULL);
 END$$
 
+-- @author STORAGE PROCEDURE SP_GET_DETAILS_REQUEST_BY_ID: Angel Nolasco 20211021246 @created 10/12/2024
 CREATE PROCEDURE SP_GET_DETAILS_REQUEST_BY_ID(IN idRequest INT)
 BEGIN
     SELECT 
@@ -1011,6 +1012,55 @@ BEGIN
     FROM EnrollmentProcess
     WHERE status_enrollment_process = TRUE
     LIMIT 1; 
+END$$
+
+-- @author STORAGE PROCEDURE SP_GET_ACADEMIC_CHARGE_BY_PERIOD: Angel Nolasco 20211021246 @created 08/12/2024
+CREATE PROCEDURE SP_GET_STUDENT_DATA_BY_REGCENT_UNDER (IN idRegionalCenter INT, IN idUndergraduate INT)
+BEGIN
+    SELECT 
+        `Students`.id_student as id_student,
+        TRIM(REPLACE(
+            CONCAT(
+            COALESCE(`Students`.first_name_student, ''),
+            ' ',
+            COALESCE(`Students`.second_name_student, ''),
+            ' ',
+            COALESCE(`Students`.third_name_student, ''),
+            ' ',
+            COALESCE(`Students`.first_lastname_student, ''),
+            ' ',
+            COALESCE(`Students`.second_lastname_student, '')
+            ),
+            '  ', ' '
+        )) as name_student,
+        `Undergraduates`.name_undergraduate as undergraduate,
+        `RegionalCenters`.name_regional_center as regional_center,
+        `Students`.status_student as status_student
+    FROM `Students`
+    INNER JOIN `StudentsUndergraduates` ON `Students`.id_student = `StudentsUndergraduates`.id_student
+    INNER JOIN `StudentsRegionalCenters` ON `Students`.id_student = `StudentsRegionalCenters`.id_student
+    INNER JOIN `Undergraduates` ON `StudentsUndergraduates`.id_undergraduate = `Undergraduates`.id_undergraduate
+    INNER JOIN `RegionalCenters` ON `StudentsRegionalCenters`.id_regional_center = `RegionalCenters`.id_regional_center
+    WHERE `StudentsRegionalCenters`.id_regional_center = idRegionalCenter AND `StudentsUndergraduates`.id_undergraduate = idUndergraduate;
+END$$
+
+CREATE PROCEDURE SP_GET_ACADEMIC_HISTORY_BY_STUDENT (IN idStudent VARCHAR(13))
+BEGIN
+    SELECT 
+        `ClassSections`.id_class_section as code_section,
+        classes.id_class as id_class,
+        classes.name_class as name_class,
+        classes.credit_units as uv,
+        `DatesAcademicPeriodicityYear`.description_dates_academic_periodicity_year as period_semester,
+        `SpecificationClassStatus`.grade_class_student as grade,
+        `SpecificationClassStatus`.specification_class_status as specification
+    FROM `EnrollmentClassSections`
+    INNER JOIN `Students` ON `EnrollmentClassSections`.id_student = `Students`.id_student
+    INNER JOIN `ClassSections` ON `EnrollmentClassSections`.id_class_section = `ClassSections`.id_class_section
+    INNER JOIN `DatesAcademicPeriodicityYear` ON `ClassSections`.id_dates_academic_periodicity_year = `DatesAcademicPeriodicityYear`.id_dates_academic_periodicity_year
+    INNER JOIN `SpecificationClassStatus` ON `ClassSections`.id_class_section = `SpecificationClassStatus`.id_class_section
+    INNER JOIN classes ON `ClassSections`.id_class = classes.id_class
+    WHERE `Students`.id_student = idStudent AND `EnrollmentClassSections`.status_enrollment_class_sections = FALSE;
 END$$
 
 DELIMITER ;
