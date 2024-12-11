@@ -285,8 +285,8 @@ class ProfessorsDAO {
         $stmtSearchAcademicCoordinator->execute();
         $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
         $roles = [];
-        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
-            $roles [] = $row;
+        while ($row = $resultSearchAcademicCoordinator->fetch_array(MYSQLI_ASSOC)) {
+            $roles [] = $row['role'];
         }
 
         if (!in_array('Coordinator', $roles)) {
@@ -334,7 +334,7 @@ class ProfessorsDAO {
     /**
      * 
      */
-    public function respondeRequestListSectionClass (int $idProfessor, int $idRequest, $arrayClassSectionIdResolution) {
+    public function respondeRequestListSectionClass (int $idProfessor, int $idRequest, string $idStudent, $arrayClassSectionIdResolution) {
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
         INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
         INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
@@ -344,8 +344,8 @@ class ProfessorsDAO {
         $stmtSearchAcademicCoordinator->execute();
         $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
         $roles = [];
-        while ($row = $resultSearchAcademicCoordinator->fetch_array()) {
-            $roles [] = $row;
+        while ($row = $resultSearchAcademicCoordinator->fetch_array(MYSQLI_ASSOC)) {
+            $roles [] = $row['role'];
         }
 
         if (!in_array('Coordinator', $roles)) {
@@ -392,24 +392,48 @@ class ProfessorsDAO {
             ];
         }
 
-        $erros = [];
+        $errors = [];
+        $registredSectionRespond = [];
+        $enrollmentUpdate = [];
         $queryInsertRespondList = "INSERT INTO `ResolutionListClassSectionCancellationExceptional` (id_academic_coordinator, id_list_class_section_cancellation_exceptional, resolution_request_student, date_resolution)
-        VALUES (?, ?, TRUE, CURRENT_DATE());";
+        VALUES (?, ?, ?, CURRENT_DATE());";
+        $queryUpdateEnrollment = "UPDATE `EnrollmentClassSections` SET status_enrollment_class_sections = ? WHERE id_student = ? AND id_class_section = ?;";
         foreach($arrayClassSectionIdResolution as $classSectionResolution) {
             for ($i=0; $i < count($arrayIdListIdSection); $i++) { 
-                if (in_array($classSectionResolution['idSection'], $arrayIdListIdSection[$i]['idSection'])) {
-                    $resultRespondListSection = $this->connection->execute_query($queryInsertRespondList, [$idAcademicCoordinator, $arrayIdListIdSection[$i]['idList']]);
+                if (in_array($classSectionResolution['idSection'], $arrayIdListIdSection[$i])) {
+                    $resultRespondListSection = $this->connection->execute_query($queryInsertRespondList, [$idAcademicCoordinator, $arrayIdListIdSection[$i]['idList'], $classSectionResolution['resolution']]);
 
-                    if(!$resultRespondListSection) {
-                        $this->connection->rollback();
-                        return $erros [] = 'No se registro el dictamen de la seccion '.$arrayIdListIdSection[$i]['idSection'];
+                    while ($this->connection->more_results()) {
+                        $this->connection->next_result();
+                    }
+
+                    if($resultRespondListSection) {
+                        $registredSectionRespond [] = 'Se registro el dictamen de la seccion con codigo '.$arrayIdListIdSection[$i]['idSection'];
+
+                        $newStatusEnrollment = ($classSectionResolution['resolution'] === 1) ? 0 : 1;
+                        $resultUpdateEnrollment = $this->connection->execute_query($queryUpdateEnrollment, [$newStatusEnrollment, $idStudent, $arrayIdListIdSection[$i]['idSection']]);
+
+                        if ($resultUpdateEnrollment) {
+                            if ($newStatusEnrollment == 0) {
+                                $enrollmentUpdate[] = 'Seccion con codigo '.$arrayIdListIdSection[$i]['idSection'].' ha sido cancelada para el estudiante con numero de cuenta '.$idStudent;
+                            }
+                        } else {
+                            $errors [] = 'No se actualizo el estado de matricula en la seccion '.$arrayIdListIdSection[$i]['idSection'];
+                        }
+                    } else {
+                        $errors [] = 'No se registro el dictamen de la seccion '.$arrayIdListIdSection[$i]['idSection'];
                     }
                 }
             }
         }
 
-
-
+        return $response = [
+            'status' => 'success',
+            'message' => 'Dictamen de solicitud registrado.',
+            'registredSectionRespond' => $registredSectionRespond,
+            'enrollmentUpdate' => $enrollmentUpdate,
+            'errors' => $errors
+        ];
 
     }
 
