@@ -38,6 +38,6 @@ insert into `DepartmentHeadWorkingHours` (id_department_head,id_working_hour,sta
 select * from Roles;
 --OBTEN EL ID DEL USUARIO DEL PROFESOR
 select * from `UsersProfessors` inner join `Professors` on `UsersProfessors`.username_user_professor = `Professors`.id_professor where id_professor = 10;
-INSERT INTO `RolesUsersProfessor` (id_user_professor,id_role_professor, status_role_professor) values(2,13, 1);
+INSERT INTO `RolesUsersProfessor` (id_user_professor,id_role_professor, status_role_professor) values(2git,13, 1);
 
 /*9) CREA SU HORARIO*/

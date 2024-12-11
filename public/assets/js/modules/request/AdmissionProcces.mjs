@@ -136,8 +136,7 @@ class AdmissionProccess{
                 // Mostrar la modal
                 Modal.showModal('Inscription-form');
             
-                // Mostrar alerta
-               // Alert.display(data.status, 'Aviso', data.message);
+           
             }
 
         } catch (error) {

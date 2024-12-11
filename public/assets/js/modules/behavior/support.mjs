@@ -1,6 +1,7 @@
 import { regular_expressions } from "./configuration.mjs";
 import { Login } from "../request/login.mjs";
 import { AcademicPlanning } from "../request/AcademicPlanning.mjs";
+
 class Alert {
   static display(type, title, message, path = "") {
     // Crear el contenedor de la notificación
@@ -473,7 +474,7 @@ class Sidebar {
       // Si ocurre un error, simplemente no se ejecuta el resto del código.
       return;
     }
-
+    
    // const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
     //const accesses = ["iAV7sDXj"];
 
@@ -565,6 +566,35 @@ class Sidebar {
 
       sidebarBody.appendChild(liSolicitudes);
     }
+
+    //Pantalla de carga de estudiantes de DIIP
+    if(accesses.includes('bG8uB0wH')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path + "views/administration/DIPP/upload-students.html";
+      a.appendChild(document.createTextNode("Carga usuarios"));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+    //Pantalla de visualización de proceso de matrícula
+    if(accesses.includes('xjAQ9PA5')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = "";
+      a.setAttribute('role', 'button');
+      a.classList.add('btn')
+      a.style.display = 'flex';
+      a.style.padding = '0';
+      a.id ='enrollmentBtn';
+      a.appendChild(document.createTextNode("Matrícula"));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+
   }
 }
 
