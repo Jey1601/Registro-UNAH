@@ -92,6 +92,7 @@ Class DatesEnrollmentProcessDAO{
 
         $EnrollmentProcessDAO = new EnrollmentProcessDAO();
         $enrollment_process_id = $EnrollmentProcessDAO->checkActiveEnrollmentProcess();
+        echo json_encode($enrollment_process_id['id_enrollment_process']);
         try {
             $stmt = $this->connection->prepare("CALL GET_DATES_BY_ENROLLMENT_PROCESS(?)");
             if ($stmt === false) {
