@@ -93,7 +93,7 @@ class ProfessorsDAO {
 
                     //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
                     $payload = [
-                        'userAdmissionAdmin' => $username,
+                        'username' => $username,
                         'accessArray' => $accessArray,
                         'idRole' => $idRole,
                         'idDepartment' => $idDepartment

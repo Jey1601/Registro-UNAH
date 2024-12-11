@@ -73,7 +73,7 @@ class RegionalCenter {
 
     //Tomamos el valor seleccionado del select de centro regional
     const selectedValue = departmentSelect.value;
-    console.log(selectedValue);
+    
     //Eliminamos el contenido que pueda tener el select de carrera principal
     select.innerHTML = "";
 
@@ -104,9 +104,7 @@ class RegionalCenter {
         "No se encontraron centros regionales",
         "../../../.././"
       );
-      console.error(
-        "No se encontraron centros regionales o los datos no son válidos."
-      );
+     
     }
   }
 

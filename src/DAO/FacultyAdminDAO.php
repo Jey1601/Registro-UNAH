@@ -83,9 +83,9 @@ class FacultyAdminDAO {
                         }
                     }
 
-                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
+                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de facultad
                     $payload = [
-                        'userAdmissionAdmin' => $username,
+                        'username' => $username,
                         'accessArray' => $accessArray,
                         'facultyID' => $facultyID
                     ];
