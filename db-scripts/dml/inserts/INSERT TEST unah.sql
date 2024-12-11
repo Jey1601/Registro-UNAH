@@ -165,8 +165,13 @@ VALUES
 	('iAV7sDXj', 'Estudiante Visualización de las clases matrículadas en el periodo actual index.html', TRUE),
 	('qUhmvjSC', 'Estudiante Visualización de las calificaciones historicas y de periodo del estudiante grades.html', TRUE),
 	('HxoBKYl8', 'Estudiante VPantalla de matrícula del estudiante registration.html', TRUE),
-	('aXK83XFl', 'Estudiante Pantalla de acceso a solicitudesrequest.html', TRUE)
-	('xjAQ9PA5', 'Administrador DIPP Visualiza el calendario de matrícula enrollment.html', TRUE);
+	('aXK83XFl', 'Estudiante Pantalla de acceso a solicitudesrequest.html', TRUE),
+	('xjAQ9PA5', 'Administrador DIPP Visualiza el calendario de matrícula enrollment.html', TRUE),
+	('jwh484T8', 'Coordinator Visualización de carga academica del periodo academic-workload.html', TRUE),
+	('RoiOulJ1', 'Coordinator Visualización del historial academico de los estudiantes de la carrera grades.html', TRUE),
+	('64IDerH6', 'Coordinator Visualización y dictamen de solicitudes request.html', TRUE);
+
+
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(2, 'lwx50K7f', TRUE),
@@ -185,7 +190,10 @@ VALUES
 	(15, 'qUhmvjSC', TRUE),
 	(15, 'HxoBKYl8', TRUE),
 	(15, 'aXK83XFl', TRUE),
-	(7, 'xjAQ9PA5', TRUE);
+	(7, 'xjAQ9PA5', TRUE),
+	(16, 'jwh484T8', TRUE),
+	(16, 'RoiOulJ1', TRUE),
+	(16, '64IDerH6', TRUE);
 
 
 

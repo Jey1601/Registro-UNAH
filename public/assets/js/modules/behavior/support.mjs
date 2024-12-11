@@ -461,6 +461,14 @@ class Sidebar {
 
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
+     //Apartado de logout
+     const logoutBtn = document.getElementById('logoutBtn');
+
+     logoutBtn.addEventListener('click', function(event){
+       event.preventDefault();
+       Login.logout();
+     })
+
     //Deben leerse de manera dinamica desde el sessión storage
     let accesses = [];
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
@@ -594,6 +602,8 @@ class Sidebar {
       sidebarBody.appendChild(li);
     }
 
+
+   
 
   }
 }

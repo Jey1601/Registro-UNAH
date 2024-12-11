@@ -1,6 +1,7 @@
 import { Cell } from "../behavior/support.mjs";
 import { Table } from "../behavior/support.mjs";
 import { Alert } from "../behavior/support.mjs";
+import { Professor } from "./Professor.mjs";
 class Section {
   static path = "../../../";
 
@@ -31,19 +32,39 @@ class Section {
       buttonVideo.setAttribute("section", fourthCellText);
    
 
-      // Creamos la imagen y configuramos su fuente
+      // Creamos la imagen y configuramos su fuente 
       const videoIcon = document.createElement("img");
       videoIcon.src = this.path + "assets/img/icons/add-video-icon.png";
 
-      const buttonDownload = document.createElement("button");
-      buttonDownload.classList.add("btn");
-      buttonDownload.classList.add("btn-download");
-      buttonDownload.setAttribute("section", fourthCellText);
-     
+      //Botón de descarga CSV
+      const buttonDownloadCSV = document.createElement("button");
+      buttonDownloadCSV.classList.add("btn");
+      buttonDownloadCSV.classList.add("btn-downloadCSV");
+      buttonDownloadCSV.setAttribute("section", fourthCellText);
+      
+      buttonDownloadCSV.addEventListener('click',function(){
+        Professor.getStudentsBySectionCSV(fourthCellText);
+      })
 
       // Creamos la imagen y configuramos su fuente
-      const downloadIcon = document.createElement("img");
-      downloadIcon.src = this.path + "assets/img/icons/download-grey-icon.png";
+      const downloadCSVIcon = document.createElement("img");
+      downloadCSVIcon.src = this.path + "assets/img/icons/csv-icon.png";
+
+
+
+         //Botón de descarga PDF
+         const buttonDownloadPDF = document.createElement("button");
+         buttonDownloadPDF.classList.add("btn");
+         buttonDownloadPDF.classList.add("btn-downloadCSV");
+         buttonDownloadPDF.setAttribute("section", fourthCellText);
+         
+         buttonDownloadPDF.addEventListener('click',function(){
+           Professor.getStudentsBySectionPDF(fourthCellText);
+         })
+   
+         // Creamos la imagen y configuramos su fuente
+         const downloadPDFIcon = document.createElement("img");
+         downloadPDFIcon.src = this.path + "assets/img/icons/pdf-icon.png";
 
       const buttonGrade = document.createElement("button");
       buttonGrade.classList.add("btn");
@@ -56,11 +77,13 @@ class Section {
 
       // Agregamos la imagen al botón
       buttonVideo.appendChild(videoIcon);
-      buttonDownload.appendChild(downloadIcon);
+      buttonDownloadCSV.appendChild(downloadCSVIcon);
+      buttonDownloadPDF.appendChild(downloadPDFIcon);
       buttonGrade.appendChild(gradeIcon);
 
       cellOptions.appendChild(buttonVideo);
-      cellOptions.appendChild(buttonDownload);
+      cellOptions.appendChild(buttonDownloadCSV);
+      cellOptions.appendChild(buttonDownloadPDF);
       cellOptions.appendChild(buttonGrade);
 
       row.appendChild(cellOptions); // Agregamos las opciones a la fila

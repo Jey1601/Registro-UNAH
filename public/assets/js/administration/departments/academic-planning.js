@@ -18,13 +18,15 @@ const academicPlanningCenterSelect = document.getElementById(
   "ademicPlanningCenter"
 );
 //Jefe de departamento
-const idProfessor = 1;
-const departmentId = 9;
+let idProfessor = '';
+let departmentId = '';
 //Aquí se debe obtener el usuario del profesor del token
 //Aquí se debe obtener el departamento al que pertenece el jefe
-/*const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-        const payload = Login.getPayloadFromToken(token);
-        const username_user_professor = payload.userProfessor; */
+const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage  
+const payload = Login.getPayloadFromToken(token);
+
+idProfessor = payload.username;
+departmentId = payload.idDepartment;
 
 //carrera select
 const academicPlannigUndegraduateSelect = document.getElementById(

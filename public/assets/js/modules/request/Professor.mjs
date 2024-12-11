@@ -65,7 +65,7 @@ class Professor {
       }
 
       const data = await response.json();
-      console.log(data);
+      
       return data.assignedClasses;
     } catch (error) {
       return [];
@@ -118,6 +118,103 @@ class Professor {
       return null;
     }
   }
+
+  static async getStudentsBySectionCSV(idSectionClass) {
+    try {
+      const response = await fetch(
+        this.path +
+          `api/get/professor/getStudentsBySectionCSV.php?idSectionClass=${idSectionClass}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "text/csv",
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.status);
+      }
+  
+      const contentType = response.headers.get("Content-Type");
+  
+      if (contentType && contentType.includes("text/csv")) {
+ 
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+  
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "EstudiantesSección.csv"; 
+        document.body.appendChild(a);
+        a.click();
+  
+   
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else if (contentType && contentType.includes("application/json")) {
+   
+        const data = await response.json();
+        Alert.display("error", "Oh", data.message || "Sección vacía", this.path);
+      } else {
+        throw new Error("Respuesta inesperada del servidor");
+      }
+    } catch (error) {
+      console.error("Error al manejar la solicitud:", error);
+      Alert.display("error", "Oh", "Ocurrió un error al procesar la solicitud.", this.path);
+    }
+  }
+
+
+  static async getStudentsBySectionPDF(idSectionClass) {
+    try {
+      const response = await fetch(
+        this.path +
+          `api/get/professor/getStudentsBySectionPDF.php?idSectionClass=${idSectionClass}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.status);
+      }
+  
+     
+      const contentType = response.headers.get("Content-Type");
+  
+      if (contentType && contentType.includes("application/pdf")) {
+      
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+  
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Sección_Estudiantes.pdf"; 
+        document.body.appendChild(a);
+        a.click();
+  
+      
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else if (contentType && contentType.includes("application/json")) {
+       
+        const data = await response.json();
+        Alert.display('error', 'Oh', data.message || 'Sección vacía', this.path);
+      } else {
+        throw new Error("Respuesta inesperada del servidor");
+      }
+    } catch (error) {
+      console.error("Error al manejar la solicitud:", error);
+      Alert.display('error', 'Oh', 'Ocurrió un error al procesar la solicitud.', this.path);
+    }
+  }
+
+
+
 }
 
 export { Professor };
