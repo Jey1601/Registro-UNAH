@@ -1,6 +1,7 @@
 <?php
 include_once 'util/jwt.php';
 require_once 'util/encryption.php';
+require_once 'util/FPDF/fpdf.php';
 /**
  * Objeto de acceso a datos y controlador de maestros.
  * 
@@ -607,9 +608,10 @@ class ProfessorsDAO {
     }
 
     /**
-     * 
+     * @author @AngelNolasco
+     * @created 10/12/2024
      */
-    public function getStudentsBySection (int $idSectionClass) {
+    public function getStudentsBySectionCSV (int $idSectionClass) {
         $queryGetStudents = "SELECT `Students`.id_student,
         TRIM(REPLACE(
             CONCAT(
@@ -667,6 +669,92 @@ class ProfessorsDAO {
     
         fclose($output);
         exit;
+    }
+
+    /**
+     * @author @AngelNolasco
+     * @created 10/12/2024
+     */
+    public function getStudentsBySectionPDF (int $idSectionClass) {
+        $queryGetStudents = "SELECT `Students`.id_student,
+        TRIM(REPLACE(
+            CONCAT(
+                COALESCE(`Students`.first_name_student, ''),
+                ' ',
+                COALESCE(`Students`.second_name_student, ''),
+                ' ',
+                COALESCE(`Students`.third_name_student, ''),
+                ' ',
+                COALESCE(`Students`.first_lastname_student, ''),
+                ' ',
+                COALESCE(`Students`.second_lastname_student, '')
+            ),
+            '  ', ' '
+        )) as name_student, `Students`.email_student FROM `EnrollmentClassSections`
+        INNER JOIN `ClassSections` ON `EnrollmentClassSections`.id_class_section = `ClassSections`.id_class_section
+        INNER JOIN `Students` ON `EnrollmentClassSections`.id_student = `Students`.id_student
+        WHERE `EnrollmentClassSections`.id_class_section = ?;";
+
+        $resulGetStudents = $this->connection->execute_query($queryGetStudents, [$idSectionClass]);
+
+        if (!$resulGetStudents) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudieron obtener los estudiantes de la seccion con codigo '.$idSectionClass
+            ];
+        }
+
+        $students = [];
+        while ($row = $resulGetStudents->fetch_assoc()) {
+            $students[] = [
+                'idStudent' => $row['id_student'],
+                'nameStudent' => $row['name_student'],
+                'emailStudent' => $row['email_student']
+            ]; 
+        }
+
+        if (empty($students)) {
+            return [
+                'status' => 'error',
+                'message' => 'No hay estudiantes registrados en la seccion con codigo '.$idSectionClass
+            ];
+        }
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 12);
+
+        // Título
+        $pdf->Cell(0, 10, $this->replaceSpecialChars('Estudiantes de la Sección ') . $idSectionClass, 0, 1, 'C');
+        $pdf->Ln(10);
+
+        // Encabezados de la tabla
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(30, 10, 'ID', 1, 0, 'C');
+        $pdf->Cell(80, 10, 'Nombre Completo', 1, 0, 'C');
+        $pdf->Cell(80, 10, $this->replaceSpecialChars('Correo Electrónico'), 1, 1, 'C');
+
+        // Datos de la tabla
+        $pdf->SetFont('Arial', '', 10);
+        foreach ($students as $student) {
+            $pdf->Cell(30, 10, $student['idStudent'], 1, 0, 'C');
+            $pdf->Cell(80, 10, $this->replaceSpecialChars($student['nameStudent']), 1, 0, 'L');
+            $pdf->Cell(80, 10, $student['emailStudent'], 1, 1, 'L');
+        }
+
+        // Forzar descarga del PDF
+        $pdf->Output('D', 'students_section_' . $idSectionClass . '.pdf');
+        exit;
+    }
+
+    /**
+     * @author @AngelNolasco
+     * @created 10/12/2024
+     */
+    public function replaceSpecialChars($string) {
+        $search = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ'];
+        $replace = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U', 'n', 'N'];
+        return str_replace($search, $replace, $string);
     }
 
     /**
