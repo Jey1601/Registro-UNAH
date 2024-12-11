@@ -17,6 +17,7 @@ update `DepartmentHeadWorkingHours` set status_department_head_working_hours=0 w
 --DESACTIVA SU ROL DE JEFE DE DEPARTAMENTO
 update  `RolesUsersProfessor` set status_role_professor=0 where id_user_professor =1  and id_role_professor =13;
 /*4) SELECCIONA LAS OBLIGACIONES DEL JEFE DE DEPARTAMENTO*/
+    
 select * from `DepartmentHeadObligations`;
 
 /*5) INSERTA EL NUEVO JEFE DE DEPARTAMENTO*/
@@ -40,4 +41,3 @@ select * from Roles;
 select * from `UsersProfessors` inner join `Professors` on `UsersProfessors`.username_user_professor = `Professors`.id_professor where id_professor = 10;
 INSERT INTO `RolesUsersProfessor` (id_user_professor,id_role_professor, status_role_professor) values(2,13, 1);
 
-/*9) CREA SU HORARIO*/

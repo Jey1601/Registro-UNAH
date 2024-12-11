@@ -698,3 +698,4 @@ INSERT INTO DatesEnrollmentProcess (
 (1, 3, '2024-12-14', '09:00:00', '23:59:00', TRUE);
 
 
+INSERT INTO `AcademicCoordinatorObligations` (credit_units_academic_coordinator_obligations, status_academic_coordinator_obligations) VALUES (5,1);

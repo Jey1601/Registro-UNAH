@@ -47,7 +47,7 @@ class Professor {
         "error",
         "Lo sentimos",
         "No se encontraron profesores ",
-        "../../../.././"
+        this.path
       );
       console.error("No se encontraron profesores o los datos no son válidos.");
     }
@@ -79,7 +79,7 @@ class Professor {
         idClassSection:idClassSection
     };
 
-    console.log(data);
+    
     try {
       const response = await fetch(
         this.path +
@@ -94,21 +94,21 @@ class Professor {
       );
 
       const responseData = await response.json();
-      console.log("Respuesta del servidor:", responseData);
+    
 
       if (responseData.status == "success") {
         Alert.display(
           responseData.status,
           "Enhorabuena",
           responseData.message,
-          "../../../../"
+          this.path
         );
       } else {
         Alert.display(
           responseData.status,
           "oh",
           responseData.message,
-          "../../../../"
+         this.path
         );
       }
 
@@ -214,7 +214,115 @@ class Professor {
   }
 
 
+  
+  static async getAcademicCharge(idProfessor) {
+    const data = {
+        idProfessor: idProfessor,  // El valor que se va a enviar
+    };
 
+   
+    try {
+        // Realiza la solicitud POST
+        const response = await fetch(
+            this.path + "api/post/professor/getAcademicCharge.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",  
+                },
+                body: JSON.stringify(data), 
+            }
+        );
+
+
+        const responseData = await response.json();
+      
+ 
+        if (responseData.status == 'success') {
+            Alert.display(
+                responseData.status,
+                "Enhorabuena",
+                responseData.message,
+                this.path
+            );
+        } else {
+            Alert.display(
+                "warning",
+                "Oh",
+                responseData.message,
+                this.path
+            );
+        }
+        
+        return responseData.academicCharge;
+    } catch (error) {
+        console.error("Error:", error);
+        return [];
+    }
+}
+
+
+static async getAcademicChargeCSV(idProfessor) {
+  const data = { idProfessor: parseInt(idProfessor, 10) };
+
+  try {
+    const response = await fetch(this.path + 'api/post/professor/getAcademicChargeCSV.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Verificar si la respuesta es un archivo CSV
+    const contentType = response.headers.get('Content-Type');
+    
+    if (contentType && contentType.includes('text/csv')) {
+      const blob = await response.blob(); 
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob); 
+      link.download = 'academic_charge.csv'; 
+      link.click(); 
+    } else {
+      
+      const responseData = await response.json(); 
+      Alert.display('error: ', 'oh', 'Aún no hay datos de carga', this.path);
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
+}
+
+static async getAcademicChargePDF(idProfessor) {
+  const data = { idProfessor: parseInt(idProfessor, 10) };
+
+  try {
+    const response = await fetch(this.path + 'api/post/professor/getAcademicChargePDF.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+   
+    const contentType = response.headers.get('Content-Type');
+    
+    if (contentType && contentType.includes('application/pdf')) {
+      const blob = await response.blob();
+      const link = document.createElement('a'); 
+      link.href = URL.createObjectURL(blob); 
+      link.download = 'academic_charge.pdf'; 
+      link.click(); 
+    } else {
+      
+      const responseData = await response.json(); 
+      Alert.display('error: ', 'oh', 'Aún no hay datos de carga', this.path);
+    }
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
+}
 }
 
 export { Professor };

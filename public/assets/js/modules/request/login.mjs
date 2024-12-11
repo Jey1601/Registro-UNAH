@@ -211,30 +211,13 @@ class Login {
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
                     access = payload_decoded.accessArray;
 
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case '2izGK2WC':
-                          window.location.href = this.path+'views/professors/index.html';
-                        
-                          break;
-                        
-                        case 'zKQFIY69':
-                          window.location.href = this.path+'views/administration/departments/academic-planning.html';
-                        
-                          break;
+                    if (access.includes('2izGK2WC')) {
+                      window.location.href = this.path + 'views/professors/index.html';
+                    } else {
+                      window.location.href = this.path + 'index.html';
+                      Alert.display("warning", "Usuario no tiene accesos.", result.message, this.path);
+                    }
 
-                        case 'p62NcCiC':
-                          window.location.href = this.path+'views/administration/departments/dashboard.html';
-                        
-                          break;
-                        
-                        default:
-                          window.location.href = this.path+'index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
                 window.location.href = this.path+'index.html';

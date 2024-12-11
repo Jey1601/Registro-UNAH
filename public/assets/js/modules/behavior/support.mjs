@@ -603,7 +603,43 @@ class Sidebar {
     }
 
 
-   
+    //Pantalla de visualización de carga academica
+    if(accesses.includes('jwh484T8')){
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = path + "views/administration/undergraduates/academic-workload.html";
+      a.appendChild(document.createTextNode("Carga académica"));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
+    }
+
+       //Pantalla de visualización de historial academico para coordinadores
+       if(accesses.includes('RoiOulJ1')){
+        const a = document.createElement("a");
+        const li = document.createElement("li");
+        li.classList.add("slidebar-item");
+        a.href = path + "views/administration/undergraduates/grades.html";
+        a.appendChild(document.createTextNode("Historial académico"));
+        li.appendChild(a);
+        sidebarBody.appendChild(li);
+      }
+
+
+       //Pantalla de visualización de historial academico para coordinadores
+       if(accesses.includes('64IDerH6')){
+        const a = document.createElement("a");
+        const li = document.createElement("li");
+        li.classList.add("slidebar-item");
+        a.href = path + "views/administration/undergraduates/requests.html";
+        a.appendChild(document.createTextNode("Solicitudes"));
+        li.appendChild(a);
+        sidebarBody.appendChild(li);
+      }
+  
+  
+
+
 
   }
 }

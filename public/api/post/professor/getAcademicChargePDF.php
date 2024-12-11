@@ -8,7 +8,10 @@ include_once PATH.'/DAO/ProfessorDAO.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_POST['idProfessor'])) {
+$input = json_decode(file_get_contents('php://input'), true);
+
+
+if (!isset($input['idProfessor'])) {
     echo json_encode([
         'success' => false,
         'message' => 'Numero de empleado no definido o nulo.'
@@ -16,7 +19,8 @@ if (!isset($_POST['idProfessor'])) {
     exit;
 }
 
-$idProfessor = $_POST['idProfessor'];
+
+$idProfessor = intval($input['idProfessor']);
 $controller = new ProfessorsDAO();
 $response = $controller->getReportCurrentPeriodPDF($idProfessor);
 
