@@ -272,7 +272,7 @@ class Login {
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
-                  console.log(payload_decoded);
+                 
                     access = payload_decoded.accessArray;
                  
                     if (access.includes('iAV7sDXj')) {
@@ -318,22 +318,21 @@ class Login {
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
-                    access = payload_decoded.accessArray;
+                  console.log(payload_decoded);
+                  access = payload_decoded.accessArray;
 
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case 'bG8uB0wH':
-                          window.location.href = this.path+'views/administration/DIPP/upload-students.html';
-                        
-                          break;  
-                        
-                        default:
-                          window.location.href = this.path+'index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
+                  if(access.includes('bG8uB0wH')){
+                    window.location.href = this.path+'views/administration/DIPP/upload-students.html';
+                  }else{
+                    Alert.display("warning", "Usuario no tiene accesos.", result.message);
+                   
+                    setTimeout(()=>{
+                      window.location.href = this.path+'index.html';
+                    }, 6000)
+                   
+                    
+                  }
+                
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
                 window.location.href = this.path+'index.html';
