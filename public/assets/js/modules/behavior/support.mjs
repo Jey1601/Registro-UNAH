@@ -470,7 +470,7 @@ class Sidebar {
      })
 
     //Deben leerse de manera dinamica desde el sessión storage
-    let accesses = [];
+    /*let accesses = [];
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
      if (!token) return; // Si no hay token, no se ejecuta lo demás
@@ -481,10 +481,10 @@ class Sidebar {
     } catch (error) {
       // Si ocurre un error, simplemente no se ejecuta el resto del código.
       return;
-    }
+    }*/
     
    // const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
-    //const accesses = ["iAV7sDXj"];
+    const accesses = ["iAV7sDXj",'qUhmvjSC','HxoBKYl8','aXK83XFl'];
 
     // Select the sidebar container
     const sidebarBody = document.querySelector(".sidebar-body ul");

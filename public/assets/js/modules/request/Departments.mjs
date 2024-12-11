@@ -56,7 +56,6 @@ class Department{
         }
     }
 
-
 }
 
 export {Department}

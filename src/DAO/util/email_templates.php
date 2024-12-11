@@ -118,7 +118,7 @@ function getTemplate($type, $placeholders = []) {
             <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
                 <h2 style='color: #0056b3;'>Estimado(a) {{full_name}},</h2>
                 <p>Puedes restablecer tu contraseña accediendo al siguiente enlace:</p>
-                <a href='http://ruta-ejemplo/reset-view.php?token={{token}}' style='color: #0056b3;'>Actualiza tu contraseña</a>
+                <a href='http://localhost:8000/views/reset-view.php?token={{token}}' style='color: #0056b3;'>Actualiza tu contraseña</a>
                 <p>Este enlace expirará dentro de 1 hora.</p>
                 <p>Atentamente,</p>
                 <p style='color: #0056b3;'><strong>Equipo de Admisiones</strong></p>

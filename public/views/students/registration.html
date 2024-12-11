@@ -94,7 +94,7 @@
 
         <div style="display: flex; flex-direction: row !important; gap: 1%;" >
             <div style="width: 49%;">
-                <select class="form-select" aria-label="Default select example">
+                <select id="departmentSelect" class="form-select" aria-label="Default select example">
                     <option selected>Departamento</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -102,11 +102,8 @@
                   </select>
            </div>  
             <div  style="width: 49%;" >
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Clase</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select id="classSelect" class="form-select" aria-label="Default select example">
+       
                   </select> 
             </div>      
            
@@ -249,10 +246,7 @@
       src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-    <script
-    type="module"
-    src="../../../assets/js/students/main.js"
-  ></script>
+
     <script
       type="module"
       src="../../../assets/js/aspects.js"

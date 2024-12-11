@@ -413,7 +413,7 @@ class AcademicPlanning {
       status_class_section: 1,
     };
 
-    console.log(data);
+   
     try {
       const response = await fetch(
         this.path +

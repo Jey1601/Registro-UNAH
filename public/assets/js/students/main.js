@@ -22,7 +22,7 @@ window.addEventListener('load', async function(){
 
    if (!token)  // Si no hay token, no se ejecuta lo demás
    
-   this.window.location.href ='../../../index.html'
+   //this.window.location.href ='../../../index.html'
   try {
     
     const payload = Login.getPayloadFromToken(token);
@@ -31,7 +31,7 @@ window.addEventListener('load', async function(){
   } catch (error) {
     // Si ocurre un error, simplemente no se ejecuta el resto del código.
     console.log(error);
-    this.window.location.href ='../../../index.html'
+   // this.window.location.href ='../../../index.html'
   }
 
   const sections = await Student.getEnrollmentClassSection(idStudent);
