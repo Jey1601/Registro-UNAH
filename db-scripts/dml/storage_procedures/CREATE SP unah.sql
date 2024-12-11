@@ -1288,7 +1288,114 @@ BEGIN
     SET status_enrollment_class_sections = FALSE
     WHERE id_student = p_id_student AND id_class_section = p_id_class_section;
 END $$
+-- @author PROCEDURE GET_ENROLLMENT_CLASS_SECTION_IDS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_ENROLLMENT_CLASS_SECTION_IDS(
+    IN classSectionID INT
+)
+BEGIN
+    SELECT id_enrollment_class_sections, id_student 
+    FROM EnrollmentClassSections
+    WHERE id_class_section = classSectionID;
+END $$
+
+
+-- @author PROCEDURE GET_UNDERGRADUATE_PROGRESS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_UNDERGRADUATE_PROGRESS(
+    IN studentID VARCHAR(13)
+)
+BEGIN
+    DECLARE totalClassesInCareer INT;
+    DECLARE approvedClasses INT;
+    DECLARE progressPercentage DECIMAL(5, 2);
+
+     SELECT COUNT(*) 
+    INTO totalClassesInCareer
+    FROM StudentClassStatus
+    WHERE id_student = studentID AND class_status = 1;
+
+    SELECT COUNT(*) 
+    INTO approvedClasses
+    FROM SpecificationClassStatus
+    WHERE id_student_class_status = studentID
+      AND specification_class_status = 'APROBADO';
+
+
+    IF totalClassesInCareer > 0 THEN
+        SET progressPercentage = (approvedClasses / totalClassesInCareer) * 100;
+    ELSE
+        SET progressPercentage = 0; 
+    END IF;
+
+
+    SELECT studentID AS id_student, 
+           totalClassesInCareer AS total_classes_in_career, 
+           approvedClasses AS approved_classes, 
+           progressPercentage AS progress_percentage;
+END $$
+
+-- @author PROCEDURE PROCEDURE INSERT_CLASS_SECTION_CANCELLED: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE INSERT_CLASS_SECTION_CANCELLED(
+    IN p_id_class_section INT,
+    IN p_id_department_head INT,
+    IN p_justification TEXT
+)
+BEGIN
+    INSERT INTO ClassSectionsCancelledDepartmentHead (
+        id_class_section,
+        id_department_head,
+        justification_sections_cancelled
+    )
+    VALUES (
+        p_id_class_section,
+        p_id_department_head,
+        p_justification
+    );
+END $$
+
+-- @author PROCEDURE UPDATE_CLASS_SECTION_STATUS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE UPDATE_CLASS_SECTION_STATUS(
+    IN p_id_class_section INT
+)
+BEGIN
+    UPDATE ClassSections
+    SET status_class_section = FALSE
+    WHERE id_class_section = p_id_class_section;
+END $$
+
+
+-- @author PROCEDURE UPDATE_CLASS_SECTION_DAYS_STATUS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE UPDATE_CLASS_SECTION_DAYS_STATUS(
+    IN p_id_class_section INT
+)
+BEGIN
+    UPDATE ClassSectionsDays
+    SET status_class_sections_days = FALSE
+    WHERE id_class_section = p_id_class_section;
+END $$
+
+
+-- @author PROCEDURE UPDATE_CLASS_SECTION_PROFESSOR_STATUS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE UPDATE_CLASS_SECTION_PROFESSOR_STATUS(
+    IN p_id_class_section INT
+)
+BEGIN
+    UPDATE ClassSectionsProfessor
+    SET status_class_section_professor = FALSE
+    WHERE id_class_section = p_id_class_section;
+END $$
+
+
+-- @author PROCEDURE GET_DEPARTMENTHEAD_BY_USERNAMEPROFESSOR_IDDEPARTMENT: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_DEPARTMENTHEAD_BY_USERNAMEPROFESSOR_IDDEPARTMENT(
+    IN p_id_professor INT,
+    IN p_id_department INT
+)
+BEGIN
+    SELECT id_department_head
+    FROM DepartmentHead
+    WHERE id_professor = p_id_professor
+      AND id_department = p_id_department
+      AND status_department_head = TRUE;
+END $$
 
 DELIMITER ;
-
-
