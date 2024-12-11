@@ -161,8 +161,11 @@ VALUES
 	('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
 	('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
 	('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE),
-	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE);
-
+	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE),
+	('iAV7sDXj', 'Estudiante Visualización de las clases matrículadas en el periodo actual index.html', TRUE),
+	('qUhmvjSC', 'Estudiante Visualización de las calificaciones historicas y de periodo del estudiante grades.html', TRUE),
+	('HxoBKYl8', 'Estudiante VPantalla de matrícula del estudiante registration.html', TRUE),
+	('aXK83XFl', 'Estudiante Pantalla de acceso a solicitudesrequest.html', TRUE);
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(2, 'lwx50K7f', TRUE),
@@ -176,7 +179,11 @@ VALUES
 	(13, 'zKQFIY69', TRUE),
 	(13, 'p62NcCiC', TRUE),
 	(14, '2izGK2WC', TRUE),
-	(7, 'bG8uB0wH', TRUE);
+	(7, 'bG8uB0wH', TRUE),
+	(15, 'iAV7sDXj', TRUE),
+	(15, 'qUhmvjSC', TRUE),
+	(15, 'HxoBKYl8', TRUE),
+	(15, 'aXK83XFl', TRUE);
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 

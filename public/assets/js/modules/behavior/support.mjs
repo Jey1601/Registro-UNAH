@@ -243,16 +243,7 @@ class Form {
     
     let isFormValid = true;
    
-    // Filtrar solo los checkboxes
-   /* const checkboxes = Array.from(inputsForm).filter(
-      (input) => input.type === "checkbox"
-    );
-    if(checkboxes.length>0){
-      const isChecked = checkboxes.some((checkbox) => checkbox.checked);
-      if (!isChecked) {
-        isFormValid = false;
-      }
-    }*/
+ 
     // Recorre todos los inputs del formulario
     inputsForm.forEach((input) => {
       if (input.disabled == "false" || input.type != "hidden") {
@@ -282,7 +273,6 @@ class Form {
     });
 
     // Aquí se maneja el estado del botón al final de todas las verificaciones
-    console.log(isFormValid);
     if (isFormValid) {
       submitButton.classList.add("oficial-blue");
       submitButton.classList.remove("wrong-form");
@@ -296,6 +286,38 @@ class Form {
       submitButton.disabled = true; // Deshabilita el botón
     }
     
+    return isFormValid;
+  }
+
+  static validateChecks(inputsForm, submitButton, textRight="Enviar", textWrong ="Revisa la información"){
+       // Filtrar solo los checkboxes
+   
+      let isFormValid = true;
+
+       const checkboxes = Array.from(inputsForm).filter(
+      (input) => input.type === "checkbox"
+    );
+    if(checkboxes.length>0){
+      const isChecked = checkboxes.some((checkbox) => checkbox.checked);
+      if (!isChecked) {
+        isFormValid = false;
+      }
+    }
+
+
+    if (isFormValid) {
+      submitButton.classList.add("oficial-blue");
+      submitButton.classList.remove("wrong-form");
+      submitButton.innerText = textRight;
+      submitButton.disabled = false; // Habilita el botón
+    } else {
+
+      submitButton.classList.remove("oficial-blue");
+      submitButton.classList.add("wrong-form");
+      submitButton.innerText = textWrong;
+      submitButton.disabled = true; // Deshabilita el botón
+    }
+
     return isFormValid;
   }
 
@@ -439,7 +461,20 @@ class Sidebar {
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
     //Deben leerse de manera dinamica desde el sessión storage
-    const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
+    let accesses = [];
+    const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+
+     if (!token) return; // Si no hay token, no se ejecuta lo demás
+
+    try {
+      const payload = Login.getPayloadFromToken(token);
+      accesses = payload.accessArray;
+    } catch (error) {
+      // Si ocurre un error, simplemente no se ejecuta el resto del código.
+      return;
+    }
+
+   // const accesses = ['zKQFIY69','p62NcCiC','2izGK2WC'];
     //const accesses = ["iAV7sDXj"];
 
     // Select the sidebar container

@@ -1,9 +1,8 @@
 <?php
 include_once 'util/jwt.php';
-include_once 'util/Code.php';
 include_once 'util/StudentFunctions.php';
 include_once 'util/encryption.php';
-
+require_once 'util/mail.php';
 /**
  * Clase objeto de acceso a datos y controlador de administrador de DIPP
  * 
@@ -172,7 +171,8 @@ class DIIPAdminDAO {
      */
     public function insertStudentsByCSV ($csvFile, bool $firstRowHeaders=true) {
         $fileTempPath = $csvFile['tmp_csv'];
-        
+        //Nos permite enviar los correos
+        $mail = new mail();
         if(($handle = fopen($fileTempPath, 'r')) !== FALSE) {
             $rowsInsertedStudent = 0;
             $rowsInsertedStudentRegionalCenter = 0;
@@ -277,6 +277,9 @@ class DIIPAdminDAO {
     
                 if($stmtInsertStudentUndergraduate->execute()) {
                     $rowsInsertedStudentUndergraduate++;
+
+                    //Enviar el correo con usuario y contraseña
+
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent;
                 }
@@ -316,6 +319,8 @@ class DIIPAdminDAO {
 
                 if($stmtInsertUserStudent->execute()) {
                     $rowsInsertUserStudent++;
+                   
+                    $mail -> sendStudentsLogin($fullName, $accountNumberStudent, $randomPassword, $personalEmail);
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-perfil, con numero de identidad del estudiante: " . $idCardStudent;
                 }

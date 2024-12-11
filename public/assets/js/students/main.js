@@ -21,3 +21,11 @@ window.addEventListener('load', async function(){
    Table.renderDynamicTable(sections,'viewSections');
    Student.addOptionTableMain('viewSections');
 });
+
+
+
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function(event){
+    event.preventDefault();
+    Login.logout();
+});  
