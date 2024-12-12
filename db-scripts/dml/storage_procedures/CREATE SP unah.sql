@@ -955,7 +955,7 @@ BEGIN
     INNER JOIN `Students` 
         ON `RequestsCancellationExceptionalClasses`.id_student = `Students`.id_student
     INNER JOIN `StudentsRegionalCenters` 
-        ON `StudentsRegionalCenters`.id_student = `StudentsRegionalCenters`.id_student
+        ON `Students`.id_student = `StudentsRegionalCenters`.id_student
     INNER JOIN `RegionalCenters` 
         ON `StudentsRegionalCenters`.id_regional_center_student = `RegionalCenters`.id_regional_center
     INNER JOIN `ClassSections` 
