@@ -108,7 +108,7 @@ class RequestExceptionalCancellation{
       const cellCheckbox = document.createElement("td");
 
       const cells = row.querySelectorAll("td");
-      const sectionId = cells[0].textContent.trim();
+      const sectionId = cells[2].textContent.trim();
 
       // Crear el contenedor del checkbox
       const divFormCheck = document.createElement("div");
@@ -187,7 +187,7 @@ static async getDetailsRequestCancellationExceptional(idRequest){
   try {
     const response = await fetch(
       this.path +
-        `api/get/professor/getDetailsRequestCancellationExceptional.php?idRequest=${idRequest}`,
+        `api/get/professor/getDetailsRequestCancellationExceptional.php?idRequest='${idRequest}'`,
       { 
         method: "GET",  
         headers: {

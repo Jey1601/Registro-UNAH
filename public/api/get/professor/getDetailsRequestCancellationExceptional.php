@@ -12,7 +12,7 @@ if (!isset($_GET['idRequest'])) {
     exit;
 }
 
-$idRequest = $_GET['idRequest'];
+$idRequest = intval($_GET['idRequest']);
 $controller = new ProfessorsDAO();
 $response = $controller->getDetailsRequestCancellationExceptional($idRequest);
 

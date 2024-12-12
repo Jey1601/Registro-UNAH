@@ -138,7 +138,7 @@ document
       btnLogin.classList.add("btn-blue"); // Agregar clase para color azul
       btnLogin.classList.remove("btn-yellow"); // Remover clase para color amarillo
       username.placeholder = "Usuario.."; // Establecer placeholder predeterminado para el campo de usuario
-
+      const passwordResent = document.getElementById('passwordResent');
       // Seleccionar la acción según el texto del botón clickeado
       switch (this.textContent.trim()) {
         case "Gestión estratégica":
@@ -146,27 +146,41 @@ document
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
         case "Facultades":
+         
+          passwordResent.style.display = 'none';
           Login.updateUserType("facultyAdmin"); // Actualizar tipo de usuario
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
         case "Admisiones":
-          Login.updateUserType("admissionAdmin"); // Actualizar tipo de usuario
+          passwordResent.style.display = 'none';  
+        Login.updateUserType("admissionAdmin"); // Actualizar tipo de usuario
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
         case "DIPP":
+          passwordResent.style.display = 'none';
           Login.updateUserType("dippAdmin"); // Actualizar tipo de usuario
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
         case "Estudiantes":
+          passwordResent.style.display = 'none';
           Login.updateUserType("student"); // Actualizar tipo de usuario
           btnLogin.classList.remove("btn-blue"); // Cambiar estilo del botón
           btnLogin.classList.add("btn-yellow"); // Cambiar estilo del botón
           username.placeholder = "Número de cuenta.."; // Cambiar placeholder para estudiantes
+         
+          passwordResent.style.margin = '10px 0'
+          passwordResent.style.display = 'block';
+          const a = document.createElement('a');
+          a.innerText = '¿Olvidaste tu contraseña?';
+          a.href = '../../views/password-reset-email.html';
+          a.style.color = 'grey';
+          passwordResent.appendChild(a);
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
         case "Docentes":
         case "Coordinadores de carrera":
         case "Jefes de Departamento":
+          passwordResent.style.display = 'none';
           Login.updateUserType("professor"); // Actualizar tipo de usuario
           Modal.showModal("loginModal"); // Mostrar la modal de login
           break;
