@@ -1,4 +1,5 @@
 USE unah_registration;
+-- @author  Jeyson Espinal 20201001015 @created 10/12/2024
 
 /*1) IDENTIFICA EL ID DE LA CARRERA AL QUE QUIERES ASIGNAR EL DOCENTE COMO COORDINADOR*/
 
@@ -8,9 +9,9 @@ select * from `Undergraduates`;
 select * from `Professors` where email_professor = 'jfeg1601@gmail.com';
 
 /*3) DESACTIVA EL STATUS DEL ANTERIOR COORDINADOR SI EXISTE*/
-select * from `AcademicCoordinator` where id_undergraduate = 9;
+select * from `AcademicCoordinator` where id_undergraduate = 2;
 
-UPDATE `AcademicCoordinator` set status_academic_coordinator = 0 where id_undergraduate = 9;
+UPDATE `AcademicCoordinator` set status_academic_coordinator = 0 where id_undergraduate = 2;
 
 
 --DESACTIVA SU HORARIO TAMBIÉN
@@ -34,7 +35,7 @@ select * from `AcademicCoordinator` ORDER BY id_academic_coordinator DESC LIMIT 
 
 
 /*8) CREA SU HORARIO*/
-insert into `AcademicCoordinatorWorkingHours` (id_academic_coordinator,id_working_hour,status_academic_coordinator_working_hours) values (2,1,1);
+insert into `AcademicCoordinatorWorkingHours` (id_academic_coordinator,id_working_hour,status_academic_coordinator_working_hours) values (1,1,1);
 
 /*9) ASIGNA LOS ROLE DE COORDINADOR AL DOCENTE (ID 13)*/
 

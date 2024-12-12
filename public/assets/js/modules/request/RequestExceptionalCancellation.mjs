@@ -1,5 +1,5 @@
 
-import { Alert, Cell } from "../behavior/support.mjs";
+import { Alert, Cell, Modal } from "../behavior/support.mjs";
 
 class RequestExceptionalCancellation{
     static path = "../../../../";
@@ -108,7 +108,7 @@ class RequestExceptionalCancellation{
       const cellCheckbox = document.createElement("td");
 
       const cells = row.querySelectorAll("td");
-      const sectionId = cells[2].textContent.trim();
+      const sectionId = cells[0].textContent.trim();
 
       // Crear el contenedor del checkbox
       const divFormCheck = document.createElement("div");
@@ -135,6 +135,77 @@ class RequestExceptionalCancellation{
       row.appendChild(cellCheckbox);
     });
   }        
+
+  static addOptionView(tableId){
+    // Selecciona la tabla por su ID
+    const table = document.getElementById(tableId);
+    if (!table) {
+      console.error("La tabla no existe.");
+      return;
+    }
+
+    // Selecciona todas las filas del cuerpo de la tabla
+    const rows = table.querySelectorAll("tbody tr");
+
+    rows.forEach((row) => {
+      // Obtén todas las celdas de la fila actual
+      const cells = row.querySelectorAll("td");
+   
+      const idSolicitude = cells[0].textContent.trim();
+
+      //Celda que contendrá las opciones
+      const cellOptions = Cell.createCell("td", "");
+
+   
+         //Botón de descarga PDF
+         const buttonView = document.createElement("button");
+         buttonView.classList.add("btn");
+     
+         buttonView.addEventListener('click',async ()=>{
+           //Aquí llamar la función de mostrar la solicitud
+            this.getDetailsRequestCancellationExceptional(parseInt(idSolicitude,10));
+          
+           Modal.showModal('viewInfo');
+         })
+   
+         // Creamos la imagen y configuramos su fuente
+         const icon = document.createElement("img");
+         icon.src = this.path + "assets/img/icons/zoom-icon.png";
+
+   
+         buttonView.appendChild(icon);
+
+         cellOptions.appendChild(buttonView);
+     
+
+      row.appendChild(cellOptions); // Agregamos las opciones a la fila
+    });
+}
+
+static async getDetailsRequestCancellationExceptional(idRequest){
+
+  try {
+    const response = await fetch(
+      this.path +
+        `api/get/professor/getDetailsRequestCancellationExceptional.php?idRequest=${idRequest}`,
+      { 
+        method: "GET",  
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    
+  console.log(responseData);
+  return responseData;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }    
+}
+
 
 }
 

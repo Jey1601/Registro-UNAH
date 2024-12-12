@@ -5,7 +5,7 @@ import { Login } from "../modules/request/login.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
-let idStudent  = '20240002123';
+let idStudent  = '';
 
 
 /* ========== Funcionalidad del sidebar  ============*/
@@ -19,11 +19,9 @@ Sidebar.buildSidebar('../../../')
 window.addEventListener('load', async function(){
 
 
-  /* const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+  const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
-   if (!token)  // Si no hay token, no se ejecuta lo demás
-   
-   //this.window.location.href ='../../../index.html'
+ 
   try {
     
     const payload = Login.getPayloadFromToken(token);
@@ -32,8 +30,8 @@ window.addEventListener('load', async function(){
   } catch (error) {
     // Si ocurre un error, simplemente no se ejecuta el resto del código.
     console.log(error);
-   // this.window.location.href ='../../../index.html'
-  }*/
+    this.window.location.href ='../../../index.html'
+  }
   await  EnrollmentProcess.verifyStatusEnrollmentProcessStudent(idStudent);
   const sections = await Student.getEnrollmentClassSection(idStudent);
 

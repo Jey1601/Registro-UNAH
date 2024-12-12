@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if(!token) {
         sessionStorage.setItem('message',"No se encontro token en el sessionStorage.");
-        window.location.href = '../../index.html';
+        window.location.href = '../../../index.html';
         return;
     }
 
@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }).then(response => response.json()).then(data => {
         if (data.success === false) {
-            window.location.href = '../../index.html';
+            window.location.href = '../../../index.html';
         }
     }).catch (error => {
         console.error("Error en la validacion del token: ", error);
-        window.location.href = '../../index.html';
+        window.location.href = '../../../index.html';
     });
 });

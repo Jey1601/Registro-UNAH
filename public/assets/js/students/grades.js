@@ -1,10 +1,10 @@
 import { Sidebar, Modal } from "../modules/behavior/support.mjs";
-
+import { EnrollmentProcess } from "../modules/request/EnrollmentProcess.mjs";
+import { Login } from "../modules/request/login.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
 let idStudent  = '';
-
 
 
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
@@ -12,6 +12,22 @@ closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
 Sidebar.buildSidebar('../../../')
 
+
+window.addEventListener('load', function(){
+
+    const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+
+    try {
+      
+      const payload = Login.getPayloadFromToken(token);
+      idStudent = payload.username;
+     
+    } catch (error) {
+      // Si ocurre un error, simplemente no se ejecuta el resto del código.
+      console.log(error);
+      this.window.location.href ='../../../index.html'
+    }
+})
 
 
 const logoutBtn = document.getElementById('logoutBtn');

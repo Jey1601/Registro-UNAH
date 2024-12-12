@@ -77,7 +77,7 @@ class EnrollmentProcess {
           this.path
         )
       } 
-      console.log(responseData);
+      
      return responseData;
     } catch (error) {
       console.error("Error:", error);
@@ -220,19 +220,53 @@ static addOptionsSectionEnrollment(tableId){
     // Obténer todas las celdas de la fila actual
     const cells = row.querySelectorAll("td");
     const sectionId = cells[2].textContent.trim();
-
+    
     //Obtenmos la cantidad de spots disponibles
     let spots =0;
     let cellSpots = null;
+    let cellVideo = Cell.createCell("td",);
 
+    //Agregamos el botón del video 
+    //botón que despliga la modal para agregar video
+    const buttonVideo = document.createElement("button");
+    buttonVideo.classList.add("btn");
+    buttonVideo.classList.add("btn-video");
+   
+    // Creamos la imagen y configuramos su fuente 
+    const videoIcon = document.createElement("img");
+    videoIcon.src = this.path + "assets/img/icons/add-video-icon.png";
+
+    // Agregamos la imagen al botón
+    buttonVideo.appendChild(videoIcon);
+
+   
     try {
       const sectionIdParsed = parseInt(sectionId, 10);
       const spotsavailable = await this.getAvailableSpots(sectionIdParsed);
       const spotsTaken = await this.getStudentCountByClassSection(sectionIdParsed);
-      
+      const url = await this.getUrlPresentationVideo(sectionIdParsed);
+
       spots = parseInt(spotsavailable, 10) - parseInt(spotsTaken, 10);
       cellSpots = Cell.createCell("td",spots.toString());
-     
+      
+    
+
+    // Extraemos el VIDEO_ID (en este caso "PcP7UyoRYTU")
+    let videoId = url.split('v=')[1].split('/')[0];
+
+    // Construimos la URL para el iframe
+    let iframeUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
+
+      buttonVideo.addEventListener('click', (event)=>{
+        event.preventDefault();
+        const iframe = document.getElementById('youtubePlayer');
+              iframe.src = iframeUrl;
+             
+        Modal.showModal('videoModal');
+      });
+
+
+      cellVideo.appendChild(buttonVideo);
     } catch (error) {
       console.error('Error fetching spots:', error);
     }
@@ -251,6 +285,7 @@ static addOptionsSectionEnrollment(tableId){
     input.name = "sectionToEnroll"
     input.id = 'btn-'+sectionId
     input.value = sectionId;
+
     const label = document.createElement('label');
     label.style.width ="100%";
     label.classList.add('btn');
@@ -263,7 +298,7 @@ static addOptionsSectionEnrollment(tableId){
   
 
     cellOptions.appendChild(div);
-
+    row.appendChild( cellVideo);
     row.appendChild(cellSpots);
     row.appendChild(cellOptions);
   }) // Agregamos las opciones a la fila
@@ -592,8 +627,37 @@ static addOptionsSectionEnrollment(tableId){
   
   }
 
+  static async getUrlPresentationVideo(idClassSection){
+    const data = {
+      idClassSection :idClassSection
+    };
+  
+  
+    try {
+      const response = await fetch(
+        this.path +
+          "api/post/academicPlanning/PostUrlPresentationVideo.php",
+        { 
+          method: "POST",  
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+  
+      const responseData = await response.json();
+      
+    
+    return responseData.urlVideo;
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }    
+  }
 
 
+ 
 
 }
 

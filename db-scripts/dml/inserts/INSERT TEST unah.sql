@@ -168,7 +168,7 @@ VALUES
 	('aXK83XFl', 'Estudiante Pantalla de acceso a solicitudesrequest.html', TRUE),
 	('xjAQ9PA5', 'Administrador DIPP Visualiza el calendario de matrícula enrollment.html', TRUE),
 	('jwh484T8', 'Coordinator Visualización de carga academica del periodo academic-workload.html', TRUE),
-	('RoiOulJ1', 'Coordinator Visualización del historial academico de los estudiantes de la carrera grades.html', TRUE),
+	('RoiOulJ1', ' Visualización del historial academico de los estudiantes .html', TRUE),
 	('64IDerH6', 'Coordinator Visualización y dictamen de solicitudes request.html', TRUE);
 
 
@@ -193,7 +193,8 @@ VALUES
 	(7, 'xjAQ9PA5', TRUE),
 	(16, 'jwh484T8', TRUE),
 	(16, 'RoiOulJ1', TRUE),
-	(16, '64IDerH6', TRUE);
+	(16, '64IDerH6', TRUE),
+    (13, 'RoiOulJ1', TRUE);
 
 
 
@@ -1512,3 +1513,13 @@ VALUES
 ('20201001559', '7', TRUE),
 ('20201001559', '8', TRUE),
 ('20201001559', '9', TRUE);
+
+
+-- @author INSERT INTO ClassSectionsProfessor: Alejandro Moya 20211020462 @created 11/12/2024
+INSERT INTO ClassSectionsProfessor (id_class_section, class_presentation_video, status_class_section_professor)
+VALUES 
+(1, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(2, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(3, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(4, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(6, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE);

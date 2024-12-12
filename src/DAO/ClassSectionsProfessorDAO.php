@@ -36,17 +36,17 @@ Class  ClassSectionsProfessorDAO{
      * @author Alejandro Moya
      * @created 08/12/2024
      */
-    public function getUrlPresentationVideo($idClassSection, $idProfessor){
-        if (!is_int($idClassSection) || !is_int($idProfessor)) {
+    public function getUrlPresentationVideo($idClassSection){
+        if (!is_int($idClassSection) ) {
             throw new InvalidArgumentException("Los parámetros deben ser enteros válidos en getUrlPresentationVideo().");
         }
 
         try {
-            $stmt = $this->connection->prepare("CALL GET_CLASS_PRESENTATION_VIDEO(?, ?)");
+            $stmt = $this->connection->prepare("CALL GET_CLASS_PRESENTATION_VIDEO(?)");
             if ($stmt === false) {
                 throw new mysqli_sql_exception("Error al preparar la consulta: " . $this->connection->error);
             }
-            $stmt->bind_param("ii", $idClassSection, $idProfessor);
+            $stmt->bind_param("i", $idClassSection );
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result === false) {

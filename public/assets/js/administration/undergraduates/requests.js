@@ -1,6 +1,7 @@
 import { Professor } from "../../modules/request/Professor.mjs";
 import { Alert, Sidebar, Table } from "../../modules/behavior/support.mjs";
 import { Login } from "../../modules/request/login.mjs";
+import { RequestExceptionalCancellation } from "../../modules/request/RequestExceptionalCancellation.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
@@ -39,4 +40,5 @@ window.addEventListener('load', async function(){
     Alert.display('info','Todo en orden', 'No tiene solicitudes pendientes','../../../../');
    }
    Table.renderDynamicTable(solicitudes,'viewPendingSolicitudes');
+   RequestExceptionalCancellation.addOptionView('viewPendingSolicitudes');
 })

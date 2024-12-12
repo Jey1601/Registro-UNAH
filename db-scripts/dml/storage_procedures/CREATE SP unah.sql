@@ -1444,4 +1444,18 @@ BEGIN
 END$$
 
 
+
+-- @author PROCEDURE GET_CLASS_PRESENTATION_VIDEO: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_CLASS_PRESENTATION_VIDEO(
+    IN param_id_class_section INT
+)
+BEGIN
+    SELECT 
+        class_presentation_video
+    FROM 
+        ClassSectionsProfessor
+    WHERE 
+        id_class_section = param_id_class_section
+        AND status_class_section_professor = TRUE;
+END $$
 DELIMITER ;

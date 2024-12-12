@@ -612,10 +612,11 @@ class ProfessorsDAO {
             $roles [] = $row['role'];
         }
 
-        if (!in_array('Department Head', $roles)) {
+        $validRoles = ['Department Head', 'Coordinator'];
+        if (empty(array_intersect($validRoles, $roles))) {
             return $response = [
                 'status' => 'info',
-                'message' => 'El usuario docente no tiene rol de jefe de departamento.'
+                'message' => 'El usuario docente no tiene rol de jefe de departamento ni de coordinador.'
             ];
         }
 
@@ -683,7 +684,7 @@ class ProfessorsDAO {
             $roles [] = $row['role'];
         }
 
-        if (!in_array('Department Head', $roles)) {
+        if (!in_array('Department Head', $roles) && !in_array('Coordinator', $roles)) {
             return $response = [
                 'status' => 'info',
                 'message' => 'El usuario docente no tiene rol de jefe de departamento.'
