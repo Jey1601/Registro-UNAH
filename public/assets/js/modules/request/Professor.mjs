@@ -1,5 +1,5 @@
 import { AcademicPlanning } from "./AcademicPlanning.mjs";
-import { Alert } from "../behavior/support.mjs";
+import { Alert, Cell, Table, Modal } from "../behavior/support.mjs";
 
 class Professor {
   static path = "../../../../";
@@ -354,6 +354,110 @@ static async getRequestsCancellationExceptional(idProfessor) {
   }
 }
 
+
+static async  fetchStudentsByRegionalCenterUndergraduate(idProfessor,idRegionalCenter,idUndergraduate) {
+  const url = this.path+'api/post/professor/getStudentsByRegionalCenterUndergraduate.php'; 
+
+  const formData = new FormData();
+  formData.append('idProfessor', parseInt(idProfessor,10)); 
+  formData.append('idRegionalCenter', parseInt(idRegionalCenter,10)); 
+  formData.append('idUndergraduate', parseInt(idUndergraduate,10)); 
+
+  try {
+      const response = await fetch(url, {
+          method: 'POST',
+          body: formData,
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      return data.students;
+  } catch (error) {
+      console.error('Error al consumir el endpoint:', error);
+      return [];
+  }
+}
+
+
+static async  getAcademicHistoryByStudent(idProfessor, idStudent) {
+  const url = this.path+'api/post/professor/getAcademicHistoryByStudent.php'; 
+
+  const formData = new FormData();
+  formData.append('idProfessor', parseInt(idProfessor,10)); 
+  formData.append('idStudent', parseInt(idStudent,10)); 
+
+
+  try {
+      const response = await fetch(url, {
+          method: 'POST',
+          body: formData,
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      Alert.display(data.status,'Hola',data.message, this.path);
+      return data.secciones;
+  } catch (error) {
+      console.error('Error al consumir el endpoint:', error);
+      return [];
+  }
+}
+
+
+static addOptionGrades(tableId,idProfessor){
+     // Selecciona la tabla por su ID
+     const table = document.getElementById(tableId);
+     if (!table) {
+       console.error("La tabla no existe.");
+       return;
+     }
+ 
+     // Selecciona todas las filas del cuerpo de la tabla
+     const rows = table.querySelectorAll("tbody tr");
+ 
+     rows.forEach((row) => {
+       // Obtén todas las celdas de la fila actual
+       const cells = row.querySelectorAll("td");
+    
+       const idStudent = cells[0].textContent.trim();
+ 
+       //Celda que contendrá las opciones
+       const cellOptions = Cell.createCell("td", "");
+ 
+    
+          //Botón de descarga PDF
+          const buttonView = document.createElement("button");
+          buttonView.classList.add("btn");
+      
+          buttonView.addEventListener('click',async ()=>{
+            //Aquí llamar la función de motrar historial individual
+            const sections =  await this.getAcademicHistoryByStudent(parseInt(idProfessor,10),idStudent)
+            Table.renderDynamicTable(sections,'viewHistorial');
+            Modal.showModal('viewInfo');
+          })
+    
+          // Creamos la imagen y configuramos su fuente
+          const icon = document.createElement("img");
+          icon.src = this.path + "assets/img/icons/zoom-icon.png";
+ 
+    
+          buttonView.appendChild(icon);
+ 
+          cellOptions.appendChild(buttonView);
+      
+ 
+       row.appendChild(cellOptions); // Agregamos las opciones a la fila
+     });
+}
 
 }
 

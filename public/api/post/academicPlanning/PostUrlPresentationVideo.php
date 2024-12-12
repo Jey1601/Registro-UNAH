@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_POST = json_decode($input, true);
 
     $idClassSection = $_POST['idClassSection'] ?? null;
-    $idProfessor = $_POST['idProfessor'] ?? null;
 
-    if (!is_int($idClassSection) || !is_int($idProfessor)) {
+
+    if (!is_int($idClassSection) ) {
         echo json_encode([
             "status" => "error",
             "message" => "Parámetros inválidos. Asegúrese de enviar IDs válidos para la sección de clase y el profesor."
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $result = $dao->getUrlPresentationVideo($idClassSection, $idProfessor);
+        $result = $dao->getUrlPresentationVideo($idClassSection, );
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode([

@@ -16,9 +16,9 @@ if (!isset($_POST['idProfessor'], $_POST['idRegionalCenter'], $_POST['idUndergra
     exit;
 }
 
-$idProfessor = $_POST['idProfessor'];
-$idRegionalCenter = $_POST['idRegionalCenter'];
-$idUndergraduate = $_POST['idUndergraduate'];
+$idProfessor = intval($_POST['idProfessor']);
+$idRegionalCenter = intval($_POST['idRegionalCenter']);
+$idUndergraduate = intval($_POST['idUndergraduate']);
 
 $controller = new ProfessorsDAO();
 $response = $controller->getStudentsByRegionalCenterUndergraduate($idProfessor, $idRegionalCenter, $idUndergraduate);

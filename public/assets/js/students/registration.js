@@ -1,9 +1,10 @@
 import { Sidebar, Table, Modal } from "../modules/behavior/support.mjs";
 import { EnrollmentProcess } from "../modules/request/EnrollmentProcess.mjs";
+import { Login } from "../modules/request/login.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
-let idStudent = "20240002123";
+let idStudent = "";
 
 
 const departmentSelect = document.getElementById("departmentSelect");
@@ -17,7 +18,20 @@ closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 Sidebar.buildSidebar("../../../");
 
 window.addEventListener("load", async function () {
+
+ const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
+
+  try {
     
+    const payload = Login.getPayloadFromToken(token);
+    idStudent = payload.username;
+    console.log(payload);
+  } catch (error) {
+    // Si ocurre un error, simplemente no se ejecuta el resto del código.
+    console.log(error);
+    //this.window.location.href ='../../../index.html'
+  }
+
     const response = await EnrollmentProcess.verifyEnrollmentProcessStatus();
     
   
@@ -85,8 +99,8 @@ window.addEventListener("load", async function () {
             Modal.showModal("warningModal");
 
             this.setTimeout(()=>{
-                this.window.location.href ="../../../views/students/index.html"
-            },6000 );
+               this.window.location.href ="../../../views/students/index.html"
+            },7000 );
 
             }
 

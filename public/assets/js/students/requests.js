@@ -4,6 +4,7 @@ import { Student } from "../modules/request/Student.mjs";
 import { Sidebar } from "../modules/behavior/support.mjs";
 import { RequestExceptionalCancellation } from "../modules/request/RequestExceptionalCancellation.mjs";
 import { Login } from "../modules/request/login.mjs";
+import { EnrollmentProcess } from "../modules/request/EnrollmentProcess.mjs";
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
@@ -24,9 +25,6 @@ window.addEventListener('load', async function(){
   
   const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
-   if (!token)  // Si no hay token, no se ejecuta lo demás
-   
-   this.window.location.href ='../../../index.html'
   try {
     
     const payload = Login.getPayloadFromToken(token);

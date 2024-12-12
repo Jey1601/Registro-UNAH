@@ -24,14 +24,14 @@ class Career {
         }
     }
 
-    static async updateFirstOption() {
+    static async updateFirstOption(idCarrer='applicantFirstChoice', idCenter ="applicantStudyCenter",module ='Admissions') {
         //Select de centro regional
-        const applicantStudyCenter = document.getElementById('applicantStudyCenter');
-        const firstOption = document.getElementById('applicantFirstChoice');
+        const applicantStudyCenter = document.getElementById(idCenter);
+        const firstOption = document.getElementById(idCarrer);
         
         //Tomamos el valor seleccionado del select de centro regional
         const selectedValue = applicantStudyCenter.value;
-
+        
         //Eliminamos el contenido que pueda tener el select de carrera principal
         firstOption.innerHTML = '';
 
@@ -54,13 +54,15 @@ class Career {
                 counter++;
             });
 
-              //Cargamos las carreras del segundo select,eliminando la primera opción
+            if(module == 'Admissions') {
+            //Cargamos las carreras del segundo select,eliminando la primera opción
               firstOption.addEventListener('change', () => {
                 this.updateSecondOption(Careers);
               });
-
+            
               // por el valor seleccionado por defecto también cargamos la segunda opción:
               this.updateSecondOption(Careers);
+            }
         } else {
             console.error("No se encontraron carreras en el centro regional o los datos no son válidos.");
         }
