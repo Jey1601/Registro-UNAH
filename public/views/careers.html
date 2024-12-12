@@ -25,23 +25,28 @@
 <body class="background-white animation">
 
     <!--Header/navar==============================================================================-->
-    <nav class="header" >
+    <nav class="header"  >
       
-      <div class="container-fluid background-white my-navbar" >
+      <div class="container-fluid background-white my-navbar">
         <a href="../index.html" class="logo-header" >
-          <img  class="navbar-logo" src="../assets/img/logos/UNAH-version-horizontal.png" alt="UNAH" >
+          <img class="navbar-logo" src="../assets/img/logos/UNAH-version-horizontal.png" alt="UNAH"  >
         </a>
         <div class="oficial-yellow bar yellow-bar " ></div>
         <div class="oficial-blue bar  blue-bar" ></div>
-        <div class="oficial-blue   blue-banner" >
+        <div class="oficial-blue  blue-banner ">
           
           <div class="navbar-menu">
             <div class="navbar-menu-item">
-              <a href="careers.html">Oferta Académica</a>
+              <a href="./careers.html">Oferta Académica</a>
             </div>
             <div class="navbar-menu-item">
-              <button  class="btn-inscription" data-bs-toggle="modal" >Inscripción</button>
+                
+              <button  class="btn-inscription" type="button" data-bs-toggle="modal" >Inscripción</button>
             </div>
+            <div class="navbar-menu-item">
+             
+            <a role="button" href="./views/admissions/login.html" style="text-decoration: none; color: white;"   >Aspirantes</a>
+          </div>  
             <div class="navbar-menu-item">
               <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
             </div>
@@ -52,13 +57,15 @@
               
               <div class="dropdown" >
                 <button class="btn btn-secondary dropdown-toggle btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Admistración
+                  Administración
                 </button>
                 <ul class="dropdown-menu" >
-                  <li><button class="dropdown-item" href="#">Gestión estratégica</button></li>
-                  <li><button class="dropdown-item" href="#">Facultades</button></li>
-                  <li><button id="loginAdmissionsButton" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModalAdmissions">Admisiones</Button></li>
-                  <li><button class="dropdown-item" href="#">DIPP</button></li>
+                  
+                  <li><button  class="dropdown-item" >Facultades</Button></li>
+                  <li ><button id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal">Admisiones</Button></li>
+                  <li><button class="dropdown-item" >DIPP</Button></li>
+                  <li><button class="dropdown-item" >Coordinadores de carrera</Button></li>
+                  <li><button class="dropdown-item" >Jefes de Departamento</Button></li>
                 </ul>
               </div>
               
@@ -70,6 +77,7 @@
 
     </nav>
     <div id="notifications"></div>
+    
     <div style="width:100vw; display:flex; justify-content: center; padding-top: 20px;">
       <h1  style="font-weight: bold; color: #ffb300; ">Oferta Académica</h1>
     </div>

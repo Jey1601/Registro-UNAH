@@ -85,6 +85,7 @@ class AcademicPlanning {
       Alert.display("error", "Algo ha salido mal", "Lo sentimos", this.path);
     }
   }
+
   /**
    * Obtiene los horarios académicos asociados a la planificación académica desde el servidor.
    *
@@ -150,6 +151,17 @@ class AcademicPlanning {
     }
   }
 
+  /**
+   * Envía una solicitud POST para obtener la planificación académica de los estudiantes de pregrado asociados a un profesor en un centro regional.
+   * Se envía el nombre de usuario del profesor y el ID del centro regional para obtener los datos relevantes.
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12-04
+   * @param {int} username_user_professor - Nombre de usuario del profesor.
+   * @param {int} id_regionalcenter - Identificador del centro regional donde se encuentra el profesor.
+   * @returns {Promise<Object|null>} Una promesa que resuelve con los datos de la planificación académica de los estudiantes de pregrado o `null` en caso de error.
+   * @throws {Error} Si ocurre un problema durante la solicitud.
+   */
+
   static async UndergraduatesAcademicPlanning(
     username_user_professor,
     id_regionalcenter
@@ -180,6 +192,7 @@ class AcademicPlanning {
       return null;
     }
   }
+
   /**
    * Envía una solicitud POST para obtener los programas de pregrado asociados a un profesor y un centro regional específico en el contexto de la planificación académica.
    *
@@ -413,7 +426,6 @@ class AcademicPlanning {
       status_class_section: 1,
     };
 
-   
     try {
       const response = await fetch(
         this.path +

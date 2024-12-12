@@ -11,10 +11,11 @@ window.addEventListener('load', function(){
     if (token) {
         const payload = Login.getPayloadFromToken(token);
         access = payload.accessArray;
-
-       if(access.includes('lwx50K7f') || access.includes('rllHaveq') || access.includes('IeMfti20') ){
-            Applicant.renderData(access);      
+       
       
+       if(access.includes('lwx50K7f') || access.includes('rllHaveq') || access.includes('IeMfti20') ){
+             
+          Applicant.renderData(access);    
         }else{
             this.window.location.href = path+'index.html'
         }

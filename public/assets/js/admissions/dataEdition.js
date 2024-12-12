@@ -1,5 +1,5 @@
 
-import { Modal, Form, Alert , File} from "../modules/behavior/support.mjs";
+import { Form , File} from "../modules/behavior/support.mjs";
 import { Applicant } from "../modules/request/Applicant.mjs";
 import { Login } from "../modules/request/login.mjs";
 

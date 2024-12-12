@@ -4,6 +4,16 @@ import { RegionalCenter } from "./RegionalCenter.mjs";
 class AdmissionProccess{
     static path = '../../../';
 
+
+    /**
+ * Envía una solicitud GET para obtener el estado del proceso de admisión actual.
+ * Si el proceso está activo, renderiza un selector de centros regionales y muestra un modal para la inscripción.
+ * Si no está activo, se muestra una alerta con un mensaje informativo.
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-11
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si ocurre un problema durante la solicitud o si la respuesta es inválida.
+ */
     static async getCurrentProccess() {
     
         try {
@@ -31,6 +41,16 @@ class AdmissionProccess{
         }
     }
 
+    /**
+ * Verifica el estado del proceso de admisión y actúa en consecuencia.
+ * Si el proceso está activo, renderiza un selector de centros regionales y muestra un modal para la inscripción.
+ * Si no está activo, muestra el modal de inscripción y una alerta con el mensaje correspondiente.
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-12
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si ocurre un problema durante la solicitud o si la respuesta es inválida.
+ */
+
     static async verifyAdmissionProcess() {
     
         try {
@@ -48,12 +68,7 @@ class AdmissionProccess{
                 RegionalCenter.renderSelectRegionalCenters('applicantStudyCenter');
                 Modal.showModal('Inscription-form');
            }else{
-                
-                const body = document.querySelector('#Inscription-form .modal-body');
-                const footer = document.querySelector('#Inscription-form .modal-footer');
 
-               // body.innerHTML = '';
-               // footer.innerHTML = ''; 
                 Modal.showModal('Inscription-form');
                 Alert.display(data.status,'Aviso', data.message);
            }
@@ -64,6 +79,16 @@ class AdmissionProccess{
         }
     }
 
+    /**
+ * Verifica el estado del proceso de inscripción para el proceso de admisión.
+ * Si el proceso de inscripción está activo, renderiza un selector de centros regionales y muestra un modal para la inscripción.
+ * Si no está activo, muestra un modal con información sobre la próxima fecha de inicio del proceso de admisión.
+ * Se incluye una imagen, mensaje y un enlace a la página de admisiones.
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-12
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si ocurre un problema durante la solicitud o si la respuesta es inválida.
+ */
 
     static async verifyInscriptionAdmissionProcess() {
     
@@ -223,6 +248,16 @@ class AdmissionProccess{
         }
     }
 
+
+    /**
+ * Verifica si el proceso de validación de documentos está activo para el proceso de admisión.
+ * Si el proceso está activo, redirige a la página de verificación de aplicaciones de admisión.
+ * Si no está activo, muestra un modal con información sobre la fecha en la que comienza el proceso de validación de documentos.
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-01
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si ocurre un problema durante la solicitud o si la respuesta es inválida.
+ */
     static async verifyDownloadApplicantAdmittedInformationAdmissionProcess() {
     
         try {

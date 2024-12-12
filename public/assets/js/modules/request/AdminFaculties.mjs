@@ -118,6 +118,16 @@ class Professor {
     }
   }
 
+  /**
+ * Envía una solicitud GET para obtener los profesores asociados a una facultad específica.
+ * Se utiliza el ID de la facultad para recuperar los datos correspondientes de los profesores.
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-04
+ * @param {int} idFaculty - Identificador de la facultad para la cual se desean obtener los profesores.
+ * @returns {Promise<Object[]>} Una promesa que resuelve con un array de los datos de los profesores de la facultad o un array vacío en caso de error.
+ * @throws {Error} Si ocurre un problema durante la solicitud o si la respuesta no es exitosa.
+ */
+
   static async getProfessorsByFaculty(idFaculty) {
     try {
       const response = await fetch(
@@ -136,6 +146,17 @@ class Professor {
       return [];
     }
   }
+
+/**
+ * Añade botones de acción para activar o desactivar a los profesores en una tabla.
+ * La función recorre las filas de la tabla, obtiene el estado de cada profesor y asigna un botón para cambiar su estado.
+ * Si el estado del profesor es "1" (activo), el botón mostrará "Desactivar"; si es "0" (inactivo), mostrará "Activar".
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-08
+ * @param {string} tableId - El ID de la tabla en la que se agregarán los botones de acción.
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si la tabla con el ID proporcionado no existe.
+ */
 
   static addOptions(tableId) {
     // Selecciona la tabla por su ID
@@ -177,6 +198,17 @@ class Professor {
       statusCell.appendChild(buttonUpdate);
     });
   }
+
+  /**
+ * Envía una solicitud PUT para cambiar el estado de un profesor (activar o desactivar).
+ * Al recibir una respuesta exitosa, el estado visual del botón también se actualiza (el botón cambiará entre "Activar" y "Desactivar").
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-04
+ * @param {int} idProfessor - El identificador del profesor cuyo estado se desea cambiar.
+ * @param {HTMLElement} buttonUpdate - El botón asociado al estado del profesor, que cambiará su apariencia según el nuevo estado.
+ * @returns {void} No devuelve ningún valor.
+ * @throws {Error} Si ocurre un problema durante la solicitud.
+ */
 
   static async changeStateProfessor(idProfessor, buttonUpdate) {
     const data = {

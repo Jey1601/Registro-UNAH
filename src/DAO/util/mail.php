@@ -33,43 +33,7 @@ public function __construct()
 }
 
 
-/*
-  Consulta para obtener usuarios.
-  Se concatenan los nombres del aplicante bajo el alias "full_name",
-  posteriormente, "IFNULL" verifica si el campo es NULL y, en ese caso, 
-  lo reemplaza con una cadena vacía (''). Esto evita que aparezca NULL en el resultado concatenado.
-  También obtenemos el email de los aspirantes, su contraseña para acceder al sistema y elegir una carrera,
-  la nota que obtuvieron en el examen de admisión y un ID de la resolución de su examen, de esta manera podrémos
-  almacenar la información referente al envio de correo a cada aspiante más adelante.
 
-function getUsersWithResults($connection) {
-    $sql = "
-          SELECT 
-            Applicants.id_applicant,
-            CONCAT(
-                Applicants.first_name_applicant, ' ',
-                IFNULL(Applicants.second_name_applicant, ''), ' ',
-                IFNULL(Applicants.third_name_applicant, ''), ' ',
-                Applicants.first_lastname_applicant, ' ',
-                IFNULL(Applicants.second_lastname_applicant, '')
-            ) AS full_name,
-            Applicants.email_applicant,
-            UsersApplicants.password_user_applicant,
-            `TypesAdmissionTests`.name_type_admission_tests,
-            `RatingApplicantsTest`.rating_applicant
-        FROM 
-            Applicants
-        LEFT JOIN 
-            Applications ON Applicants.id_applicant = Applications.id_applicant
-        LEFT JOIN 
-            UsersApplicants ON Applications.id_admission_application_number = UsersApplicants.password_user_applicant
-        LEFT JOIN
-            RatingApplicantsTest ON Applications.id_admission_application_number = RatingApplicantsTest.id_admission_application_number
-        LEFT JOIN `TypesAdmissionTests` ON `RatingApplicantsTest`.id_type_admission_tests = `TypesAdmissionTests`.id_type_admission_tests   
-        WHERE 
-            Applicants.status_applicant = 1 AND status_rating_applicant_test =1;";
-    return $connection->query($sql);
-}*/
 
 //Configuración de PHPMailer
 private function PHPMailerConfig() {
@@ -85,52 +49,7 @@ private function PHPMailerConfig() {
     return $mail;
 }
 
-//Enviar correos electrónicos
-/*public function sendEmails( $type, $maxEmailsPerDay) {
-    $mail = $this->PHPMailerConfig();
 
-    //Obtener los usuarios según el tipo de mensaje
-    $result = match ($type) {
-        'confirmation' => getApplicantsForConfirmation($this->connection),
-        'exam_results' => getApplicantsWithResults($this->connection),
-        'approved' => getApprovedApplicants($this->connection),
-        default => null
-    };
-
-    if (!$result || $result->num_rows === 0) {
-        echo "No se encontraron usuarios para enviar correos.<br>";
-        return;
-    }
-
-    $emailCount = 0;
-
-    while ($row = $result->fetch_assoc()) {
-        if ($emailCount >= $maxEmailsPerDay) break;
-
-        $placeholders = [
-            'full_name' => $row['full_name'] ?? '',
-            'password_user_applicant' => $row['password_user_applicant'] ?? ''
-        ];
-
-        $message = getTemplate($type, $placeholders);
-
-        try {
-            $mail->addAddress($row['email_applicant']);
-            $mail->isHTML(true);
-            $mail->Subject = 'Admisiones UNAH';
-            $mail->Body = $message;
-            $mail->send();
-            echo "Correo enviado a {$row['full_name']}<br>";
-            $emailCount++;
-        } catch (Exception $e) {
-            echo "Error al enviar correo a {$row['email_applicant']}: {$mail->ErrorInfo}<br>";
-        }
-
-        $mail->clearAddresses();
-    }
-
-    echo "Se enviaron $emailCount correos.<br>";
-}*/
 
 public function sendConfirmation($name,$id_application,$email,$password){
     $mail = $this->PHPMailerConfig();

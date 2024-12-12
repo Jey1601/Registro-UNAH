@@ -25,11 +25,6 @@ window.addEventListener('load', async function(){
     //Obtenemos la ifnromación del token
   const token = sessionStorage.getItem("token"); // Obtén el token del sessionStorage
 
-  if (!token){
-     // Si no hay token, no se ejecuta lo demás
-
-    this.window.location.href = "../../../../index.html";
-  }
    
   try {
     const payload = Login.getPayloadFromToken(token);

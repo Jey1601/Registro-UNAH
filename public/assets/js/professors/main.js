@@ -16,9 +16,7 @@ window.addEventListener("load", async function () {
   //Obtenemos la ifnromación del token
   const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 
-  if (!token)  // Si no hay token, no se ejecuta lo demás
-  
-  this.window.location.href ='../../../index.html'
+
  try {
    
    const payload = Login.getPayloadFromToken(token);
@@ -116,7 +114,7 @@ videoForm.addEventListener("submit", async function (event) {
   event.preventDefault();
   saveUrlButton.disabled = true;
   //El id del profesor se debe obtener dinamicamente del payload
-  const status = await Professor.setUrlVideoClassSection(1, urlVideo, section);
+  const status = await Professor.setUrlVideoClassSection(idProfessor, urlVideo, section);
   saveUrlButton.disabled = false;
 
   if (status == "success") {
