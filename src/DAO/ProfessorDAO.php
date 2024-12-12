@@ -175,13 +175,14 @@ class ProfessorsDAO {
      * @created 11/12/2024
      */
     public function setDateCancellationExceptionalProcess (int $idProfessor, string $startDateString, string $endDateString) {
-        if (!isset($idProfessor, $startDate, $endDate)) {
+        if (!isset($idProfessor, $startDateString, $endDateString)) {
             return $response = [
                 'status' => 'warning',
                 'message' => 'Parametros no definidos o nulos.'
             ];
         }
 
+        //VERIFICACION DE QUE EL DOCENTE SEA COORDINADOR ACADEMICO
         $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
         INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
         INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
@@ -202,25 +203,81 @@ class ProfessorsDAO {
             ];
         }
 
-        $queryGetIdAcademicCoordinator = "SELECT `AcademicCoordinator`.id_academic_coordinator FROM `AcademicCoordinator`
-        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
-        WHERE `Professors`.id_professor = ? AND `AcademicCoordinator`.status_academic_coordinator = TRUE;";
-        $resultGetIdAcademicCoordinator = $this->connection->execute_query($queryGetIdAcademicCoordinator, [$idProfessor]);
-        $idAcademicCoordinator = 0;
-        while ($row = $resultGetIdAcademicCoordinator->fetch_assoc()) {
-            $idAcademicCoordinator = $row['id_academic_coordinator'] ?? 0;
-            break;
-        }
+        //OBTENCION DEL ID DE LA PLANIFICACION DE LA PERIODICIDAD ACTUAL
+        $queryGetIdDatesPeriodicity = "CALL GET_DATES_ACADEMIC_PERIODICITY_BY_PROFESSOR(?);";
+        $resultGetIdDatesPeriodicity = $this->connection->execute_query($queryGetIdDatesPeriodicity, [$idProfessor]);
 
-        if($idAcademicCoordinator == 0) {
+        if (!$resultGetIdDatesPeriodicity) {
             return $response = [
-                'status' => 'warning',
-                'message' => 'El docente no esta registrado como coordinador academico.'
+                'status' => 'error',
+                'message' => 'No se pudo obtener la planificacion del periodo actual.'
             ];
         }
 
-        
+        $idDates = 0;
+        while ($row = $resultGetIdDatesPeriodicity->fetch_assoc()) {
+            $idDates = $row['id_dates_acad_period'];
+            break;
+        }
 
+        //VERIFICACION QUE LAS FECHAS INGRESADAS ESTEN DENTRO DEL RANGO PERMITIDO
+
+
+        //OBTENCION DE LA CARRERA DEL COORDINADOR
+        $queryGetIdUndergraduate = "SELECT id_undergraduate FROM `AcademicCoordinator` WHERE id_professor = ?;";
+        $resultGetIdUndergraduate = $this->connection->execute_query($queryGetIdUndergraduate, [$idProfessor]);
+
+        if (!$resultGetIdUndergraduate) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo identificar la carrera del coordinador academico.'
+            ];
+        }
+
+        $idUndergraduate = 0;
+        while ($row = $resultGetIdUndergraduate->fetch_assoc()) {
+            $idUndergraduate = $row ['id_undergraduate'] ?? 0;
+            break;
+        }
+
+        if ($idUndergraduate == 0) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudo identificar la carrera del coordinador academico.'
+            ];
+        }
+
+        $startDateStringToTime = strtotime($startDateString);
+        $endDateStringToTime = strtotime($endDateString);
+        $startDate = date('Y-m-d', $startDateStringToTime);
+        $endDate = date('Y-m-d', $endDateStringToTime);
+
+        if (
+            !(($startDateStringToTime !== false && $startDate === $startDateString)
+            && ($endDateStringToTime !== false && $endDate === $endDateString))
+        ) {
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudieron obtener las fechas correctamente.'
+            ];
+        }
+
+        $queryInsertDateCancellationExceptionalProcess = "INSERT INTO `CancellationExceptionalClassesProcess` (academic_periodicity, id_undergraduate, start_dateof_cancellation_exceptional_classes_process, end_dateof_cancellation_exceptional_classes_process, status_cancellation_exceptional_classes_process)
+        VALUES (?, ?, ?, ?, TRUE);";
+        $resultInsertDateCancellationExceptionalProcess = $this->connection->execute_query($queryInsertDateCancellationExceptionalProcess, [$idDates, $idUndergraduate, $startDate, $endDate]);
+
+        if (!$resultInsertDateCancellationExceptionalProcess) {
+            $this->connection->rollback();
+            return $response = [
+                'status' => 'error',
+                'message' => 'No se pudieron registrar las fechas del proceso de cancelacion.'
+            ];
+        }
+
+        return $response = [
+            'status' => 'success',
+            'message' => 'Se registraron las fechas del proceso de cancelacion exitosamente.'
+        ];
     }
 
     /**

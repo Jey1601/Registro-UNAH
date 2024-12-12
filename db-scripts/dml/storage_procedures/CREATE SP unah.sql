@@ -1429,5 +1429,19 @@ BEGIN
     VALUES (p_id_class_section, p_id_student);
 END$$
 
+-- @author PROCEDURE GET_DEPARTMENTHEAD_BY_USERNAMEPROFESSOR_IDDEPARTMENT: Angel Nolasco 20211021246 @created 11/12/2024
+CREATE PROCEDURE GET_DATES_ACADEMIC_PERIODICITY_BY_PROFESSOR (IN idProfessor INT)
+BEGIN
+    SELECT `DatesAcademicPeriodicityYear`.id_dates_academic_periodicity_year as id_dates_acad_period
+    FROM `DatesAcademicPeriodicityYear`
+    INNER JOIN `ProfessorsDepartmentsWorkingHours` 
+        ON `ProfessorsDepartmentsWorkingHours`.id_dates_academic_periodicity_year = `DatesAcademicPeriodicityYear`.id_dates_academic_periodicity_year
+    INNER JOIN `ProfessorsDepartments` 
+        ON `ProfessorsDepartmentsWorkingHours`.id_professor_department = `ProfessorsDepartments`.id_professor_department
+    INNER JOIN `Professors` 
+        ON `ProfessorsDepartments`.id_professor = `Professors`.id_professor
+    WHERE `Professors`.id_professor = idProfessor AND `DatesAcademicPeriodicityYear`.status_dates_academic_periodicity_year = TRUE;
+END$$
+
 
 DELIMITER ;
