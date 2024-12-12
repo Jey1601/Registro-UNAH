@@ -181,6 +181,7 @@ class DIIPAdminDAO {
             $rowsInsertUserStudent = 0;
             $rowsInsertRolUserStudent = 0;
             $rowsInsertAverage = 0;
+            $rowsStudentClassStatus = 0;
             $errors = [];
             $headers = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "direccion_aspirante_admitido", "celular_aspirante_admitido","correo_personal_aspirante_admitido", "carrera_aspirante_admitido", "centro_regional_aspirante_admitido"];
 
@@ -281,8 +282,57 @@ class DIIPAdminDAO {
 
                     //Enviar el correo con usuario y contraseña
 
+                    //INSERCION Y DEFINICION DE ESTADO ESTUDIANTE-CLASE_PREGRADO
+                    //Obtencion de los IDs de las clases que pertenecen a la carrera a la que pertenece el estudiante
+                    $querySelectIdsClasses = "SELECT id_class FROM `UndergraduateClass` WHERE id_undergraduate = ?;";
+                    $resultSelectIdClasses = $this->connection->execute_query($querySelectIdsClasses, [$idUndergraduate]);
+
+                    $idClasses = [];
+                    if ($resultSelectIdClasses) {
+                        while($row = $resultSelectIdClasses->fetch_assoc()) {
+                            $idClasses[] = $row['id_class'];
+                        }
+
+                        while ($this->connection->more_results() && $this->connection->next_result()) {
+                            $extraResult = $this->connection->store_result();
+                            if ($extraResult) {
+                                $extraResult->free();
+                            }
+                        }
+                        
+                        //Definicion StudentClassStatus
+                        $queryInsertStudentClassStatus = "INSERT INTO `StudentClassStatus` (id_student, id_class, class_status) VALUES (?, ?, TRUE);";
+                        foreach ($idClasses as $idClass) {
+                            if (!isset($idClass)) {
+                                $errors[] = "No se pudo obtener el codigo de una clase.";
+                                continue;
+                            }
+
+                            $resultInsertStudentClassStatus = $this->connection->execute_query($queryInsertStudentClassStatus, [$accountNumberStudent, $idClass]);
+                            
+                            if (!$resultInsertStudentClassStatus) {
+                                $this->connection->rollback();
+                                $errors[] =  "No se pudo definir el estado de la relacion estudiante-clase del estudiante con numero de identidad: " . $idCardStudent." en la clase con codigo: ".$idClass;
+                                continue;
+                            }
+
+                            $rowsStudentClassStatus++;
+
+                            while ($this->connection->more_results() && $this->connection->next_result()) {
+                                $extraResult = $this->connection->store_result();
+                                if ($extraResult) {
+                                    $extraResult->free();
+                                }
+                            }
+                        }
+
+                    } else {
+                        $errors = "No se pudieron identificar las clases que tiene que cursar el estudiante con numero de identidad: " . $idCardStudent;
+                    }
+
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-pregrado, con numero de identidad del estudiante: " . $idCardStudent;
+                    $errors[] = "No se pudo definir el estado de la relacion estudiante-clase con las clases del estudiante con numero de identidad: " . $idCardStudent;
                 }
 
                 while ($this->connection->more_results() && $this->connection->next_result()) {
@@ -320,7 +370,7 @@ class DIIPAdminDAO {
 
                 if($stmtInsertUserStudent->execute()) {
                     $rowsInsertUserStudent++;
-                   
+                    
                     $mail -> sendStudentsLogin($fullName, $accountNumberStudent, $randomPassword, $personalEmail);
                 } else {
                     $errors[] = "Fallo en la insercion estudiante-perfil, con numero de identidad del estudiante: " . $idCardStudent;
@@ -381,7 +431,8 @@ class DIIPAdminDAO {
                     'Total perfiles de estudiantes creados: '.$rowsInsertedStudentProfile,
                     'Total usuarios estudiantes creados: '.$rowsInsertUserStudent,
                     'Total filas usuario-rol registradas: '.$rowsInsertRolUserStudent,
-                    'Total de registros de promedios de estudiantes: '.$rowsInsertAverage++
+                    'Total de registros de promedios de estudiantes: '.$rowsInsertAverage++,
+                    'Total de actualizacion de estado estudiante-clase: '.$rowsStudentClassStatus++
                 ]
             ];
         } else {
