@@ -370,7 +370,7 @@ class ProfessorsDAO {
                     ];
                 }
 
-                $groupedSections['$codeRequest']['idSectionClass'][] = [
+                $groupedSections[$codeRequest]['idSectionClass'][] = [
                     'idSection' => $row['id_class_section'],
                     'nameClass' => $row['name_class']
                 ];
