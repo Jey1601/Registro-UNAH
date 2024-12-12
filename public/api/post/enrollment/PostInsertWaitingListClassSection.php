@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validar los parámetros recibidos
     if (
-        empty($student_id) || !is_string($student_id) || strlen($student_id) !== 13 ||
+        empty($student_id) || !is_string($student_id) ||
         empty($class_section_id) || !is_int($class_section_id)
     ) {
         echo json_encode([

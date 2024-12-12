@@ -36,7 +36,7 @@ Class WaitingListsClassSectionsDAO{
      */
     public function insertWaitingListClassSection(string $studentId, int $classSectionId){
         // Validar parámetros de entrada
-        if (empty($studentId) || strlen($studentId) !== 13 || $classSectionId <= 0) {
+        if (empty($studentId)  || $classSectionId <= 0) {
             throw new InvalidArgumentException('Los parámetros proporcionados no son válidos.');
         }
 

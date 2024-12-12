@@ -1,7 +1,7 @@
 <?php
 
 $path = '../../../../';
-include_once $path . "src/DAO/enrollment/EnrollmentClassSectionsDAO.php"; 
+include_once $path . "src/DAO/Enrollment/EnrollmentClassSectionsDAO.php"; 
 $dao = new EnrollmentClassSectionsDAO(); 
 
 /**

@@ -546,13 +546,18 @@ class Sidebar {
       sidebarBody.appendChild(liInicio);
 
       // Opción "Matrícula"
-      const aMatricula = document.createElement("a");
-      const liMatricula = document.createElement("li");
-      liMatricula.classList.add("slidebar-item");
-      aMatricula.href = path + "views/students/registration.html";
-      aMatricula.appendChild(document.createTextNode("Matrícula"));
-      liMatricula.appendChild(aMatricula);
-      sidebarBody.appendChild(liMatricula);
+      const a = document.createElement("a");
+      const li = document.createElement("li");
+      li.classList.add("slidebar-item");
+      a.href = "";
+      a.setAttribute('role', 'button');
+      a.classList.add('btn')
+      a.style.display = 'flex';
+      a.style.padding = '0';
+      a.id ='enrollmentBtn';
+      a.appendChild(document.createTextNode("Matrícula"));
+      li.appendChild(a);
+      sidebarBody.appendChild(li);
 
       // Opción "Calificaciones" con subopciones
       const liCalificaciones = document.createElement("li");

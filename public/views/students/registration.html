@@ -66,13 +66,6 @@
        </div>
        <div class="sidebar-body">
           <ul >
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Incio</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Planificación Academica</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Evaluación Docente</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Calificaciones</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Estudiantes</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Administración Docente</a></li>
-            <li class="slidebar-item"><a href=""><img src="" alt="" class="sidebar-icon">Docencia</a></li>
  
           </ul>
        </div>
@@ -82,10 +75,10 @@
     </section>
     <!--offcanvas main container end=================================================================================-->
     <!--Principal=================================================================================-->
-    <section style="display: flex; justify-content: center;" class="menu">
+    <section  style="display: flex; justify-content: center;" class="menu">
       
 
-      <section class="table-container" > 
+      <section id="contentSection" class="table-container" > 
         <div class="title-container">
           <div class="table-title">
               <h2>Matrícula</h2>
@@ -95,10 +88,8 @@
         <div style="display: flex; flex-direction: row !important; gap: 1%;" >
             <div style="width: 49%;">
                 <select id="departmentSelect" class="form-select" aria-label="Default select example">
-                    <option selected>Departamento</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                 
+                   
                   </select>
            </div>  
             <div  style="width: 49%;" >
@@ -110,7 +101,7 @@
           </div>
 
       
-          <form   action="">
+          <form id="sectionForm"  action="">
             <div style="height: 70vh; overflow: scroll;">
 
             
@@ -118,7 +109,7 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col"># Código</th>
+                        <th scope="col">Código</th>
                         <th scope="col">Clase</th>
                         <th scope="col">Sección</th>
                         <th scope="col">Días</th>
@@ -126,47 +117,17 @@
                         <th scope="col">HF</th>
                         <th scope="col">Aula</th>
                         <th scope="col">Docente</th>
+                        <th scope="col">Cupos</th>
                         <th scope="col">Opciones</th>
                       </tr>
                     </thead>
                     <tbody id="viewDataSectionsBody">
-                      <tr>
-                        <td>1</td>
-                        <td>1001</td>
-                        <td>Introducción a la inginiería en sistemas</td>
-                        <td>0700</td>
-                        <td>lu,ma,mi</td>
-                        <td>0700</td>
-                        <td>0800</td>
-                        <td>201</td>
-                        <td>Juan</td>     
-                        <td  ><div style="width: 100%;">
-                            <input type="radio" class="btn-check"  name="btnradio" id="btnradio1" autocomplete="off" checked />
-                            <label  style="width: 100%; " class="btn btn-outline-primary" for="btnradio1">Agregar</label>
-                            </div> 
-                        </td>    
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>1002</td>
-                        <td>Ingeniería de Software</td>
-                        <td>0800</td>
-                        <td>lu,ma,mi,ju</td>
-                        <td>0800</td>
-                        <td>0900</td>
-                        <td>201</td>
-                        <td>Julio</td>
-                        <td  ><div style="width: 100%;">
-                            <input type="radio" class="btn-check"  name="btnradio" id="btnradio2" autocomplete="off" />
-                            <label  style="width: 100%; " class="btn btn-outline-primary" for="btnradio2">Agregar</label>
-                            </div> 
-                        </td>
-                        </tr>
+                    
                     </tbody>
                   </table>
                 </div>
                   <div style="display: flex; justify-content: end;">
-                    <button id="inscriptionButton" type="submit" class="btn btn-primary oficial-blue" style="border: none; position: sticky; right: 0;">Matrícular</button>
+                    <button id="enrollmentButton" type="submit" class="btn btn-primary oficial-blue" style="border: none; position: sticky; right: 0;">Matrícular</button>
                   </div>
                 </form>  
       </section>
@@ -241,7 +202,23 @@
       </ul>
       <p class="footer-text">@año | Todos los derechos reservados</p>
     </footer>
-   
+    <!-- Modal de avisos -->
+<div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
     <script
       src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"

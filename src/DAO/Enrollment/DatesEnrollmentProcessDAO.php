@@ -35,7 +35,7 @@ Class DatesEnrollmentProcessDAO{
     public function getEnrollmentProcessByDate() {
         //$Date = new DateTime();
         //$actualDate = $Date->format('Y-m-d');
-        $actualDate = '2024-12-12';
+        $actualDate = '2024-12-14';
         try {
             $stmt = $this->connection->prepare("CALL GET_ENROLLMENT_PROCESS_BY_DATE(?)");
             if ($stmt === false) {

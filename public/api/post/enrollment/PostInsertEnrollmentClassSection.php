@@ -1,8 +1,8 @@
 <?php
 
 $path = '../../../../';
-include_once $path . "src/DAO/enrollment/EnrollmentClassSectionsDAO.php"; 
-$dao = new EnrollmentClassSectionsDAO(); 
+include_once $path . "src/DAO/Enrollment/EnrollmentClassSectionsDAO.php"; 
+$dao = new EnrollmentClassSectionsDAO();  
 
 /**
  * Endpoint que recibe una solicitud POST para registrar la inscripción de un estudiante en una sección de clase.

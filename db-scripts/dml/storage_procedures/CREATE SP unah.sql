@@ -858,6 +858,7 @@ BEGIN
     WHERE `Departments`.id_faculty = idFaculty;
 END$$
 
+
 -- @author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 08/12/2024
 CREATE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT(IN idStudent VARCHAR(13))
 BEGIN
@@ -875,7 +876,7 @@ BEGIN
     INNER JOIN `Classrooms` ON `ClassSections`.id_classroom_class_section = `Classrooms`.id_classroom
     INNER JOIN `Professors` ON `ClassSections`.id_professor_class_section = `Professors`.id_professor
     INNER JOIN `EnrollmentClassSections` ON `ClassSections`.id_class_section = `EnrollmentClassSections`.id_class_section
-    WHERE `EnrollmentClassSections`.id_student = idStudent AND `ClassSections`.status_class_section = 1;
+    WHERE `EnrollmentClassSections`.id_student = idStudent AND `ClassSections`.status_class_section = 1 AND `EnrollmentClassSections`.status_enrollment_class_sections=1;
 END$$
 
 -- @author STORAGE PROCEDURE SP_GET_ENROLLMENT_CLASS_SECTION_BY_STUDENT: Angel Nolasco 20211021246 @created 09/12/2024
@@ -1169,6 +1170,7 @@ BEGIN
     END IF;
 END$$
 
+
 -- @author PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT: Alejandro Moya 20211020462 @created 08/12/2024
 CREATE PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT (
     IN input_id_student VARCHAR(13),
@@ -1183,16 +1185,16 @@ BEGIN
     WHERE id_student = input_id_student;
 
     SELECT 
-	Classes.id_class as clasId,
+	classes.id_class as clasId,
     	ClassSections.id_class_section,
-        Classes.name_class AS class_name,
+        classes.name_class AS class_name,
         AcademicSchedules.start_timeof_classes AS start_time,
         AcademicSchedules.end_timeof_classes AS end_time,
         Classrooms.name_classroom AS classroom_name,
         CONCAT(Professors.first_name_professor, ' ', Professors.second_name_professor) AS professor_names
     FROM 
         ClassSections
-    JOIN Classes ON Classes.id_class = ClassSections.id_class
+    JOIN classes ON classes.id_class = ClassSections.id_class
     JOIN AcademicSchedules ON AcademicSchedules.id_academic_schedules = ClassSections.id_academic_schedules
     JOIN Classrooms ON Classrooms.id_classroom = ClassSections.id_classroom_class_section
     JOIN Professors ON Professors.id_professor = ClassSections.id_professor_class_section
@@ -1397,5 +1399,35 @@ BEGIN
       AND id_department = p_id_department
       AND status_department_head = TRUE;
 END $$
+
+
+
+-- @author PROCEDURE GET_CLASS_SECTION_DAYS: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE GET_CLASS_SECTION_DAYS(
+    IN input_id_class_section INT
+)
+BEGIN
+    SELECT 
+        id_class_sections_days, 
+        id_class_section, 
+        id_day, 
+        status_class_sections_days
+    FROM 
+        ClassSectionsDays
+    WHERE 
+        id_class_section = input_id_class_section
+        AND status_class_sections_days = TRUE;
+END $$
+
+-- @author PROCEDURE GET_ACTIVE_CLASS_SECTIONS_FOR_STUDENT: Alejandro Moya 20211020462 @created 08/12/2024
+CREATE PROCEDURE INSERT_WAITING_LIST_CLASS_SECTIONS(
+    IN p_id_class_section INT,
+    IN p_id_student VARCHAR(13)
+)
+BEGIN
+    INSERT INTO WaitingListsClassSections (id_class_section, id_student)
+    VALUES (p_id_class_section, p_id_student);
+END$$
+
 
 DELIMITER ;
