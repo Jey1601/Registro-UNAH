@@ -357,8 +357,8 @@ class ProfessorsDAO {
             while ($row = $resultGetDetails->fetch_array(MYSQLI_ASSOC)) {
                 $codeRequest = $row['id_request'];
 
-                if (!isset($groupedSections['$codeRequest'])) {
-                    $groupedSections['$codeRequest'] = [
+                if (!isset($groupedSections[$codeRequest])) {
+                    $groupedSections[$codeRequest] = [
                         'idStudent' => $row['id_student'],
                         'nameStudent' => $row['name_student'],
                         'lastnameStudent' => $row['lastname_student'],
