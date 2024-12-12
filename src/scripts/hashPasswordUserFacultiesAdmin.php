@@ -1,4 +1,10 @@
 <?php
+/**
+ * Script que cifra las contrasenas de los usuarios administradores de facultad.
+ * 
+ * @author @AngelNolasco
+ */
+
 $host = 'localhost';
 $user = 'root';
 $password = '12345';

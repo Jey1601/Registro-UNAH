@@ -8,6 +8,12 @@ async function submitCSVFile() {
     formUploadStudents.addEventListener('submit', async function (e) {
         e.preventDefault();
 
+
+        const submitButton = document.querySelector('button[type="submit"]');
+        submitButton.disabled = true; // Deshabilitar botón
+        submitButton.textContent = 'Procesando...'; // Cambiar texto del botón
+
+
         const file_input = document.getElementById('csvFile');
         const form_data = new FormData();
 
@@ -22,13 +28,16 @@ async function submitCSVFile() {
 
                 const result = await response.json();
                 formUploadStudents.reset();
-                Alert.display("warning", 'Aviso',result.message,'../../' );
+                Alert.display("warning", 'Aviso',result.message, path );
             } catch (error) {
                 console.log(error);
-                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", "../../");
+                Alert.display('warning','Lo sentimos',"No se pudo cargar el archivo", path);
+            }finally{
+                submitButton.disabled = false; // Habilitar botón
+                submitButton.textContent = 'Cargar Estudiantes'; // Restaurar texto
             }
         } else {
-            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.','../../');
+            Alert.display('warning','Vacio','Por favor, seleccionar un archivo CSV.',path);
         }
     })
 }
@@ -39,6 +48,6 @@ btn_upload.addEventListener('click', submitCSVFile);
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
-    Login.logout('../../index.html')
+    Login.logout()
 });
 

@@ -18,13 +18,13 @@ try {
     } else {
         echo json_encode([
             "status" => "error",
-            "message" => "El proceso de planificación no está disponible en este momento."
+            "message" => "Ocurrio un error en: getDataAcademicSchedulesAcademicPlanning()"
         ]);
     }
 } catch (Exception $e) {
     echo json_encode([
         "status" => "error",
-        "message" => "Ocurrió un error al verificar el proceso de planificación académica: " . $e->getMessage()
+        "message" => "Ocurrio un error en: getDataAcademicSchedulesAcademicPlanning(): " . $e->getMessage()
     ]);
 }
 

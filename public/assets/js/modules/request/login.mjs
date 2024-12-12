@@ -46,9 +46,9 @@ class Login {
           sessionStorage.setItem('token', result.token);
           sessionStorage.setItem('typeUser',result.typeUser);
           //const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
-          window.location.href = '../../../../public/views/admissions/results.html';
+          window.location.href = this.path+'/views/admissions/results.html';
         } else {
-          Alert.display("warning", "Error en la autenticacion", result.message,'../../');
+          Alert.display("warning", "Error en la autenticacion", result.message,this.path);
         }
       });
     } catch (error) {
@@ -95,24 +95,25 @@ class Login {
                           break;  
                         
                         case 'lwx50K7f':
-                          //Visualiza, busca y edita la información de los aspirantes.
+                          //Visualiza y verifica la información de los aspirantes
                           AdmissionProccess.verifyDocumentValidationAdmissionProcess();
                           
                           break; 
 
                         case 'IeMfti20':
-                          //Descarga la información de las aplicaciones el proceso admisión
-                          window.location.href = this.path+'views/administration/verify-data-applications.html';
-                          
+                          //Busca y edia
+                          window.location.href = this.path+'views/administration/admissions/verify-data-applications.html';
+                         
                           break; 
 
                         case 'rllHaveq':
-                          //Descarga la información de los aspirantes adminitos en el proceso admisión
+                          //Descarga la información de las aplicaciones el proceso admisión
                           AdmissionProccess.verifyDocumentValidationAdmissionProcess(); 
                         
                           break;
                         
                         case 'pFw9dYOw':
+                          //Descarga la información de los aspirantes adminitos en el proceso admisión
                           AdmissionProccess.verifyDownloadApplicantAdmittedInformationAdmissionProcess()  
                         
                           break; 
@@ -120,7 +121,7 @@ class Login {
                   });
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
-                window.location.href = '../../../../index.html';
+                window.location.href = this.path+'index.html';
               }
           } else {
             Alert.display("warning", "Error en la autenticacion", result.message);
@@ -156,23 +157,13 @@ class Login {
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
                     access = payload_decoded.accessArray;
-
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case 'V3yWAxgH':
-                          window.location.href = '../../../../views/administration/faculties/professors.html';
-                        
-                          break;  
-                        
-                        default:
-                          window.location.href = '../../../../index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
+                    if (access.includes('V3yWAxgH')) {
+                      window.location.href = this.path+'views/administration/faculties/professors.html';
+                    } else {
+                      window.location.href = '../../../../index.html';
+                      Alert.display("warning", "Usuario no tiene accesos.", result.message, this.path);
+                    }
               } else {
-                console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
                 window.location.href = '../../../../index.html';
               }
           } else {
@@ -210,33 +201,16 @@ class Login {
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
                     access = payload_decoded.accessArray;
 
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case '2izGK2WC':
-                          window.location.href = '../../../../views/professors/index.html';
-                        
-                          break;
-                        
-                        case 'zKQFIY69':
-                          window.location.href = '../../../../views/administration/departments/academic-planning.html';
-                        
-                          break;
+                    if (access.includes('2izGK2WC')) {
+                      window.location.href = this.path + 'views/professors/index.html';
+                    } else {
+                      window.location.href = this.path + 'index.html';
+                      Alert.display("warning", "Usuario no tiene accesos.", result.message, this.path);
+                    }
 
-                        case 'p62NcCiC':
-                          window.location.href = '../../../../views/administration/departments/dashboard.html';
-                        
-                          break;
-                        
-                        default:
-                          window.location.href = '../../../../index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
-                window.location.href = '../../../../index.html';
+                window.location.href = this.path+'index.html';
               }
           } else {
             Alert.display("warning", "Error en la autenticacion", result.message);
@@ -265,31 +239,24 @@ class Login {
                 sessionStorage.setItem('token', result.token);
                 sessionStorage.setItem('typeUser',result.typeUser);
 
-                //Redirección de admisiones
+            
                 const token_saved = result.token;
                 const payload_decoded = JWT.decodeToken(token_saved);
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
+                 
                     access = payload_decoded.accessArray;
-
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case 'iAV7sDXj':
-                          window.location.href = '../../../../views/students/index.html';
-                        
-                          break;  
-                        
-                        default:
-                          window.location.href = '../../../../index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
+                 
+                    if (access.includes('iAV7sDXj')) {
+                      window.location.href = this.path + 'views/students/index.html';
+                    } else {
+                      window.location.href = this.path + 'index.html';
+                      Alert.display("warning", "Usuario no tiene accesos.", result.message);
+                    }
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
-                window.location.href = '../../../../index.html';
+                window.location.href = this.path+'index.html';
               }
           } else {
             Alert.display("warning", "Error en la autenticacion", result.message);
@@ -324,25 +291,24 @@ class Login {
                 let access = [];
 
                 if (!(JWT.payloadIsEmpty(payload_decoded))) {
-                    access = payload_decoded.accessArray;
+                  console.log(payload_decoded);
+                  access = payload_decoded.accessArray;
 
-                  access.forEach(element => {
-                      switch (element) {
-                        //Carga de las notas de los exámenes de admisión de los solicitantes.
-                        case 'bG8uB0wH':
-                          window.location.href = '../../../../views/administration/DIPP/upload-students.html';
-                        
-                          break;  
-                        
-                        default:
-                          window.location.href = '../../../../index.html';
-                          Alert.display("warning", "Usuario no tiene accesos.", result.message);
-                          break;
-                      }
-                  });
+                  if(access.includes('bG8uB0wH')){
+                    window.location.href = this.path+'views/administration/DIPP/upload-students.html';
+                  }else{
+                    Alert.display("warning", "Usuario no tiene accesos.", result.message);
+                   
+                    setTimeout(()=>{
+                      window.location.href = this.path+'index.html';
+                    }, 6000)
+                   
+                    
+                  }
+                
               } else {
                 console.log("El usuario no tiene permisos: ", payload_decoded.accessArray);
-                window.location.href = '../../../../index.html';
+                window.location.href = this.path+'index.html';
               }
           } else {
             Alert.display("warning", "Error en la autenticacion", result.message);
@@ -371,9 +337,9 @@ class Login {
     return JSON.parse(payload); // Convierte el JSON a un objeto
   }
 
-  static logout(url){
+  static logout(url='index.html'){
     sessionStorage.setItem('token','');
-    window.location.href = url;
+    window.location.href = this.path+url;
   }
 
   static  updateUserType(value) {

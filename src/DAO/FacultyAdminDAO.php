@@ -40,6 +40,9 @@ class FacultyAdminDAO {
      * @param string $password Contrasena de usuario administrador de facultad.
      * 
      * @return array $response Arreglo asociativo que indica si la autenticacion fallo o no junto con un mensaje de retroalimentacion y el valor del token (nulo en caso de fallo de autenticacion).
+     * 
+     * @author @AngelNolasco
+     * @created 02/12/2024
      */
     public function authFacultyAdmin(string $username, string $password) {
         if (isset($username) && isset($password)) {
@@ -80,9 +83,9 @@ class FacultyAdminDAO {
                         }
                     }
 
-                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de admisiones
+                    //Creacion del payload con el username y el arreglo de accesos del usuario administrador de facultad
                     $payload = [
-                        'userAdmissionAdmin' => $username,
+                        'username' => $username,
                         'accessArray' => $accessArray,
                         'facultyID' => $facultyID
                     ];
@@ -129,7 +132,7 @@ class FacultyAdminDAO {
                         'success' => true,
                         'message' => 'Validacion de credenciales exitosa.',
                         'token' => $newToken,
-                        'typeUser' => 'facultyAdmin'
+                        'typeUser' => 8
                     ];
 
                 } else { //La contrasena no coincide
@@ -177,6 +180,9 @@ class FacultyAdminDAO {
      *      FALLO EN LA INSERCION DEL USUARIO DEL PROFESOR: 'success'=>false
      *      FALLO EN LA INSERCION DE LA RELACION DEL PROFESOR CON UN DEPARTAMENTO: 'success'=>false
      *      SIN FALLOS PRODUCIDOS: 'success'=>true (Se retornan el nombre de usuario y la contrasena del usuario del profesor)
+     * 
+     * @author @AngelNolasco @JeysonEspinal
+     * @created 02/12/2024
      */
     public function createProfessor (
         string $firstName, string $secondName, string $thirdName, string $firstLastname, string $secondLastname, string $email,
@@ -294,7 +300,8 @@ class FacultyAdminDAO {
     }
     
     /**
-     * Metodo auxiliar para la insercion de un usuario docente. Usado en el metodo createProfessor.
+     * Metodo auxiliar para la insercion de un usuario docente.
+     * @see createProfessor
      * 
      * @param int $idProfessor ID del profesor a quien pertenece el usuario.
      * @param string $password Contrasena del usuario.
@@ -302,6 +309,9 @@ class FacultyAdminDAO {
      * @return array Arreglo asociativo con el resultado de la insercion (success) y mensaje de retroalimentacion (message).
      *      FALLO EN LA INSERCION DEL USUARIO: 'success'=>false
      *      SIN FALLOS EN LA INSERCION: 'success'=>true (Se retorna el username del usuario)
+     * 
+     * @author @AngelNolasco
+     * @created 01/12/2024
      */
     public function insertUserProfessor(int $idProfessor, string $password) {
         $hashPassword = Encryption::hashPassword($password);
@@ -340,145 +350,164 @@ class FacultyAdminDAO {
     }
 
     /**
-     * Metodo para crear la relacion entre un profesor y sus distintos roles.
+     * Metodo para actualizar la foto, el las obligaciones y el centro regional de un docente.
      * 
-     * @param array $roles Arreglo con los roles del docente.
-     * @param int $idUserProfessor ID del usuario del docente.
+     * @param int $idProfessor El numero de cuenta del docente.
+     * @param string|null $pictureProfessor La foto del docente en formato BLOB
+     * @param int|null $idProfessorObligation El ID que hace referencias a las obligaciones definidas a nivel institucional.
+     * @param int|null $idRegionalCenter El ID del centro regional al que esta vinculado el docente.
      * 
-     * @return array $response Arreglo asociativo con el resultado de la insercion de la relacion rol-usuario_docente (success) y mensaje de retroalimentacion (message).
-     *      FALLO EN LA BUSQUEDA DE ROLES: 'success'=>false
-     *      FALLO EN LA INSERCION DE LA RELACION ROL-USUARIO_DOCENTE: 'success'=>false
-     *      NO SE PRESENTAN FALLOS: 'success'=>true
+     * @author @AngelNolasco
+     * @created 09/12/2024
      */
-    public function rolesUserProfessor (array $roles, int $idUserProfessor) {
-        $querySelectIdRole = "SELECT id_role FROM Roles WHERE role = ?";
-        $stmtSelectIdRole = $this->connection->prepare($querySelectIdRole);
-        $stmtSelectIdRole->bind_param('s', $roleUserProfessor); //RECORRER ARREGLO DE ROLES (METODO POR REFINAR)
-        $stmtSelectIdRole->execute();
-        $resultSelectIdRole = $stmtSelectIdRole->get_result();
-
-        if(!($resultSelectIdRole->num_rows > 0)) {
-            $this->connection->rollback();
-            $stmtSelectIdRole->close();
-
+    public function updateProfessor (int $idProfessor, string|null $pictureProfessor=null, int|null $idProfessorObligation=null, int|null $idRegionalCenter=null) {
+        if (!(isset($idProfessor))) {
             return $response = [
-                'success' => false,
-                'message' => 'Rol no encontrado'
-            ];
-        }
-        
-        $rowSelectIdRole = $resultSelectIdRole->fetch_array(MYSQLI_ASSOC);
-        $idUserRole = $rowSelectIdRole['id_role'];
-        
-        $queryInsertRoleUserProfessor = "INSERT INTO `RolesUsersProfessor` (id_role_professor, id_user_professor, status_role_professor) VALUES (?, ?, TRUE);";
-        $stmtInsertRoleUserProfessor = $this->connection->prepare($queryInsertRoleUserProfessor);
-        
-        if(!($stmtInsertRoleUserProfessor->execute())) {
-            $this->connection->rollback();
-            $stmtInsertRoleUserProfessor->close();
-
-            return $response = [
-                'success' => false,
-                'message' => 'Fallo en insercion de Rol-Usuario.'
+                'status' => 'warning',
+                'message' => 'Numero empleado docente no definido o nulo.'
             ];
         }
 
-        //Liberacion del resultado de la consulta
-        $stmtInsertRoleUserProfessor->close();
-        while ($this->connection->more_results() && $this->connection->next_result()) {
-            $extraResult = $this->connection->store_result();
-            if ($extraResult) {
-                $extraResult->free();
-            }
-        }
+        $querySelectProfessor = "SELECT * FROM Professors WHERE id_professor = ?;";
+        $stmtSelectProfessor = $this->connection->prepare($querySelectProfessor);
+        $stmtSelectProfessor->bind_param('i', $idProfessor);
+        $resultSelectProfessor = $stmtSelectProfessor->get_result();
 
-        return $response = [
-            'success' => true,
-            'message' => 'Insercion de Rol-Usuario exitosa.'
-        ];
+        if($resultSelectProfessor->num_rows > 0) {
+            if(isset($pictureProfessor) && isset($idProfessorObligation) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, id_regional_center = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idProfessorObligation, $idRegionalCenter];
+            } elseif (isset($pictureProfessor) && isset($idProfessorObligation)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idProfessorObligation];
+            } elseif (isset($pictureProfessor) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_regional_center = ?, picture_professor = ? WHERE id_professor = ?;";
+                $params = [$pictureProfessor, $idRegionalCenter];
+            } elseif (isset($idProfessorObligation) && isset($idRegionalCenter)) {
+                $queryUpdateProfessor = "UPDATE `Professors` SET id_professors_obligations = ?, id_regional_center = ? WHERE id_professor = ?;";
+                $params = [$idProfessorObligation, $idRegionalCenter];
+            } else {
+                return $response = [
+                    'status' => 'error',
+                    'message' => 'Parametros nulos o no definidos. No hubo actualizacion.'
+                ];
+            }
+
+            $resultUpdateProfessor = $this->connection->execute_query($queryUpdateProfessor, $params);
+            if ($resultUpdateProfessor) {
+                return $response = [
+                    'status' => 'success',
+                    'message' => 'Actualizacion realizada satisfactoriamente.'
+                ];
+            } else {
+                return $response = [
+                    'status' => 'error',
+                    'message' => 'Error en la ejecucion de la consulta.'
+                ];
+            }
+        } else {
+            return $response = [
+                'status' => 'info',
+                'message' => 'Docente no encontrado.'
+            ];
+        }
     }
 
     /**
-     * Metodo auxiliar par obtener el ID de un centro regional por su nombre. Usado en metodo createProfessor.
+     * Metodo para actualizar el estado de un docente.
      * 
-     * @param string $nameRegionalCenter Nombre del centro regional.
-     * @return bool|int False en caso de fallo en la busqueda, el ID del centro regional en caso de exito.
+     * @param int $idProfessor El numero de cuenta del docente.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (success), un mensaje de retroalimentacion (message) y, en caso de exito, el nuevo status del docente (newStatus).
+     * 
+     * @author @AngelNolasco
+     * @created 08/12/2024
      */
-    public function getIdRegionalCenterByName (string $nameRegionalCenter) {
-        $querySearchRegionalCenter = "SELECT id_regional_center FROM `RegionalCenters` WHERE name_regional_center = ?";
-        $stmtSearchRegionalCenter = $this->connection->prepare($querySearchRegionalCenter);
-        $stmtSearchRegionalCenter->bind_param('s', $nameRegionalCenter);
-        $stmtSearchRegionalCenter->execute();
-        $resultSearchRegionalCenter = $stmtSearchRegionalCenter->get_result();
-
-        if(!($resultSearchRegionalCenter->num_rows > 0)) { //Centro regional no encontrado
-            return false;
+    public function changeStatusProfessor (int $idProfessor) {
+        $querySelectProfessor = "SELECT status_professor FROM `Professors` WHERE id_professor = ?;";
+        $resultSelectProfessor = $this->connection->execute_query($querySelectProfessor, [$idProfessor]);
+        if (!($resultSelectProfessor)) {
+            return $response = [
+                'success' => false,
+                'message' => 'Docente no encontrado.'
+            ];
+        }
+        while ($row = $resultSelectProfessor->fetch_assoc()) {
+            $currentStatus = $row['status_professor'];
         }
 
-        $rowSearchRegionalCenter = $resultSearchRegionalCenter->fetch_array(MYSQLI_ASSOC);
-        $idRegionalCenter = $rowSearchRegionalCenter['id_regional_center'];
-
-        //Liberacion del resultado de la consulta
-        $resultSearchRegionalCenter->free();
-        $stmtSearchRegionalCenter->close();
-        while ($this->connection->more_results() && $this->connection->next_result()) {
-            $extraResult = $this->connection->store_result();
-            if ($extraResult) {
-                $extraResult->free();
+        if ($currentStatus == 1) { //El status actual es TRUE
+            $queryUpdateStatus = "UPDATE `Professors` SET status_professor = 0 WHERE id_professor = ?;";
+            if ($resultUpdateStatus = $this->connection->execute_query($queryUpdateStatus, [$idProfessor])) {
+                return $response = [
+                    'success' => true,
+                    'message' => 'Actualizacion de estado realizada correctamente.',
+                    'newStatus' => false
+                ];
+            } else {
+                return $response = [
+                    'success' => false,
+                    'mesage' => 'No se pudo actualizar el estado.'
+                ];
+            }
+        } else { //El status actual es FALSE
+            $queryUpdateStatus = "UPDATE `Professors` SET status_professor = 1 WHERE id_professor = ?;";
+            if ($resultUpdateStatus = $this->connection->execute_query($queryUpdateStatus, [$idProfessor])) {
+                return $response = [
+                    'success' => true,
+                    'message' => 'Actualizacion de estado realizada correctamente.',
+                    'newStatus' => true
+                ];
+            } else {
+                return $response = [
+                    'success' => false,
+                    'mesage' => 'No se pudo actualizar el estado.'
+                ];
             }
         }
-
-        return $idRegionalCenter;
     }
 
     /**
-     * Metodo auxiliar para obtener el ID de un departamento por su nombre. Usado en metodo createProfessor.
-     * 
-     * @param string $departmentName Nombre del departamento.
-     * 
-     * @return array Arreglo asociativo con el resultado de la consulta (success) y el ID del departamento (nulo en caso de fallo).
+     * @author @AngelNolasco
+     * @created 08/12/2024
      */
-    public function getIdDeparmentByName (string $departmentName) {
-        $querySelectDepartment = "SELECT id_department FROM Departments WHERE name_departmet = ?";
-        $stmtSelectDepartment = $this->connection->prepare($querySelectDepartment);
-        $stmtSelectDepartment->bind_param('s', $departmentName);
-        $resultSelectDepartment = $stmtSelectDepartment->get_result();
+    public function getProfessorsByFaculty (int $idFaculty) {
+        if (!(isset($idFaculty))) {
+            return $response = [
+                'success' => false,
+                'message' => 'Codigo de facultad no definido o nulo.'
+            ];
+        }
 
-        if ($resultSelectDepartment->num_rows > 0) {
-            $rowSelectDeparment = $resultSelectDepartment->fetch_assoc();
-            $idDepartment = $rowSelectDeparment['id_department'];
+        $querySelectProfessorsByFaculty = "CALL SP_GET_PROFESSORS_BY_FACULTY(?)";
+        $resultSelectProfessorByFaculty = $this->connection->execute_query($querySelectProfessorsByFaculty, [$idFaculty]);
 
-            //Liberacion del resultado de la consulta
-            $resultSelectDepartment->free();
-            $stmtSelectDepartment->close();
-            while ($this->connection->more_results() && $this->connection->next_result()) {
-                $extraResult = $this->connection->store_result();
-                if ($extraResult) {
-                    $extraResult->free();
-                }
-            }
+        if (!($resultSelectProfessorByFaculty)) {
+            return $response = [
+                'success' => false,
+                'message' => 'Error en la ejecucion de la consulta.'
+            ];
+        }
 
-            return [
+        $professors = [];
+        while ($row = $resultSelectProfessorByFaculty->fetch_assoc()) {
+            $professors [] = $row;
+        }
+
+        if (empty($professors)) {
+            return $response = [
                 'success' => true,
-                'idDepartment' => $idDepartment
+                'message' => 'No se encontraron docentes asignados a la facultad.'
             ];
-        } else { //Departamento no encontrado
-            //Liberacion del resultado de la consulta
-            $stmtSelectDepartment->close();
-            while ($this->connection->more_results() && $this->connection->next_result()) {
-                $extraResult = $this->connection->store_result();
-                if ($extraResult) {
-                    $extraResult->free();
-                }
-            }
-
-            return [
-                'success' => false,
-                'idDeparment' => null
+        } else {
+            return $response = [
+                'success' => true,
+                'message' => 'Ejecucion de consulta exitosa. Campos: id_professor, names_professor, lastnames_professors, email_professor, name_regional_center, name_departmet, status_professor.',
+                'professors' => $professors
             ];
         }
-
     }
+
 
 }
 ?>

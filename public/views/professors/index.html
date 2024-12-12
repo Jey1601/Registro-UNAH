@@ -12,7 +12,7 @@
     <meta name="date" content="2024/12/04" />
     <meta
       name="description"
-      content="Página principal del administrador de facultades"
+      content="Página principal de docentes"
     />
 
     <link
@@ -36,7 +36,7 @@
     href="../../../assets/css/support.css"
   />
     <title>Docencia</title>
-    <!-- <script src="../../../assets/js/tokenValidation.js"></script>-->
+    <script src="../../../assets/js/tokenValidation.js"></script>
   </head>
 
   <body class="background-white animation">
@@ -56,7 +56,7 @@
       </div>
     </nav>
     <!--Logout=================================================================================-->
-
+    <div id="notifications"></div>
     <!--offcanvas main container start=================================================================================-->
     <section class="sidebar hidden">
        <div class="sidebar-header" style="display: flex; justify-content: end; align-items: center;">
@@ -83,7 +83,38 @@
     <!--offcanvas main container end=================================================================================-->
     <!--Menu=================================================================================-->
     <section style="display: flex; justify-content: center;" class="menu">
-     <img style="width: 30%;" src="../../assets/img/background/construction.png" alt="">
+      <section class="table-container" > 
+        
+        <div class="title-container">
+          <div class="table-title">
+              <h2>Clases asignadas</h2>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 10px; display: flex; justify-content: left; gap:10px;">
+          <input id="searchSection" type="text" placeholder="Buscar" style="border-radius: 5px; border: solid 1px rgba(0, 0, 0, 0.4); height: 30px; ">
+        </div>
+        
+                <table id="viewSections" class="table table-striped table-hover" >
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Clase</th>
+                        <th scope="col">Sección</th>
+                        <th scope="col">Días</th>
+                        <th scope="col">HI</th>
+                        <th scope="col">HF</th>
+                        <th scope="col">Aula</th>
+                        <th scope="col">Opciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="viewDataSectionsBody">
+                    
+                    </tbody>
+                  </table>
+      </section>
+
     </section>
 
 
@@ -156,23 +187,50 @@
       <p class="footer-text">@año | Todos los derechos reservados</p>
     </footer>
 
-    <!-- Modal de avisos -->
-<div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl ">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="warningModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
+        <!-- Modal de avisos -->
+    <div class="modal fade" id="warningModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl ">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+
+        <!-- Modal para agregar video -->
+        <div class="modal fade" id="videoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog  ">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Agregar video de presentación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="videoForm">
+                    <div class="mb-3">
+                      <input type="hidden" name="" id="sectionField">
+                      <label for="" class="form-label">URL video</label>
+                      <input type="text" class="form-control" id="urlVideo" name="urlYoutube" >
+                      <div  class="form-text">Utiliza un link de la plafaforma Youtube, verifica que el video se encuentre público</div>
+                    </div>
+                    <button id="saveUrlButton" type="submit" class="btn btn-primary">Guardar</button>
+                  </form>
+              </div>
+              <div class="modal-footer">
+              </div>
+            </div>
+          </div>
+        </div>
    
+
+        
     <script
       src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"

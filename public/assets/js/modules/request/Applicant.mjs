@@ -2,7 +2,7 @@ import { Cell, Modal, Alert, Search, Entry, File } from "../behavior/support.mjs
 import { Inscription } from "./Inscription.mjs";
 import { Login } from "./login.mjs";
 class Applicant {
-  static path = '../../../';
+  static path = '../../../../';
 
   static modalInstance = null;
 
@@ -12,10 +12,8 @@ class Applicant {
 
        applications = await this.viewData();
     }else{
-      console.log('vamos por aquí');
- 
+
        applications = await this.viewPendingCheckData();
-       console.log(applications);
     }
    
 
@@ -106,13 +104,13 @@ class Applicant {
       });
 
       
-      if(!accessess.includes('rllHaveq')){
+      if(!accessess.includes('rllHaveq') || applications.length==0){
         downloadInscriptionsCsv.style.display = 'none';
       }
 
       accessess.forEach(access =>{
         
-        console.log(access);
+   
 
               //Agregamos el evento a los botones para poder ver el certificado
             const viewCertificateButtons =
@@ -136,14 +134,15 @@ class Applicant {
     
 
     } else {
-      Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas','../../');
+      document.getElementById('downloadInscriptionsCsv').style.display = 'none';
+      Alert.display('info','Todo en orden','No se encontraron solicitudes de aplicación activas',this.path);
     }
   }
 
   //Carga la imagen del certificado del aplicante en la modal y luego la despliega
    static showDataApplication(applications, idApplicant, access) {
    const application = applications.find(applicant => applicant.id_applicant === idApplicant);
-    console.log(applications);
+   
     //Apartado de verificación para roles de revisión, no edición.
     const verifyDataCheckList = document.getElementById('verifyDataCheckList');
    
@@ -206,6 +205,7 @@ class Applicant {
       //Tiene acceso a ver y descargar más no editar
       case 'rllHaveq':
         verifyDataCheckList.style.display = 'none';
+        document.getElementById('checkButton').style.display = 'none';
 
 
       break;
@@ -331,7 +331,7 @@ class Applicant {
         for (var i = 0; i < elements.length; i++) {
             elements[i].disabled = true;
         }
-        Alert.display(result.status, 'Aviso', result.message, '../../');
+        Alert.display(result.status, 'Aviso', result.message, this.path);
         setTimeout(function() {
           window.location.href = './login.html';
       }, 8000);
@@ -380,7 +380,17 @@ class Applicant {
   static async renderResults(id_applicant) {
     const results = await this.getResults(id_applicant);
     //Ahora obtengo el proceso y diferencio
-    console.log(results);
+
+    //Significa que aun no hay resultados
+    if(results == null){
+      document.getElementById('submitBtn').disabled=true;
+      Alert.display('warning','Sin acciones','Aún no tiene resultados que aceptar', this.path);
+     
+      setTimeout(() => {
+        window.location.href = this.path + 'views/admissions/login.html';
+      }, 6000); 
+      return;
+    }
     if(results.view === 'results'){
      
       if (!(Object.keys(results.resolutions).length === 0)) {
@@ -475,7 +485,7 @@ class Applicant {
       } else {
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.remove();
-        Alert.display("No se encontraron resultados", "warning");
+        Alert.display('warning','Al parecer',"No se encontraron resultados", this.path);
       }
 
 
@@ -504,7 +514,7 @@ class Applicant {
         const result = await response.json(); // Convertir respuesta a JSON
 
         
-        console.log("Resultado obtenido del servidor:", result);
+     
 
         if (!result || typeof result !== "object") {
             throw new Error("Respuesta no válida del servidor");
@@ -525,10 +535,11 @@ static async getData() {
 
 
   // Obtener los valores de los campos del formulario
-  const applicant_name = formData.get("applicantName");
-  const applicant_last_name = formData.get("applicantLastName");
+  const applicant_name = formData.get("applicantName").toUpperCase();
+  const applicant_last_name = formData.get("applicantLastName").toUpperCase();
 
-
+  const address = formData.get('applicantDirection').toUpperCase();
+  formData.set('applicantDirection',address);
 
   // Obtenemos los input de tipo file
   const certificateImage = document.getElementById("applicantCertificate");
@@ -555,7 +566,7 @@ static async getData() {
               
         if(!isCertificateValid){
           document.getElementById('applicantCertificate').value='';
-          Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de certificado");
+          Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de certificado", this.path);
         }
         formData.append('typeCertificate','file');
     }else{
@@ -575,7 +586,7 @@ static async getData() {
 
       if(!isIdValid){
         document.getElementById('applicantIdDocument').value='';
-        Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de identificación");
+        Alert.display('error','Algo anda mal',"Revise el tamaño o resolución de su archivo de identificación",this.path);
       }
       formData.append('typeId','file');
     }else{
@@ -598,9 +609,7 @@ static async getData() {
   formData.append("applicantFirstLastName", first_lastname);
   formData.append("applicantSecondLastName", second_lastname); // Si no hay segundo apellido, pasará null
 
-  /*for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`); // Imprime cada clave y valor en la consola 
-    } */
+
 
       if(idImage.type === 'file' && certificateImage.type === 'file'){
         const isCertificateValid = await File.validateFile(certificateFile);
@@ -608,7 +617,7 @@ static async getData() {
         
           if (isCertificateValid && isIdValid) {
             
-            Alert.display('warning','Espere','Estamos cargando su información');
+            Alert.display('warning','Espere','Estamos cargando su información',this.path);
            
           
         }
@@ -638,7 +647,7 @@ static async updateData(formData, form) {
     const result = await response.json(); 
    
     if (result.id_application == null ){
-      Alert.display(result.status,'Aviso', result.message, '../../');
+      Alert.display(result.status,'Aviso', result.message, this.path);
 
       form.reset();
       
@@ -652,7 +661,7 @@ static async updateData(formData, form) {
    
   } catch (error) {
     console.log(error);
-    Alert.display('error','Lamentamos decirte esto', 'Hubo un error al cargar la información', '../../');
+    Alert.display('error','Lamentamos decirte esto', 'Hubo un error al cargar la información', this.path);
   }
 }
 
@@ -671,27 +680,20 @@ static  async getChecks() {
   // Obtener los valores de los campos adicionales
   const checkJustification =document.getElementById('checkJustification');
   const justification = checkJustification.value;
-  //const idAdmissionApplicationNumber = document.getElementById('id_admission_application_number').value;
+
   const idCheckApplicantApplications = document.getElementById('id_check_applicant_applications').value;
 
-  // Mostrar los valores para depuración (puedes quitarlo en producción)
-  console.log('Checkboxes Activos:', checkboxesActivos);
-  console.log('Justificación:', justification);
- // console.log('ID de Solicitud:', idAdmissionApplicationNumber);
-  console.log('ID de Check Applicant Applications:', idCheckApplicantApplications);
+
+
+
+
   let verificationStatus = 1;
   if(checkboxesActivos.length>0){
     verificationStatus = 0;
   }
 
   const revisionStatus = 1;
-    // Mostrar los valores para depuración (puedes quitarlo en producción)
-    console.log('Checkboxes Activos:', checkboxesActivos);
-    console.log('Justificación:', justification);
-   // console.log('ID de Solicitud:', idAdmissionApplicationNumber);
-    console.log('ID de Check Applicant Applications:', idCheckApplicantApplications);
-    console.log('status:', verificationStatus);
-    console.log('status:', revisionStatus);
+    
 
   await this.saveChecks(checkboxesActivos, justification, idCheckApplicantApplications, verificationStatus,revisionStatus);
   
@@ -736,15 +738,15 @@ static  async getChecks() {
 
       // Mostrar el resultado en consola o tomar las acciones correspondientes
       if (result.success) {
-          alert(result.message);
+        Alert.display(result.status,'Aviso',result.message, this.path);
         
       } else {
-          Alert.display(result.status,'Aviso',result.message, '../../'); // Mensaje de error
+          Alert.display(result.status,'Aviso',result.message, this.path); // Mensaje de error
       }
   } catch (error) {
       // Manejo de errores en caso de fallo en la solicitud
       console.error('Error al enviar los datos:', error);
-      alert('Hubo un error al enviar los datos.');
+  
   }
 }
 }

@@ -12,7 +12,7 @@ class Department{
 
             const data = await response.json();
             
-            console.log(data);
+         
             return data;  // Retorna los departamentos
 
         } catch (error) {
@@ -55,7 +55,6 @@ class Department{
             console.error("No se encontraron Departamentos o los datos no son válidos.");
         }
     }
-
 
 }
 

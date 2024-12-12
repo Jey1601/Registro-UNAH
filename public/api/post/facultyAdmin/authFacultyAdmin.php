@@ -1,6 +1,9 @@
 <?php
 /**
  * Endpoint para autenticacion de los usuarios administradores de facultad.
+ * 
+ * @author @AngelNolasco
+ * @created 02/12/2024
  */
 const PATH = '../../../../src';
 include_once PATH.'/DAO/FacultyAdminDAO.php';

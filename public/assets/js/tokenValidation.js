@@ -1,15 +1,15 @@
 
-/*document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const token = sessionStorage.getItem('token');
     const type_user = sessionStorage.getItem('typeUser');
     
     if(!token) {
-        console.log("No se encontro token en el sessionStorage.");
-        window.location.href = '../../index.html';
+        sessionStorage.setItem('message',"No se encontro token en el sessionStorage.");
+        window.location.href = '../../../index.html';
         return;
     }
 
-    fetch('../../api/post/tokenValidation.php', {
+    fetch('../../../api/post/tokenValidation.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -20,11 +20,10 @@
         })
     }).then(response => response.json()).then(data => {
         if (data.success === false) {
-            window.location.href = '../../index.html';
+            window.location.href = '../../../index.html';
         }
     }).catch (error => {
-        console.log(error);
         console.error("Error en la validacion del token: ", error);
-        window.location.href = '../../index.html';
+        window.location.href = '../../../index.html';
     });
-});*/
+});

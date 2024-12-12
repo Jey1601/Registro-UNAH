@@ -3,7 +3,7 @@
 require 'PHPMailer/Exception.php';
 require 'PHPMailer/PHPMailer.php';
 require 'PHPMailer/SMTP.php';
-require 'getApplicantsEmail.php';
+require 'getUsersInfoForMail.php';
 require 'email_templates.php';
 require 'Code.php';
 use PHPMailer\PHPMailer\PHPMailer;
@@ -428,7 +428,7 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
 
 //Enviar resultados de los diferentes tipos de exámenes realizados
 function sendRatings(/*$connection, $type, $maxEmailsPerDay*/) {
-    $mail = $this->$this->PHPMailerConfig();
+    $mail = $this->PHPMailerConfig();
     $type = 'exam_results';
     $maxEmailsPerDay = 500;
     // Obtener los usuarios según el tipo de mensaje
@@ -508,13 +508,43 @@ function sendCareerAcceptanceNotification($email, $name, $career) {
     $mail->clearAddresses();
 }
 
-//Configuración
+//Enviar el usuario y contraseña de los estudiantes
+function sendStudentsLogin($full_name, $username_user_student, $password, $email) {
+    $mail = $this->PHPMailerConfig();
 
+    // Crear los datos para la plantilla
+    $placeholders = [
+        'full_name' => $full_name,
+        'username_user_student' => $username_user_student,
+        'password_user_student' => $password
+    ];
 
-/*Ejecutar el sistema: prueba para enviar confirmación
-$connection = DBConection($host, $user, $password, $database);
-sendEmails($connection, 'confirmation', $maxEmailsPerDay);
-$connection->close();*/
+    // Obtener la plantilla del mensaje
+    $message = getTemplate('users_login', $placeholders);
+
+    if (!$message) {
+        echo "Error: No se pudo generar el mensaje.<br>";
+        return;
+    }
+
+    try {
+        // Configuración del correo
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Admisiones UNAH';
+        $mail->Body = $message;
+
+        // Enviar el correo
+        $mail->send();
+       
+    } catch (Exception $e) {
+        echo "Error al enviar correo a {$email}: {$e->getMessage()}<br>";
+    } finally {
+        // Limpiar direcciones para futuros envíos
+        $mail->clearAddresses();
+    }
+}
+
 }
 
 ?>

@@ -38,9 +38,13 @@
               <a href="views/careers.html">Oferta Académica</a>
             </div>
             <div class="navbar-menu-item">
-                <!--Boón que activa el modal de -->
+                
               <button  class="btn-inscription" type="button" data-bs-toggle="modal" >Inscripción</button>
             </div>
+            <div class="navbar-menu-item">
+             
+            <a role="button" href="./views/admissions/login.html" style="text-decoration: none; color: white;"   >Aspirantes</a>
+          </div>  
             <div class="navbar-menu-item">
               <button id="loginStudentsButton" type="button" data-bs-toggle="modal" data-bs-target="#loginModalStudents">Estudiantes</button>
             </div>
@@ -54,10 +58,12 @@
                   Administración
                 </button>
                 <ul class="dropdown-menu" >
-                  <li><button class="dropdown-item" >Gestión estratégica</Button></li>
+                  
                   <li><button  class="dropdown-item" >Facultades</Button></li>
-                  <li ><button   id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal">Admisiones</Button></li>
+                  <li ><button id="loginAdmissionsButton" class="dropdown-item"  data-bs-toggle="modal">Admisiones</Button></li>
                   <li><button class="dropdown-item" >DIPP</Button></li>
+                  <li><button class="dropdown-item" >Coordinadores de carrera</Button></li>
+                  <li><button class="dropdown-item" >Jefes de Departamento</Button></li>
                 </ul>
               </div>
               
@@ -549,6 +555,7 @@
           <div class="mb-3">
           
               <input type="password" class="form-control"  id="password"  name="password" placeholder="Contraseña...." style="box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" >
+             
               <button 
               type="button" 
               class="toggle-button" 
@@ -557,7 +564,9 @@
             </button>
 
             </div>
-          
+            <div id='passwordResent'>
+
+            </div>
           <div class="modal-footer" style="border-top: none; display: flex; justify-content: center;">
               <button  type="submit" class=" btn-blue" style="border-radius: 20px; box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);" id="btnLogin">Iniciar Sesión</button>
           </div>

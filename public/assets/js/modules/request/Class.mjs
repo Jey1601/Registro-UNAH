@@ -45,6 +45,7 @@ class Class{
         const input = document.getElementById(idinput);
         input.value = code;
     }
+    
 
 }
 

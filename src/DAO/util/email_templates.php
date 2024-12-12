@@ -100,7 +100,30 @@ function getTemplate($type, $placeholders = []) {
                         <p style="color: #0056b3;"><strong>Equipo de Gestión Universitaria</strong></p>
                         <p style="font-size: 12px; color: #777;">Este es un mensaje automático, por favor no respondas a este correo. Si necesitas ayuda, contáctanos a través de nuestros canales oficiales.</p>
                     </body>
-                </html>'
+                </html>',
+            'users_login' => "
+            <html>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+               <h2 style='color: #0056b3;'>Estimado(a) {{full_name}},</h2>
+                <p>A continuación te compartimos tu usuario y contraseña para que puedas acceder al portal virtual.</p>
+                <p>Usuario: {{username_user_student}}</p>
+                <p>Contraseña: {{password_user_student}}</p>
+                <a href='https://www.facebook.com'>Inicia sesión aquí</a>
+                <p style='color: #ff6600;'><strong>Equipo de Admisiones</strong></p>
+                <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>
+            </body>
+            </html>",
+            'reset_request' => "
+            <html>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                <h2 style='color: #0056b3;'>Estimado(a) {{full_name}},</h2>
+                <p>Puedes restablecer tu contraseña accediendo al siguiente enlace:</p>
+                <a href='http://18.188.97.75/views/password-reset-email.html?token={{token}}' style='color: #0056b3;'>Actualiza tu contraseña</a>
+                <p>Este enlace expirará dentro de 1 hora.</p>
+                <p>Atentamente,</p>
+                <p style='color: #0056b3;'><strong>Equipo de Admisiones</strong></p>
+                <p style='font-size: 12px; color: #777;'>Este es un mensaje automático, por favor no respondas a este correo. Si tienes preguntas, contáctanos a través de nuestros canales oficiales.</p>            </body>
+            </html>"
     ];
 
     $message = $templates[$type] ?? '';

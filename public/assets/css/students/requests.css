@@ -1,0 +1,54 @@
+@media (max-width: 768px) {
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .table-container {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .form-check-label {
+      font-size: 14px;
+    }
+
+    .table th, .table td {
+      padding: 0.5rem;
+      font-size: 12px;
+    }
+
+    .table {
+      font-size: 12px;
+    }
+
+    .form-control {
+      width: 100%;
+    }
+
+    .row .col-md-6, .row .col-12 {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .form-check {
+      margin-bottom: 10px;
+    }
+
+    .collapse {
+      font-size: 12px;
+    }
+
+    h5 {
+      font-size: 16px;
+    }
+
+    h4 {
+      font-size: 18px;
+    }
+
+    .col-12.text-center button {
+      width: 100%;
+    }
+  }

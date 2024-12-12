@@ -1,3 +1,5 @@
+
+import { regular_expressions } from "./configuration.mjs";
 class Password{
 
     static togglePassword(fieldId) {
@@ -13,16 +15,39 @@ class Password{
     }
 
       static verifyPassword(idPassword, idVerification, idButton, textRight, textWrong) {
-        const password = document.getElementById(idPassword).value;
-        const passwordVerification = document.getElementById(idVerification).value;
+        const inputPassword = document.getElementById(idPassword);
+        const inputPasswordV = document.getElementById(idVerification);
+
+        const password =inputPassword.value;
+        const passwordVerification = inputPasswordV.value;
         const button = document.getElementById(idButton);
     
-        if (password !== passwordVerification || password === "" || passwordVerification === "") {
-          button.disabled = true;
-          button.innerText = textWrong;
-        } else {
+        if (password == passwordVerification && password != "" && passwordVerification != "") {
+    
           button.disabled = false;
           button.innerText = textRight;
+        } else {
+          button.disabled = 'true';
+          button.innerText = textWrong;
+        }
+
+        if (regular_expressions.password.test(password)) {
+          inputPassword.classList.add("right-input");
+          inputPassword.classList.remove("wrong-input");
+        
+        }else{
+          inputPassword.classList.add("wrong-input");
+          inputPassword.classList.remove("right-input");
+        }
+
+        if (regular_expressions.password.test(passwordVerification)) {
+          inputPasswordV.classList.add("right-input");
+          inputPasswordV.classList.remove("wrong-input");
+          
+        } else {
+          inputPasswordV.classList.add("wrong-input");
+          inputPasswordV.classList.remove("right-input");
+         
         }
       }
 }

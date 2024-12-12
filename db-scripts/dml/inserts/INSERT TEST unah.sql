@@ -142,7 +142,9 @@ VALUES
 	('Strategic Manager Faculty', 'Visualizar estadisticas de la facultad.', TRUE),
 	('Prospective Student', 'Completar el proceso de inscripción y seleccionar la carrera deseada.', TRUE),
 	('Department Head', 'Administración de un departamento.', TRUE),
-	('Professor', 'Docente ', TRUE);
+	('Professor', 'Docente ', TRUE),
+	('Student', 'Estudiante', TRUE),
+	('Coordinator', 'Coordinador', TRUE);
 	
 INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control)
 VALUES
@@ -150,36 +152,58 @@ VALUES
 	('P3pwBDfx', 'Administrador Admisiones see-inscriptions.html', TRUE),
 	('Fz1YeRgv', 'Administrador Admisiones upload-grades.html', TRUE),
 	('lwx50K7f', 'Administrador Admisiones Verificar la información personal y de solicitud de los aspirantes.', TRUE),
-   	('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
-    	('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
-    	('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
-    	('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
-    	('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
-    	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE),
-		('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
-		('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
-		('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE);
+	('IeMfti20', 'Administrador Admisiones Visualiza, busca y edita la información de los aspirantes.', TRUE),
+	('rllHaveq', 'Administrador Admisiones Descarga la información de las aplicaciones del proceso de admisión.', TRUE),
+	('pFw9dYOw', 'Administrador Admisiones Descarga la información de los aspirantes admitidos en el proceso de admisión.', TRUE),
+	('78mD0SYa', "Aspirante Seleccion de carrera results.html", TRUE),
+	('dJPR7ohs', "Aspirante Inicio de sesion login.html", TRUE),
+	('V3yWAxgH', 'Administrador Facultad Creación de usuarios y perfiles docentes, y establecimiento de fechas de planificación y cancelcación professor.html', TRUE),
+	('zKQFIY69', 'Planeación y creación de planificación academica academic-planning.html', TRUE),
+	('p62NcCiC', 'Dashboard  dashboard.html', TRUE),
+	('2izGK2WC', 'Pagina principal de acceso docente index.html', TRUE),
+	('bG8uB0wH', 'Administrador de reigstro upload-students.html', TRUE),
+	('iAV7sDXj', 'Estudiante Visualización de las clases matrículadas en el periodo actual index.html', TRUE),
+	('qUhmvjSC', 'Estudiante Visualización de las calificaciones historicas y de periodo del estudiante grades.html', TRUE),
+	('HxoBKYl8', 'Estudiante VPantalla de matrícula del estudiante registration.html', TRUE),
+	('aXK83XFl', 'Estudiante Pantalla de acceso a solicitudesrequest.html', TRUE),
+	('xjAQ9PA5', 'Administrador DIPP Visualiza el calendario de matrícula enrollment.html', TRUE),
+	('jwh484T8', 'Coordinator Visualización de carga academica del periodo academic-workload.html', TRUE),
+	('RoiOulJ1', ' Visualización del historial academico de los estudiantes .html', TRUE),
+	('64IDerH6', 'Coordinator Visualización y dictamen de solicitudes request.html', TRUE);
+
+
 INSERT INTO AccessControlRoles (id_role, id_access_control, status_access_control_roles)
 VALUES 
 	(2, 'lwx50K7f', TRUE),
-    	(3, 'IeMfti20', TRUE),
-    	(4, 'rllHaveq', TRUE),
-    	(5, 'Fz1YeRgv', TRUE),
-    	(6, 'pFw9dYOw', TRUE),
-    	(12, '78mD0SYa', TRUE),
-    	(12, 'dJPR7ohs', TRUE),
-    	(8, 'V3yWAxgH', TRUE),
-		(13, 'zKQFIY69', TRUE),
-		(13, 'p62NcCiC', TRUE),
-		(14, '2izGK2WC', TRUE);
+	(3, 'IeMfti20', TRUE),
+	(4, 'rllHaveq', TRUE),
+	(5, 'Fz1YeRgv', TRUE),
+	(6, 'pFw9dYOw', TRUE),
+	(12, '78mD0SYa', TRUE),
+	(12, 'dJPR7ohs', TRUE),
+	(8, 'V3yWAxgH', TRUE),
+	(13, 'zKQFIY69', TRUE),
+	(13, 'p62NcCiC', TRUE),
+	(14, '2izGK2WC', TRUE),
+	(7, 'bG8uB0wH', TRUE),
+	(15, 'iAV7sDXj', TRUE),
+	(15, 'qUhmvjSC', TRUE),
+	(15, 'HxoBKYl8', TRUE),
+	(15, 'aXK83XFl', TRUE),
+	(7, 'xjAQ9PA5', TRUE),
+	(16, 'jwh484T8', TRUE),
+	(16, 'RoiOulJ1', TRUE),
+	(16, '64IDerH6', TRUE),
+    (13, 'RoiOulJ1', TRUE);
+
+
 
 INSERT INTO RolesUsersAdmissionsAdministrator (id_user_admissions_administrator, id_role_admissions_administrator, status_role_admissions_administrator, id_regional_center)
 VALUES 
-	(2, 5, TRUE, 1),
-	(2, 2, TRUE, 1),
+	    (2, 2, TRUE, 1),
     	(7, 2, TRUE, 1),
     	(8, 2, TRUE, 1),
- 	(3, 3, TRUE, 1),
+ 	    (3, 3, TRUE, 1),
     	(4, 4, TRUE, 1),
     	(5, 5, TRUE, 1),
     	(6, 6, TRUE, 1);
@@ -190,7 +214,18 @@ VALUES
     ('facultyAdmin08011999015', 'Dark19*Fish', 1, TRUE);
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
 VALUES
-    (1, 8, TRUE); 
+    (1, 8, TRUE);
+
+INSERT INTO `UsersRegistryAdministrator` (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator)
+VALUES
+	('20001001010', 'G4to-h1Draulico', TRUE),
+	('20002002020', 'seDosa*4crobat1ca', TRUE);
+
+INSERT INTO `RolesUsersRegistryAdministrator` (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator)
+VALUES
+	(7, 1, 1, TRUE),
+	(7, 2, 1, TRUE);
+
 INSERT INTO AcademicYear (name_academic_year, status_academic_year)
 VALUES ('SIN NOMNRE', FALSE);
 
@@ -480,6 +515,17 @@ VALUES
 ('Diana', 'Paola', NULL, 'Moreno', 'Zapata', 'diana.moreno@example.com', 1, 4, TRUE),
 ('César', NULL, NULL, 'Ortega', 'Méndez', 'cesar.ortega@example.com', 1, 4, TRUE);
 
+INSERT INTO `UsersProfessors` (username_user_professor, password_user_professor, status_user_professor)
+VALUES
+(1, 'd4nDadAn', TRUE);
+
+INSERT INTO `RolesUsersProfessor` (id_user_professor, id_role_professor, status_role_professor)
+VALUES
+(1, 14, TRUE),
+(1, 8, TRUE),
+(1, 16, TRUE),
+(1, 13, TRUE);
+
 INSERT INTO ProfessorsDepartments (id_department, id_professor, status_professor_department) 
 VALUES
 (9, 1, 'active'),
@@ -586,24 +632,894 @@ VALUES
 (1, 4, TRUE),
 (1, 5, TRUE); 
 
+INSERT INTO `Students` (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, third_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES
+('20201001559', 'enrique.valenzuela@unah.hn', '0801200049092', 'Enrique', null, null, 'Valenzuela', null, 'Col. Kennedy', 'enrique.valenzuela@example.com', '93940294', TRUE);
+
+INSERT INTO `RequestsCancellationExceptionalClasses` (id_student, reasons_request_cancellation_exceptional_classes, document_request_cancellation_exceptional_classes, evidence_request_cancellation_exceptional_classes, status_request_cancellation_exceptional_classes)
+VALUES
+('20201001559', 'Calamidad domestica', '', null, TRUE);
+
+-- @author INSERT INTO TypesEnrollmentConditions: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO TypesEnrollmentConditions (
+    maximum_student_global_average, minimum_student_global_average, 
+    status_student_global_average, 
+    maximum_student_period_average, minimum_student_period_average, 
+    status_type_enrollment_conditions
+) VALUES 
+(99.99, 80.00, TRUE, 99.99, 0.00, TRUE),
+(79.99, 0.00, FALSE, 99.99, 71.99, TRUE),
+(79.99, 0.00, FALSE, 79.00, 0.00, TRUE);
+
+-- @author INSERT INTO EnrollmentProcess: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO EnrollmentProcess (id_dates_academic_periodicity_year, status_enrollment_process)
+VALUES (4, true);
+
+-- @author INSERT INTO DatesEnrollmentProcess: Alejandro Moya 20211020462 @created 09/12/2024
+INSERT INTO DatesEnrollmentProcess (
+    id_enrollment_process, 
+    id_type_enrollment_conditions, 
+    day_available_enrollment_process, 
+    start_time_available_enrollment_process, 
+    end_time_available_enrollment_process, 
+    status_date_enrollment_process
+) VALUES 
+(1, 1, '2024-12-12', '09:00:00', '23:59:00', TRUE),
+(1, 2, '2024-12-13', '09:00:00', '23:59:00', TRUE),
+(1, 3, '2024-12-14', '09:00:00', '23:59:00', TRUE);
+
+INSERT INTO `AcademicCoordinatorObligations` (credit_units_academic_coordinator_obligations, status_academic_coordinator_obligations) VALUES (5,1);
+
+-- @author INSERT INTO ClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO ClassSections (id_class, id_dates_academic_periodicity_year,id_classroom_class_section,id_academic_schedules,id_professor_class_section,numberof_spots_available_class_section,status_class_section)
+VALUES 
+(1, 2, 61, 1, 3, 15, FALSE),
+(2, 2, 61, 2, 3, 15, FALSE),
+(3, 2, 61, 3, 3, 15, FALSE),
+(4, 2, 61, 4, 3, 15, FALSE),
+(5, 2, 61, 5, 3, 15, FALSE);
+
+-- ESTUDIANTE CON 80% DE CLASES APROBADAS, DE COMAYAGUA
+-- @author INSERT INTO Students: Kenia Romero 20171003359 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002123', 'estudiante0@unah.hn', '080119900002', 'María', 'Fernanda', 'Hernández', 'Mejía', 'San Pedro Sula, Honduras', 'maria1.hernandez@email.com', '9999-0002', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Kenia Romero 20171003359 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002123', 2, TRUE); 
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002123', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002123', 1, TRUE), 
+('20240002123', 2, TRUE), 
+('20240002123', 3, TRUE),
+('20240002123', 4, TRUE), 
+('20240002123', 5, TRUE),
+('20240002123', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002123', 1, 'APROBADO', 90.00),
+('20240002123', 2, 'APROBADO', 90.00),
+('20240002123', 3, 'APROBADO', 90.00),
+('20240002123', 4, 'APROBADO', 90.00),
+('20240002123', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002123', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002123', 1, FALSE),
+    ('20240002123', 2, FALSE),
+    ('20240002123', 3, FALSE),
+    ('20240002123', 4, FALSE),
+    ('20240002123', 5, FALSE);
+    
+    -- ESTUDIANTE CON UN 0% DE CLASES APROBADAS DE CUIDAD UNIVERSITARIA
+-- @author INSERT INTO Students: Kenia Romero 20171003359 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240004', 'estudiante4@unah.edu.hn', '080119900004', 'Ana', 'Isabel', 'Ramírez', 'Santos', 'La Ceiba, Honduras', 'ana.ramirez@email.com', '9999-0004', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240004', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240004', 1, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240004', 1, TRUE), 
+('20240004', 2, TRUE), 
+('20240004', 3, TRUE),
+('20240004', 4, TRUE), 
+('20240004', 5, TRUE),
+('20240004', 6, TRUE);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240004', 0.0, 0.00, 0.00);
+
+-- Inserts para 15 estudiantes con el 80% de clases aprobadas, en Comayagua
+
+-- Estudiante 1
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002101', 'estudiante1@unah.hn', '130119900001', 'Carlos', 'Andrés', 'López', 'González', 'Comayagua, Honduras', 'carlos.lopez@email.com', '9999-0001', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002101', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002101', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002101', 1, TRUE), 
+('20240002101', 2, TRUE), 
+('20240002101', 3, TRUE),
+('20240002101', 4, TRUE), 
+('20240002101', 5, TRUE),
+('20240002101', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002101', 1, 'APROBADO', 90.00),
+('20240002101', 2, 'APROBADO', 90.00),
+('20240002101', 3, 'APROBADO', 90.00),
+('20240002101', 4, 'APROBADO', 90.00),
+('20240002101', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002101', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002101', 1, FALSE),
+    ('20240002101', 2, FALSE),
+    ('20240002101', 3, FALSE),
+    ('20240002101', 4, FALSE),
+    ('20240002101', 5, FALSE);
+
+-- Estudiante 2
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002102', 'estudiante2@unah.hn', '130119900002', 'Ana', 'María', 'Pérez', 'Castro', 'Comayagua, Honduras', 'ana.perez@email.com', '9999-0002', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002102', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002102', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002102', 1, TRUE), 
+('20240002102', 2, TRUE), 
+('20240002102', 3, TRUE),
+('20240002102', 4, TRUE), 
+('20240002102', 5, TRUE),
+('20240002102', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002102', 1, 'APROBADO', 90.00),
+('20240002102', 2, 'APROBADO', 90.00),
+('20240002102', 3, 'APROBADO', 90.00),
+('20240002102', 4, 'APROBADO', 90.00),
+('20240002102', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002102', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002102', 1, FALSE),
+    ('20240002102', 2, FALSE),
+    ('20240002102', 3, FALSE),
+    ('20240002102', 4, FALSE),
+    ('20240002102', 5, FALSE);
+-- Estudiante 3
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002103', 'estudiante3@unah.hn', '130119900003', 'Luis', 'Alberto', 'Martínez', 'Rodríguez', 'Comayagua, Honduras', 'luis.martinez@email.com', '9999-0003', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002103', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002103', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002103', 1, TRUE), 
+('20240002103', 2, TRUE), 
+('20240002103', 3, TRUE),
+('20240002103', 4, TRUE), 
+('20240002103', 5, TRUE),
+('20240002103', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002103', 1, 'APROBADO', 90.00),
+('20240002103', 2, 'APROBADO', 90.00),
+('20240002103', 3, 'APROBADO', 90.00),
+('20240002103', 4, 'APROBADO', 90.00),
+('20240002103', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002103', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002103', 1, FALSE),
+    ('20240002103', 2, FALSE),
+    ('20240002103', 3, FALSE),
+    ('20240002103', 4, FALSE),
+    ('20240002103', 5, FALSE);
+
+-- Estudiante 4
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002104', 'estudiante4@unah.hn', '130119900004', 'Claudia', 'Patricia', 'Ramírez', 'Hernández', 'Comayagua, Honduras', 'claudia.ramirez@email.com', '9999-0004', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002104', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002104', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002104', 1, TRUE), 
+('20240002104', 2, TRUE), 
+('20240002104', 3, TRUE),
+('20240002104', 4, TRUE), 
+('20240002104', 5, TRUE),
+('20240002104', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002104', 1, 'APROBADO', 90.00),
+('20240002104', 2, 'APROBADO', 90.00),
+('20240002104', 3, 'APROBADO', 90.00),
+('20240002104', 4, 'APROBADO', 90.00),
+('20240002104', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002104', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002104', 1, FALSE),
+    ('20240002104', 2, FALSE),
+    ('20240002104', 3, FALSE),
+    ('20240002104', 4, FALSE),
+    ('20240002104', 5, FALSE);
+-- Estudiante 5
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002105', 'estudiante5@unah.hn', '130119900005', 'Carlos', 'Andrés', 'López', 'Pineda', 'Comayagua, Honduras', 'carlos.lopez@email.com', '9999-0005', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002105', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002105', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002105', 1, TRUE), 
+('20240002105', 2, TRUE), 
+('20240002105', 3, TRUE),
+('20240002105', 4, TRUE), 
+('20240002105', 5, TRUE),
+('20240002105', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002105', 1, 'APROBADO', 90.00),
+('20240002105', 2, 'APROBADO', 90.00),
+('20240002105', 3, 'APROBADO', 90.00),
+('20240002105', 4, 'APROBADO', 90.00),
+('20240002105', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002105', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002105', 1, FALSE),
+    ('20240002105', 2, FALSE),
+    ('20240002105', 3, FALSE),
+    ('20240002105', 4, FALSE),
+    ('20240002105', 5, FALSE);
+
+-- Estudiante 6
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002106', 'estudiante6@unah.hn', '130119900006', 'Ana', 'Gabriela', 'Castro', 'Zelaya', 'Comayagua, Honduras', 'ana.castro@email.com', '9999-0006', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002106', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002106', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002106', 1, TRUE), 
+('20240002106', 2, TRUE), 
+('20240002106', 3, TRUE),
+('20240002106', 4, TRUE), 
+('20240002106', 5, TRUE),
+('20240002106', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002106', 1, 'APROBADO', 90.00),
+('20240002106', 2, 'APROBADO', 90.00),
+('20240002106', 3, 'APROBADO', 90.00),
+('20240002106', 4, 'APROBADO', 90.00),
+('20240002106', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002106', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002106', 1, FALSE),
+    ('20240002106', 2, FALSE),
+    ('20240002106', 3, FALSE),
+    ('20240002106', 4, FALSE),
+    ('20240002106', 5, FALSE);
+
+-- Estudiante 7
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002107', 'estudiante7@unah.hn', '130119900007', 'Luis', 'Eduardo', 'Martínez', 'Gómez', 'Comayagua, Honduras', 'luis.martinez@email.com', '9999-0007', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002107', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002107', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002107', 1, TRUE), 
+('20240002107', 2, TRUE), 
+('20240002107', 3, TRUE),
+('20240002107', 4, TRUE), 
+('20240002107', 5, TRUE),
+('20240002107', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002107', 1, 'APROBADO', 90.00),
+('20240002107', 2, 'APROBADO', 90.00),
+('20240002107', 3, 'APROBADO', 90.00),
+('20240002107', 4, 'APROBADO', 90.00),
+('20240002107', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002107', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002107', 1, FALSE),
+    ('20240002107', 2, FALSE),
+    ('20240002107', 3, FALSE),
+    ('20240002107', 4, FALSE),
+    ('20240002107', 5, FALSE);
+
+-- Estudiante 8
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002108', 'estudiante8@unah.hn', '130119900008', 'Claudia', 'Patricia', 'Sánchez', 'Lopez', 'Comayagua, Honduras', 'claudia.sanchez@email.com', '9999-0008', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002108', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002108', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002108', 1, TRUE), 
+('20240002108', 2, TRUE), 
+('20240002108', 3, TRUE),
+('20240002108', 4, TRUE), 
+('20240002108', 5, TRUE),
+('20240002108', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002108', 1, 'APROBADO', 90.00),
+('20240002108', 2, 'APROBADO', 90.00),
+('20240002108', 3, 'APROBADO', 90.00),
+('20240002108', 4, 'APROBADO', 90.00),
+('20240002108', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002108', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002108', 1, FALSE),
+    ('20240002108', 2, FALSE),
+    ('20240002108', 3, FALSE),
+    ('20240002108', 4, FALSE),
+    ('20240002108', 5, FALSE);
+
+-- Estudiante 9
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002109', 'estudiante9@unah.hn', '130119900009', 'Carlos', 'Andrés', 'Castillo', 'Ruiz', 'Comayagua, Honduras', 'carlos.castillo@email.com', '9999-0009', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002109', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002109', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002109', 1, TRUE), 
+('20240002109', 2, TRUE), 
+('20240002109', 3, TRUE),
+('20240002109', 4, TRUE), 
+('20240002109', 5, TRUE),
+('20240002109', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002109', 1, 'APROBADO', 90.00),
+('20240002109', 2, 'APROBADO', 90.00),
+('20240002109', 3, 'APROBADO', 90.00),
+('20240002109', 4, 'APROBADO', 90.00),
+('20240002109', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002109', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002109', 1, FALSE),
+    ('20240002109', 2, FALSE),
+    ('20240002109', 3, FALSE),
+    ('20240002109', 4, FALSE),
+    ('20240002109', 5, FALSE);
+
+-- Estudiante 10
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002110', 'estudiante10@unah.hn', '130119900010', 'Gabriela', 'Isabel', 'Pineda', 'Cruz', 'Comayagua, Honduras', 'gabriela.pineda@email.com', '9999-0010', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002110', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002110', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002110', 1, TRUE), 
+('20240002110', 2, TRUE), 
+('20240002110', 3, TRUE),
+('20240002110', 4, TRUE), 
+('20240002110', 5, TRUE),
+('20240002110', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002110', 1, 'APROBADO', 90.00),
+('20240002110', 2, 'APROBADO', 90.00),
+('20240002110', 3, 'APROBADO', 90.00),
+('20240002110', 4, 'APROBADO', 90.00),
+('20240002110', 5, 'APROBADO', 90.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002110', 90.00, 90.00, 90.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002110', 1, FALSE),
+    ('20240002110', 2, FALSE),
+    ('20240002110', 3, FALSE),
+    ('20240002110', 4, FALSE),
+    ('20240002110', 5, FALSE);
+
+-- Estudiante 11
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002111', 'estudiante11@unah.hn', '130119900011', 'María', 'Fernanda', 'Pérez', 'Ramírez', 'Tegucigalpa, Honduras', 'maria.perez@email.com', '9999-0011', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002111', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002111', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002111', 1, TRUE), 
+('20240002111', 2, TRUE), 
+('20240002111', 3, TRUE),
+('20240002111', 4, TRUE), 
+('20240002111', 5, TRUE),
+('20240002111', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002111', 1, 'APROBADO', 88.00),
+('20240002111', 2, 'APROBADO', 88.00),
+('20240002111', 3, 'APROBADO', 88.00),
+('20240002111', 4, 'APROBADO', 88.00),
+('20240002111', 5, 'APROBADO', 88.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002111', 88.00, 88.00, 88.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002111', 1, FALSE),
+    ('20240002111', 2, FALSE),
+    ('20240002111', 3, FALSE),
+    ('20240002111', 4, FALSE),
+    ('20240002111', 5, FALSE);
+
+-- Estudiante 12
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002112', 'estudiante12@unah.hn', '130119900012', 'Luis', 'Fernando', 'García', 'Martínez', 'San Pedro Sula, Honduras', 'luis.garcia@email.com', '9999-0012', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002112', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002112', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002112', 1, TRUE), 
+('20240002112', 2, TRUE), 
+('20240002112', 3, TRUE),
+('20240002112', 4, TRUE), 
+('20240002112', 5, TRUE),
+('20240002112', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002112', 1, 'APROBADO', 85.00),
+('20240002112', 2, 'APROBADO', 85.00),
+('20240002112', 3, 'APROBADO', 85.00),
+('20240002112', 4, 'APROBADO', 85.00),
+('20240002112', 5, 'APROBADO', 85.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002112', 85.00, 85.00, 85.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002112', 1, FALSE),
+    ('20240002112', 2, FALSE),
+    ('20240002112', 3, FALSE),
+    ('20240002112', 4, FALSE),
+    ('20240002112', 5, FALSE);
+-- Estudiante 13
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002113', 'estudiante13@unah.hn', '130119900013', 'Ana', 'Lucía', 'Hernández', 'López', 'La Ceiba, Honduras', 'ana.hernandez@email.com', '9999-0013', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002113', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002113', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002113', 1, TRUE), 
+('20240002113', 2, TRUE), 
+('20240002113', 3, TRUE),
+('20240002113', 4, TRUE), 
+('20240002113', 5, TRUE),
+('20240002113', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002113', 1, 'APROBADO', 92.00),
+('20240002113', 2, 'APROBADO', 92.00),
+('20240002113', 3, 'APROBADO', 92.00),
+('20240002113', 4, 'APROBADO', 92.00),
+('20240002113', 5, 'APROBADO', 92.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002113', 92.00, 92.00, 92.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002113', 1, FALSE),
+    ('20240002113', 2, FALSE),
+    ('20240002113', 3, FALSE),
+    ('20240002113', 4, FALSE),
+    ('20240002113', 5, FALSE);
+
+-- Estudiante 14
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002114', 'estudiante14@unah.hn', '130119900014', 'José', 'Antonio', 'Vásquez', 'Castillo', 'Choluteca, Honduras', 'jose.vasquez@email.com', '9999-0014', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002114', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002114', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002114', 1, TRUE), 
+('20240002114', 2, TRUE), 
+('20240002114', 3, TRUE),
+('20240002114', 4, TRUE), 
+('20240002114', 5, TRUE),
+('20240002114', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002114', 1, 'APROBADO', 87.00),
+('20240002114', 2, 'APROBADO', 87.00),
+('20240002114', 3, 'APROBADO', 87.00),
+('20240002114', 4, 'APROBADO', 87.00),
+('20240002114', 5, 'APROBADO', 87.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002114', 87.00, 87.00, 87.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002114', 1, FALSE),
+    ('20240002114', 2, FALSE),
+    ('20240002114', 3, FALSE),
+    ('20240002114', 4, FALSE),
+    ('20240002114', 5, FALSE);
+
+-- Estudiante 15
+-- @author INSERT INTO Students: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO Students (id_student, institutional_email_student, id_card_student, first_name_student, second_name_student, first_lastname_student, second_lastname_student, address_student, email_student, phone_number_student, status_student)
+VALUES ('20240002115', 'estudiante15@unah.hn', '130119900015', 'Laura', 'María', 'González', 'Ramírez', 'Tegucigalpa, Honduras', 'laura.gonzalez@email.com', '9999-0015', TRUE);
+
+-- @author INSERT INTO StudentsUndergraduates: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsUndergraduates (id_student, id_undergraduate, status_student_undergraduate)
+VALUES ('20240002115', 2, TRUE);
+
+-- @author INSERT INTO StudentsRegionalCenters: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentsRegionalCenters (id_student, id_regional_center, status_regional_center_student)
+VALUES ('20240002115', 4, TRUE);
+
+-- @author INSERT INTO StudentClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentClassStatus (id_student, id_class, class_status)
+VALUES 
+('20240002115', 1, TRUE), 
+('20240002115', 2, TRUE), 
+('20240002115', 3, TRUE),
+('20240002115', 4, TRUE), 
+('20240002115', 5, TRUE),
+('20240002115', 6, TRUE);
+
+-- @author INSERT INTO SpecificationClassStatus: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO SpecificationClassStatus (id_student_class_status, id_class_section, specification_class_status, grade_class_student) 
+VALUES
+('20240002115', 1, 'APROBADO', 88.00),
+('20240002115', 2, 'APROBADO', 88.00),
+('20240002115', 3, 'APROBADO', 88.00),
+('20240002115', 4, 'APROBADO', 88.00),
+('20240002115', 5, 'APROBADO', 88.00);
+
+-- @author INSERT INTO StudentGradesAverages: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO StudentGradesAverages (
+    id_student, global_grade_average_student, period_grade_average_student, annual_academic_grade_average_student) 
+VALUES ('20240002115', 88.00, 88.00, 88.00);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002115', 1, FALSE),
+    ('20240002115', 2, FALSE),
+    ('20240002115', 3, FALSE),
+    ('20240002115', 4, FALSE),
+    ('20240002115', 5, FALSE);
+
+-- INSERT GENERAL PARA EL NUEVO PROCESO DE MATRICULA
+-- @author INSERT INTO ClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO ClassSections (id_class, id_dates_academic_periodicity_year,id_classroom_class_section,id_academic_schedules,id_professor_class_section,numberof_spots_available_class_section,status_class_section)
+VALUES 
+(6, 4, 61, 2, 3, 20, TRUE);
+
+-- @author INSERT INTO EnrollmentClassSections: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO EnrollmentClassSections (id_student, id_class_section, status_enrollment_class_sections)
+VALUES 
+    ('20240002101', 6, TRUE),
+    ('20240002102', 6, TRUE),
+    ('20240002103', 6, TRUE),
+    ('20240002104', 6, TRUE),
+    ('20240002105', 6, TRUE),
+    ('20240002106', 6, TRUE),
+    ('20240002107', 6, TRUE),
+    ('20240002108', 6, TRUE),
+    ('20240002109', 6, TRUE),
+    ('20240002110', 6, TRUE),
+    ('20240002111', 6, TRUE),
+    ('20240002112', 6, TRUE),
+    ('20240002113', 6, TRUE),
+    ('20240002114', 6, TRUE),
+    ('20240002115', 6, TRUE);
 
 
+-- @author INSERT INTO RequirementUndergraduateClass: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO RequirementUndergraduateClass (id_undergraduate_class, id_class, status_requirement_undergraduate_class)
+VALUES (2, 5, TRUE);
+
+-- @author INSERT INTO ClassSectionsDays: Alejandro Moya 20211020462 @created 10/12/2024
+INSERT INTO ClassSectionsDays (id_class_section, id_day, status_class_sections_days)
+VALUES 
+(6, 'Lunes', TRUE),
+(6, 'Martes', TRUE),
+(6, 'Miércoles', TRUE),
+(6, 'Jueves', TRUE);
+
+-- @author INSERT INTO `ClassSections`: Angel Nolasco 20211021246 @created 10/12/2024
+INSERT INTO `ClassSections` (id_class, id_dates_academic_periodicity_year, id_classroom_class_section, id_academic_schedules, id_professor_class_section, numberof_spots_available_class_section, status_class_section)
+VALUES
+(1, 1, 27, 4, 1, 25, TRUE),
+(2, 1, 28, 4, 1, 25, TRUE),
+(3, 1, 26, 5, 1, 15, TRUE);
+
+-- @author INSERT INTO `ClassSectionsProfessor`: Angel Nolasco 20211021246 @created 10/12/2024
+INSERT INTO `ClassSectionsProfessor` (id_class_section, class_presentation_video, status_class_section_professor)
+VALUES
+(7, 'www.youtube.com', TRUE),
+(8, 'www.youtube.com', TRUE);
+
+-- @author INSERT INTO `ClassSectionsDays`: Angel Nolasco 20211021246 @created 10/12/2024
+INSERT INTO `ClassSectionsDays` (id_class_section, id_day, status_class_sections_days)
+VALUES
+(7, 'Lunes', TRUE),
+(7, 'Martes', TRUE),
+(7, 'Miercoles', TRUE),
+(7, 'Jueves', TRUE),
+(7, 'Viernes', TRUE),
+(8, 'Lunes', TRUE),
+(8, 'Martes', TRUE),
+(8, 'Miercoles', TRUE),
+(8, 'Jueves', TRUE),
+(8, 'Viernes', TRUE);
+
+-- @author INSERT INTO `EnrollmentClassSections`: Angel Nolasco 20211021246 @created 10/12/2024
+INSERT INTO `EnrollmentClassSections` (id_student, id_class_section, status_enrollment_class_sections)
+VALUES
+('20201001559', '7', TRUE),
+('20201001559', '8', TRUE),
+('20201001559', '9', TRUE);
 
 
-
-
-
-
-
-
-
-
-INSERT INTO AccessControl (id_access_control, description_access_control, status_access_control) VALUES ('bG8uB0wH', 'Registrar estudiantes', TRUE);
-
-INSERT INTO Roles (role, description_role, status_role) VALUES ('Registry Administrator', 'Registro de estudiantes', TRUE);
-
-INSERT INTO AccessControlRoles (id_access_control, id_role, status_access_control_roles) VALUES ('bG8uB0wH', 15, TRUE);
-
-INSERT INTO UsersRegistryAdministrator (username_user_registry_administrator, password_user_registry_administrator, status_user_registry_administrator) VALUES ('2024', 'gat0_h1dr4licO', TRUE);
-
-INSERT INTO RolesUsersRegistryAdministrator (id_role_registry_administrator, id_user_registry_administrator, id_regional_center, status_role_registry_administrator) VALUES (15, 1, 1, TRUE);
+-- @author INSERT INTO ClassSectionsProfessor: Alejandro Moya 20211020462 @created 11/12/2024
+INSERT INTO ClassSectionsProfessor (id_class_section, class_presentation_video, status_class_section_professor)
+VALUES 
+(1, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(2, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(3, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(4, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE),
+(6, 'https://www.youtube.com/watch?v=PcP7UyoRYTU', TRUE);

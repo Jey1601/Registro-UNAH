@@ -1,4 +1,10 @@
 <?php
+/**
+ * Clase auxiliar que contiene metodos estaticos para la creacion de estudiantes o sus usuarios
+ * 
+ * @author @AngelNolasco
+ * @created 01/12/2024 
+ */
 
 class StudentFunctions {
     static function generateAccountNumber (int $idRegionalCenter) {

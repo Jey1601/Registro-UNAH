@@ -53,4 +53,4 @@ VALUES
 
 INSERT INTO RolesUsersFacultiesAdministrator (id_user_faculties_administrator, id_role_faculties_administrator, status_role_faculties_administrator)
 VALUES
-    (3, 8, TRUE)
+    (1, 8, TRUE)

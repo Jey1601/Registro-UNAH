@@ -12,7 +12,7 @@
     <meta name="date" content="2024/11/10" />
     <meta
       name="description"
-      content="Página de carga de calificaciones de examenes de admisión"
+      content="Página de carga de usuarios nuevos de estudiantes"
     />
 
     <link
@@ -30,9 +30,10 @@
     <link rel="stylesheet" href="../../../assets/css/administration/main.css" />
     <link
       rel="stylesheet"
-      href="../../../assets/css/administration/upload-grades.css" />
+      href="../../../assets/css/administration/upload-grades.css"
+    />
     <link rel="stylesheet" href="../../../assets/css/support.css" />
-    <title>Carga de calificaciones</title>
+    <title>Carga de estudiantes</title>
     <script src="../../../assets/js/tokenValidation.js"></script>
   </head>
 
@@ -46,34 +47,43 @@
             src="../../../assets/img/logos/UNAH-version-horizontal-white.png"
           />
         </a>
-        <button
-          class="dropdown-toggle"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            class="profile-img-button"
-            src="../../../assets/img/icons/profile-icon.png"
-            alt=""
-          />
+        <button type="button" id="toggleSidebar" class="toggle-btn">
+          <img src="../../../assets/img/icons/inactive-menu-icon.png" alt="" />
         </button>
-        <ul class="dropdown-menu">
-          <li>
-            <button
-              id="logoutBtn"
-              style="border: none; background: none; height: auto"
-              class="dropdown-item"
-              href="#"
-            >
-              Cerrar sesión
-            </button>
-          </li>
-        </ul>
       </div>
     </nav>
     <div id="notifications"></div>
-    <!--Logout=================================================================================-->
+    <!--offcanvas main container start=================================================================================-->
+    <section class="sidebar hidden">
+      <div
+        class="sidebar-header"
+        style="display: flex; justify-content: end; align-items: center"
+      >
+        <button
+          style="border: none; background: none"
+          type="button"
+          id="closeSidebar"
+          class="toggle-btn"
+        >
+          <img
+            src="../../../assets/img/icons/inactive-menu-icon.png"
+            alt="Cerrar Sidebar"
+          />
+        </button>
+      </div>
+      <div class="sidebar-body">
+        <ul>
+        
+        </ul>
+      </div>
+      <div class="sidebar-footer">
+        <a role="button" style="color: white" id="logoutBtn" href=""
+          >Cerrar sesión
+          <img src="../../../assets/img/icons/logout-icon.png" alt=""
+        /></a>
+      </div>
+    </section>
+    <!--offcanvas main container end=================================================================================-->
 
     <!--Cargar calificaciones=================================================================================-->
 
@@ -84,7 +94,7 @@
             <h2>Cargar Información de Nuevos Estudiantes</h2>
           </div>
         </div>
-    
+
         <!-- Instrucciones adicionales -->
         <div class="row mb-4">
           <div class="col-12">
@@ -92,26 +102,31 @@
               <h4 class="alert-heading">Instrucciones:</h4>
               <ul>
                 <li>
-                  El archivo CSV debe contener los siguientes campos en el orden exacto:
+                  El archivo CSV debe contener los siguientes campos en el orden
+                  exacto:
                   <strong>
-                    nombre_completo_apirante_admitido, identidad_aspirante_admitido, direccion_aspirante_admitido,
-                    correo_personal_aspirante_admitido, carrera_aspirante_admitido, centro_regional_aspirante_admitido
-                  </strong>.
+                    nombre_completo_apirante_admitido,
+                    identidad_aspirante_admitido, direccion_aspirante_admitido,
+                    correo_personal_aspirante_admitido,
+                    carrera_aspirante_admitido,
+                    centro_regional_aspirante_admitido </strong
+                  >.
                 </li>
                 <li>
-                  Asegúrese de que el archivo no contenga filas vacías ni caracteres inválidos.
+                  Asegúrese de que el archivo no contenga filas vacías ni
+                  caracteres inválidos.
                 </li>
               </ul>
               <p>Ejemplo de estructura del archivo CSV:</p>
               <pre>
-    nombre_completo_apirante_admitido,identidad_aspirante_admitido,direccion_aspirante_admitido,correo_personal_aspirante_admitido,carrera_aspirante_admitido,centro_regional_aspirante_admitido
-    "Juan Pérez",0801199912345,"Col. Miraflores, Tegucigalpa","juan.perez@gmail.com","Ingeniería en Sistemas","Centro Regional 1"
-    "Ana López",0802199923456,"Barrio Abajo, San Pedro Sula","ana.lopez@gmail.com","Administración de Empresas","Centro Regional 2"
+nombre_completo_apirante_admitido,identidad_aspirante_admitido,direccion_aspirante_admitido,celular_aspirante_admitido,correo_personal_aspirante_admitido,carrera_aspirante_admitido,centro_regional_aspirante_admitido
+"JEYSON FERNANDO ALEJANDRO ESPINA LOPEZ",1501200602462,ALEMAN,99346961,jfeg1601@gmail.com,1,1
+"JEYSON FERNANDO guevara ESPINAL GUEVARA",0801200119258,ALEMÁN,99346961,fernandoespinalguevara@gmail.com,2,1
               </pre>
             </div>
           </div>
         </div>
-    
+
         <!-- Formulario para cargar el CSV -->
         <div class="row justify-content-center">
           <div class="col-md-8 col-lg-6">
@@ -133,7 +148,8 @@
                   accept=".csv"
                 />
                 <div class="form-text">
-                  El archivo debe estar en formato .csv y contener los datos correctamente estructurados.
+                  El archivo debe estar en formato .csv y contener los datos
+                  correctamente estructurados.
                 </div>
               </div>
               <button
@@ -160,7 +176,10 @@
       <ul class="social-icon">
         <li class="footer-icon">
           <a href="https://facebook.com/unahoficial">
-            <img src="../../../assets/img/icons/icon_facebook_white.png" alt="" />
+            <img
+              src="../../../assets/img/icons/icon_facebook_white.png"
+              alt=""
+            />
           </a>
         </li>
         <li class="footer-icon">
@@ -170,7 +189,10 @@
         </li>
         <li class="footer-icon">
           <a href="https://www.unah.edu.hn/">
-            <img src="../../../assets/img/icons/icon_linkedin_white.png" alt="" />
+            <img
+              src="../../../assets/img/icons/icon_linkedin_white.png"
+              alt=""
+            />
           </a>
         </li>
         <li class="footer-icon">
@@ -180,7 +202,10 @@
         </li>
         <li class="footer-icon">
           <a href="https://youtube.com/unahoficial">
-            <img src="../../../assets/img/icons/icon_youtube_white.png" alt="" />
+            <img
+              src="../../../assets/img/icons/icon_youtube_white.png"
+              alt=""
+            />
           </a>
         </li>
       </ul>
@@ -202,6 +227,32 @@
       <p class="footer-text">@año | Todos los derechos reservados</p>
     </footer>
 
+    <!-- Modal de avisos -->
+    <div
+      class="modal fade"
+      id="warningModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="warningModalLabel"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">...</div>
+          <div class="modal-footer"></div>
+        </div>
+      </div>
+    </div>
     <script
       src="../../../../assets/js/bootstrap/bootstrap.bundle.min.js"
       crossorigin="anonymous"
@@ -212,5 +263,10 @@
       type="module"
       src="../../../../assets/js/modules/request/uploadCSVStudents.mjs"
     ></script>
-  </body> 
+
+    <script
+      type="module"
+      src="../../../../assets/js/administration/DIPP/upload-students.js"
+    ></script>
+  </body>
 </html>

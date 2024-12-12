@@ -37,7 +37,7 @@ window.addEventListener('load', function(){
 const logoutBtn = document.getElementById('logoutBtn');
 logoutBtn.addEventListener('click', function(event){
     event.preventDefault();
-    Login.logout('../../index.html')
+    Login.logout();
 });  
 
 

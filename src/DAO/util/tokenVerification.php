@@ -7,6 +7,8 @@
  * @property string $password Clave de acceso del respectivo usuario
  * @property string $dbName Nombre de la base de datos
  * @property mysqli $connection Objeto de conexion con la base de datos
+ * 
+ * @author @AngelNolasco
  * */
 
 include_once 'jwt.php';
@@ -41,31 +43,46 @@ class TokenVerification {
      * @param string $typeUser El tipo de usuario del que se desea verificar el token.
      * 
      * @return array $response Arreglo asociativo con el resultado de la verificacion, un mensaje de retroalimentacion, y el tiempo de expiracion si la verificacion es exitosa o un token nulo si la verificacion falla.
+     * 
+     * @author @AngelNolasco
+     * @created 26/11/2024
      */
     public function tokenVerification(string $token, string $typeUser) {
         if(isset($token) && isset($typeUser)) { //Verificando que el token y el typeUser no sean nulos
             $validToken = JWT::validateToken($token); 
             if ($validToken !== false) { //Verificando que la estructura del token sea valida 
                 switch ($typeUser) {
-                    case 'admissionAdmin':
+                    case 1:
                         $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
                         break;
-                    case 'applicant':
-                        $query = "SELECT id_user_applicant FROM TokenUserApplicant WHERE token = ?;";
+                    case 2:
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
                         break;
-                    case 'facultyAdmin':
-                        $query = "SELECT id_user_faculties_administrator FROM `TokenUserFacultiesAdministrator` WHERE token_faculties_administrator = ?;";
+                    case 3:
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
                         break;
-                    case 'strategicAdmin':
-                        $query = "";
+                    case 4:
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
                         break;
-                    case 'dippAdmin':
+                    case 5:
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
+                        break;
+                    case 6:
+                        $query = "SELECT id_user_admissions_administrator FROM TokenUserAdmissionAdmin WHERE token = ?;";
+                        break;
+                    case 7:
                         $query = "SELECT id_user_registry_administrator FROM `TokenUserRegistryAdministrator` WHERE token_registry_administrator = ?;";
                         break;
-                    case 'professor':
+                    case 8:
+                        $query = "SELECT id_user_faculties_administrator FROM `TokenUserFacultiesAdministrator` WHERE token_faculties_administrator = ?;";
+                        break;
+                    case 12:
+                        $query = "SELECT id_user_applicant FROM TokenUserApplicant WHERE token = ?;";
+                        break;
+                    case 14:
                         $query = "SELECT id_user_professor FROM `TokenUserProfessor` WHERE token_professor = ?;";
                         break;
-                    case 'student':
+                    case 15:
                         $query = "SELECT id_user_student FROM `TokenUserStudent` WHERE token_student = ?;";
                         break;
                     default:
