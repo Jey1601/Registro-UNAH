@@ -180,6 +180,7 @@ class DIIPAdminDAO {
             $rowsInsertedStudentProfile = 0;
             $rowsInsertUserStudent = 0;
             $rowsInsertRolUserStudent = 0;
+            $rowsInsertAverage = 0;
             $errors = [];
             $headers = ["nombre_completo_apirante_admitido", "identidad_aspirante_admitido", "direccion_aspirante_admitido", "celular_aspirante_admitido","correo_personal_aspirante_admitido", "carrera_aspirante_admitido", "centro_regional_aspirante_admitido"];
 
@@ -356,6 +357,16 @@ class DIIPAdminDAO {
                 } else {
                     $errors[] = "Fallo en la insercion rol-usuario_estudiante, con numero de identidad del estudiante: " . $idCardStudent;
                 }
+
+                //INSERCION DE LOS PROMEDIOS DEL ESTUDIANTE
+                $queryInsertAverage = "INSERT INTO `StudentGradesAverages` (id_student, period_grade_average_student, annual_academic_grade_average_student, global_grade_average_student) VALUES (?, 0, 0, 99.99);";
+                $resultInsertAverage = $this->connection->execute_query($queryInsertAverage, [$accountNumberStudent]);
+
+                if ($resultInsertAverage) {
+                    $rowsInsertAverage++;
+                } else {
+                    $errors[] = "Fallo en la definicion de los promedios para el estudiante con numero de identidad: " . $idCardStudent;
+                }
             }
 
             return $response = [
@@ -369,7 +380,8 @@ class DIIPAdminDAO {
                     'Total filas estudiantes-pregrado registradas: '.$rowsInsertedStudentUndergraduate,
                     'Total perfiles de estudiantes creados: '.$rowsInsertedStudentProfile,
                     'Total usuarios estudiantes creados: '.$rowsInsertUserStudent,
-                    'Total filas usuario-rol registradas: '.$rowsInsertRolUserStudent
+                    'Total filas usuario-rol registradas: '.$rowsInsertRolUserStudent,
+                    'Total de registros de promedios de estudiantes: '.$rowsInsertAverage++
                 ]
             ];
         } else {
