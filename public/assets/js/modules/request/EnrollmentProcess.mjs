@@ -73,7 +73,7 @@ class EnrollmentProcess {
         Alert.display(
           responseData.status,
           "oh",
-          'Verifica las selección',
+          responseData.message,
           this.path
         )
       } 
@@ -112,7 +112,7 @@ class EnrollmentProcess {
         Alert.display(
           responseData.status,
           "oh",
-          'Verifica las selección',
+          responseData.message,
           this.path
         )
       } 
@@ -153,7 +153,7 @@ class EnrollmentProcess {
         Alert.display(
           responseData.status,
           "oh",
-          'Algo anda mal',
+          responseData.message,
           this.path
         )
       } 
