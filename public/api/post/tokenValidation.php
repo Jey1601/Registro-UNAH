@@ -3,17 +3,17 @@
  * Endpoint para la validación del token de la sesión. Precarga a páginas HTML.
  */
 
- $path = '../../../';
+$path = '../../../';
 include_once $path.'src/DAO/util/tokenVerification.php';
 
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!isset($data['token']) || empty($data['token'])) {
+if (!isset($data['token'], $data['typeUser'])) {
     echo json_encode([
         'success' => false,
-        'message' => 'Token nulo.'
+        'message' => 'Token o tipo de usuario nulo.'
     ]);
     exit;
 } else {
@@ -25,7 +25,8 @@ if (!isset($data['token']) || empty($data['token'])) {
     if ($response['success'] === false) {
         echo json_encode([
             'success' => false,
-            'message' => 'Token invalido.'
+            'message' => 'Token invalido.',
+            'additionalMessage' => $response['message']
         ]);
         exit;
     } else {

@@ -171,6 +171,59 @@ class ProfessorsDAO {
     }
     
     /**
+     * @author @AngelNolasco
+     * @created 11/12/2024
+     */
+    public function setDateCancellationExceptionalProcess (int $idProfessor, string $startDateString, string $endDateString) {
+        if (!isset($idProfessor, $startDate, $endDate)) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'Parametros no definidos o nulos.'
+            ];
+        }
+
+        $querySearchAcademicCoordinator = "SELECT `Roles`.role FROM `UsersProfessors`
+        INNER JOIN `RolesUsersProfessor` ON `UsersProfessors`.id_user_professor = `RolesUsersProfessor`.id_user_professor
+        INNER JOIN `Roles` ON `RolesUsersProfessor`.id_role_professor = `Roles`.id_role
+        WHERE `UsersProfessors`.username_user_professor = ? AND `UsersProfessors`.status_user_professor = 1;";
+        $stmtSearchAcademicCoordinator = $this->connection->prepare($querySearchAcademicCoordinator);
+        $stmtSearchAcademicCoordinator->bind_param('i', $idProfessor);
+        $stmtSearchAcademicCoordinator->execute();
+        $resultSearchAcademicCoordinator = $stmtSearchAcademicCoordinator->get_result();
+        $roles = [];
+        while ($row = $resultSearchAcademicCoordinator->fetch_assoc()) {
+            $roles [] = $row['role'];
+        }
+
+        if (!in_array('Coordinator', $roles)) {
+            return $response = [
+                'status' => 'info',
+                'message' => 'El docente no tiene el rol de coordinador academico.'
+            ];
+        }
+
+        $queryGetIdAcademicCoordinator = "SELECT `AcademicCoordinator`.id_academic_coordinator FROM `AcademicCoordinator`
+        INNER JOIN `Professors` ON `AcademicCoordinator`.id_professor = `Professors`.id_professor
+        WHERE `Professors`.id_professor = ? AND `AcademicCoordinator`.status_academic_coordinator = TRUE;";
+        $resultGetIdAcademicCoordinator = $this->connection->execute_query($queryGetIdAcademicCoordinator, [$idProfessor]);
+        $idAcademicCoordinator = 0;
+        while ($row = $resultGetIdAcademicCoordinator->fetch_assoc()) {
+            $idAcademicCoordinator = $row['id_academic_coordinator'] ?? 0;
+            break;
+        }
+
+        if($idAcademicCoordinator == 0) {
+            return $response = [
+                'status' => 'warning',
+                'message' => 'El docente no esta registrado como coordinador academico.'
+            ];
+        }
+
+        
+
+    }
+
+    /**
      * Metodo para obtener las solicitudes de cancelacion excepcional de clases, las solicitudes de cambio de centro regional y las solicitudes de cambio de carrera que aun no tienen respuesta.
      * 
      * @param int $idProfessor El numero de cuenta del docente que las solicita (para verificar que sea un coordinador academico).
@@ -223,6 +276,13 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener los detalles de una solicitud de cancelacion excepcional de seccion. Detalles:
+     * datos del estudiante que hizo la solicitud, documento con explicacion de motivo, archivo de evidencia, etc.
+     * 
+     * @param int $idRequest Codigo unico de la solicitud de la que se quiere obtener los detalles.
+     * 
+     * @return array $response Arreglo asociativo con resultado del metodo (status), mensaje de retroalimentacion (message) y los datos que forman parte de los detalles de la solicitud.
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -273,6 +333,14 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para response una solicitud de cancelacion excepcional de clases.
+     * Se comprueba que el docente que desea responderla sea un coordinador academico, se registra la solicitud como respondida y se registra la fecha de respuesta.
+     * 
+     * @param int $idProfessor El numero identificador del docente que respondera la solicitud.
+     * @param int $idRequest El codigo unico de la solicitud que se respondera.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (status) y un mensaje de retroalimentacion (message)
+     * 
      * @author @AngelNolasco
      * @created 09/12/2024
      */
@@ -333,6 +401,19 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para responder a cada seccion que se solicita cancelar en una solicitud de cancelacion excepcional de clases.
+     * Se comprueba que el docente que quiere responder la solicitud se un coordinador academico, se obtiene el detalle de la solicitud (las secciones
+     * que se solicita cancelar) y se guarda la respuesta.
+     * 
+     * @param int $idProfessor Numero identificador del docente que responde la solicitud.
+     * @param int $idRequest Codigo unico de la solicitu a responder.
+     * @param string $idStudent Numero identificador del estudiante al que pertenece la solicitud.
+     * @param array $arrayClassSectionIdResolution Arreglo asociativo que contiene la relacion entre los codigos de las secciones que se solicitan cancelar y el dictamen de la cancelacion.
+     * 
+     * @return array $response Arreglo asociativo que contiene el resultado del metodo (status), un mensaje de retroalimentacion (message) y, en caso de exito
+     *                         las secciones que se han cancelado, la actualizacion de estado de matricula del estudiante en dichas secciones y un arreglo con los posibles
+     *                         errores que se pudieron haber presentado.
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -440,6 +521,15 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para filtrar estudiantes segun el centro regional y la carrera.
+     * Se comprueba que el docente que quiere filtrar los estudiantes sea jefe de departamento pues es para obtener el historial academico de los estudiantes de la universidad.
+     * 
+     * @param int $idProfessor El numero identificador del docente que quiere obtener los datos de los estudiantes.
+     * @param int $idRegionalCenter El codigo unico del centro regional por el que se quiere filtrar.
+     * @param int $idUndergraduate EL codigo unico de la carrera por la que se quiere filtrar.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (status), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo con los estudiantes y sus datos que pasaron el filtro.
+     * 
      * @author @AngelNolasco
      * @created 11/12/2024
      */
@@ -503,7 +593,16 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener el historial academico de un estudiante.
+     * Se comprueba que el docente sea jefe de departamento.
      * 
+     * @param int $idProfessor Numero identificador del docente que quiere obtener el historial academico.
+     * @param string $idStudent Numero identificador del estudiante del que se quiere obtener el historial academico.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (status), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo de todas las secciones en las que el estudiante ha estado matriculado junto con sus datos (sin contar en las que esta matriculado actualmente).
+     * 
+     * @author @AngelNolasco
+     * @created 11/12/2024
      */
     public function getAcademicHistoryByStudent (int $idProfessor, string $idStudent) {
         if (!isset($idProfessor, $idStudent)) {
@@ -632,6 +731,14 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para que un docente puede establecer el link de su video de presentacion de la clase.
+     * 
+     * @param int $idProfessor El numero de cuenta del docente.
+     * @param int $idClassSection El codigo unico de la seccion de la clase.
+     * @param string $urlVideo Link del video de presentacion.
+     * 
+     * @return array $response Arreglo asociativo con el resultado de la consulta (success) y un mensaje de retroalimentacion (message).
+     * 
      * @author @AngelNolasco
      * @created 09/12/2024
      */

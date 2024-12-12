@@ -76,9 +76,6 @@ class TokenVerification {
                     case 8:
                         $query = "SELECT id_user_faculties_administrator FROM `TokenUserFacultiesAdministrator` WHERE token_faculties_administrator = ?;";
                         break;
-                    case 11: //Strategic Manager Faculty
-                        $query = "";
-                        break;
                     case 12:
                         $query = "SELECT id_user_applicant FROM TokenUserApplicant WHERE token = ?;";
                         break;
