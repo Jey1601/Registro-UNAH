@@ -1,13 +1,14 @@
 <?php
 /**
- * Script para gestionar la actualización de la contraseña de un estudiante.
- *
- * Este script recibe una solicitud POST con un token y una nueva contraseña,
- * y utiliza la clase ResetStudents para validar el token y actualizar la contraseña.
- *
- * @author Kenia Romero
- * @created 09/11/2024
- */
+* Script para gestionar la actualización de la contraseña de un estudiante.
+*
+* Este script recibe una solicitud POST con un token y una nueva contraseña,
+* y utiliza la clase ResetStudents para validar el token y actualizar la contraseña.
+*
+* @author Kenia Romero
+* @created 09/11/2024
+*/
+
 require 'ResetProfessors.php';
 
 header('Content-Type: application/json');
