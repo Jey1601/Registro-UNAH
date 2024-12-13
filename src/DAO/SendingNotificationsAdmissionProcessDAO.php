@@ -47,6 +47,8 @@ Class SendingNotificationsAdmissionProcessDAO{
      *                   "message" => string,
      *                   "code" => int
      *                 ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getIdSendingNotificationsAdmissionProcess($idAdmissionProcess){
         try {
@@ -118,6 +120,8 @@ Class SendingNotificationsAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getStartDateSendingNotificationsAdmissionProcess($idSendingNotificationsAdmissionProcess){
         try{
@@ -187,6 +191,8 @@ Class SendingNotificationsAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getEndDateSendingNotificationsAdmissionProcess($idSendingNotificationsAdmissionProcess){
         try{
@@ -256,6 +262,8 @@ Class SendingNotificationsAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getStartTimeSendingNotificationsAdmissionProcess($idSendingNotificationsAdmissionProcess){
         try{
@@ -325,6 +333,8 @@ Class SendingNotificationsAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getEndTimeSendingNotificationsAdmissionProcess($idSendingNotificationsAdmissionProcess){
         try{
@@ -356,7 +366,10 @@ Class SendingNotificationsAdmissionProcessDAO{
             ];
         }
     }
-
+    /*
+    * @author Alejandro Moya 20211020462
+    * @created Noviembre de 2024
+    */
     public function getVerifySendingNotificationsAdmissionProcess(){
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
@@ -390,7 +403,10 @@ Class SendingNotificationsAdmissionProcessDAO{
             return false;
         }
     }
-
+    /*
+    * @author Alejandro Moya 20211020462
+    * @created Noviembre de 2024
+    */
     public function getVerifyTimeSendingNotificationsAdmissionProcess(){
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
