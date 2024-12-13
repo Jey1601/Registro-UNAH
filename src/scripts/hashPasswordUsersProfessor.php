@@ -1,15 +1,8 @@
 <?php
 /**
- * Script que cifra las contrasenas de los usuarios administradores de facultad.
+ * Script que cifra las contrasenas de los usuarios docentes. Usado unicamente para agilizar el desarrollo y la realizacion de pruebas.
  * 
  * @author @AngelNolasco
- * CREATE TABLE UsersProfessors (
-    id_user_professor INT PRIMARY KEY AUTO_INCREMENT,
-    username_user_professor INT UNIQUE NOT NULL,
-    password_user_professor VARCHAR(100) NOT NULL,
-    status_user_professor BOOLEAN NOT NULL,
-    FOREIGN KEY (username_user_professor) REFERENCES Professors(id_professor)
-);
  */
 
 $host = 'localhost';

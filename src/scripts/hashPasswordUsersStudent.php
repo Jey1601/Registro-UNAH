@@ -1,6 +1,6 @@
 <?php
 /**
- * Script que cifra las contrasenas de los usuarios de aspirantes. Usado unicamente para agilizar el desarrollo, las contrasenas se encriptan automaticamente al insertar al aspirante desde la plataforma.
+ * Script que cifra las contrasenas de los usuarios estudiantes. Usado unicamente para agilizar el desarrollo, las contrasenas se encriptan automaticamente al insertar al aspirante desde la plataforma.
  * 
  * @author @AngelNolasco
  */

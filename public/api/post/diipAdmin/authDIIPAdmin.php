@@ -1,6 +1,7 @@
 <?php
 /**
  * Endpoint para autenticacion de los usuarios administradores de registro.
+ * @author @AngelNolasco
  */
 const PATH = '../../../../src';
 include_once PATH.'/DAO/DIIPAdminDAO.php';

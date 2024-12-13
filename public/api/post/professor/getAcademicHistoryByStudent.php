@@ -1,5 +1,6 @@
 <?php
 /**
+ * Endpoint para obtener el historial academico de un estudiante.
  * @author @AngelNolasco
  * @created 11/12/2024
  */

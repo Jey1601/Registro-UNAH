@@ -1,6 +1,7 @@
 <?php
     /** 
      * Endpoint para la creacion de docente
+     * @author @AngelNolasco
     */
     const PATH = '../../../../src';
     include_once PATH.'/DAO/FacultyAdminDAO.php';

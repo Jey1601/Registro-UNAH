@@ -1,6 +1,7 @@
 <?php
 /**
  * Endpoint para la validación del token de la sesión. Precarga a páginas HTML.
+ * @author @AngelNolasco
  */
 
 $path = '../../../';

@@ -1,6 +1,7 @@
 <?php
 /**
  * Endpoint para la autenticación de usuarios de aspirantes.
+ * @author @AngelNolasco
  */
 
  $path = '../../../../';

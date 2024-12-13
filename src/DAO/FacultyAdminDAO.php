@@ -468,6 +468,12 @@ class FacultyAdminDAO {
     }
 
     /**
+     * Metodo para obtener todos los docentes de una facultad.
+     * 
+     * @param int $idFaculty Numero identificador de la facultad de la que se quiere obtener los docentes.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (success), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo con los docentes de la facultad (professors).
+     * 
      * @author @AngelNolasco
      * @created 08/12/2024
      */

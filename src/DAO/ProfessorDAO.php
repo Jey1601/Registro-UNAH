@@ -171,6 +171,14 @@ class ProfessorsDAO {
     }
     
     /**
+     * Metodo para que un coordinador academico defina las fechas del proces de cancelacion excepcional de clases de su carrera.
+     * 
+     * @param int $idProfessor Numero identificador del docente que quiere establecer las fechas
+     * @param string $startDateString Fecha de inicio del proceso.
+     * @param string $endDateString Fecha de finalizacion del proceso.
+     * 
+     * @return $response Arreglo asociativo con el resultado del metodo (status), un mensaje de retroalimentacion (message)
+     * 
      * @author @AngelNolasco
      * @created 11/12/2024
      */
@@ -864,6 +872,12 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener todos los estudiantes matriculados en una seccion y escribir sus datos en un CSV.
+     * 
+     * @param int $idSectionClass Numero unico identificador de la seccion.
+     * 
+     * @return $output Archivo CSV generado
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -928,6 +942,12 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener todos los estudiantes matriculados en una seccion y escribir sus datos en un PDF. Se utilizo la libreria FPDF (util).
+     * 
+     * @param int $idSectionClass Numero unico identificador de la seccion.
+     * 
+     * @return $output Archivo PDF generado
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -1004,6 +1024,14 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo auxiliar para reemplazar los caracteres que pueden generar incompatibilidades en la renderizacion de texto de un archivo PDF.
+     * @see getStudentsBySectionPDF
+     * @see getReportCurrentPeriodPDF
+     * 
+     * @param string $string Cadena de texto a la que se le quiere aplicar el proceso.
+     * 
+     * @return string La cadena de texto nuevo con los caracteres reemplazados.
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -1014,6 +1042,12 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener la carga academica del periodo actual.
+     * 
+     * @param int $idProfessor Numero identificador del docente que quiere obtener la carga academica (debe ser coordinador academico).
+     * 
+     * @return $response Arreglo asociativo con el resultado del metodo (status), un mensaje de retroalimentacion y, en caso de exito, la carga academica del periodo actual (secciones de clases) en formato de arreglo asociativo.
+     * 
      * @author @AngelNolasco
      * @created 11/12/2024
      */
@@ -1073,6 +1107,12 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener la carga academica del periodo actual y escribirla en un archivo PDF.
+     * 
+     * @param int $idProfessor Numero identificador del docente que quiere obtener la carga academica (debe ser coordinador academico).
+     * 
+     * @return $pdf Archivo PDF con la carga academica del periodo actual.
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -1124,12 +1164,6 @@ class ProfessorsDAO {
             ];
         }
 
-        // return $response = [
-        //     'status' => 'success',
-        //     'message' => 'Se obtuvo la carga academica satisfactoriamente.',
-        //     'academicCharge' => array_values($sections)
-        // ];
-
         // Crear PDF con FPDF
         $pdf = new FPDF('L');
         $pdf->AddPage();
@@ -1180,6 +1214,12 @@ class ProfessorsDAO {
     }
 
     /**
+     * Metodo para obtener la carga academica del periodo actual y escribirla en un archivo CSV.
+     * 
+     * @param int $idProfessor Numero identificador del docente que quiere obtener la carga academica (debe ser coordinador academico).
+     * 
+     * @return $pdf Archivo CSV con la carga academica del periodo actual.
+     * 
      * @author @AngelNolasco
      * @created 11/12/2024
      */

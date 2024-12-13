@@ -1,5 +1,6 @@
 <?php
 /**
+ * Endpoint para realizar la verificacion de fecha de realizacion de solicitud de cancelacion excepcional de clases.
  * @author @AngelNolasco
  * @created 10/12/2024
  */

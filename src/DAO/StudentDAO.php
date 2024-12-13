@@ -161,6 +161,12 @@ class StudentDAO {
     }
 
     /**
+     * Metodo para obtener las clases en las que un estudiante esta matriculado actualmente.
+     * 
+     * @param string $idStudent Numero identificador del estudiante del que se quiere obtener las clases.
+     * 
+     * @return array $response Arreglo asociativo con el resultado de la consulta (status), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo de las secciones en las que esta matriculado junto con sus datos (groupedClasses).
+     * 
      * @author @AngelNolasco
      * @created 08/12/2024
      */
@@ -218,6 +224,12 @@ class StudentDAO {
     }
 
     /**
+     * Metodo para verificar que un estudiante que esta intentando realizar una solicitud de cancelacion excepcional de clases lo haga en el periodo o rango de fechas permitidas.
+     * 
+     * @param int $idStudent Numero identificador del estudiante que quiere realizar la solicitud.
+     * 
+     * @return bool Valor boolean que indica si se cumple la condicion.
+     * 
      * @author @AngelNolasco
      * @created 10/12/2024
      */
@@ -245,6 +257,16 @@ class StudentDAO {
     }
 
     /**
+     * Metodo para realizar las solicitudes de cancelacion excepcional de clases.
+     * 
+     * @param string $idStudent Numero identificador del estudiante que quiere realizar la solicitud.
+     * @param $reasons La razon por la que realiza la solicitud.
+     * @param $document El documento que justifica su motivo.
+     * @param $evidence Evidencia del caso.
+     * @param array $idsClassSections Un arreglo con los IDs de las secciones que quiere cancelar.
+     * 
+     * @return array $response Arreglo asociativo con el resultado del metodo (success), un mensaje de retroalimentacion (message) y, en caso de exito, un arreglo de las secciones que se registraron correctamente en la consulta y un arreglo con los posibles errores que se pudieron haber producido.
+     * 
      * @author @AngelNolasco
      * @created 08/12/2024
      */

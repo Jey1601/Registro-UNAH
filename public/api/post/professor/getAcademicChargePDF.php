@@ -1,5 +1,6 @@
 <?php
 /**
+ * Endpoint para obtener la carga academica del periodo actual en formato PDF.
  * @author @AngelNolasco
  * @created 10/12/2024
  */
