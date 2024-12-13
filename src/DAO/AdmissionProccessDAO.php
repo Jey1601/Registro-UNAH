@@ -40,6 +40,8 @@ Class AdmissionProccessDAO{
      *                   "status" => "error",
      *                   "message" => string
      *                 ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getAdmissionProcess(){
         try {
@@ -110,6 +112,8 @@ Class AdmissionProccessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "Code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getStartDateAdmissionProcess($idAdmissionProcess){
         try{
@@ -180,6 +184,8 @@ Class AdmissionProccessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "Code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getEndDateAdmissionProcess($idAdmissionProcess){
         try{
@@ -250,6 +256,8 @@ Class AdmissionProccessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "Code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getNameAdmissionProcess($idAdmissionProcess){
         try{
@@ -282,7 +290,16 @@ Class AdmissionProccessDAO{
             ];
         }
     }
-
+    /**
+        * Verifica si el proceso de admisión está activo según las fechas de inicio y fin.
+        * 
+        * Este método consulta el proceso de admisión, obtiene las fechas de inicio y fin del proceso,
+        * y verifica si la fecha actual está dentro de ese rango.
+        * 
+        * @author Alejandro Moya 20211020462
+        * @created Noviembre de 2024
+        * @return bool Retorna true si la fecha actual está dentro del rango de fechas del proceso de admisión, false en caso contrario.
+        */
     public function getVerifyAdmissionProcess(){
         $dataIdAdmissionProcess = $this->getAdmissionProcess();
         if ( $dataIdAdmissionProcess['status'] != 'success') {
