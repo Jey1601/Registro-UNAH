@@ -47,15 +47,17 @@ Class AcceptanceAdmissionProcessDAO{
      *                   "message" => string,
      *                   "code" => int
      *                 ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getIdAcceptanceAdmissionProcess($idAdmissionProcess){
         try {
-            $idAdmissionProcess = (int) $idAdmissionProcess; //Se asegura que se maneje como entero
+            $idAdmissionProcess = (int) $idAdmissionProcess;
             $IdsAcceptanceAdmissionProcess = $this->connection->execute_query("CALL ACTIVE_ACCEPTANCE($idAdmissionProcess)");
 
-            if ($IdsAcceptanceAdmissionProcess) { //Comprobar si el procedimiento almacenado se ejecuto correctamente. 
-                if ($IdsAcceptanceAdmissionProcess->num_rows > 0) { //Comprobar si se devolvieron más de 0 identificadores de proceso de consultar resultados.
-                    $IdAcceptanceAdmissionProcess= $IdsAcceptanceAdmissionProcess->fetch_assoc(); //obtener el primer identificadores de proceso de consultar resultados activo devuelto, como un arreglo asociativo.
+            if ($IdsAcceptanceAdmissionProcess) { 
+                if ($IdsAcceptanceAdmissionProcess->num_rows > 0) { 
+                    $IdAcceptanceAdmissionProcess= $IdsAcceptanceAdmissionProcess->fetch_assoc();
                     return [
                         "status" => "success",
                         "id_acceptance_admission_process" => $IdAcceptanceAdmissionProcess['id_acceptance_admission_process']
@@ -118,6 +120,8 @@ Class AcceptanceAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getStartDateAcceptanceAdmissionProcess($idAcceptanceAdmissionProcess){
         try{
@@ -187,6 +191,8 @@ Class AcceptanceAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getEndDateAcceptanceAdmissionProcess($idAcceptanceAdmissionProcess){
         try{
@@ -219,7 +225,16 @@ Class AcceptanceAdmissionProcessDAO{
         }
     }
 
-
+    /**
+        * Verifica si el proceso de aceptacion está en curso según las fechas de inicio y fin.
+        * 
+        * Este método consulta el proceso de admisión activo, obtiene las fechas de inicio y fin del proceso de aceptación,
+        * y verifica si la fecha actual está dentro de ese rango.
+        * 
+        * @author Alejandro Moya 20211020462
+        * @created Noviembre de 2024
+        * @return bool Retorna true si la fecha actual está dentro del rango de fechas del proceso de aceptación, false en caso contrario.
+        */
     public function getVerifyAcceptanceAdmissionProcess() {
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
