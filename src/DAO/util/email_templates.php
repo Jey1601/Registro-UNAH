@@ -1,4 +1,36 @@
 <?php
+/**
+ * Genera plantillas HTML de correo electrónico personalizadas.
+ * 
+ * Esta función permite obtener una plantilla predefinida según el tipo de correo, 
+ * reemplazando las etiquetas de marcador de posición con los valores proporcionados.
+ * 
+ * @param string $type El tipo de plantilla de correo a utilizar. Los tipos disponibles son:
+ *      - 'confirmation'            : Correo de confirmación de solicitud.
+ *      - 'exam_results'            : Resultados del examen de admisión.
+ *      - 'career_acceptance'       : Notificación de aceptación a una carrera.
+ *      - 'verification_email'      : Correo para la verificación de dirección de email.
+ *      - 'confirmation_correct'    : Confirmación de datos correctos en una solicitud.
+ *      - 'exam_results_warning'    : Notificación de errores en la información proporcionada.
+ *      - 'user_professor'          : Información de usuario para profesores.
+ *      - 'users_login'             : Información de acceso al portal para estudiantes.
+ *      - 'reset_request'           : Solicitud de restablecimiento de contraseña.
+ * @param array $placeholders Un arreglo asociativo donde la clave representa el marcador de posición
+ *                            dentro de la plantilla y el valor corresponde al dato que reemplazará ese marcador.
+ * 
+ * @return string Retorna la plantilla HTML con los marcadores de posición reemplazados por los valores especificados.
+ *                Si no se encuentra el tipo de plantilla, retorna una cadena vacía.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * $placeholders = [
+ *     'full_name' => 'Juan Pérez',
+ *     'verification_code' => 'A1B2C'
+ * ];
+ * echo getTemplate('verification_email', $placeholders);
+ *
+ * @author Kenia Romero
+ */
 function getTemplate($type, $placeholders = []) {
     $templates = [
         'confirmation' => "

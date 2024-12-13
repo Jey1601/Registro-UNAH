@@ -1,9 +1,26 @@
 <?php
+/**
+ * mail
+ *
+ * Este arhivo contiene la clase mail, que regula el comportamiento de envio de correos.
+ * Se conecta a la base de datos unah_registration para consultar y almacenar información de los usuarios. 
+ *
+ * @author Kenia Romero
+ * @created 08/11/2024
+ */
+
+//Cargar dependencias
 require 'PHPMailerConfig.php';
 require 'getUsersInfoForMail.php';
 require 'email_templates.php';
 
 Class mail{
+/**
+* Configuración de conexión a la base de datos
+* @param int $maxEmailsPerDay limita la cantidad de correos que se pueden enviar por día. Considerando que actualmente las 
+* pruebas se realizan con un correo personal se tomaron en cuenta las limitantes que el mismo tiene; para un ámbito laboral 
+* lo ideal será utilizar un correo corporativo que permite enviar más correos por día.
+*/
     private $connection;
     private $mail;
     private $maxEmailsPerDay = 500;
@@ -13,8 +30,8 @@ Class mail{
     private $password = '12345';
     private $dbName = 'unah_registration';
 
-//Conexión BD
-//Configuración de la base de datos
+//Constructor de la clase
+//Establece la conexión a la base de datos
 public function __construct()
 {
     $this->connection = null;
@@ -25,6 +42,17 @@ public function __construct()
     }
 }
 
+/**
+* Enviar correos electrónicos de confirmación a los aspirantes.
+*
+* @param string $name, nombre completo del aspirante.
+* @param string $id_application, número de identificación de la solicitud del aspirante.
+* @param string $email, dirección de correo electrónico del aspirante.
+*
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+*
+* @author Kenia Romero
+*/
 public function sendConfirmation($name,$id_application,$email,$password){
     $mail = new PHPMailerConfig();
 
@@ -43,6 +71,22 @@ public function sendConfirmation($name,$id_application,$email,$password){
         }
 }
 
+/**
+* Envía una notificación de aceptación de carrera a un aplicante.
+* 
+* Esta función prepara un mensaje con el nombre del aplicante y la carrera aceptada,
+* utiliza una plantilla predefinida y envía el correo electrónico correspondiente.
+* 
+* @param string $email Correo electrónico del aplicante.
+* @param string $name Nombre completo del aplicante.
+* @param string $career Nombre de la carrera aceptada.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendCareerAcceptanceNotification($email, $name, $career) {
     $mail = new PHPMailerConfig();
  
@@ -63,6 +107,23 @@ public function sendCareerAcceptanceNotification($email, $name, $career) {
     }
 }
 
+/**
+* Envía las credenciales de usuario a un profesor.
+* 
+* Esta función prepara los datos del profesor, como nombre, usuario y contraseña,
+* genera un mensaje utilizando una plantilla y lo envía al correo electrónico.
+* 
+* @param string $name Nombre completo del profesor.
+* @param string $username Nombre de usuario asignado al profesor.
+* @param string $email Correo electrónico del profesor.
+* @param string $password Contraseña asignada al profesor.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendUserProfessor($name,$username,$email,$password){
     $mail = new PHPMailerConfig();
 
@@ -82,6 +143,21 @@ public function sendUserProfessor($name,$username,$email,$password){
  
 }
 
+/**
+* Envía un correo de confirmación de verificación al aplicante.
+* 
+* Esta función envía un correo con los detalles de la verificación utilizando una plantilla predefinida.
+* 
+* @param string $name Nombre completo del aplicante.
+* @param string $id_application ID de la solicitud del aplicante.
+* @param string $email Correo electrónico del aplicante.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendVerificationConfirmation($name,$id_application,$email){
     $mail = new PHPMailerConfig();
 
@@ -99,6 +175,20 @@ public function sendVerificationConfirmation($name,$id_application,$email){
         }
 }
 
+/**
+* Envía una confirmación de solicitud exitosa a un aplicante.
+* 
+* Esta función utiliza una plantilla predefinida para confirmar la solicitud.
+* 
+* @param string $email Correo electrónico del aplicante.
+* @param string $name Nombre completo del aplicante.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendStatusApplicationCorrect($email, $name){
     $mail = new PHPMailerConfig();
 
@@ -118,6 +208,15 @@ public function sendStatusApplicationCorrect($email, $name){
     }
 }
 
+/**
+* Formatea los campos incorrectos en el formulario de inscripción.
+* 
+* @param array $incorrectFields Lista de campos incorrectos.
+* 
+* @return string Lista HTML de campos incorrectos.
+*
+* @author Kenia Romero
+*/
 public function formatIncorrectFields($incorrectFields) {
     $formatted = '';
     if (is_array($incorrectFields) && count($incorrectFields) > 0) {
@@ -130,6 +229,22 @@ public function formatIncorrectFields($incorrectFields) {
     return $formatted;
 }
 
+/**
+* Envía un aviso de verificación fallida de la solicitud del aplicante.
+* 
+* Esta función utiliza una plantilla para enviar detalles de campos incorrectos y una descripción adicional.
+* 
+* @param string $email Correo electrónico del aplicante.
+* @param string $name Nombre completo del aplicante.
+* @param array $incorrectFields Lista de campos incorrectos.
+* @param string $description Descripción de los errores encontrados.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendStatusApplicationVerify($email, $name, $incorrectFields, $description){
     $mail = new PHPMailerConfig();
 
@@ -152,6 +267,20 @@ public function sendStatusApplicationVerify($email, $name, $incorrectFields, $de
     }
 }
 
+/**
+* Envía un código de confirmación por correo a un aplicante.
+* 
+* Esta función genera un código de confirmación alfanumérico, lo almacena en la base de datos
+* con un tiempo de expiración y envía el código al correo electrónico del aplicante.
+* 
+* @param string $name Nombre completo del aplicante.
+* @param string $email Correo electrónico del aplicante.
+* @param string $applicant_id_email_confirmation ID único del aplicante para la confirmación de correo.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function setConfirmationEmailApplicants($name, $email, $applicant_id_email_confirmation) {
     $confirmation_code_email_confirmation = Code::generateAlphanumericCode(5);
 
@@ -209,6 +338,19 @@ public function setConfirmationEmailApplicants($name, $email, $applicant_id_emai
     $stmt->close();
 }
 
+/**
+* Valida un código de confirmación de correo electrónico de un aplicante.
+* 
+* Esta función verifica si el código de confirmación existe, si aún no ha expirado
+* y actualiza el estado de confirmación en la base de datos.
+* 
+* @param string $applicant_id_email_confirmation ID único del aplicante.
+* @param string $confirmation_code_email_confirmation Código de confirmación proporcionado por el aplicante.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function getConfirmationEmailApplicants($applicant_id_email_confirmation,$confirmation_code_email_confirmation) {
     $mail = new PHPMailerConfig();
  
@@ -283,6 +425,19 @@ public function getConfirmationEmailApplicants($applicant_id_email_confirmation,
     $stmt->close();
 }
 
+
+/**
+* Envía correos electrónicos con los resultados de los exámenes a un listado de aplicantes.
+* 
+* Esta función obtiene la información de los aplicantes agrupada por resultados,
+* genera los cuerpos de los mensajes utilizando una plantilla y envía un número limitado de correos.
+* 
+* @throws Exception Si ocurre un error al enviar un correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendRatings(/*$connection, $type, $maxEmailsPerDay*/) {
     $mail = new PHPMailerConfig();
     $type = 'exam_results';
@@ -325,7 +480,23 @@ public function sendRatings(/*$connection, $type, $maxEmailsPerDay*/) {
     echo "Se enviaron $emailCount correos.<br>";
 }
 
-//Enviar el usuario y contraseña de los estudiantes
+/**
+* Envía un correo electrónico con las credenciales de inicio de sesión a un estudiante.
+* 
+* Esta función prepara los datos del estudiante, genera un mensaje con una plantilla y
+* envía el correo con el nombre completo, nombre de usuario y contraseña.
+* 
+* @param string $full_name Nombre completo del estudiante.
+* @param string $username_user_student Nombre de usuario del estudiante.
+* @param string $password Contraseña asignada al estudiante.
+* @param string $email Correo electrónico del estudiante.
+* 
+* @throws Exception Si ocurre un error al enviar el correo electrónico.
+* 
+* @return void
+*
+* @author Kenia Romero
+*/
 public function sendStudentsLogin($full_name, $username_user_student, $password, $email) {
     $mail = new PHPMailerConfig();
 

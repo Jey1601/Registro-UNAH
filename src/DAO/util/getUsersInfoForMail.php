@@ -1,35 +1,21 @@
 <?php
 
-/*function getApplicantsWithResults($connection) {
-    $sql = "
-          SELECT 
-            Applicants.id_applicant,
-            CONCAT(
-                Applicants.first_name_applicant, ' ',
-                IFNULL(Applicants.second_name_applicant, ''), ' ',
-                IFNULL(Applicants.third_name_applicant, ''), ' ',
-                Applicants.first_lastname_applicant, ' ',
-                IFNULL(Applicants.second_lastname_applicant, '')
-            ) AS full_name,
-            Applicants.email_applicant,
-            UsersApplicants.password_user_applicant,
-            `TypesAdmissionTests`.name_type_admission_tests,
-            `RatingApplicantsTest`.rating_applicant
-        FROM 
-            Applicants
-        LEFT JOIN 
-            Applications ON Applicants.id_applicant = Applications.id_applicant
-        LEFT JOIN 
-            UsersApplicants ON Applications.id_admission_application_number = UsersApplicants.password_user_applicant
-        LEFT JOIN
-            RatingApplicantsTest ON Applications.id_admission_application_number = RatingApplicantsTest.id_admission_application_number
-        LEFT JOIN `TypesAdmissionTests` ON `RatingApplicantsTest`.id_type_admission_tests = `TypesAdmissionTests`.id_type_admission_tests   
-        WHERE 
-            Applicants.status_applicant = 1 AND status_rating_applicant_test =1;";
-    return $connection->query($sql);
-}*/
-
-/*Esta función recupera a los aspirantes para enviarles un correo que les informará los resultados de sus diferentes tipos de examen de admisión*/
+/**
+ * Recupera a los aspirantes para enviarles un correo con los resultados de su examen(es) de admisión.
+ *
+ * Esta función consulta la base de datos y organiza los resultados por aspirante,
+ * incluyendo su información personal y las calificaciones obtenidas en los diferentes tipos de exámenes.
+ *
+ * @param mysqli $connection Conexión activa a la base de datos.
+ * 
+ * @return array Un arreglo asociativo donde cada clave es el ID del aspirante y su valor contiene:
+ *               - 'full_name': Nombre completo del aspirante.
+ *               - 'email': Correo electrónico del aspirante.
+ *               - 'password': Contraseña del usuario.
+ *               - 'exams': Arreglo con los exámenes y sus calificaciones.
+ *
+ * @author Kenia Romero
+ */
 function getGroupedResultsPerApplicants($connection) {
     $sql = "
           SELECT 
@@ -83,7 +69,17 @@ function getGroupedResultsPerApplicants($connection) {
     return $groupedResults;
 }
 
-/*Esta función genera una tabla que almacena los resultados del examen(es) y el tipo de examen(es) que realizó el aspirante*/
+/**
+* Genera una tabla HTML con los detalles de los exámenes y calificaciones del aspirante.
+*
+* @param array $exams Arreglo que contiene los detalles de los exámenes, donde cada elemento incluye:
+*                     - 'exam_name': Nombre del examen.
+*                     - 'rating': Calificación obtenida.
+* 
+* @return string Retorna una cadena HTML que representa una tabla con los detalles del examen.
+*
+* @author Kenia Romero
+*/
 function generateExamDetails($exams) {
     $details = "<table border='1' style='border-collapse: collapse; width: 100%;'>
                     <thead>
@@ -104,8 +100,18 @@ function generateExamDetails($exams) {
     return $details;
 }
 
-
-/*Esta función recupera a los aspirantes para enviarles un correo que les informará el exito del envio de su solicitud*/
+/**
+* Recupera a los aspirantes que han enviado su solicitud exitosamente.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* 
+* @return mysqli_result|bool Resultado de la consulta SQL con los siguientes campos:
+*                           - 'id_applicant': ID del aspirante.
+*                           - 'full_name': Nombre completo del aspirante.
+*                           - 'email_applicant': Correo electrónico del aspirante.
+*
+* @author Kenia Romero
+*/
 function getApplicantsForConfirmation($connection) {
     $sql = "
         SELECT 
@@ -130,7 +136,19 @@ function getApplicantsForConfirmation($connection) {
 }
 
 
-/*Esta función permite recuperar a los aspirantes que ya escogieron una carrera y fueron aprobados y registrados en la misma*/
+/**
+* Recupera a los aspirantes aprobados y registrados en una carrera universitaria.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* 
+* @return mysqli_result|bool Resultado de la consulta SQL con los siguientes campos:
+*                           - 'id_applicant': ID del aspirante.
+*                           - 'full_name': Nombre completo del aspirante.
+*                           - 'email_applicant': Correo electrónico del aspirante.
+*                           - 'name_undergraduate': Nombre de la carrera universitaria.
+*
+* @author Kenia Romero
+*/
 function getApprovedApplicants($connection) {
     $sql = "
         SELECT 
@@ -162,7 +180,21 @@ function getApprovedApplicants($connection) {
     return $connection->query($sql);
 }
 
-function getStudentsPassword(PDO $connection) {
+/**
+* Recupera las credenciales (usuario y contraseña) de los estudiantes activos.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* 
+* @return mysqli_result|bool Resultado de la consulta SQL con los siguientes campos:
+*                           - 'id_student': ID del estudiante.
+*                           - 'full_name': Nombre completo del estudiante.
+*                           - 'usser': Nombre de usuario del estudiante.
+*                           - 'password': Contraseña del estudiante.
+*                           - 'email': Correo electrónico del estudiante.
+*
+* @author Kenia Romero
+*/
+function getStudentsPassword($connection) {
     $sql = "
         SELECT 
             Students.id_student,

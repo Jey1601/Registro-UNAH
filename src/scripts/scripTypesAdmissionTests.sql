@@ -1,4 +1,5 @@
 USE unah_registration;
+-- @author  Kenia Romero 20171003359 @created 09/12/2024
 
 /*1) CREA UN NUEVO TIPO DE EXAMEN USANDO EL EJEMPLO QUE SE MUESTRA A CONTINUACIÓN*/
 INSERT INTO TypesAdmissionTests (name_type_admission_tests, status_type_admission_tests)

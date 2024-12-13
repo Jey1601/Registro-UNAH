@@ -1,14 +1,30 @@
 <?php
+/**
+ * ResetProfessors
+ *
+ * Gestiona el restablecimiento de contraseñas de docentes.
+ *
+ * @author Kenia Romero
+ * @created 09/12/2024
+ */
 
+//Cargar dependencias
 require 'PHPMailerConfig.php';
 require 'jwt.php';
 require 'email_templates.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 
+//Se estable una zona horario para que coincida con las fechas y horas que se almacenan en la base de datos.
 date_default_timezone_set('America/Tegucigalpa');
 
 class ResetProfessor{
+/**
+* Configuración de conexión a la base de datos.
+* @param int $maxEmailsPerDay limita la cantidad de correos que se pueden enviar por día. Considerando que actualmente las 
+* pruebas se realizan con un correo personal se tomaron en cuenta las limitantes que el mismo tiene; para un ámbito laboral 
+* lo ideal será utilizar un correo corporativo que permite enviar más correos por día.
+*/
     private $connection;
     private $mail;
     private $maxEmailsPerDay = 500;
@@ -18,8 +34,8 @@ class ResetProfessor{
     private $password = 'root';
     private $dbName = 'unah_registration';
 
-//Conexión BD
-//Configuración de la base de datos
+//Constructor de la clase
+//Establece la conexión a la base de datos
 public function __construct()
 {
     $this->connection = null;
@@ -36,6 +52,17 @@ public function getConnection() {
     return $this->connection;
 }
 
+/**
+* Genera un token JWT para el restablecimiento de contraseña y lo almacena en la base de datos.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* @param int $userId ID del usuario para el que se solicita el restablecimiento.
+*
+* @return string El token generado.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 public function createPasswordResetRequest(mysqli $connection, int $userId): string {
     //Generar el token JWT
     $expiryTime = time() + 3600; // Tiempo actual + 1 hora
@@ -64,6 +91,17 @@ public function createPasswordResetRequest(mysqli $connection, int $userId): str
     return $token;
 }
 
+/**
+* Envía un correo electrónico al usuario con el token de restablecimiento de contraseña.
+*
+* @param string $email Correo electrónico del usuario.
+* @param string $token Token de restablecimiento.
+*
+* @throws Exception Si el correo no es válido o hay un error al enviar el correo.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 public function sendPasswordResetEmail(string $email, string $token) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         throw new Exception("El correo proporcionado no es válido.");
@@ -79,6 +117,18 @@ public function sendPasswordResetEmail(string $email, string $token) {
     }
 }
 
+/**
+* Actualiza la contraseña del usuario en la base de datos.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* @param int $userId ID del usuario.
+* @param string $newPassword Nueva contraseña.
+*
+* @return bool Indica si la actualización fue exitosa.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 function updatePassword(mysqli $connection, int $userId, string $newPassword): bool {
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
@@ -89,6 +139,17 @@ function updatePassword(mysqli $connection, int $userId, string $newPassword): b
     
 }
 
+/**
+* Marca un token como utilizado en la base de datos.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* @param string $token Token a marcar como utilizado.
+*
+* @return bool Indica si la operación fue exitosa.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/ 
 public function markTokenAsUsed(mysqli $connection, string $token): bool {
     $query = "UPDATE PasswordResetRequestsProfessors 
               SET used_token_professor = TRUE 
@@ -115,6 +176,17 @@ public function markTokenAsUsed(mysqli $connection, string $token): bool {
     }
 }
 
+/**
+* Solicita el restablecimiento de contraseña para un usuario dado su correo electrónico.
+*
+* @param mysqli $connection Conexión activa a la base de datos.
+* @param string $email Correo electrónico del usuario.
+*
+* @return bool Indica si la solicitud fue exitosa.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 public function requestPasswordReset(mysqli $connection, string $email): bool {
 
     $query = "SELECT id_professor FROM Professor WHERE email_professor = ?";
@@ -154,6 +226,20 @@ public function requestPasswordReset(mysqli $connection, string $email): bool {
     }
 }
 
+/**
+* Valida un token y verifica su expiración.
+*
+* @param string $token Token a validar.
+* @param string $typeUser Tipo de usuario (en este caso, 'student').
+* @param mysqli $connection Conexión activa a la base de datos.
+*
+* @throws Exception Si el token es inválido o ha expirado.
+* 
+* @return bool Indica si el token es válido.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 public function validateTokenAndProceed(string $token, string $typeUser, mysqli $connection) {
     $token_hash = hash("sha256", $token);
 
@@ -181,6 +267,20 @@ public function validateTokenAndProceed(string $token, string $typeUser, mysqli 
     }
 }
 
+/**
+* Resetea la contraseña del usuario después de validar el token.
+*
+* @param string $token Token de restablecimiento.
+* @param string $newPassword Nueva contraseña.
+* @param mysqli $connection Conexión activa a la base de datos.
+*
+* @return bool Indica si el restablecimiento fue exitoso.
+*
+* @throws Exception Si no se pudo actualizar la contraseña.
+*
+* @author Kenia Romero
+* @created 09/12/2024
+*/
 public function resetPasswordWithTokenValidation(string $token, string $newPassword, mysqli $connection) {
 
     $this->validateTokenAndProceed($token, 'professor', $connection);
