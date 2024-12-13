@@ -2,6 +2,13 @@ import { Applicant } from "../modules/request/Applicant.mjs";
 import { Results } from "../modules/request/results.mjs";
 import { Login } from "../modules/request/login.mjs";
 
+
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
 window.addEventListener('load', function(){
     const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage
 

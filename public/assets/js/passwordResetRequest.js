@@ -1,6 +1,13 @@
 import { Form } from "./modules/behavior/support.mjs";
 import { Student } from "./modules/request/Student.mjs";
 
+
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
 const emailButton = document.getElementById('emailButton');
 const email = document.getElementById('Email');
 const form = document.getElementById('passwordResetRequest');

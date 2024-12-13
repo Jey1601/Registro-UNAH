@@ -7,6 +7,12 @@ import { Professor } from "../modules/request/Professor.mjs";
 const path = "../../";
 
 
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+  
 //Variable que almacena el usuariol professor
 let idProfessor = ''
 

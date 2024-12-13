@@ -3,6 +3,15 @@ import { Alert, Cell, Modal } from "../behavior/support.mjs";
 class EnrollmentProcess {
   static path = "../../../../";viewSections
 
+/**
+ * Verifica el estado del proceso de inscripción en el sistema.
+ * Realiza una solicitud a un servicio para obtener la información del estado del proceso de inscripción.
+ * Si la solicitud es exitosa, devuelve los datos obtenidos. En caso de error, muestra un mensaje de error en consola y retorna un arreglo vacío.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @returns {Promise<Object[]>} - Un arreglo de objetos con los datos del estado del proceso de inscripción, si la solicitud es exitosa. Si ocurre un error, retorna un arreglo vacío.
+ */
   static async verifyEnrollmentProcessStatus() {
     try {
       const response = await fetch(
@@ -25,6 +34,15 @@ class EnrollmentProcess {
     }
   }
 
+  /**
+   * Verifica las fechas del proceso de inscripción en el sistema.
+   * Realiza una solicitud a un servicio para obtener la información de las fechas asociadas al proceso de inscripción.
+   * Si la solicitud es exitosa, devuelve los datos obtenidos. En caso de error, muestra un mensaje de error en consola y retorna un arreglo vacío.
+   * 
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12-11
+   * @returns {Promise<Object[]>} - Un arreglo de objetos con los datos de las fechas del proceso de inscripción, si la solicitud es exitosa. Si ocurre un error, retorna un arreglo vacío.
+   */
   static async verifyDatesEnrollmentProcess() {
     try {
       const response = await fetch(
@@ -46,6 +64,18 @@ class EnrollmentProcess {
     }
   }
 
+
+  /**
+ * Verifica el estado del proceso de inscripción de un estudiante específico.
+ * Realiza una solicitud POST al servidor enviando el ID del estudiante y devuelve el estado de la inscripción.
+ * Si la solicitud es exitosa y el proceso no está completo, se muestra un mensaje de error utilizando `Alert.display`.
+ * En caso de error en la solicitud, se registra el error en la consola y retorna `null`.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} idStudent - El ID del estudiante cuyo estado de inscripción se desea verificar.
+ * @returns {Promise<Object|null>} - Retorna un objeto con el estado del proceso de inscripción del estudiante si la solicitud es exitosa. Si hay un error, retorna `null`.
+ */
 
   static async verifyStatusEnrollmentProcessStudent(idStudent){
     const data = {
@@ -85,7 +115,17 @@ class EnrollmentProcess {
     }    
   } 
 
-
+  /**
+ * Obtiene las clases pendientes de un estudiante específico.
+ * Realiza una solicitud POST al servidor enviando el ID del estudiante y devuelve las clases pendientes de inscripción.
+ * Si la solicitud es exitosa y hay clases pendientes, las retorna en el campo `data`. Si hay un error en la solicitud, se muestra un mensaje utilizando `Alert.display`.
+ * En caso de error, se registra el error en la consola y retorna `null`.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-12
+ * @param {number} studentId - El ID del estudiante para obtener las clases pendientes.
+ * @returns {Promise<Array|null>} - Retorna un array con las clases pendientes si la solicitud es exitosa, o `null` en caso de error.
+ */
   static async getPendingClassesStudent(studentId){
     const data = {
       student_id: studentId
@@ -124,7 +164,19 @@ class EnrollmentProcess {
     }    
   } 
 
-
+  /**
+ * Obtiene las secciones de una clase específica para un estudiante.
+ * Realiza una solicitud POST al servidor enviando el ID del estudiante y el ID de la clase.
+ * Si la solicitud es exitosa, retorna las secciones correspondientes al estudiante para esa clase en el campo `data`. 
+ * En caso de error en la solicitud, se muestra un mensaje utilizando `Alert.display`. 
+ * Si ocurre un error en el proceso, se registra en la consola y la función retorna `null`.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} student_id - El ID del estudiante para obtener las secciones de la clase.
+ * @param {number} class_id - El ID de la clase para la cual obtener las secciones.
+ * @returns {Promise<Array|null>} - Retorna un array con las secciones de la clase si la solicitud es exitosa, o `null` en caso de error.
+ */
   static async getClassSectionsForStudent(student_id,class_id ){
     const data = {
       student_id:student_id, 
@@ -165,7 +217,18 @@ class EnrollmentProcess {
     }    
   } 
 
-
+/**
+ * Rellena un `<select>` con opciones de departamentos a partir de un objeto de datos.
+ * La función toma un objeto `data` donde las claves representan los nombres de los departamentos.
+ * Se crea una opción para cada departamento y se agrega al `<select>` especificado por `departmentSelect`.
+ * Si el objeto `data` está vacío, solo se muestra la opción predeterminada "Seleccione un departamento".
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {Object} data - Un objeto donde las claves son los nombres de los departamentos.
+ * @param {HTMLSelectElement} departmentSelect - El elemento `<select>` donde se agregarán las opciones de departamentos.
+ * @returns {void} - No retorna ningún valor. Modifica directamente el contenido del elemento `<select>`.
+ */
 
 static    populateDepartments(data,departmentSelect ) {
   departmentSelect.innerHTML ='';
@@ -179,6 +242,20 @@ static    populateDepartments(data,departmentSelect ) {
   }
 }
 
+
+/**
+ * Rellena un `<select>` con opciones de clases basadas en el departamento seleccionado.
+ * La función toma un objeto `data` donde las claves son los nombres de los departamentos y los valores son arrays de clases asociadas a esos departamentos.
+ * Si no se selecciona un departamento o no hay clases disponibles para el departamento seleccionado, el select de clases se deshabilita.
+ * Si hay clases disponibles para el departamento seleccionado, se habilita el select y se agregan las opciones correspondientes.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-12
+ * @param {Object} data - Un objeto donde las claves son los nombres de los departamentos y los valores son arrays con los objetos de clases asociadas a esos departamentos.
+ * @param {string} department - El nombre del departamento seleccionado, utilizado para acceder a las clases correspondientes en el objeto `data`.
+ * @param {HTMLSelectElement} classSelect - El elemento `<select>` donde se agregarán las opciones de clases.
+ * @returns {void} - No retorna ningún valor. Modifica directamente el contenido del elemento `<select>`.
+ */
 // Función para llenar las opciones de las clases según el departamento seleccionado
 static populateClasses(data,department, classSelect) {
   
@@ -205,6 +282,19 @@ static populateClasses(data,department, classSelect) {
   });
 }
 
+
+/**
+ * Agrega opciones a cada fila de la tabla para las secciones de inscripción. 
+ * Para cada sección, muestra la cantidad de plazas disponibles, un botón para agregar un video de presentación (si está disponible) 
+ * y una opción de radio para seleccionar la sección de inscripción.
+ * La función realiza solicitudes asincrónicas para obtener la cantidad de plazas disponibles y ocupadas, 
+ * así como la URL del video de presentación para la sección.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {string} tableId - El ID de la tabla donde se agregarán las opciones de cada sección.
+ * @returns {void} - No retorna valor. Modifica directamente el contenido de la tabla agregando celdas con las opciones correspondientes.
+ */
 static addOptionsSectionEnrollment(tableId){
   // Selecciona la tabla por su ID
   const table = document.getElementById(tableId);
@@ -304,6 +394,17 @@ static addOptionsSectionEnrollment(tableId){
   }) // Agregamos las opciones a la fila
 }
 
+/**
+ * Obtiene la cantidad de plazas disponibles para una sección de clase específica.
+ * Realiza una solicitud POST a la API para obtener el número de plazas disponibles 
+ * basándose en el ID de la sección de clase proporcionado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} class_section_id - El ID de la sección de clase para la cual se consultarán las plazas disponibles.
+ * @returns {Promise<number|null>} - Retorna el número de plazas disponibles si la solicitud es exitosa, o `null` si ocurre un error.
+ */
+
  static async getAvailableSpots(class_section_id){
     const data = {
       class_section_id :class_section_id
@@ -333,7 +434,16 @@ static addOptionsSectionEnrollment(tableId){
  }
 
 
-
+/**
+ * Obtiene la cantidad de estudiantes inscritos en una sección de clase específica.
+ * Realiza una solicitud POST a la API para obtener el número de estudiantes registrados 
+ * en una sección de clase basándose en el ID de la sección proporcionado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} class_section_id - El ID de la sección de clase para la cual se consultará el número de estudiantes inscritos.
+ * @returns {Promise<number|null>} - Retorna el número de estudiantes inscritos si la solicitud es exitosa, o `null` si ocurre un error.
+ */
  static async getStudentCountByClassSection(class_section_id){
   const data = {
     class_section_id :class_section_id
@@ -363,6 +473,18 @@ static addOptionsSectionEnrollment(tableId){
   }    
 }
 
+
+/**
+ * Inserta una matrícula en una sección de clase para un estudiante.
+ * Realiza una solicitud POST a la API para registrar a un estudiante en una sección de clase específica.
+ * Si la matrícula se encuentra en espera, muestra un modal con la opción de agregar el estudiante a la lista de espera.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} student_id - El ID del estudiante que se quiere matricular en una sección de clase.
+ * @param {number} class_section_id - El ID de la sección de clase en la que se quiere matricular al estudiante.
+ * @returns {Promise<object|null>} - Retorna el objeto de respuesta de la API con el estado de la matrícula si es exitosa, o `null` si ocurre un error.
+ */
 
  static async insertEnrollmentClassSection(student_id, class_section_id){
     const data = {
@@ -477,6 +599,17 @@ static addOptionsSectionEnrollment(tableId){
     }    
  }
 
+ /**
+ * Elimina una matrícula de un estudiante en una sección de clase.
+ * Realiza una solicitud POST a la API para eliminar la matrícula del estudiante en una sección de clase específica.
+ * Muestra un mensaje de éxito o error dependiendo del resultado de la solicitud.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} student_id - El ID del estudiante cuya matrícula se desea eliminar.
+ * @param {number} class_section_id - El ID de la sección de clase de la cual se desea eliminar al estudiante.
+ * @returns {Promise<object|null>} - Retorna el objeto de respuesta de la API con el estado de la eliminación si es exitosa, o `null` si ocurre un error.
+ */
   static async deleteEnrollmentStudent(student_id,class_section_id){
     const data = {
       student_id :student_id,
@@ -577,7 +710,17 @@ static addOptionsSectionEnrollment(tableId){
       });
     }
 
-
+    /**
+ * Inserta un estudiante en la lista de espera para una sección de clase.
+ * Realiza una solicitud POST a la API para agregar al estudiante en la lista de espera de una sección de clase.
+ * Muestra un mensaje de éxito o error dependiendo del resultado de la solicitud.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} student_id - El ID del estudiante que desea ser agregado a la lista de espera.
+ * @param {number} class_section_id - El ID de la sección de clase a la cual el estudiante será agregado a la lista de espera.
+ * @returns {Promise<object|null>} - Retorna el objeto de respuesta de la API con el estado de la operación si es exitosa, o `null` si ocurre un error.
+ */
     static  async insertWaitingListClassSection(student_id,class_section_id){
 
       const data = {
@@ -626,7 +769,15 @@ static addOptionsSectionEnrollment(tableId){
     }   
   
   }
-
+  /**
+ * Obtiene la URL del video de presentación para una sección de clase específica.
+ * Realiza una solicitud POST a la API para obtener la URL del video asociado a una clase.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * @param {number} idClassSection - El ID de la sección de clase para la que se desea obtener la URL del video de presentación.
+ * @returns {Promise<string|null>} - Retorna la URL del video de presentación si es exitosa, o `null` si ocurre un error.
+ */
   static async getUrlPresentationVideo(idClassSection){
     const data = {
       idClassSection :idClassSection

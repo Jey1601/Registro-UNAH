@@ -3,6 +3,13 @@ import { Form , File} from "../modules/behavior/support.mjs";
 import { Applicant } from "../modules/request/Applicant.mjs";
 import { Login } from "../modules/request/login.mjs";
 
+
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
 const dataEditionForm = document.getElementById('dataEditionForm');
 const inputsDataEditionForm= Array.from(dataEditionForm.elements);
 const dataEditionButton = document.getElementById('dataEditionButton');

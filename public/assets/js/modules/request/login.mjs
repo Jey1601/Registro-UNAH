@@ -57,8 +57,7 @@ class Login {
   }
 
   static async authAdmisionAdmin(username,password) {
-    //const username = document.getElementById('admissionsUser').value;
-   // const password = document.getElementById('admissionsPassword').value;
+    
 
     const credentials = {
         "userAdmissionAdmin": username,

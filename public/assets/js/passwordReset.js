@@ -1,6 +1,13 @@
 import { Password } from "./modules/behavior/password.mjs";
 import { Student } from "./modules/request/Student.mjs";
 
+
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
 const  password = document.getElementById('password');
 const buttonPassword = password.nextElementSibling;
 

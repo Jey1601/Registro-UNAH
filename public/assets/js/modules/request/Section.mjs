@@ -5,6 +5,11 @@ import { Professor } from "./Professor.mjs";
 class Section {
   static path = "../../../";
 
+  /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12
+   */
   static addOptions(tableId) {
     // Selecciona la tabla por su ID
     const table = document.getElementById(tableId);
@@ -19,7 +24,7 @@ class Section {
     rows.forEach((row) => {
       // Obtén todas las celdas de la fila actual
       const cells = row.querySelectorAll("td");
-   
+
       const fourthCellText = cells[2].textContent.trim();
 
       //Celda que contendrá las opciones
@@ -30,9 +35,8 @@ class Section {
       buttonVideo.classList.add("btn");
       buttonVideo.classList.add("btn-video");
       buttonVideo.setAttribute("section", fourthCellText);
-   
 
-      // Creamos la imagen y configuramos su fuente 
+      // Creamos la imagen y configuramos su fuente
       const videoIcon = document.createElement("img");
       videoIcon.src = this.path + "assets/img/icons/add-video-icon.png";
 
@@ -41,30 +45,28 @@ class Section {
       buttonDownloadCSV.classList.add("btn");
       buttonDownloadCSV.classList.add("btn-downloadCSV");
       buttonDownloadCSV.setAttribute("section", fourthCellText);
-      
-      buttonDownloadCSV.addEventListener('click',function(){
+
+      buttonDownloadCSV.addEventListener("click", function () {
         Professor.getStudentsBySectionCSV(fourthCellText);
-      })
+      });
 
       // Creamos la imagen y configuramos su fuente
       const downloadCSVIcon = document.createElement("img");
       downloadCSVIcon.src = this.path + "assets/img/icons/csv-icon.png";
 
+      //Botón de descarga PDF
+      const buttonDownloadPDF = document.createElement("button");
+      buttonDownloadPDF.classList.add("btn");
+      buttonDownloadPDF.classList.add("btn-downloadCSV");
+      buttonDownloadPDF.setAttribute("section", fourthCellText);
 
+      buttonDownloadPDF.addEventListener("click", function () {
+        Professor.getStudentsBySectionPDF(fourthCellText);
+      });
 
-         //Botón de descarga PDF
-         const buttonDownloadPDF = document.createElement("button");
-         buttonDownloadPDF.classList.add("btn");
-         buttonDownloadPDF.classList.add("btn-downloadCSV");
-         buttonDownloadPDF.setAttribute("section", fourthCellText);
-         
-         buttonDownloadPDF.addEventListener('click',function(){
-           Professor.getStudentsBySectionPDF(fourthCellText);
-         })
-   
-         // Creamos la imagen y configuramos su fuente
-         const downloadPDFIcon = document.createElement("img");
-         downloadPDFIcon.src = this.path + "assets/img/icons/pdf-icon.png";
+      // Creamos la imagen y configuramos su fuente
+      const downloadPDFIcon = document.createElement("img");
+      downloadPDFIcon.src = this.path + "assets/img/icons/pdf-icon.png";
 
       const buttonGrade = document.createElement("button");
       buttonGrade.classList.add("btn");
@@ -90,6 +92,11 @@ class Section {
     });
   }
 
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12
+   */
   static addOptionsAcademicPlanning(tableId) {
     // Selecciona la tabla por su ID
     const table = document.getElementById(tableId);
@@ -178,10 +185,14 @@ class Section {
 
       row.appendChild(cellSpots); // // Agregamos las opciones a la fila
       row.appendChild(cellOptions);
-     
     });
   }
 
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-12
+   */
   static async updateSpotsAvailableClassSectionAcademicPlanning(
     id_class_section,
     new_spots_number,
@@ -189,9 +200,13 @@ class Section {
     buttonPlus,
     buttonMinus
   ) {
-
-    if(new_spots_number <= 0){
-      Alert.display('warning','Oh no', 'No pueden haber cupos vacios o negativos', '../../../../');
+    if (new_spots_number <= 0) {
+      Alert.display(
+        "warning",
+        "Oh no",
+        "No pueden haber cupos vacios o negativos",
+        "../../../../"
+      );
       return;
     }
     const data = {

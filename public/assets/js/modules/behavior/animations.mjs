@@ -2,7 +2,11 @@
 class AnimationLoad{
 
 
-
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static hideSun() {
     const body = document.querySelector('body');
     setTimeout(()=>{

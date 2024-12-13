@@ -10,6 +10,12 @@ import { Professor } from "../../modules/request/Professor.mjs";
 import { Login } from "../../modules/request/login.mjs";
 import { Section } from "../../modules/request/Section.mjs";
 
+/**
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ */
+
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
@@ -18,11 +24,11 @@ const academicPlanningCenterSelect = document.getElementById(
   "ademicPlanningCenter"
 );
 //Jefe de departamento
-let idProfessor = '';
-let departmentId = '';
+let idProfessor = "";
+let departmentId = "";
 //Aquí se debe obtener el usuario del profesor del token
 //Aquí se debe obtener el departamento al que pertenece el jefe
-const token = sessionStorage.getItem('token'); // Obtén el token del sessionStorage  
+const token = sessionStorage.getItem("token"); // Obtén el token del sessionStorage
 const payload = Login.getPayloadFromToken(token);
 
 idProfessor = payload.username;
@@ -229,9 +235,5 @@ containerFilters.addEventListener("change", async function () {
 
   Section.addOptionsAcademicPlanning("viewDataSections");
 
-  
-
   console.log(sections);
 });
-
-

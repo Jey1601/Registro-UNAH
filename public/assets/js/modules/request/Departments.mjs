@@ -1,6 +1,17 @@
 class Department{
     static path = '../../../../';
 
+
+    /**
+     * Obtiene los departamentos de una facultad específica a través de una solicitud a la API.
+     * Si la solicitud es exitosa, retorna los departamentos correspondientes a la facultad proporcionada.
+     * En caso de error, retorna un arreglo vacío.
+     * 
+     * @author Jeyson Espinal (20201001015)
+     * @created 2024-11-27
+     * @param {int} idFaculty - El ID de la facultad para obtener los departamentos correspondientes.
+     * @returns {Promise<Array>} - Retorna una promesa que resuelve un arreglo de departamentos, o un arreglo vacío si ocurre un error.
+     */
     static async getDepartmentsByFaculty(idFaculty) {
         
         try {
@@ -20,7 +31,19 @@ class Department{
             return [];  // Si hay un error, retornamos un array vacío
         }
     }
-
+    
+    /**
+     * Renderiza un `<select>` con las opciones de departamentos correspondientes a una facultad específica.
+     * Los departamentos se obtienen desde una fuente de datos a través de la función `getDepartmentsByFaculty`.
+     * Si los departamentos están disponibles, se agregan al `<select>` y se marca el primero como seleccionado.
+     * Si no se encuentran departamentos o los datos no son válidos, se muestra un mensaje de error en consola.
+     * 
+     * @author Jeyson Espinal (20201001015)
+     * @created 2024-11-27
+     * @param {string} idSelect - El ID del elemento `<select>` donde se renderizarán los departamentos.
+     * @param {int} idFaculty - El ID de la facultad para obtener los departamentos correspondientes.
+     * @returns {Promise<void>} - No retorna valor. Realiza una solicitud asíncrona para obtener los departamentos y actualiza el contenido del `<select>`.
+     */
     static async renderSelectDepartmentsByFaculty(idSelect,idFaculty) {
         const select = document.getElementById(idSelect);
         select.innerHTML= '';

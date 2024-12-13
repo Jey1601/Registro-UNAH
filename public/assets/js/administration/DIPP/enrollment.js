@@ -1,62 +1,60 @@
 import { EnrollmentProcess } from "../../modules/request/EnrollmentProcess.mjs";
 import { Sidebar } from "../../modules/behavior/support.mjs";
+
+/**
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ */
+
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");
-
 
 /* ========== Funcionalidad del sidebar  ============*/
 toggleSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 closeSidebarButton.addEventListener("click", Sidebar.toggleSidebar);
 
 /* ========== Construcción del sidebar  ============*/
-Sidebar.buildSidebar('../../../../')
+Sidebar.buildSidebar("../../../../");
 
+window.addEventListener("load", async function () {
+  const response = await EnrollmentProcess.verifyEnrollmentProcessStatus();
 
-window.addEventListener('load', async  function(){
-   const response = await EnrollmentProcess.verifyEnrollmentProcessStatus();
+  if (response.status != "success") {
+    window.location.href =
+      "../../../../views/administration/DIPP/upload-students.html";
+  }
 
-  
+  const data = await EnrollmentProcess.verifyDatesEnrollmentProcess();
 
-    if (response.status != "success") {
-        window.location.href = 
-          "../../../../views/administration/DIPP/upload-students.html";
-      } 
+  const tbody = document.getElementById("calendar-body");
 
-    const data =  await EnrollmentProcess.verifyDatesEnrollmentProcess(); 
-    
+  data.data.forEach((entry) => {
+    const row = document.createElement("tr");
 
-    const tbody = document.getElementById("calendar-body");
+    const dateCell = document.createElement("td");
+    dateCell.textContent = entry.day_available_enrollment_process;
+    row.appendChild(dateCell);
 
-    data.data.forEach(entry => {
-      const row = document.createElement("tr");
+    const timeCell = document.createElement("td");
+    timeCell.textContent = `${entry.start_time_available_enrollment_process} - ${entry.end_time_available_enrollment_process}`;
+    row.appendChild(timeCell);
 
-      const dateCell = document.createElement("td");
-      dateCell.textContent = entry.day_available_enrollment_process;
-      row.appendChild(dateCell);
+    const studentCell = document.createElement("td");
+    const messageList = document.createElement("ul");
 
-      const timeCell = document.createElement("td");
-      timeCell.textContent = `${entry.start_time_available_enrollment_process} - ${entry.end_time_available_enrollment_process}`;
-      row.appendChild(timeCell);
-
-      const studentCell = document.createElement("td");
-      const messageList = document.createElement("ul");
-
-      entry.message.split(",").forEach(message => {
-        if (message.trim() !== "") {
-          const listItem = document.createElement("li");
-          listItem.textContent = message.trim();
-          messageList.appendChild(listItem);
-        }
-      });
-
-      studentCell.appendChild(messageList);
-      row.appendChild(studentCell);
-
-      tbody.appendChild(row);
+    entry.message.split(",").forEach((message) => {
+      if (message.trim() !== "") {
+        const listItem = document.createElement("li");
+        listItem.textContent = message.trim();
+        messageList.appendChild(listItem);
+      }
     });
 
+    studentCell.appendChild(messageList);
+    row.appendChild(studentCell);
 
-})
-
-
+    tbody.appendChild(row);
+  });
+});

@@ -5,6 +5,13 @@ import { Login } from "./modules/request/login.mjs";
 import { AdmissionProccess } from "./modules/request/AdmissionProcces.mjs";
 import { Password } from "./modules/behavior/password.mjs";
 
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
+
 /* ========== Validando el proceso de inscripción ============*/
 
 const inscriptionButton = document.querySelectorAll(".btn-inscription");

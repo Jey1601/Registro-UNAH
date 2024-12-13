@@ -1,6 +1,15 @@
 import { Sidebar, Modal } from "../modules/behavior/support.mjs";
 import { EnrollmentProcess } from "../modules/request/EnrollmentProcess.mjs";
 import { Login } from "../modules/request/login.mjs";
+
+
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
+
+
 /* ========== Constantes  ============*/
 const toggleSidebarButton = document.getElementById("toggleSidebar");
 const closeSidebarButton = document.getElementById("closeSidebar");

@@ -2,7 +2,16 @@ import { regular_expressions } from "./configuration.mjs";
 import { Login } from "../request/login.mjs";
 import { AcademicPlanning } from "../request/AcademicPlanning.mjs";
 
+
+
 class Alert {
+
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static display(type, title, message, path = "") {
     // Crear el contenedor de la notificación
     const notification = document.createElement("div");
@@ -65,7 +74,12 @@ class Alert {
 
 class Modal {
   static modalInstance = null;
-
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static showModal(id) {
     const modalElement = document.getElementById(id);
 
@@ -78,6 +92,12 @@ class Modal {
     this.modalInstance.show();
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static hideModal() {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -85,6 +105,12 @@ class Modal {
     }
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static cleanupModal(modalElement) {
     // Reinicia valores de inputs, pero conserva los placeholders
     const inputs = modalElement.querySelectorAll("input");
@@ -99,6 +125,12 @@ class Modal {
 }
 
 class Cell {
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   // Función para crear celdas de manera reutilizable
   static createCell(type, content) {
     const cell = document.createElement(type);
@@ -108,6 +140,12 @@ class Cell {
 }
 
 class Search {
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static onInputChange(idInput, idTblBody) {
     //Se escoge el input del cual se toman los datos
     const searchApplication = document.getElementById(idInput);
@@ -144,6 +182,12 @@ class Search {
 }
 
 class Entry {
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static createEntry(subtitleText, textContent) {
     const entry = document.createElement("div");
     const subtitle = document.createElement("h5");
@@ -160,6 +204,13 @@ class Entry {
 }
 
 class Form {
+
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static validateInput(event) {
     let field = event.target.name;
 
@@ -200,6 +251,12 @@ class Form {
     }
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static validateField(expression, input) {
     const errorElement = input.nextElementSibling; // Obtén el <p> inmediatamente después del input
 
@@ -240,6 +297,12 @@ class Form {
     
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static checkFormValidity(inputsForm, submitButton, textRight="Enviar", textWrong ="Revisa la información") {
     
     let isFormValid = true;
@@ -290,6 +353,12 @@ class Form {
     return isFormValid;
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static validateChecks(inputsForm, submitButton, textRight="Enviar", textWrong ="Revisa la información"){
        // Filtrar solo los checkboxes
    
@@ -322,6 +391,12 @@ class Form {
     return isFormValid;
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static changeActionByChecks(
     
     idButton,
@@ -357,6 +432,13 @@ class Form {
 }
 
 class File {
+
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static validateFile(file, input, path) {
     const maxSize = 5 * 1024 * 1024; // 5 MB en bytes (tamaño máximo)
     const minSize = 100 * 1024; // 100 KB en bytes (tamaño mínimo)
@@ -441,6 +523,12 @@ class File {
 }
 
 class Sidebar {
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   // Función para alternar la visibilidad del sidebar
   static toggleSidebar() {
     const sidebar = document.querySelector(".sidebar");
@@ -459,6 +547,12 @@ class Sidebar {
     }
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   //Se debe agregar una función que cargue las opciones en base a permisos
   static buildSidebar(path) {
      //Apartado de logout
@@ -650,6 +744,12 @@ class Sidebar {
 }
 
 class Table {
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static renderDynamicTable(data, tableId) {
     const tableBody = document.querySelector(`#${tableId} tbody`);
     tableBody.innerHTML = "";
@@ -680,6 +780,12 @@ class Table {
     });
   }
 
+  
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
   static generateDynamicConfig(data) {
     if (!Array.isArray(data) || data.length === 0) return { headers: [] };
 

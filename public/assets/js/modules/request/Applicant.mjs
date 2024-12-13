@@ -6,6 +6,16 @@ class Applicant {
 
   static modalInstance = null;
 
+  /**
+ * Renderiza los datos de las aplicaciones de admisión en una tabla según los accesos proporcionados.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-21
+ * @param {Array<string>} accessess - Lista de permisos de acceso del usuario.
+ * @returns {Promise<void>} Una promesa que no devuelve ningún valor.
+ * @throws {Error} Si ocurre un error en la obtención o procesamiento de los datos.
+ */
+
   static async renderData(accessess) {
     let  applications = [];
     if(accessess.includes('rllHaveq') || accessess.includes('IeMfti20') ){
@@ -139,7 +149,15 @@ class Applicant {
     }
   }
 
-  //Carga la imagen del certificado del aplicante en la modal y luego la despliega
+  /**
+ * Muestra los datos de una aplicación de admisión en una ventana modal, incluyendo la imagen del certificado y la identificación del solicitante.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-21
+ * @param {Array<Object>} applications - Lista de aplicaciones de admisión.
+ * @param {string} idApplicant - ID del solicitante cuya información se mostrará.
+ * @param {string} access - Nivel de acceso del usuario (puede determinar permisos de verificación, edición o descarga).
+ */
    static showDataApplication(applications, idApplicant, access) {
    const application = applications.find(applicant => applicant.id_applicant === idApplicant);
    
@@ -241,8 +259,17 @@ class Applicant {
     Modal.showModal("viewCertificate");
   }
 
+ 
 
-    //Carga la imagen del certificado del aplicante en la modal y luego la despliega
+/**
+ * Renderiza los datos de un solicitante para su edición en un formulario y habilita o deshabilita campos según sea necesario.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-23
+ * @param {string} id_applicant - ID del solicitante cuyos datos se van a cargar.
+ * @returns {void}
+ */
+  
   static  async renderDataToEdit(id_applicant) {
 
     const result = await this.getResults(id_applicant);
@@ -339,7 +366,14 @@ class Applicant {
       } 
     }
    
-  // Método para obtener los datos de las solicitudes de aplicación
+    /**
+     * Método para obtener los datos de las solicitudes de aplicación desde la API.
+     * @author Jeyson Espinal (20201001015)
+     * @created 2024-11-13
+     * @async
+     * @returns {Promise<Array>} - Retorna un arreglo con los datos obtenidos o un arreglo vacío en caso de error.
+     */
+
   static async viewData() {
     try {
       const response = await fetch(this.path+"api/get/applicant/viewData.php");
@@ -356,6 +390,15 @@ class Applicant {
     }
     
   }
+
+
+   /**
+ * Obtiene los datos pendientes de verificación de los solicitantes.
+ *
+ * @created 2024-11-13
+ * @author Jeyson Espinal (20201001015)
+ * @returns {Promise<Array<Object>>} Retorna un arreglo con los datos de las solicitudes pendientes de verificación. Si ocurre un error, retorna un arreglo vacío.
+ */
 
   static async viewPendingCheckData() {
     const tokenSaved = sessionStorage.getItem('token');
@@ -376,6 +419,16 @@ class Applicant {
       return []; // Si hay un error, retornamos un array vacio
     }
   }
+
+  /**
+ * Muestra los resultados de un solicitante de admisión, incluyendo detalles sobre los exámenes, las resoluciones y la tabla de resultados.
+ * Si no hay resultados, desactiva el botón de envío y redirige al usuario a la página de inicio de sesión después de un breve mensaje de advertencia.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-16
+ * @param {string} id_applicant - ID del solicitante cuyo resultado se mostrará.
+ * @returns {void} 
+ */
 
   static async renderResults(id_applicant) {
     const results = await this.getResults(id_applicant);
@@ -455,9 +508,6 @@ class Applicant {
               input.name = "option";
               input.value = resolution.id_notification_application_resolution;
               input.id = "firstOption";
-             
-                 
-           
   
   
               // Agregar el input al div
@@ -497,6 +547,16 @@ class Applicant {
     
   }
 
+  /**
+ * Obtiene los resultados de un solicitante de admisión desde el servidor a través de una solicitud POST.
+ * En caso de error en la respuesta o en la conexión, retorna `null`.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-16
+ * @param {string} id_applicant - ID del solicitante cuyos resultados se desean obtener.
+ * @returns {Promise<Object|null>} - Los resultados del solicitante en formato JSON si la solicitud es exitosa, o `null` en caso de error.
+ */
+
   static async getResults(id_applicant) {
     const formData = new FormData();
     formData.append('id_applicant', id_applicant);
@@ -527,6 +587,15 @@ class Applicant {
     }
 }
 
+/**
+ * Obtiene los datos de un formulario de edición de datos del solicitante, validando y procesando los archivos de imagen (certificado e identificación).
+ * Los archivos de imagen se validan según el tipo y tamaño permitido, y si son válidos, se convierten en `Blob` y se agregan al `FormData`. 
+ * Si los archivos no son válidos, se limpia el campo de entrada y se muestra un mensaje de error.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-15
+ * @returns {Promise<FormData>} - El objeto `FormData` con los datos del formulario y los archivos procesados.
+ */
 static async getData() {
   const dataEditionForm = document.getElementById("dataEditionForm");
   // Crear un nuevo objeto FormData
@@ -633,6 +702,18 @@ static async getData() {
   //inscriptionForm.reset();
 }
 
+
+/**
+ * Actualiza los datos de un solicitante enviando un formulario con los datos al servidor. 
+ * Si la respuesta del servidor indica un error o no contiene un `id_application`, se muestra un mensaje de alerta, se restablece el formulario y se redirige al usuario al inicio de sesión después de un retraso.
+ * En caso de error en la solicitud, se muestra un mensaje de error.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-12
+ * @param {FormData} formData - El objeto `FormData` que contiene los datos del formulario.
+ * @param {HTMLFormElement} form - El formulario que se está enviando.
+ * @returns {void} 
+ */
 static async updateData(formData, form) {
   try {
     // Realizar la solicitud POST usando fetch
@@ -664,6 +745,16 @@ static async updateData(formData, form) {
     Alert.display('error','Lamentamos decirte esto', 'Hubo un error al cargar la información', this.path);
   }
 }
+
+/**
+ * Obtiene los valores de los checkboxes seleccionados y los campos adicionales del formulario. 
+ * Luego guarda estos valores mediante una función de guardado (`saveChecks`) y desmarca todos los checkboxes. 
+ * Finalmente, limpia el campo de justificación, cierra el modal y recarga la página después de un breve retraso.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-19
+ * @returns {Promise<void>} - No retorna ningún valor. Realiza operaciones de guardado, desmarcado de checkboxes y recarga de la página.
+ */
 
 static  async getChecks() {
   // Arreglo para almacenar los valores de los checkboxes activos
@@ -712,6 +803,20 @@ static  async getChecks() {
   
 }
 
+/**
+ * Guarda los valores de los checkboxes activos, la justificación y otros datos relevantes en el backend. 
+ * Envia los datos como una solicitud POST al servidor y muestra un mensaje de alerta según el resultado de la operación.
+ * Si ocurre un error al enviar los datos, se captura y muestra en la consola.
+ *
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11-19
+ * @param {Array<string>} checkboxesActivos - Arreglo con los valores de los checkboxes activos seleccionados.
+ * @param {string} justification - Justificación proporcionada para la verificación.
+ * @param {int} idCheckApplicantApplications - ID de la solicitud del solicitante.
+ * @param {number} verificationStatus - Estado de verificación (1 o 0, dependiendo de los checkboxes activos).
+ * @param {number} revisionStatus - Estado de revisión (por defecto es 1).
+ * @returns {Promise<void>} - No retorna ningún valor. Realiza una solicitud al servidor y muestra alertas dependiendo del resultado.
+ */
 
  static async  saveChecks(checkboxesActivos, justification, idCheckApplicantApplications, verificationStatus,revisionStatus) {
   // Crear el objeto de datos que se enviará al backend

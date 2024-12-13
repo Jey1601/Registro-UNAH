@@ -1,4 +1,10 @@
 const  modalTemplates = {
+    
+   /**
+   *
+   * @author Jeyson Espinal (20201001015)
+   * @created 2024-11
+   */
     exceptionalCancellationTerms: 
     `<div >
         <p>Si el estudiante ha matriculado y reprobado o abandonado la asignatura o experiencia educativa en la que solicita cancelación más de dos (2) veces, la cancelación le será denegada. Si un estudiante envía un correo electrónico con una pregunta cuya información se encuentre en este procedimiento, no se dará respuesta al correo electrónico recibido.</p>

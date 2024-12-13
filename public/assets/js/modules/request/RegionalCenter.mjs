@@ -4,6 +4,17 @@ import { AcademicPlanning } from "./AcademicPlanning.mjs";
 import { Building } from "./Building.mjs";
 class RegionalCenter {
   static path = "../../../../";
+
+  /**
+ * Renderiza un select con los centros regionales disponibles, cargando sus opciones en un dropdown.
+ * Si el módulo es "Admissions", también carga las carreras asociadas al centro regional seleccionado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ * 
+ * @param {string} id - El ID del elemento `<select>` donde se agregarán las opciones de centros regionales.
+ * @param {string} [module="Admissions"] - El módulo para el que se están cargando los centros. Si es "Admissions", se actualizan las carreras asociadas.
+ */
   static async renderSelectRegionalCenters(id, module = "Admissions") {
     const select = document.getElementById(id);
     select.innerHTML = "";
@@ -42,6 +53,16 @@ class RegionalCenter {
     }
   }
 
+  /**
+ * Obtiene la lista de centros regionales desde el servidor.
+ * Realiza una solicitud GET al endpoint de la API y devuelve los centros regionales en formato JSON.
+ * Si ocurre un error, devuelve un array vacío.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ * 
+ * @returns {Array} - Un array de objetos que representan los centros regionales. Si hay un error, devuelve un array vacío.
+ */
   // Método para obtener los centros regionales de la API
   static async getRegionalCenters() {
     try {
@@ -61,6 +82,18 @@ class RegionalCenter {
     }
   }
 
+
+  /**
+ * Renderiza un select de centros regionales basado en el departamento seleccionado.
+ * Esta función toma el valor del select de departamento, obtiene los centros regionales correspondientes
+ * a ese departamento y los muestra en un select de centros regionales.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ * 
+ * @param {string} idSelect - El ID del elemento select donde se mostrarán los centros regionales.
+ * @param {string} idDepartmentSelect - El ID del elemento select donde se selecciona el departamento.
+ */
   static async renderSelectRegionalCentersByDepartment(
     idSelect,
     idDepartmentSelect
@@ -108,6 +141,19 @@ class RegionalCenter {
     }
   }
 
+
+
+  /**
+ * Obtiene los centros regionales asociados a un departamento específico.
+ * Esta función realiza una solicitud al servidor para obtener los centros regionales
+ * correspondientes al ID del departamento proporcionado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-11
+ * 
+ * @param {int} idDepartment - El ID del departamento cuyo centros regionales se desean obtener.
+ * @returns {Array} Un arreglo de centros regionales si la solicitud es exitosa, o un arreglo vacío si ocurre un error.
+ */
   static async getRegionalCentersByDepartment(idDepartment) {
     try {
       const response = await fetch(
@@ -127,6 +173,19 @@ class RegionalCenter {
     }
   }
 
+
+  /**
+ * Renderiza un select de centros regionales específicos de un profesor.
+ * Esta función obtiene los centros regionales asociados a un profesor y los renderiza
+ * en un select HTML. Además, se renderizan los select de carreras y edificios asociados
+ * al centro regional seleccionado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12
+ * 
+ * @param {string} idSelect - El ID del select donde se renderizarán los centros regionales.
+ * @param {int} idProfessor - El ID del profesor cuyo centros regionales se desean obtener.
+ */
   static async renderSelectRegionalCentersByProfessor(idSelect, idProfessor) {
     const select = document.getElementById(idSelect);
     select.innerHTML = "";
@@ -178,6 +237,17 @@ class RegionalCenter {
     }
   }
 
+  /**
+ * Renderiza los filtros de centros regionales como botones de opción (radio buttons).
+ * Crea dinámicamente los botones de opción para cada centro regional, permitiendo 
+ * seleccionar un centro regional de manera visual y fácil.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12
+ * 
+ * @param {Array} regionalCenters - Lista de centros regionales que se deben mostrar como filtros.
+ * Cada objeto debe tener propiedades como `id_regionalcenter` y `name_regional_center`.
+ */
   static renderCenterFilters(regionalCenters){
     const container = document.getElementById("regionalCenterFilter");
     container.innerHTML = "";

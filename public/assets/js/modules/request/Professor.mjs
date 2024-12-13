@@ -3,6 +3,22 @@ import { Alert, Cell, Table, Modal } from "../behavior/support.mjs";
 
 class Professor {
   static path = "../../../../";
+
+  /**
+ * Renderiza un `select` de profesores disponibles basados en los criterios de planificación académica.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-03
+ * 
+ * @param {string} idSelect - El ID del elemento `select` donde se agregarán las opciones de profesores.
+ * @param {int} regionalCenter - El centro regional para filtrar los profesores.
+ * @param {int} username_user_professor - El nombre de usuario del profesor para filtrar según el plan académico.
+ * @param {string} days - Los días de la semana en los que se realiza la clase, utilizados para filtrar los profesores.
+ * @param {string} startTime - La hora de inicio de la clase, usada para filtrar los profesores disponibles en ese horario.
+ * @param {string} endTime - La hora de finalización de la clase, usada para filtrar los profesores disponibles en ese horario.
+ * @returns {Promise<void>} - Esta función no retorna nada, solo modifica el contenido del `select` de profesores.
+ */
+
   static async renderSelectProfessors(
     idSelect,
     regionalCenter,
@@ -53,6 +69,17 @@ class Professor {
     }
   }
 
+
+  /**
+ * Obtiene las clases asignadas a un profesor específico.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idProfessor - El ID del profesor para obtener las clases asignadas.
+ * @returns {Promise<Array>} - Un arreglo con las clases asignadas al profesor. Si ocurre un error, retorna un arreglo vacío.
+ */
+
   static async getAssignedClasses(idProfessor) {
     try {
       const response = await fetch(
@@ -71,6 +98,18 @@ class Professor {
       return [];
     }
   }
+
+  /**
+ * Establece la URL del video para una sección de clase específica de un profesor.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-09
+ * 
+ * @param {int} idProfessor - El ID del profesor que está asignado a la sección.
+ * @param {string} urlVideo - La URL del video que se quiere asignar a la sección de clase.
+ * @param {int} idClassSection - El ID de la sección de clase a la que se le asignará el video.
+ * @returns {Promise<string|null>} - El estado de la operación ("success" si todo fue bien, o null si ocurrió un error).
+ */
 
   static async setUrlVideoClassSection(idProfessor, urlVideo, idClassSection) {
     const data = {
@@ -119,6 +158,16 @@ class Professor {
     }
   }
 
+
+  /**
+ * Obtiene los estudiantes de una sección de clase y descarga la información en un archivo CSV.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idSectionClass - El ID de la sección de clase de la cual se quieren obtener los estudiantes.
+ * @returns {Promise<void>} - No retorna ningún valor. Si se realiza correctamente, descarga un archivo CSV con los estudiantes.
+ */
   static async getStudentsBySectionCSV(idSectionClass) {
     try {
       const response = await fetch(
@@ -165,7 +214,15 @@ class Professor {
     }
   }
 
-
+/**
+ * Obtiene los estudiantes de una sección de clase y descarga la información en un archivo PDF.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idSectionClass - El ID de la sección de clase de la cual se quieren obtener los estudiantes.
+ * @returns {Promise<void>} - No retorna ningún valor. Si se realiza correctamente, descarga un archivo PDF con los estudiantes.
+ */
   static async getStudentsBySectionPDF(idSectionClass) {
     try {
       const response = await fetch(
@@ -214,7 +271,15 @@ class Professor {
   }
 
 
-  
+  /**
+ * Obtiene la carga académica de un profesor mediante una solicitud POST.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idProfessor - El ID del profesor para obtener su carga académica.
+ * @returns {Promise<Array>} - Devuelve una lista con la carga académica del profesor, si la solicitud es exitosa. Si ocurre un error, devuelve un arreglo vacío.
+ */
   static async getAcademicCharge(idProfessor) {
     const data = {
         idProfessor: idProfessor,  // El valor que se va a enviar
@@ -261,7 +326,15 @@ class Professor {
     }
 }
 
-
+/**
+ * Obtiene la carga académica en formato CSV mediante una solicitud POST.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idProfessor - El ID del profesor para obtener su carga académica en formato CSV.
+ * @returns {Promise<void>} - No devuelve ningún valor, pero si la solicitud es exitosa, descarga un archivo CSV. Si ocurre un error, muestra un mensaje de alerta.
+ */
 static async getAcademicChargeCSV(idProfessor) {
   const data = { idProfessor: parseInt(idProfessor, 10) };
 
@@ -293,6 +366,15 @@ static async getAcademicChargeCSV(idProfessor) {
   }
 }
 
+/**
+ * Obtiene la carga académica en formato PDF mediante una solicitud POST.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-12
+ * 
+ * @param {int} idProfessor - El ID del profesor para obtener su carga académica en formato PDF.
+ * @returns {Promise<void>} - No devuelve ningún valor, pero si la solicitud es exitosa, descarga un archivo PDF. Si ocurre un error, muestra un mensaje de alerta.
+ */
 static async getAcademicChargePDF(idProfessor) {
   const data = { idProfessor: parseInt(idProfessor, 10) };
 
@@ -324,6 +406,16 @@ static async getAcademicChargePDF(idProfessor) {
   }
 }
 
+
+/**
+ * Obtiene las solicitudes de cancelación excepcional para un profesor.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-12
+ * 
+ * @param {int} idProfessor - El ID del profesor para obtener las solicitudes de cancelación excepcional.
+ * @returns {Promise<Array>} - Devuelve un array con las solicitudes de cancelación excepcional del profesor, o un array vacío en caso de error o sin resultados.
+ */
 static async getRequestsCancellationExceptional(idProfessor) {
   const data = { idProfessor: parseInt(idProfessor, 10) };
 
@@ -354,7 +446,17 @@ static async getRequestsCancellationExceptional(idProfessor) {
   }
 }
 
-
+/**
+ * Obtiene los estudiantes de un centro regional y carrera de pregrado.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * 
+ * @param {int} idProfessor - El ID del profesor.
+ * @param {int} idRegionalCenter - El ID del centro regional.
+ * @param {int} idUndergraduate - El ID de la carrera de pregrado.
+ * @returns {Promise<Array>} - Devuelve un array con los estudiantes que cumplen con los criterios, o un array vacío en caso de error o sin resultados.
+ */
 static async  fetchStudentsByRegionalCenterUndergraduate(idProfessor,idRegionalCenter,idUndergraduate) {
   const url = this.path+'api/post/professor/getStudentsByRegionalCenterUndergraduate.php'; 
 
@@ -383,7 +485,16 @@ static async  fetchStudentsByRegionalCenterUndergraduate(idProfessor,idRegionalC
   }
 }
 
-
+/**
+ * Obtiene el historial académico de un estudiante
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-10
+ * 
+ * @param {int} idProfessor - El ID del profesor.
+ * @param {int} idStudent - El ID del estudiante.
+ * @returns {Promise<Array>} - Devuelve un array con las secciones del historial académico del estudiante, o un array vacío en caso de error o sin resultados.
+ */
 static async  getAcademicHistoryByStudent(idProfessor, idStudent) {
   const url = this.path+'api/post/professor/getAcademicHistoryByStudent.php'; 
 
@@ -412,6 +523,15 @@ static async  getAcademicHistoryByStudent(idProfessor, idStudent) {
   }
 }
 
+/**
+ * Agrega un botón de vista previa del historial académico a cada fila de la tabla de calificaciones.
+ * 
+ * @author Jeyson Espinal (20201001015)
+ * @created 2024-12-11
+ * 
+ * @param {string} tableId - El ID de la tabla donde se agregarán los botones.
+ * @param {int} idProfessor - El ID del profesor para consultar el historial académico del estudiante.
+ */
 
 static addOptionGrades(tableId,idProfessor){
      // Selecciona la tabla por su ID
