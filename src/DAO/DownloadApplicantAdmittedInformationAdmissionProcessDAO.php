@@ -47,6 +47,8 @@ Class DownloadApplicantAdmittedInformationAdmissionProcessDAO{
      *                   "message" => string,
      *                   "code" => int
      *                 ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getIdDownloadApplicantAdmittedInformationAdmissionProcess($idAdmissionProcess){
         try {
@@ -118,6 +120,8 @@ Class DownloadApplicantAdmittedInformationAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getStartDateDownloadApplicantAdmittedInformationAdmissionProcess($idDownloadAdmitted){
         try{
@@ -187,6 +191,8 @@ Class DownloadApplicantAdmittedInformationAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getEndDateDownloadApplicantAdmittedInformationAdmissionProcess($idDownloadAdmitted){
         try{
@@ -219,6 +225,16 @@ Class DownloadApplicantAdmittedInformationAdmissionProcessDAO{
         }
     }
 
+    /**
+        * Verifica si el proceso de descarga de la información del solicitante admitido está activo según las fechas de inicio y fin.
+        * 
+        * Este método consulta el proceso de admisión activo, obtiene las fechas de inicio y fin para la descarga de la
+        * información del solicitante admitido, y verifica si la fecha actual está dentro de ese rango.
+        * 
+        * @author Alejandro Moya 20211020462
+        * @created Noviembre de 2024
+        * @return bool Retorna true si la fecha actual está dentro del rango de fechas del proceso de descarga de la información del solicitante admitido, false en caso contrario.
+        */
     public function getVerifyDownloadApplicantAdmittedInformationAdmissionProcess(){
         $activeAdmissionProcess = new AdmissionProccessDAO();
         $idAdmissionProcess = $activeAdmissionProcess->getVerifyAdmissionProcess();
