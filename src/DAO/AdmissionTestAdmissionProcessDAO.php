@@ -48,6 +48,8 @@ Class AdmissionTestAdmissionProcessDAO{
      *                   "message" => string,
      *                   "code" => int
      *                 ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getIdAdmissionTestAdmissionProcess($idAdmissionProcess){
         try {
@@ -119,6 +121,8 @@ Class AdmissionTestAdmissionProcessDAO{
      *       "message" => "Excepción capturada: " . $exception->getMessage(), 
      *       "Code" => $exception->getCode()  
      *   ]
+     * @author Alejandro Moya 20211020462
+     * @created Noviembre de 2024
      */
     public function getDateAdmissionTestAdmissionProcess($idAdmissionTestAdmissionProcess){
         try{
